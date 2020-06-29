@@ -16,14 +16,15 @@ class Doctor
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check()){
+        if (!Auth::check())
+            return redirect('login');
 
-            $role = Auth::user()->role->role_id;
-            if ( ($role == 2)) {
-                return $next($request);
-            }
-            return redirect('/test')->with(['data'=>'role not 2']);
+        $role = Auth::user()->role->role_id;
+
+        if ( ($role== 0) || ($role==2)) {
+            return $next($request);
         }
-        return redirect('/test')->with(['data'=>'not auth']);
+
+        return redirect('login');
     }
 }

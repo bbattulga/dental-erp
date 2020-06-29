@@ -12,7 +12,8 @@
 */
 
 Route::get('/test', function() {
-    return view('test');
+	$data = Session::get('data');
+    return view('test', ['data'=>$data]);
 });
 
 Route::get('/', function () {

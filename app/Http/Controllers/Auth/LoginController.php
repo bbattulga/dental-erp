@@ -23,46 +23,32 @@ class LoginController extends Controller
 
     protected function authenticated()
     {
-        if (Auth::check()) {
-            if (is_null(Auth::user()->role)){
-                return redirect('/user');
-            } else {
-                if(Auth::user()->role->role_id == 0) {
-                    return redirect('/admin/dashboard');
-                } elseif (Auth::user()->role->role_id == 1) {
-                    return redirect('/reception/time');
-                } elseif (Auth::user()->role->role_id == 2) {
-                    return redirect('/doctor');
-                } elseif (Auth::user()->role->role_id == 4) {
-                    return redirect('/accountant/transactions');
-                }  else {
-                    return redirect('/user');
-                }
-            }
-        } else {
+        if (!Auth::check())
             return redirect('login');
-        }
-			/*
-        if (Auth::check()) {
-            if (is_null(Auth::user()->role)){
-                return redirect('/user');
-            } else {
-                if(Auth::user()->role->role_id == 0) {
-                    return redirect('/admin/dashboard');
-                } elseif (Auth::user()->role->role_id == 1) {
-                    return redirect('/reception/time');
-                } elseif (Auth::user()->role->role_id == 2) {
-                    return redirect('/doctor/dashboard');
-                } elseif (Auth::user()->role->role_id == 4) {
-                    return redirect('/accountant/transactions');
-                }  else {
-                    return redirect('/user');
-                }
-            }
-        } else {
+
+        $user = Auth::user();
+
+        if (is_null($user->role))
             return redirect('login');
-        }
-				*/
+
+        if($user->role->role_id == 0) {
+            return redirect('/admin/dashboard');
+        } 
+
+        if ($user->role->role_id == 1) {
+            return redirect('/reception/time');
+        } 
+
+        if ($user->role->role_id == 2) {
+            return redirect('/doctor');
+        } 
+
+        if ($user->role->role_id == 4) {
+            return redirect('/accountant/transactions');
+        } 
+
+        return redirect('login');
+        
     }
 
     public function logout() {

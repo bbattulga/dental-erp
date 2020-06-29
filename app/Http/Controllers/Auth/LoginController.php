@@ -32,7 +32,7 @@ class LoginController extends Controller
                 } elseif (Auth::user()->role->role_id == 1) {
                     return redirect('/reception/time');
                 } elseif (Auth::user()->role->role_id == 2) {
-                    return redirect('/doctor/dashboard');
+                    return redirect('/doctor');
                 } elseif (Auth::user()->role->role_id == 4) {
                     return redirect('/accountant/transactions');
                 }  else {

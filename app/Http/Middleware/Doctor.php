@@ -19,12 +19,11 @@ class Doctor
         if (Auth::check()){
 
             $role = Auth::user()->role->role_id;
-
-            if ( $role== 0 || $role == 2) {
+            if ( ($role == 2)) {
                 return $next($request);
             }
-            return redirect('login');
+            return redirect('/test')->with(['data'=>'role not 2']);
         }
-        return redirect('login');
+        return redirect('/test')->with(['data'=>'not auth']);
     }
 }

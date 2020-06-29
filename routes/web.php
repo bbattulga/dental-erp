@@ -11,11 +11,12 @@
 |
 */
 
-Route::get('test', function() {
+Route::get('/test', function() {
     return view('test');
 });
 
 Route::get('/', function () {
+	$roles = App\Role::all();
     return view('welcome', compact('roles'));
 });
 Route::get('emchilgeenuud', function () {

@@ -8,7 +8,7 @@ use App\Lease;
 use App\Log;
 use App\ProductHistory;
 use App\Products;
-use App\Role;
+use App\UserRole;
 use Aloha\Twilio\Support\Laravel\Facade as Twilio;
 use App\Time;
 use App\Transaction;
@@ -27,7 +27,7 @@ class AdminController extends Controller
     //STAFF SECTION
     //-------------
     public function index(){
-        $roles = Role::all();
+        $roles = UserRole::all();
         return view('admin.add_staff',compact('roles'));
     }
     public function add_staff(Request $request){
@@ -45,7 +45,7 @@ class AdminController extends Controller
         $date = explode('/', $request['birth_date']);
         $birth_date = $date[2] . '-' . $date[0] . '-' . $date[1];
         $user = User::create(['last_name'=>$request['last_name'],'name'=>$request['name'],'register'=>$request['register'],'phone_number'=>$request['phone_number'],'email'=>$request['email'],'birth_date'=>$birth_date,'location'=>$request['location'],'description'=>$request['info'],'password'=>$pass,'sex'=>$request['sex']]);
-        $role = Role::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);
+        $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);
         return redirect('/admin/add_staff');
     }
     //---------------
@@ -72,7 +72,7 @@ class AdminController extends Controller
     //--------------
     public function dashboard() {
         $users = User::all()->count();
-        $roles =Role::all()->count();
+        $roles = UserRole::all()->count();
         $users_number = $users - $roles;
         $appointments = Appointment::all()->where('created_at','>',date('Y-m-d 00:00:00'))->count();
         $checkins = CheckIn::where('created_at','>',date('Y-m-d'))->count();

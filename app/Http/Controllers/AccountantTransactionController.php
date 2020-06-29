@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Log;
 use App\OutcomeCategory;
-use App\Role;
+use App\UserRole;
 use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class AccountantTransactionController extends Controller
 
     public function index() {
         $transactions = Transaction::all()->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->sortByDesc('id');
-        $roles = Role::all();
+        $roles = UserRole::all();
         $types = OutcomeCategory::all();
         $start_date = strtotime('-30 Days');
         $end_date = strtotime('Today');
@@ -47,7 +47,7 @@ class AccountantTransactionController extends Controller
 
     public function search($start_date, $end_date) {
         $transactions = Transaction::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
-        $roles = Role::all();
+        $roles = UserRole::all();
         $types = OutcomeCategory::all();
         return view('accountant.transaction', compact('transactions', 'roles', 'start_date', 'end_date', 'types'));
     }
@@ -61,7 +61,7 @@ class AccountantTransactionController extends Controller
         return redirect('/accountant/transactions');
     }
     public function salary(Request $request) {
-        $user = Role::find($request['staff'])->staff;
+        $user = UserRole::find($request['staff'])->staff;
         Transaction::create(['price'=> -1*$request['price'], 'type'=>1, 'type_id'=>$request['staff'], 'description'=>$user->name.' цалин','created_by'=>Auth::user()->id]);
         return redirect('/accountant/transactions');
     }

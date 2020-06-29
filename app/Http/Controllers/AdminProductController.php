@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ProductHistory;
 use App\Products;
-use App\Role;
+use App\UserRole;
 use Aloha\Twilio\Support\Laravel\Facade as Twilio;
 use App\Transaction;
 use App\User;
@@ -26,7 +26,7 @@ class AdminProductController extends Controller
         $products = Products::all();
         $specific_product = Products::find($id);
         $histories = ProductHistory::all()->where('product_id', $specific_product->id);
-        $roles = Role::all();
+        $roles = UserRole::all();
 
         return view('admin.product_show', compact('products', 'specific_product', 'histories', 'roles','created_user'));
     }

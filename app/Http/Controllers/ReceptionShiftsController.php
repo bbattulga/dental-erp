@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Log;
-use App\Role;
+use App\UserRole;
 use App\Time;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class ReceptionShiftsController extends Controller
         $this->middleware('reception');
     }
     public function index() {
-        $doctors = Role::all()->where('role_id',2);
+        $doctors = UserRole::all()->where('role_id',2);
         $shifts = Time::all()->where('date', '>=', date('Y-m-d'));
         return view('reception.shifts',compact('doctors', 'shifts'));
     }

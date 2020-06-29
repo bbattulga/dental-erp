@@ -10,7 +10,7 @@ use App\Lease;
 use App\ProductHistory;
 use App\Products;
 use App\Promotion;
-use App\Role;
+use App\UserRole;
 use App\Transaction;
 use App\TreatmentSelections;
 use App\User;
@@ -117,7 +117,7 @@ class ReceptionPaymentController extends Controller
         $products = Item::all();
         $specific_product = Item::find($id);
         $histories = ItemHistory::all()->where('item_id', $specific_product->id);
-        $roles = Role::all();
+        $roles = UserRole::all();
         return view('reception.product_show', compact('products', 'specific_product', 'histories', 'roles','created_user'));
     }
 

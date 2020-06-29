@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Log;
 use App\OutcomeCategory;
 use App\Transaction;
-use App\Role;
+use App\UserRole;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,7 @@ class AdminTransactionController extends Controller
     }
     public function index() {
         $transactions = Transaction::all()->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->sortByDesc('id');
-        $roles = Role::all();
+        $roles = UserRole::all();
         $types = OutcomeCategory::all();
         $start_date = strtotime('first day of this month');
         $end_date = strtotime('Today');
@@ -29,7 +29,7 @@ class AdminTransactionController extends Controller
 
     public function search($start_date, $end_date) {
         $transactions = Transaction::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
-        $roles = Role::all();
+        $roles = UserRole::all();
         $types = OutcomeCategory::all();
         return view('admin.transaction', compact('transactions', 'roles', 'start_date', 'end_date', 'types'));
     }

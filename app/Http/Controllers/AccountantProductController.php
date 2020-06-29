@@ -6,7 +6,7 @@ use App\Log;
 use App\ProductHistory;
 use App\Products;
 use App\Promotion;
-use App\Role;
+use App\UserRole;
 use App\Transaction;
 use App\User;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class AccountantProductController extends Controller
         $products = Products::all();
         $specific_product = Products::find($id);
         $histories = ProductHistory::all()->where('product_id', $specific_product->id);
-        $roles = Role::all();
+        $roles = UserRole::all();
         return view('accountant.product_show', compact('products', 'specific_product', 'histories', 'roles'));
     }
     public function add_product(Request $request){
@@ -60,7 +60,7 @@ class AccountantProductController extends Controller
         $products = Products::all();
         $specific_product = Products::find($id);
         $histories = ProductHistory::all()->where('product_id', $specific_product->id);
-        $roles = Role::all();
+        $roles = UserRole::all();
         return view('accountant.product_change', compact('products', 'specific_product', 'histories', 'roles'));
     }
     public function change_product($id, Request $request){

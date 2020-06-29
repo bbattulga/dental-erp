@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\Log;
 use App\CheckIn;
-use App\Role;
+use App\UserRole;
 use App\Time;
 use App\User;
 use Illuminate\Http\Request;
@@ -30,16 +30,16 @@ class ReceptionTimeController extends Controller
     }
 
     public function timeWeek($id) {
-        $role = Role::find($id);
-        $roles = Role::where('role_id', 2);
+        $role = UserRole::find($id);
+        $roles = UserRole::where('role_id', 2);
         $shifts = $role->shifts->where('date', '>=', date('Y-m-d'));
         return view('reception.time_week', compact('role', 'roles', 'shifts'));
 
     }
     public function timeWeekAppointment($id, $user_id) {
         $user = User::find($user_id);
-        $role = Role::find($id);
-        $roles = Role::where('role_id', 2);
+        $role = UserRole::find($id);
+        $roles = UserRole::where('role_id', 2);
         $shifts = $role->shifts->where('date', '>=', date('Y-m-d'));
         return view('reception.time_week', compact('shifts', 'user','role', 'roles'));
     }

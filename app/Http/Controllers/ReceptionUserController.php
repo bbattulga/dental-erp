@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\CheckIn;
-use App\Role;
+use App\UserRole;
 use App\Time;
 use App\User;
 use Illuminate\Http\Request;

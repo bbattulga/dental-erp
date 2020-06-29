@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
-use App\Role;
+use App\UserRole;
 use App\Time;
 use App\User;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class AdminTimeController extends Controller
     }
     //
     public function index() {
-        $doctors = Role::all()->where('role_id',2);
+        $doctors = UserRole::all()->where('role_id',2);
         $shifts = Time::all()->where('date', '>=', date('Y-m-d'));
         return view('admin.time',compact('doctors', 'shifts'));
 
@@ -47,8 +47,8 @@ class AdminTimeController extends Controller
     }
 
     public function timeWeek($id) {
-        $role = Role::find($id);
-        $roles = Role::where('role_id', 2);
+        $role = UserRole::find($id);
+        $roles = UserRole::where('role_id', 2);
         $shifts = $role->shifts->where('date', '>=', date('Y-m-d'));
         return view('admin.week', compact('role', 'roles', 'shifts'));
     }

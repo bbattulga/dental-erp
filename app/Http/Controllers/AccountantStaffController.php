@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CheckIn;
-use App\Role;
+use App\UserRole;
 use App\Time;
 use App\User;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class AccountantStaffController extends Controller
         $this->middleware('accountant');
     }
     public function index() {
-        $roles = Role::whereIn('role_id', [2,3,5]);
+        $roles = UserRole::whereIn('role_id', [2,3,5]);
         return view('accountant.staffs', compact('roles'));
     }
     public function staff_check($id){

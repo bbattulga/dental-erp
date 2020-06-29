@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Item;
 use App\ItemHistory;
 use App\Log;
-use App\Role;
+use App\UserRole;
 use App\Transaction;
 use App\User;
 use Illuminate\Http\Request;

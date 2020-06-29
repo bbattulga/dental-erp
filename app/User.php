@@ -20,7 +20,7 @@ class User extends Authenticatable
     ];
 
     public function role() {
-        return $this->hasOne('App\Role','user_id');
+        return $this->hasOne('App\UserRole','user_id');
     }
 
     public function photos(){

@@ -830,9 +830,8 @@
                 <!--
                 In case of special treatment
                 -->
-
                 <!-- remove comments to see default lombo -->
-                <!--
+                
                     @if($treatment->id == 1)
                     <button class="btn btn-primary btn-block single" data-toggle="modal"
                             data-target="#exampleModal">
@@ -840,15 +839,16 @@
                         <div class="row">
 
                             <div class="col-md-12 text-left" onclick="reset()">
-                                Ломбо<br> төрөлтэй
+                                {{$treatment->name}}<br> төрөлтэй
                             </div>
-                    
                         </div>
                     
                     </button>
                     @else
-                -->
-                    <button class="btn btn-primary btn-block
+                    <button 
+
+                    class="btn btn-primary btn-block
+
                         @if($treatment->selection_type == 0)
                             all
                         @elseif($treatment->selection_type == 1)
@@ -873,7 +873,7 @@
                             </div>
                         </div>
                     </button>
-               <!-- @endif -->
+                @endif
             @endforeach
         </div>
     </div>

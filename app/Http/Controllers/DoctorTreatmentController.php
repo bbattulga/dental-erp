@@ -24,10 +24,10 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $treatments = Treatment::where('category', 0)->get();;
+            $category = 0;
+            $treatments = Treatment::where('category', $category)->get();;
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', 3)->get();
-            $category = 0;
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');
@@ -38,10 +38,10 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $treatments = Treatment::where('category', 1)->get();
+            $category = 1;
+            $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', 3)->get();
-            $category = 1;
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');
@@ -51,10 +51,10 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $treatments = Treatment::where('category', 2)->get();
+            $category = 2;
+            $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', 3)->get();
-            $category = 2;
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');
@@ -64,10 +64,11 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $treatments = Treatment::where('category', 3)->get();
+            $category = 3;
+            $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', 3)->get();
-            $category = 3;
+            
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');

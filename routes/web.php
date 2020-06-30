@@ -202,3 +202,8 @@ Route::get('/doctor/dashboard/','DoctorController@dashboard');
 Route::get('/doctor/dashboard/{start_date}/{end_date}', 'DoctorController@search');
 Route::post('/doctor/dashboard/by_month', 'DoctorController@by_month');
 Route::post('/doctor/dashboard/date', 'DoctorController@date');
+
+
+Route::group(['prefix' => 'vadmin'], function () {
+    Voyager::routes();
+});

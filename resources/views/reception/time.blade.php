@@ -151,11 +151,11 @@
                     <div class="col-md-3">
                         <select class="form-control" onchange="location = this.value;">
                             <option>Өдрөөр</option>
-                            <option value="@if(\App\Role::where('role_id', 2)->first() != null)
+                            <option value="@if(\App\UserRole::where('role_id', 2)->first() != null)
                             @if(!empty($user))
-                            {{url('reception/time/week/'. \App\Role::where('role_id', 2)->first()->id .'/'. $user->id)}}
+                            {{url('reception/time/week/'. \App\UserRole::where('role_id', 2)->first()->id .'/'. $user->id)}}
                             @else
-                            {{url('reception/time/week/'. \App\Role::where('role_id', 2)->first()->id)}}
+                            {{url('reception/time/week/'. \App\UserRole::where('role_id', 2)->first()->id)}}
                             @endif
                             @endif">
                                 30 хоногоор

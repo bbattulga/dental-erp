@@ -830,16 +830,24 @@
                 <!--
                 In case of special treatment
                 -->
+
+                <!-- remove comments to see default lombo -->
+                <!--
                     @if($treatment->id == 1)
                     <button class="btn btn-primary btn-block single" data-toggle="modal"
                             data-target="#exampleModal">
+                            
                         <div class="row">
+
                             <div class="col-md-12 text-left" onclick="reset()">
                                 Ломбо<br> төрөлтэй
                             </div>
+                    
                         </div>
+                    
                     </button>
                     @else
+                -->
                     <button class="btn btn-primary btn-block
                         @if($treatment->selection_type == 0)
                             all
@@ -848,7 +856,7 @@
                         @else
                             multiple
                         @endif"
-                            @if($treatment->treatmentSelection->count() != 0)
+                        @if($treatment->treatmentSelection->count() != 0)
                             onclick="treatmentButton('{{$treatment->id}}')"
                         @else
                             onclick="singleTreatment('{{$treatment->id}}', '{{$treatment->price}}', '{{$treatment->limit}}')"
@@ -865,7 +873,7 @@
                             </div>
                         </div>
                     </button>
-                @endif
+               <!-- @endif -->
             @endforeach
         </div>
     </div>

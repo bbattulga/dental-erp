@@ -15,7 +15,11 @@ class CreateItemHistoriesTable extends Migration
     {
         Schema::create('item_histories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id');
+
+            $table->index('item_id');
+            $table->integer('item_id')->unsigned()->default(10);
+            $table->foreign('item_id')->references('id')->on('items');
+
             $table->integer('quantity');
             $table->integer('created_by');
             $table->timestamps();
@@ -29,6 +33,11 @@ class CreateItemHistoriesTable extends Migration
      */
     public function down()
     {
+        Schema::table('item_histories', function($table){
+             $table->dropForeign('item_id');
+        $table->dropIndex('item_id');
+        });
+
         Schema::dropIfExists('item_histories');
     }
 }

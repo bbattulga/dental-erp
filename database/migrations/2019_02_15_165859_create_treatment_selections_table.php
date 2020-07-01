@@ -15,7 +15,11 @@ class CreateTreatmentSelectionsTable extends Migration
     {
         Schema::create('treatment_selections', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('treatment_id');
+
+            $table->index('treatment_id');
+            $table->integer('treatment_id')->unsigned()->default(10);
+            $table->foreign('treatment_id')->references('id')->on('treatments');
+
             $table->string('name');
             $table->integer('price');
             $table->timestamps();
@@ -29,6 +33,11 @@ class CreateTreatmentSelectionsTable extends Migration
      */
     public function down()
     {
+        Schema::table('treatment_selections', function($table){
+             $table->dropForeign('treatment_id');
+        $table->dropIndex('treatment_id');
+        });
+
         Schema::dropIfExists('treatment_selections');
     }
 }

@@ -15,7 +15,9 @@ class CreateTimesTable extends Migration
     {
         Schema::create('times', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('doctor_id');
+            $table->index('doctor_id');
+            $table->integer('doctor_id')->unsigned()->default(10);
+            $table->foreign('doctor_id')->references('id')->on('users');
             $table->date('date');
             $table->tinyInteger('shift_id');
             $table->integer('created_by');
@@ -30,6 +32,11 @@ class CreateTimesTable extends Migration
      */
     public function down()
     {
+        Schema::table('times', function($table){
+            $table->dropForeign('doctor_id');
+            $table->dropIndex('doctor_id');
+        });
+        
         Schema::dropIfExists('times');
     }
 }

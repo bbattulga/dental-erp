@@ -15,7 +15,11 @@ class CreateLeasesTable extends Migration
     {
         Schema::create('leases', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('checkin_id');
+
+            $table->index('checkin_id');
+            $table->integer('checkin_id')->unsigned()->default(10);
+            $table->foreign('checkin_id')->references('id')->on('check_ins');
+
             $table->integer('price');
             $table->integer('created_by');
             $table->integer('total');
@@ -30,6 +34,11 @@ class CreateLeasesTable extends Migration
      */
     public function down()
     {
+        Schema::table('leases', function($table){
+            $table->dropForeign('checkin_id');
+        $table->dropIndex('checkin_id');
+        });
+
         Schema::dropIfExists('leases');
     }
 }

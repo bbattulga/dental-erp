@@ -20,10 +20,11 @@ class Admin
         if (!Auth::check())
             return redirect('login');
 
-        $role = Auth::user()->role->role_id;
+        $roles = Auth::user()->roles;
 
-        if ( $role== 0 ) {
-            return $next($request);
+        foreach($roles as $role){
+            if ($role->role_id == 5)
+                return $next($request);
         }
         return redirect('login');
 

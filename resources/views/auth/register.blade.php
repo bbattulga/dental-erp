@@ -120,25 +120,25 @@
 
 		    <div class="col-md-6">
 		      <div class="form-check">
-			<input class="form-check-input" type="radio" name="role" id="admin" value="0" checked>
+			<input class="form-check-input" type="radio" name="role" id="admin" value="5" checked>
 			<label class="form-check-label" for="admin">
 			  Admin
 			</label>
 		      </div>
 		      <div class="form-check">
-			<input class="form-check-input" type="radio" name="role" id="reception" value="1">
+			<input class="form-check-input" type="radio" name="role" id="reception" value="2">
 			<label class="form-check-label" for="reception">
 			  Reception
 			</label>
 		      </div>
 		      <div class="form-check">
-			<input class="form-check-input" type="radio" name="role" id="doctor" value="2">
+			<input class="form-check-input" type="radio" name="role" id="doctor" value="3">
 			<label class="form-check-label" for="doctor">
 			  Doctor
 			</label>
 		      </div>
 		      <div class="form-check">
-			<input class="form-check-input" type="radio" name="role" id="assistant" value="3">
+			<input class="form-check-input" type="radio" name="role" id="assistant" value="1">
 			<label class="form-check-label" for="assistant">
 			  Assistant
 			</label>

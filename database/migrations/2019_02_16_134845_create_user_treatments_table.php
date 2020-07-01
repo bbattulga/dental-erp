@@ -15,11 +15,24 @@ class CreateUserTreatmentsTable extends Migration
     {
         Schema::create('user_treatments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('checkin_id');
-            $table->integer('treatment_id');
-            $table->integer('treatment_selection_id')->nullable();
-            $table->integer('tooth_id')->nullable();
+
+            $table->index('user_id');
+            $table->integer('user_id')->unsigned()->default(10);
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->index('checkin_id');
+            $table->integer('checkin_id')->unsigned()->default(10);
+            $table->foreign('checkin_id')->references('id')->on('check_ins');
+
+            $table->index('treatment_id');
+            $table->integer('treatment_id')->unsigned()->default(10);
+            $table->foreign('treatment_id')->references('id')->on('treatments');
+
+            $table->index('treatment_selection_id');
+            $table->integer('treatment_selection_id')->nullable()->unsigned()->default(10);
+            $table->foreign('treatment_selection_id')->references('id')->on('treatment_selections');
+
+            $table->integer('tooth_id')->nullable()->unsigned()->default(10);
             $table->integer('value')->nullable();
             $table->timestamps();
         });
@@ -31,7 +44,19 @@ class CreateUserTreatmentsTable extends Migration
      * @return void
      */
     public function down()
-    {
+    {   
+        Schema::table('user_treatments', function($table){
+             $this->drops($table, ['user_id', 'checkin_id', 'treatment_id', 'treatment_selection_id']);
+        });
+
+        
         Schema::dropIfExists('user_treatments');
+    }
+
+    private function drops($table, $list){
+        foreach($list as $item){
+            $table->dropForeign($item);
+            $table->dropIndex($item);
+        }
     }
 }

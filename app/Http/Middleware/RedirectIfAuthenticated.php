@@ -18,23 +18,39 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            if (is_null(Auth::user()->role)){
-                return redirect('/user');
+            return redirect('/test')->with(['data'=>'guard passed']);
+            if (is_null(Auth::user()->roles)){
+                return redirect('/register');
             } else {
-                if(Auth::user()->role->role_id == 0) {
+                $roles = Auth::user()->roles;
+
+                if(check_role(5, $roles) ){
+                  //  return redirect('/test', ['data'=>'admin']);
                     return redirect('/admin/dashboard');
-                } elseif (Auth::user()->role->role_id == 1) {
-                    return redirect('/reception/time');
-                } elseif (Auth::user()->role->role_id == 2) {
-                    return redirect('/doctor/dashboard');
-                }  elseif (Auth::user()->role->role_id == 4) {
+                } 
+                elseif (check_role(4, $roles)) {
                     return redirect('/accountant/transactions');
-                } else {
+                }
+                elseif (check_role(3, $roles)) {
+                    return redirect('/doctor/dashboard');
+                } 
+                elseif (check_role(2, $roles)) {
+                    return redirect('/reception/time');
+                }
+                 else {
                     return redirect('/user');
                 }
             }
         }
 
-        return $next($request);
+        return redirect('/test')->with(['data'=>'no role match']);
+    }
+
+    private function check_role($id, $roles){
+        foreach($roles as $role){
+            if ($role->role_id == $id)
+                return true;
+        }
+        return false;
     }
 }

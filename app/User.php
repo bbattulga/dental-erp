@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -19,8 +20,14 @@ class User extends Authenticatable
         'last_name', 'name', 'email', 'password','sex','location','register','birth_date','description','phone_number'
     ];
 
-    public function role() {
-        return $this->hasOne('App\UserRole','user_id');
+    
+
+    // basically, each account does one thing,
+    // which means no need to have multiple roles,
+    // just having 1 role is enough
+    
+    public function roles(){
+        return $this->belongsTo('App\UserRole', 'user_role', 'user_id', 'role_id');
     }
 
     public function photos(){

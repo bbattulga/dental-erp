@@ -21,7 +21,7 @@ class Reception
 
         $role = Auth::user()->role->role_id;
 
-        if ( $role== 0 || $role==1) {
+        if ($role>=2) {
             return $next($request);
         }
         return redirect('login');

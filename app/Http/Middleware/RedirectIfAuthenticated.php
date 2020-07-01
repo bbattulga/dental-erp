@@ -21,24 +21,20 @@ class RedirectIfAuthenticated
             if (is_null(Auth::user()->role)){
                 return redirect('/user');
             } else {
-                $role = Auth::user()->role->role_id;
-
-                switch($role){
-                    case 5:
-                        return redirect('/admin/dashboard');
-                    case 4:
-                        return redirect('/accountant/transactions');
-                    case 3:
-                        return redirect('/doctor/dashboard');
-                    case 2:
-                        return redirect('/reception/time');
-                    case 1:
-                        return redirect('/doctor/dashboard');
+                if(Auth::user()->role->role_id == 5) {
+                    return redirect('/admin/dashboard');
+                } elseif (Auth::user()->role->role_id == 2) {
+                    return redirect('/reception/time');
+                } elseif (Auth::user()->role->role_id == 3) {
+                    return redirect('/doctor/dashboard');
+                }  elseif (Auth::user()->role->role_id == 4) {
+                    return redirect('/accountant/transactions');
+                } else {
+                    return redirect('/user');
                 }
-                
             }
         }
 
-        return redirect('/login');
+        return $next($request);
     }
 }

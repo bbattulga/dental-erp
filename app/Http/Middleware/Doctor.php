@@ -21,7 +21,7 @@ class Doctor
 
         $role = Auth::user()->role->role_id;
 
-        if ( ($role== 0) || ($role==2)) {
+        if ($role>=3) {
             return $next($request);
         }
 

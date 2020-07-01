@@ -24,8 +24,11 @@ class ReceptionUserController extends Controller
 
     public function fromAppointment($name, $phone, $appointment_id) {
         $param = array($name, $phone, $appointment_id);
+
+        $same_users = User::where('name', 'like', "%$name%")->get();
+
         $users = User::all()->sortByDesc('created_at');
-        return view('reception.users', compact('param', 'users'));
+        return view('reception.users', compact('param', 'users', 'same_users'));
     }
 
     public function store(Request $request) {

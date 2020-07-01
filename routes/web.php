@@ -17,8 +17,9 @@ Route::get('/test', function() {
 });
 
 Route::get('/', function () {
-	$roles = App\Role::all();
-    return view('welcome', compact('roles'));
+	$roles = App\UserRole::all();
+    //return view('welcome', compact('roles'));
+    return view('welcome2');
 });
 Route::get('emchilgeenuud', function () {
     return view('emchilgeenuud');

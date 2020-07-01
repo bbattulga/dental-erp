@@ -191,6 +191,7 @@
                         <tr>
                             <td height="90px">{{9+$i}}:00</td>
                             @foreach($shifts as $shift)
+
                                 @if($shift->shift_id == 0 || $shift->shift_id ==2)
                                     @if($appointment = $shift->appointments->where('start', 9+$i)->first())
                                         <td height="90px" rowspan="{{$appointment->end - $appointment->start}}">
@@ -307,7 +308,7 @@
 
         function validation(shift_id) {
 
-            // Backend bolon Frontend hosluultiin gaikhamshig
+            // Backend bolon Frontend hosluultiin gaihamshig
                     @foreach($shifts as $shift)
                         var shift{{$shift->id}} = @if($shift->shift_id == 0) [1, 2, 3, 4, 5, 6, 7, 8, 15, 16, 17, 18, 19, 20, 21, 22, 23] @elseif($shift->shift_id == 0) [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22, 23] @else [1, 2, 3, 4, 5, 6, 7, 8, 21, 22, 23] @endif ;
                         @foreach ($shift->appointments as $appointment)

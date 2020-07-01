@@ -92,10 +92,23 @@ class ReceptionTimeController extends Controller
         }
 
         if($request['user_id'] == 0) {
-            Appointment::create(['shift_id'=>$request['shift_id'],'user_id'=>0,'name'=>$request['name'], 'phone'=>$request['phone'], 'start'=>$request['time'], 'end'=>$request['time']+$request['hours'], 'created_by'=>Auth::user()->id]);
+            Appointment::create([
+                'shift_id'=>$request['shift_id'],
+                'user_id'=>0,
+                'name'=>$request['name'], 
+                'phone'=>$request['phone'], 
+                'start'=>$request['time'], 
+                'end'=>$request['time']+$request['hours'], 
+                'created_by'=>Auth::user()->id]);
         } else {
             $user = User::find($request['user_id']);
-            Appointment::create(['shift_id'=>$request['shift_id'], 'user_id'=>$request['user_id'], 'name'=>$user->name,'phone'=>$request['phone'],'start'=>$request['time'], 'end'=>$request['time']+$request['hours'], 'created_by'=>Auth::user()->id]);
+            Appointment::create([
+                'shift_id'=>$request['shift_id'], 
+                'user_id'=>$request['user_id'], 
+                'name'=>$user->name,'phone'=>$request['phone'],
+                'start'=>$request['time'], 
+                'end'=>$request['time']+$request['hours'], 
+                'created_by'=>Auth::user()->id]);
         }
         return back();
     }

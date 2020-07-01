@@ -32,7 +32,6 @@ class DoctorTreatmentController extends Controller
         } else {
             return redirect('404');
         }
-
     }
     public function gajig($checkin_id) {
         $checkin = CheckIn::find($checkin_id);

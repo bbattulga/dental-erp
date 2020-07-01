@@ -18,39 +18,27 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/test')->with(['data'=>'guard passed']);
-            if (is_null(Auth::user()->roles)){
-                return redirect('/register');
+            if (is_null(Auth::user()->role)){
+                return redirect('/user');
             } else {
-                $roles = Auth::user()->roles;
+                $role = Auth::user()->role->role_id;
 
-                if(check_role(5, $roles) ){
-                  //  return redirect('/test', ['data'=>'admin']);
-                    return redirect('/admin/dashboard');
-                } 
-                elseif (check_role(4, $roles)) {
-                    return redirect('/accountant/transactions');
+                switch($role){
+                    case 5:
+                        return redirect('/admin/dashboard');
+                    case 4:
+                        return redirect('/accountant/transactions');
+                    case 3:
+                        return redirect('/doctor/dashboard');
+                    case 2:
+                        return redirect('/reception/time');
+                    case 1:
+                        return redirect('/doctor/dashboard');
                 }
-                elseif (check_role(3, $roles)) {
-                    return redirect('/doctor/dashboard');
-                } 
-                elseif (check_role(2, $roles)) {
-                    return redirect('/reception/time');
-                }
-                 else {
-                    return redirect('/user');
-                }
+                
             }
         }
 
-        return redirect('/test')->with(['data'=>'no role match']);
-    }
-
-    private function check_role($id, $roles){
-        foreach($roles as $role){
-            if ($role->role_id == $id)
-                return true;
-        }
-        return false;
+        return redirect('/login');
     }
 }

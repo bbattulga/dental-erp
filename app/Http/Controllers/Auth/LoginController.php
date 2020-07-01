@@ -26,44 +26,24 @@ class LoginController extends Controller
         if (!Auth::check())
             return redirect('login');
 
-        $user = Auth::user();
-        $roles = $user->roles;
+        $role = Auth::user()->role->role_id;
 
-        if (is_null($roles))
-            return redirect('login');
-
-        if($this->check_role(5, $roles)) {
-            return redirect('/admin/dashboard');
-        } 
-
-        if ($this->check_role(4, $roles)) {
-            return redirect('/accountant/transactions');
-        } 
-
-        if ($this->check_role(3, $roles)) {
-            return redirect('/doctor');
-        } 
-
-        if ($this->check_role(2, $roles)) {
-            return redirect('/reception/user');
-        } 
-
-        if ($this->check_role(1, $roles)) {
-            return redirect('/doctor');
-        } 
-
-
-        return redirect('login');
-        
-    }
-
-    private function check_role($id, $roles){
-        foreach($roles as $role){
-            if ($role->role_id == $id)
-                return true;
+        switch($role){
+            case 5:
+                return redirect('/admin/dashboard');
+            case 4:
+                return redirect('/accountant/transactions');
+            case 3:
+                return redirect('/doctor/dashboard');
+            case 2:
+                return redirect('/reception/time');
+            case 1:
+                return redirect('/doctor/dashboard');
         }
-        return false;
+        
+        return redirect('/login');
     }
+
     public function logout() {
         Auth::logout();
         return redirect('/login');

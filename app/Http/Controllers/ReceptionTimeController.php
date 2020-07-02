@@ -56,7 +56,7 @@ class ReceptionTimeController extends Controller
     public function store(Request $request) {
 
         $shift = Time::find($request['shift_id']);
-        if ($shift->shift_id == 0) {
+        if ($shift->shift_id == 2) {
             $times = [15, 16, 17, 18, 19, 20];
         } elseif ($shift->shift_id == 1) {
             $times = [9, 10, 11, 12, 13, 14];

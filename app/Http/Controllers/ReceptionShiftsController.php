@@ -27,7 +27,7 @@ class ReceptionShiftsController extends Controller
         $date = date('Y-m-d', strtotime("+".$i." Days"));
         if (!is_null($time = Time::all()->where('date', $date)->where('doctor_id', $doctor_staff_id)->first())) {
             //Full time
-            $time->shift_id = 2;
+            $time->shift_id = 3;
             $time->save();
         } else {
             //Half time

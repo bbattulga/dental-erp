@@ -17,7 +17,7 @@ class CreateTreatmentSelectionsTable extends Migration
             $table->increments('id');
 
             $table->index('treatment_id');
-            $table->integer('treatment_id')->unsigned()->default(10);
+            $table->integer('treatment_id')->unsigned();
             $table->foreign('treatment_id')->references('id')->on('treatments');
 
             $table->string('name');
@@ -35,7 +35,7 @@ class CreateTreatmentSelectionsTable extends Migration
     {
         Schema::table('treatment_selections', function($table){
              $table->dropForeign('treatment_id');
-        $table->dropIndex('treatment_id');
+            $table->dropIndex('treatment_id');
         });
 
         Schema::dropIfExists('treatment_selections');

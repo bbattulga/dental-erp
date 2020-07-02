@@ -25,7 +25,7 @@ class AccountantStaffController extends Controller
         if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Time::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile',compact('user', 'shifts'));
-        } else if($user->role->role_id == RoleId::nurse()) {
+        } else if($user->role->role_id == RoleId::nurse()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile', compact('user', 'checkins'));
         }

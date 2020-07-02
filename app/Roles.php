@@ -4,11 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/*
+
+*/
 class Roles extends Model
 {
     // these will be cached as a Eloquent models
-    // and accessible through Roles::[rolename]
-    // and accessed via lowercased methods like Roles::admin()
+    // and accessible like Roles::admin()
 	private static $ADMIN;
 	private static $ACCOUNTANT;
 	private static $DOCTOR;

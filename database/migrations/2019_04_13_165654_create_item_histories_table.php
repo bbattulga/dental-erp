@@ -17,7 +17,7 @@ class CreateItemHistoriesTable extends Migration
             $table->increments('id');
 
             $table->index('item_id');
-            $table->integer('item_id')->unsigned()->default(10);
+            $table->integer('item_id')->unsigned();
             $table->foreign('item_id')->references('id')->on('items');
 
             $table->integer('quantity');

@@ -17,15 +17,15 @@ class CreateUserPromotionsTable extends Migration
             $table->increments('id');
 
             $table->index('checkin_id');
-            $table->integer('checkin_id')->unsigned()->default(10);
+            $table->integer('checkin_id')->unsigned();
             $table->foreign('checkin_id')->references('id')->on('check_ins');
 
             $table->index('promotion_id');
-            $table->integer('promotion_id')->unsigned()->default(10);
+            $table->integer('promotion_id')->unsigned();
             $table->foreign('promotion_id')->references('id')->on('promotions');
 
             $table->index('created_by');
-            $table->integer('created_by')->unsigned()->default(10);
+            $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
         });

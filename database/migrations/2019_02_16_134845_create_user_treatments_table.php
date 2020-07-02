@@ -17,22 +17,22 @@ class CreateUserTreatmentsTable extends Migration
             $table->increments('id');
 
             $table->index('user_id');
-            $table->integer('user_id')->unsigned()->default(10);
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->index('checkin_id');
-            $table->integer('checkin_id')->unsigned()->default(10);
+            $table->integer('checkin_id')->unsigned();
             $table->foreign('checkin_id')->references('id')->on('check_ins');
 
             $table->index('treatment_id');
-            $table->integer('treatment_id')->unsigned()->default(10);
+            $table->integer('treatment_id')->unsigned();
             $table->foreign('treatment_id')->references('id')->on('treatments');
 
             $table->index('treatment_selection_id');
             $table->integer('treatment_selection_id')->nullable()->unsigned()->default(10);
             $table->foreign('treatment_selection_id')->references('id')->on('treatment_selections');
 
-            $table->integer('tooth_id')->nullable()->unsigned()->default(10);
+            $table->integer('tooth_id')->nullable()->unsigned();
             $table->integer('value')->nullable();
             $table->timestamps();
         });

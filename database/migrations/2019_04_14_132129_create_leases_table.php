@@ -17,7 +17,7 @@ class CreateLeasesTable extends Migration
             $table->increments('id');
 
             $table->index('checkin_id');
-            $table->integer('checkin_id')->unsigned()->default(10);
+            $table->integer('checkin_id')->unsigned();
             $table->foreign('checkin_id')->references('id')->on('check_ins');
 
             $table->integer('price');

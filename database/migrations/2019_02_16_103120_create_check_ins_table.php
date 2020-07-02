@@ -17,11 +17,11 @@ class CreateCheckInsTable extends Migration
             $table->increments('id');
 
             $table->index('shift_id');
-            $table->integer('shift_id')->unsigned()->default(10);
+            $table->integer('shift_id')->unsigned();
             $table->foreign('shift_id')->references('id')->on('times');
 
             $table->index('user_id');
-            $table->integer('user_id')->unsigned()->default(10);
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->integer('state');
@@ -31,7 +31,7 @@ class CreateCheckInsTable extends Migration
             $table->integer('created_by');
 
             $table->index('nurse_id');
-            $table->integer('nurse_id')->unsigned()->default(10);
+            $table->integer('nurse_id')->unsigned();
             $table->foreign('nurse_id')->references('id')->on('users');
 
             $table->timestamps();

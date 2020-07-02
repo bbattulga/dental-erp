@@ -14,15 +14,20 @@ class CreateTimesTable extends Migration
     public function up()
     {
         Schema::create('times', function (Blueprint $table) {
+
             $table->increments('id');
             $table->index('doctor_id');
-            $table->integer('doctor_id')->unsigned()->default(10);
+            $table->integer('doctor_id')->unsigned();
             $table->foreign('doctor_id')->references('id')->on('users');
+            
             $table->date('date');
-            $table->tinyInteger('shift_id');
+
+            $table->index('shift_id');
+            $table->integer('shift_id')->unsigned();
+            $table->foreign('shift_id')->references('id')->on('shift_types');
 
             $table->index('created_by');
-            $table->integer('created_by')->unsigned()->default(10);
+            $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users');
             
             $table->timestamps();
@@ -36,10 +41,6 @@ class CreateTimesTable extends Migration
      */
     public function down()
     {
-        Schema::table('times', function($table){
-            $table->dropForeign('doctor_id');
-            $table->dropIndex('doctor_id');
-        });
         
         Schema::dropIfExists('times');
     }

@@ -108,11 +108,12 @@
                         <label for="inputState">Сонгох</label>
                         <select name="role" id="inputState" class="form-control">
                             <option selected>Мэргэжил сонгоно уу ...</option>
-                            <option value="1">Ресепшн</option>
-                            <option value="2">Эмч</option>
-                            <option value="3">Сувилагч</option>
+                            <option value="2">Ресепшн</option>
+                            <option value="3">Эмч</option>
+                            <option value="1">Сувилагч</option>
                             <option value="4">Нягтлан бодогч</option>
-                            <option value="5">Бусад</option>
+                            <option value="5">Менежер</option>
+                            <option value="0">Бусад</option>
                         </select><br>
                         <div class="form-group">
                             <label for="inputAddress2">Нууц үг</label>
@@ -145,7 +146,6 @@
                     <table class="data-table">
                         <thead>
                         <tr>
-
                             <th>Нэр</th>
                             <th>Овог</th>
                             <th>Мэргэжил</th>
@@ -164,15 +164,16 @@
                                     <p class="text-muted">{{$role->staff->last_name}}</p>
                                 </td>
                                 <td>
-                                    <p class="text-muted">@if($role->role_id ==1)
+                                    <p class="text-muted">
+                                        @if($role->role_id ==2)
                                             Ресепшн
-                                        @elseif($role->role_id ==2)
-                                            Эмч
                                         @elseif($role->role_id ==3)
+                                            Эмч
+                                        @elseif($role->role_id ==1)
                                             Сувилагч
                                         @elseif($role->role_id ==4)
                                             Нягтлан бодогч
-                                        @elseif($role->role_id ==0)
+                                        @elseif($role->role_id ==5)
                                             Админ
                                         @else
                                             Бусад
@@ -182,8 +183,7 @@
                                     <p class="text-muted">{{$role->staff->phone_number}}</p>
                                 </td>
                             </tr>
-                        @endforeach
-
+                        @endforeach 
                         </tbody>
                     </table>
                 </div>

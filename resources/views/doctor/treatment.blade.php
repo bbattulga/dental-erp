@@ -279,7 +279,6 @@
                                                 $special_treatment = $tooth_special_treatments[$a];
                                                 break;
                                             }
-
                                         }
                                     }
                                     ?>

@@ -18,7 +18,7 @@ class AddConstraintsToTimes extends Migration
             //
 
             $table->integer('shift_id')->unsigned()->nullable()->change();
-            $table->index('shift_id');
+          //  $table->index('shift_id');
             $table->foreign('shift_id')->references('id')->on('shift_types')
                 ->onDelete('SET NULL');
 

@@ -15,7 +15,6 @@ class ModifyTimes extends Migration
     {
 
         Schema::create('times', function (Blueprint $table) {
-            $table->increments('id');
             $table->index('doctor_id');
             $table->integer('doctor_id')->unsigned()->default(10);
             $table->foreign('doctor_id')->references('id')->on('users');

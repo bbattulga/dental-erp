@@ -19,13 +19,12 @@ class CreateTimesTable extends Migration
             $table->integer('doctor_id')->unsigned()->default(10);
             $table->foreign('doctor_id')->references('id')->on('users');
             $table->date('date');
-            
             $table->tinyInteger('shift_id');
 
             $table->index('created_by');
             $table->integer('created_by')->unsigned()->default(10);
             $table->foreign('created_by')->references('id')->on('users');
-
+            
             $table->timestamps();
         });
     }

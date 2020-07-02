@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class Admin
 {
@@ -22,7 +24,7 @@ class Admin
 
         $role = Auth::user()->role;
 
-        if ($role->role_id >= 5)
+        if ($role->role_id == Roles::admin()->id)
             return $next($request);
         
         return redirect('login');

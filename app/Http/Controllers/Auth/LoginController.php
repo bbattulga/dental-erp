@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class LoginController extends Controller
 {
@@ -26,24 +28,24 @@ class LoginController extends Controller
         if (!Auth::check())
             return redirect('login');
 
-        $user = Auth::user();
-
-        if (is_null($user->role))
+        if (is_null(Auth::user()->role))
             return redirect('login');
 
-        if($user->role->role_id == 5) {
+        $role_id = Auth::user()->role->id;
+
+        if($role_id == Roles::admin()->id) {
             return redirect('/admin/dashboard');
         } 
 
-        if ($user->role->role_id == 4) {
+        if ($role_id == Roles::accountant()->id) {
             return redirect('/accountant/transactions');
         } 
 
-        if ($user->role->role_id == 3) {
+        if ($role_id == Roles::doctor()->id) {
             return redirect('/doctor');
         } 
 
-        if ($user->role->role_id == 2) {
+        if ($role_id == Roles::reception()->id) {
             return redirect('/reception/time');
         } 
 

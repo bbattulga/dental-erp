@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class Doctor
 {
@@ -21,7 +23,7 @@ class Doctor
 
         $role = Auth::user()->role->role_id;
 
-        if ($role>=3) {
+        if ($role>=Roles::doctor()->id) {
             return $next($request);
         }
 

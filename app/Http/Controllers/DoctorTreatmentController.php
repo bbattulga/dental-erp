@@ -11,6 +11,7 @@ use App\User;
 use App\UserTreatments;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Roles;
 
 
 class DoctorTreatmentController extends Controller
@@ -27,7 +28,7 @@ class DoctorTreatmentController extends Controller
             $category = 0;
             $treatments = Treatment::where('category', $category)->get();;
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $nurses = UserRole::where('role_id', 3)->get();
+            $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');
@@ -40,7 +41,7 @@ class DoctorTreatmentController extends Controller
             $category = 1;
             $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $nurses = UserRole::where('role_id', 3)->get();
+            $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');
@@ -53,7 +54,7 @@ class DoctorTreatmentController extends Controller
             $category = 2;
             $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $nurses = UserRole::where('role_id', 3)->get();
+            $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {
             return redirect('404');
@@ -66,7 +67,7 @@ class DoctorTreatmentController extends Controller
             $category = 3;
             $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $nurses = UserRole::where('role_id', 3)->get();
+            $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
             
             return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
         } else {

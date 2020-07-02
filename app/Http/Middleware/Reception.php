@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class Reception
 {
@@ -21,7 +23,7 @@ class Reception
 
         $role = Auth::user()->role->role_id;
 
-        if ($role>=2) {
+        if ($role>=Roles::reception()->id) {
             return $next($request);
         }
         return redirect('login');

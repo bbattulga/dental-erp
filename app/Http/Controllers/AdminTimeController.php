@@ -8,6 +8,8 @@ use App\Time;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class AdminTimeController extends Controller
 {
@@ -17,7 +19,7 @@ class AdminTimeController extends Controller
     }
     //
     public function index() {
-        $doctors = UserRole::all()->where('role_id',2);
+        $doctors = UserRole::all()->where('role_id', Roles::doctor()->id);
         $shifts = Time::all()->where('date', '>=', date('Y-m-d'));
         return view('admin.time',compact('doctors', 'shifts'));
 
@@ -48,7 +50,7 @@ class AdminTimeController extends Controller
 
     public function timeWeek($id) {
         $role = UserRole::find($id);
-        $roles = UserRole::where('role_id', 2);
+        $roles = UserRole::where('role_id', Roles::doctor()->id);
         $shifts = $role->shifts->where('date', '>=', date('Y-m-d'));
         return view('admin.week', compact('role', 'roles', 'shifts'));
     }

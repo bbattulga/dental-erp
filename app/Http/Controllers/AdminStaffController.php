@@ -6,6 +6,8 @@ use App\CheckIn;
 use App\Time;
 use App\User;
 use Illuminate\Http\Request;
+use App\Roles;
+
 
 class AdminStaffController extends Controller
 {
@@ -22,7 +24,7 @@ class AdminStaffController extends Controller
         //Doctor->2
         //Assistant->3
         //Accountant->4
-        $update = ['Админ','Ресепшн','Доктор','Сувилагч','Нягтлан','Бусад'];
+        $update = ['Админ','Ресепшн','Эмч','Сувилагч','Нягтлан','Бусад'];
         return view('admin.staff_profile', compact('user', 'update'));
     }
 
@@ -58,10 +60,10 @@ class AdminStaffController extends Controller
 
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
-        if($user->role->role_id == 2) {
+        if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Time::all()->where('doctor_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
             return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date'));
-        } else if($user->role->role_id == 3) {
+        } else if($user->role->role_id == Roles::doctor()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins', 'start_date', 'end_date'));
         }

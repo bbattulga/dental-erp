@@ -8,6 +8,7 @@ use App\Time;
 use App\User;
 use Illuminate\Http\Request;
 
+
 class AccountantStaffController extends Controller
 {
     //
@@ -16,26 +17,25 @@ class AccountantStaffController extends Controller
         $this->middleware('accountant');
     }
     public function index() {
-        $roles = UserRole::whereIn('role_id', [2,3,5]);
+        $roles = UserRole::whereIn('role_id', [1, 2, 3, 4, 5]);
         return view('accountant.staffs', compact('roles'));
     }
     public function staff_check($id){
         $user = User::find($id);
-        if($user->role->role_id == 2) {
+        if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Time::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile',compact('user', 'shifts'));
-        } else if($user->role->role_id == 3) {
+        } else if($user->role->role_id == RoleId::nurse()) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile', compact('user', 'checkins'));
         }
-
     }
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
-        if($user->role->role_id == 2) {
+        if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Time::all()->where('doctor_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
             return view('accountant.staff_profile', compact('user', 'shifts', 'start_date', 'end_date'));
-        } else if($user->role->role_id == 3) {
+        } else if($user->role->role_id == Roles::nurse()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile', compact('user', 'checkins', 'start_date', 'end_date'));
         }

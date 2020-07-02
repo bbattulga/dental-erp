@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class RedirectIfAuthenticated
 {
@@ -17,21 +19,28 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
         if (Auth::guard($guard)->check()) {
             if (is_null(Auth::user()->role)){
                 return redirect('/user');
             } else {
-                if(Auth::user()->role->role_id == 5) {
+
+                if(Auth::user()->role->role_id == Roles::admin()->id) {
                     return redirect('/admin/dashboard');
-                } elseif (Auth::user()->role->role_id == 2) {
-                    return redirect('/reception/time');
-                } elseif (Auth::user()->role->role_id == 3) {
-                    return redirect('/doctor/dashboard');
-                }  elseif (Auth::user()->role->role_id == 4) {
+                } 
+
+                if (Auth::user()->role->role_id == Roles::accountant()->id) {
                     return redirect('/accountant/transactions');
-                } else {
-                    return redirect('/user');
                 }
+
+                if (Auth::user()->role->role_id == Roles::doctor()->id) {
+                    return redirect('/doctor/dashboard');
+                }
+
+                if (Auth::user()->role->role_id == Roles::reception()->id) {
+                    return redirect('/reception/time');
+                }
+                return redirect('/user');
             }
         }
 

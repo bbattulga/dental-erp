@@ -10,6 +10,8 @@ use App\Time;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class ReceptionTimeController extends Controller
 {
@@ -31,7 +33,7 @@ class ReceptionTimeController extends Controller
 
     public function timeWeek($id) {
         $role = UserRole::find($id);
-        $roles = UserRole::where('role_id', 2);
+        $roles = UserRole::where('role_id', Roles::doctor()->id);
         $shifts = $role->shifts->where('date', '>=', date('Y-m-d'));
         return view('reception.time_week', compact('role', 'roles', 'shifts'));
 
@@ -39,7 +41,7 @@ class ReceptionTimeController extends Controller
     public function timeWeekAppointment($id, $user_id) {
         $user = User::find($user_id);
         $role = UserRole::find($id);
-        $roles = UserRole::where('role_id', 2);
+        $roles = UserRole::where('role_id', Roles::doctor()->id);
         $shifts = $role->shifts->where('date', '>=', date('Y-m-d'));
         return view('reception.time_week', compact('shifts', 'user','role', 'roles'));
     }

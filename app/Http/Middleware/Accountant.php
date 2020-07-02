@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class Accountant
 {
@@ -21,7 +23,7 @@ class Accountant
 
         $role = Auth::user()->role->role_id;
 
-        if ($role>=4) {
+        if ($role>=Roles::accountant()->id) {
             return $next($request);
         }
         return redirect('login');

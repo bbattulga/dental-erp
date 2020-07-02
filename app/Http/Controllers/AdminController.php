@@ -13,8 +13,10 @@ use Aloha\Twilio\Support\Laravel\Facade as Twilio;
 use App\Time;
 use App\Transaction;
 use App\User;
+use App\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class AdminController extends Controller
 {
@@ -45,6 +47,7 @@ class AdminController extends Controller
         $date = explode('/', $request['birth_date']);
         $birth_date = $date[2] . '-' . $date[0] . '-' . $date[1];
         $user = User::create(['last_name'=>$request['last_name'],'name'=>$request['name'],'register'=>$request['register'],'phone_number'=>$request['phone_number'],'email'=>$request['email'],'birth_date'=>$birth_date,'location'=>$request['location'],'description'=>$request['info'],'password'=>$pass,'sex'=>$request['sex']]);
+
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);
         return redirect('/admin/add_staff');
     }
@@ -53,10 +56,10 @@ class AdminController extends Controller
     //---------------
     public function profile($id){
         $user = User::find($id);
-        if($user->role->role_id == 2) {
+        if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Time::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile',compact('user', 'shifts'));
-        } else if($user->role->role_id == 3) {
+        } else if($user->role->role_id == RoleId::nurse()) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins'));
         }

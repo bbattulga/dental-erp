@@ -7,6 +7,8 @@ use App\UserRole;
 use App\Time;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class ReceptionShiftsController extends Controller
 {
@@ -16,7 +18,7 @@ class ReceptionShiftsController extends Controller
         $this->middleware('reception');
     }
     public function index() {
-        $doctors = UserRole::all()->where('role_id',2);
+        $doctors = UserRole::all()->where('role_id', Roles::doctor()->id);
         $shifts = Time::all()->where('date', '>=', date('Y-m-d'));
         return view('reception.shifts',compact('doctors', 'shifts'));
     }

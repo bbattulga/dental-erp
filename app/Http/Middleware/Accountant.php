@@ -23,7 +23,7 @@ class Accountant
 
         $role = Auth::user()->role->role_id;
 
-        if ($role>=Roles::accountant()->id) {
+        if ($role==Roles::accountant()->id || $role==Roles::admin()->id) {
             return $next($request);
         }
         return redirect('login');

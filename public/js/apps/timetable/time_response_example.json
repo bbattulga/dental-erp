@@ -1,0 +1,52 @@
+{
+		"appointments": [
+
+			// appointment
+			{
+
+				"id": "x",
+
+				"doctor_shift":{
+					"doctor": {"name": "doctor1", "shift_type": "1|2|3"},
+				},
+
+				"shift": [9, 10, "...", 20],
+
+				"users": [
+
+					// user
+					{
+						"name": "patient 1",
+						"phone": "8899xxxx",
+						"start": "15:00",
+						"end": "17:00",
+						"registered": "1|0"
+					}
+				]
+			},
+
+			{
+
+				"id": "x",
+
+				"doctor_shift":{
+					"doctor": {"name": "doctor2", "shift_type": "1|2|3"},
+				},
+
+				"shift": [9, 10, "...", 20],
+
+				"users":[
+					// user
+					{
+						"name": "patient 2",
+						"phone": "8899xxxx",
+						"start": "17:00",
+						"end": "17:00",
+						"registered": "1|0"
+					},
+					
+				]
+			}
+
+			]
+		};

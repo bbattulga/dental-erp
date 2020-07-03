@@ -15,7 +15,7 @@ class CreateShiftTypesTable extends Migration
     {
         Schema::create('shift_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name', 45);
             $table->timestamps();
         });
     }

@@ -61,7 +61,7 @@
         </div>
         <div class="col-md-4">
             <div class="card m-1">
-                <div class="card-body">
+                <div  class="card-body">
                     <h5>Шинэ эмчилгээ оруулах</h5>
                     <form method="post" action="{{url('admin/treatment/store')}}">
                         @csrf
@@ -97,6 +97,7 @@
                         <br>
                         <button class="btn btn-primary" type="submit">Оруулах</button>
                     </form>
+                
                 </div>
             </div>
         </div>
@@ -104,6 +105,7 @@
 @endsection
 @section('footer')
 
+    <script src="{{asset('js/apps/add_treatment/public/build/bundle.js')}}"></script>
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
     <script src="{{asset('js/vendor/moment.min.js')}}"></script>

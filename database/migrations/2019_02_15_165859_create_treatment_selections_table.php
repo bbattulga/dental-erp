@@ -20,7 +20,7 @@ class CreateTreatmentSelectionsTable extends Migration
             $table->integer('treatment_id')->unsigned();
             $table->foreign('treatment_id')->references('id')->on('treatments');
 
-            $table->string('name');
+            $table->string('name', 65);
             $table->integer('price');
             $table->timestamps();
         });

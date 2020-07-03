@@ -23,7 +23,7 @@ class Reception
 
         $role = Auth::user()->role->role_id;
 
-        if ($role>=Roles::reception()->id) {
+        if ($role==Roles::reception()->id || $role==Roles::admin()->id) {
             return $next($request);
         }
         return redirect('login');

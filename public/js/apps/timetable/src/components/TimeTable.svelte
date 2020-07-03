@@ -1,10 +1,38 @@
 <script type="text/javascript">
 	
 	import Cell from './Cell.svelte';
-	export let doctors;
-	export let customers;
-	export let times;
+	import {createEventDispatcher} from 'svelte';
 
+	export let appointments;
+
+	let times = [];
+	for (let i=9; i<21; i++) times.push(""+i+":00");
+
+	let dispatch = createEventDispatcher();
+
+
+	appointments.forEach(appointment=>{
+
+		appointment.times = [];
+		
+		times.forEach(time=>{
+			let hasUser = false;
+			let users = appointment.users;
+			for (let i =0; i<users.length; i++){
+				if (users[i].start == time){
+					appointment.times.push({user: users[i]});
+					hasUser = true;
+					break;
+				}
+			}
+			if (!hasUser)
+				appointment.times.push(null);
+		})
+	});
+	
+	function handleCell(event){
+		dispatch('queryCell', {user: event.detail.user});
+	}
 </script>
 
 
@@ -13,20 +41,28 @@
 	<!-- Title columns -->
 	<tr class="header-row">
 		<td></td>
-		{#each doctors as doctor}
-		<td>{doctor.name}</td>
+		{#each times as time}
+		<th>{time} цаг</th>
 		{/each}
 	</tr>
 
-	<!-- time rows -->
-	{#each times as time}
-	<tr>
-		<td>{time}:00 цаг</td>
+	{#each appointments as appointment}
 
-		<!-- add customer cell here -->
-		<!-- for each doctors -->
-		{#each doctors as doctor}
-			<Cell customer={customers.find((c)=>c.doctor_id=doctor.id)}/>
+	<tr>
+		<td>{appointment.doctor_shift.doctor.name}</td>
+
+		{#each appointment.times as time}
+		{#if time != null}
+
+			<Cell 
+				on:click={handleCell}
+				user={time.user} />
+
+			{:else}
+				<Cell 
+					on:click={handleCell}
+					user={null} />
+		{/if}
 		{/each}
 	</tr>
 	{/each}
@@ -34,24 +70,31 @@
 
 <style>
 
-	.main-table{
-		display: grid;
-		background-color: #e7e7e7e7;
-	}
-
-	.header-row{
-		height: 100px;
-		position: sticky;
-		top: 0px;
-		background-color: #abd6dfff;
+	th{
+		width: 200px;
 	}
 
 	td{
-		width: 80px;
+		width: 120px;
 		height: 80px;
 		padding: 10px;
 		border-radius: 3px;
 		background-color: white;
 		margin: 10px;
+	}
+
+	.main-table{
+
+		background-color: #e7e7e7e7;
+		overflow: auto;
+		border: 1px solid black;
+	}
+
+	.header-row{
+		height: 100px;
+		min-width: 100%;
+		position: sticky;
+		top: 0px;
+		background-color: #abd6dfff;
 	}
 </style>

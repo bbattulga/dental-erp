@@ -15,7 +15,7 @@ class CreateOutcomeCategoriesTable extends Migration
     {
         Schema::create('outcome_categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name', 50);
             $table->timestamps();
         });
     }

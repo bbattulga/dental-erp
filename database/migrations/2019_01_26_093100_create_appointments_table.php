@@ -25,7 +25,7 @@ class CreateAppointmentsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->string('name');
-            $table->string('phone');
+            $table->string('phone', 20);
             $table->tinyInteger('start');
             $table->tinyInteger('end');
             $table->integer('created_by'); //the after method is optional.

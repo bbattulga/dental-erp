@@ -22,7 +22,7 @@ class CreateTreatmentsTable extends Migration
             //0-Buh shud n deer
             //1-Neg shud n deer
             //2-1ees ikh shud n deer
-            $table->tinyInteger('category');
+            $table->tinyInteger('category')->unsigned();
             //0-Emchilgee
             //1-Gajig zasal
             //2-Sogog zasal

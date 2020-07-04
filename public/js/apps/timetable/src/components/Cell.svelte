@@ -5,61 +5,55 @@
 
 	export let user = null;
 	export let doctor = null;
+	export let colspan = 1;
 	export let time = null;
 
-	const dispatch = createEventDispatcher();
+	// conditional classes
+	let empty =  user == null;
+	let newUser = !empty && (user.registered == "0");
+	let registered = !empty && (user.registered == "1");
 
-	let title = user == null? 'Цаг захиалах':user.name;
-	let subtitle = user == null? '': user.phone;
+	// dispatch events
+	let dispatch = createEventDispatcher();
 
-	function notifyClick(event){
-		dispatch('click', {
+	const handleClick = ()=>{
+
+		let detail = {
 			user,
 			doctor,
 			time
-		});
+		};
+
+		dispatch('click', detail);
 	}
-
-	let d = 1;
-	if (user != null){
-		let start = user.start;
-		let end = user.end;
-
-		let colon = start.indexOf(':');
-
-		let sh = start.slice(0, colon);
-		let sm = start.slice(colon+1, start.length);
-
-		let eh = end.slice(0, colon);
-		let em = end.slice(colon+1, end.length);
-		d =  parseInt(eh) - parseInt(sh);
-	}
-
 </script>
 
 
-<td 
-	colspan={d}
-	on:click={notifyClick}
-	class:empty={user==null}
-	class:registered={(user!=null) && (user.registered=="1")}
-	class:newuser={(user!=null) && (!user.registered=="0")}>
-	<div>
-		<p>{title}</p>
-		<p>{subtitle}</p>
-	</div>
+<td {colspan} 
+	on:click={handleClick}
+	class:registered={registered}
+	class:empty={empty}
+	class:newuser={newUser}>
+
+	{#if user == null}
+		tsag zahialah
+		{:else}
+		{user.name}
+	{/if}
 </td>
 
 
 <style type="text/css">
 	
 	td{
+		background-color: white;
 		width: 80px;
+		height: 80px;
 		color: grey;
-		background-color: #e2e2e2e2;
 		border-radius: 10px;
 		margin: 5px;
 		transition: 0.3s;
+		padding: 5px;
 	}
 
 	.empty{
@@ -68,7 +62,6 @@
 
 	.empty:hover{
 		color: black;
-		background-color: #e1e1e1e1;
 	}
 
 	.newuser{

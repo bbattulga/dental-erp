@@ -4,7 +4,7 @@
 			// appointment
 			{
 
-				"id": "x",
+				"id": "1",
 
 				"doctor_shift":{
 					"doctor": {"name": "doctor1", "shift_type": "1|2|3"},
@@ -27,7 +27,7 @@
 
 			{
 
-				"id": "x",
+				"id": "2",
 
 				"doctor_shift":{
 					"doctor": {"name": "doctor2", "shift_type": "1|2|3"},

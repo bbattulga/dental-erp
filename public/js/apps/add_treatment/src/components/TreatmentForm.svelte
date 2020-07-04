@@ -6,8 +6,8 @@
 	let dispatch = createEventDispatcher();
 
 	let name = "";
-	let category = "";
-	let type = "";
+	let category = 1;
+	let type = 1;
 	let selections = [];
 	let price = "";
 	let maxPrice = "";
@@ -23,9 +23,9 @@
 		let treatment = {
 			name: name,
 			category: category,
-			type: type,
+			selection_type: type,
 			price: price,
-			maxPrice: maxPrice,
+			limit: maxPrice,
 		}
 
 		dispatch('submit',treatment);
@@ -35,15 +35,20 @@
 <div class="form">
 
 	<div class="field-wrap">
-		<label>Нэр:</label>
+		<label>Эмчилгээний нэр:</label>
 		<input bind:value={name}> <br />
 	</div>
 
 	<div class="field-wrap">
 		<label>Төрөл:</label>
 		<select bind:value={category}>
-			{#each treatmentCategories as category}
-			<option>{category}</option>
+			{#each treatmentCategories as category, i (category.id)}
+			{#if i==0}
+			<option value={category.id} selected>{category.name}</option>
+			{:else}
+			<option value={category.id}>{category.name}</option>
+			{/if}
+
 			{/each}
 		</select>
 	</div>
@@ -51,8 +56,8 @@
 	<div class="field-wrap">
 		<label>Хийгдэх хэлбэр:</label>
 		<select bind:value={type}>
-			<option>нэг шүд</option>
-			<option>Бүх шүд</option>
+			<option value={1}>Нэг шүд</option>
+			<option value={2}>Бүх шүд</option>
 		</select>
 	</div>
 
@@ -77,6 +82,8 @@
 		overflow: hidden;
 		padding: 30px;
 		border-radius: 10px;
+
+		background-color: #333333;
 	}
 
 	input{
@@ -90,6 +97,7 @@
 
 	.field-wrap{
 		text-align: left;
+		margin: 10px;
 	}
 
 	.btn-add{

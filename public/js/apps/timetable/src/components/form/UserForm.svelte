@@ -2,37 +2,63 @@
 	
 	import {createEventDispatcher} from 'svelte';
 
-	export let showModal = false;
+	export let show = true;
 	export let detail = null;
 	export let subtitle;
 
-	console.log(detail);
 	let dispatch = createEventDispatcher();
 
 	let user = detail.user;
 	let name = user == null? "":user.name;
 	let phone = user == null? "":user.phone;
-	let time = detail.time == null? "":detail.time;
+
+	let start = parseInt(detail.time.slice(0, detail.time.indexOf(':')));
+	let hours = null;
 
 	function close(){
-		showModal = false;
+		show = false;
 	}
 
 	function handleSubmit(){
 
+		// just visited or edited existing user cell
+		if (detail.user != null){
+			close();
+		}
+
+		// create new user
+		// if cell did not have user
 		let user = {
-			name,
-			phone
-		};
-		dispatch('submit', user);
+				name,
+				phone,
+				start,
+				end: start+hours
+			}
+
+		let _detail = {
+			user
+		}
+		
+		dispatch('submit', _detail);
+		
 		close();
 	}
 </script>
 
-<form class="form">
+{#if show}
+<div class="form" target="#">
 
-	<h2>{user == null? "Цаг захиалах": "Цаг захиалсан"}</h2>
-	<h4>{user == null? "": user.start+"-"+user.end}</h4>
+	<h3>{user == null? "Цаг захиалах": "Цаг захиалсан"}</h3>
+
+	<div class="row-input">
+		<h4>Эмчийн нэр: {detail.doctor.name}</h4>
+		<h4>{user == null? detail.time+'-': user.start+"-"+user.end}</h4>
+
+		{#if user == null}
+		<input style="width: 60px;" type="number" bind:value={hours}>
+		{/if}
+
+	</div>
 
 	<div class="row-input">
 		<label>Үйлчлүүлэгчийн нэр:</label>
@@ -43,8 +69,9 @@
 		<label >Утас:</label>
 		<input bind:value={phone}>
 	</div>
-	<button class="btn btn-add" on:click|preventDefault={handleSubmit}>ok</button>
-</form>
+	<button class="btn btn-add" on:click={handleSubmit}>ok</button>
+</div>
+{/if}
 
 
 
@@ -57,6 +84,7 @@
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.7);
+		transition: 0.5s;
 	}
 
 	.modal{
@@ -76,6 +104,10 @@
 
 	.btn-add{
 		margin: 10px;
+	}
+
+	.btn-add:hover{
+		background-color: 1px 2px 4px black;
 	}
 
 	input{

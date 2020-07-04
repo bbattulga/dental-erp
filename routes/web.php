@@ -49,6 +49,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 //--ADMIN STARTING--
+
+// for normal routings
 Route::get('/admin/dashboard', 'AdminController@dashboard')->name('dash');
 Route::get('/admin/shifts', 'AdminTimeController@index');
 
@@ -111,7 +113,8 @@ Route::post('/admin/treatment/updateTreatmentSelection', 'AdminTreatmentControll
 Route::post('/admin/treatment/update', 'AdminTreatmentController@update');
 Route::get('/admin/treatment/{id}', 'AdminTreatmentController@edit');
 Route::get('/admin/treatment/{id}/{s_id}', 'AdminTreatmentController@editTreatmentSelection');
-
+// admin for ajax
+Route::post('/admin/treatment/categories', 'AdminTreatmentController@treatmentCategories');
 
 //--ACCOUNTANT STARTING--
 Route::post('/accountant/transactions/date', 'AccountantTransactionController@date');

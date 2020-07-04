@@ -6,9 +6,9 @@
 		"appointments": [
 
 		// appointment
-		{
+			{
 
-			"id": "x",
+			"id": "1",
 
 			"doctor_shift":{
 				"doctor": {"name": "doctor1", "shift_type": "1|2|3"},
@@ -22,7 +22,15 @@
 				{
 					"name": "patient 1",
 					"phone": "8899xxxx",
-					"start": "14:00",
+					"start": "12:00",
+					"end": "16:00",
+					"registered": "0"
+				},
+
+				{
+					"name": "another patient for doctor1",
+					"phone": "8899xxxx",
+					"start": "16:00",
 					"end": "17:00",
 					"registered": "0"
 				}
@@ -32,7 +40,7 @@
 
 			{
 
-				"id": "x",
+				"id": "2",
 
 				"doctor_shift":{
 					"doctor": {"name": "doctor2", "shift_type": "1|2|3"},
@@ -49,43 +57,24 @@
 					"end": "17:00",
 					"registered": "0"
 				},
-
-				{
-					"name": "patient 3",
-					"phone": "8899xxxx",
-					"start": "17:00",
-					"end": "17:00",
-					"registered": "0"
-				},
-				{
-					"name": "patient 3",
-					"phone": "8899xxxx",
-					"start": "17:00",
-					"end": "17:00",
-					"registered": "0"
-				},
+			
 
 				{
 					"name": "patient 4",
 					"phone": "8899xxxx",
 					"start": "19:00",
-					"end": "17:00",
+					"end": "20:00",
 					"registered": "1"
 				},
-
-				{
-					"name": "patient 5",
-					"phone": "8899xxxx",
-					"start": "9:00",
-					"end": "17:00",
-					"registered": "1"
-				}
 
 				]
 			} 
 
 			]
 		};
+
+		let times = [];
+		for (let i=9; i<21; i++) times.push(""+i+":00");
 
 		let title = "table title";
 		let showModal = false;
@@ -99,7 +88,8 @@
 		<h1>{title}</h1>
 		<TimeTable 
 			on:queryCell={handleQueryCell}
-			appointments={data.appointments} />
+			appointments={data.appointments}
+			{times} />
 	</main>
 
 	<style>

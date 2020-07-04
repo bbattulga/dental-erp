@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Treatment;
 use App\TreatmentSelections;
+use App\TreatmentCategory;
 use Illuminate\Http\Request;
 
 class AdminTreatmentController extends Controller
@@ -15,8 +16,14 @@ class AdminTreatmentController extends Controller
     }
     public function index() {
         $treatments = Treatment::all();
-        return view('admin.treatments', compact('treatments'));
+        return view('admin.btt_treatments', compact('treatments'));
     }
+
+    public function treatmentCategories(){
+        $categories = TreatmentCategory::all();
+        return $categories;
+    }
+
     public function edit($id) {
         $treatments = Treatment::all();
         $treatment = Treatment::find($id);
@@ -47,10 +54,13 @@ class AdminTreatmentController extends Controller
         return redirect()->back();
     }
     public function store(Request $request) {
-       Treatment::create(['name'=>$request['name'], 'selection_type'=>$request['selection_type'],
+        //return $request['treatment'];
+       $record = Treatment::create(['name'=>$request['name'], 'selection_type'=>$request['selection_type'],
            'category'=>$request['category'], 'price'=>$request['price'], 'limit'=>$request['limit']]);
-        return redirect()->back();
+        //return redirect()->back();
+       return $record->id;
     }
+    
     public function storeTreatmentSelection(Request $request) {
         TreatmentSelections::create(['treatment_id'=>$request['s_treatment_id'],'name'=>$request['s_name'],
             'price'=>$request['s_price'], 'limit'=>$request['s_limit']]);

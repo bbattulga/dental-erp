@@ -34,12 +34,6 @@ var app = (function () {
     function detach(node) {
         node.parentNode.removeChild(node);
     }
-    function destroy_each(iterations, detaching) {
-        for (let i = 0; i < iterations.length; i += 1) {
-            if (iterations[i])
-                iterations[i].d(detaching);
-        }
-    }
     function element(name) {
         return document.createElement(name);
     }
@@ -48,6 +42,9 @@ var app = (function () {
     }
     function space() {
         return text(' ');
+    }
+    function empty() {
+        return text('');
     }
     function listen(node, event, handler, options) {
         node.addEventListener(event, handler, options);
@@ -203,6 +200,96 @@ var app = (function () {
         : typeof globalThis !== 'undefined'
             ? globalThis
             : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
+    function validate_each_keys(ctx, list, get_context, get_key) {
+        const keys = new Set();
+        for (let i = 0; i < list.length; i++) {
+            const key = get_key(get_context(ctx, list, i));
+            if (keys.has(key)) {
+                throw new Error(`Cannot have duplicate keys in a keyed each`);
+            }
+            keys.add(key);
+        }
+    }
     function create_component(block) {
         block && block.c();
     }
@@ -1831,13 +1918,14 @@ var app = (function () {
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[5] = list[i];
+    	child_ctx[16] = i;
     	return child_ctx;
     }
 
-    // (45:3) {#each treatmentCategories as category}
-    function create_each_block(ctx) {
+    // (48:3) {:else}
+    function create_else_block(ctx) {
     	let option;
-    	let t_value = /*category*/ ctx[5] + "";
+    	let t_value = /*category*/ ctx[5].name + "";
     	let t;
     	let option_value_value;
 
@@ -1845,18 +1933,18 @@ var app = (function () {
     		c: function create() {
     			option = element("option");
     			t = text(t_value);
-    			option.__value = option_value_value = /*category*/ ctx[5];
+    			option.__value = option_value_value = /*category*/ ctx[5].id;
     			option.value = option.__value;
-    			add_location(option, file, 45, 3, 814);
+    			add_location(option, file, 48, 3, 938);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*treatmentCategories*/ 1 && t_value !== (t_value = /*category*/ ctx[5] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*treatmentCategories*/ 1 && t_value !== (t_value = /*category*/ ctx[5].name + "")) set_data_dev(t, t_value);
 
-    			if (dirty & /*treatmentCategories*/ 1 && option_value_value !== (option_value_value = /*category*/ ctx[5])) {
+    			if (dirty & /*treatmentCategories*/ 1 && option_value_value !== (option_value_value = /*category*/ ctx[5].id)) {
     				prop_dev(option, "__value", option_value_value);
     			}
 
@@ -1869,9 +1957,112 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(48:3) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (46:3) {#if i==0}
+    function create_if_block(ctx) {
+    	let option;
+    	let t_value = /*category*/ ctx[5].name + "";
+    	let t;
+    	let option_value_value;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			t = text(t_value);
+    			option.__value = option_value_value = /*category*/ ctx[5].id;
+    			option.value = option.__value;
+    			option.selected = true;
+    			add_location(option, file, 46, 3, 862);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    			append_dev(option, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*treatmentCategories*/ 1 && t_value !== (t_value = /*category*/ ctx[5].name + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*treatmentCategories*/ 1 && option_value_value !== (option_value_value = /*category*/ ctx[5].id)) {
+    				prop_dev(option, "__value", option_value_value);
+    			}
+
+    			option.value = option.__value;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(46:3) {#if i==0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (45:3) {#each treatmentCategories as category, i (category.id)}
+    function create_each_block(key_1, ctx) {
+    	let first;
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*i*/ ctx[16] == 0) return create_if_block;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			first = empty();
+    			if_block.c();
+    			if_block_anchor = empty();
+    			this.first = first;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, first, anchor);
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(45:3) {#each treatmentCategories as category}",
+    		source: "(45:3) {#each treatmentCategories as category, i (category.id)}",
     		ctx
     	});
 
@@ -1891,13 +2082,17 @@ var app = (function () {
     	let label1;
     	let t5;
     	let select0;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
     	let t6;
     	let div2;
     	let label2;
     	let t8;
     	let select1;
     	let option0;
+    	let option0_value_value;
     	let option1;
+    	let option1_value_value;
     	let t11;
     	let div3;
     	let label3;
@@ -1915,10 +2110,13 @@ var app = (function () {
     	let dispose;
     	let each_value = /*treatmentCategories*/ ctx[0];
     	validate_each_argument(each_value);
-    	let each_blocks = [];
+    	const get_key = ctx => /*category*/ ctx[5].id;
+    	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
     	}
 
     	const block = {
@@ -1926,7 +2124,7 @@ var app = (function () {
     			div5 = element("div");
     			div0 = element("div");
     			label0 = element("label");
-    			label0.textContent = "Нэр:";
+    			label0.textContent = "Эмчилгээний нэр:";
     			t1 = space();
     			input0 = element("input");
     			t2 = space();
@@ -1949,7 +2147,7 @@ var app = (function () {
     			t8 = space();
     			select1 = element("select");
     			option0 = element("option");
-    			option0.textContent = "нэг шүд";
+    			option0.textContent = "Нэг шүд";
     			option1 = element("option");
     			option1.textContent = "Бүх шүд";
     			t11 = space();
@@ -1968,47 +2166,47 @@ var app = (function () {
     			t17 = space();
     			button = element("button");
     			button.textContent = "add";
-    			add_location(label0, file, 37, 2, 621);
-    			attr_dev(input0, "class", "svelte-oq8ycy");
-    			add_location(input0, file, 38, 2, 643);
-    			add_location(br0, file, 38, 28, 669);
-    			attr_dev(div0, "class", "field-wrap svelte-oq8ycy");
-    			add_location(div0, file, 36, 1, 594);
-    			add_location(label1, file, 42, 2, 713);
-    			attr_dev(select0, "class", "svelte-oq8ycy");
+    			add_location(label0, file, 37, 2, 626);
+    			attr_dev(input0, "class", "svelte-vlqc96");
+    			add_location(input0, file, 38, 2, 660);
+    			add_location(br0, file, 38, 28, 686);
+    			attr_dev(div0, "class", "field-wrap svelte-vlqc96");
+    			add_location(div0, file, 36, 1, 599);
+    			add_location(label1, file, 42, 2, 730);
+    			attr_dev(select0, "class", "svelte-vlqc96");
     			if (/*category*/ ctx[5] === void 0) add_render_callback(() => /*select0_change_handler*/ ctx[8].call(select0));
-    			add_location(select0, file, 43, 2, 737);
-    			attr_dev(div1, "class", "field-wrap svelte-oq8ycy");
-    			add_location(div1, file, 41, 1, 686);
-    			add_location(label2, file, 51, 2, 902);
-    			option0.__value = "нэг шүд";
+    			add_location(select0, file, 43, 2, 754);
+    			attr_dev(div1, "class", "field-wrap svelte-vlqc96");
+    			add_location(div1, file, 41, 1, 703);
+    			add_location(label2, file, 56, 2, 1061);
+    			option0.__value = option0_value_value = 1;
     			option0.value = option0.__value;
-    			add_location(option0, file, 53, 3, 965);
-    			option1.__value = "Бүх шүд";
+    			add_location(option0, file, 58, 3, 1124);
+    			option1.__value = option1_value_value = 2;
     			option1.value = option1.__value;
-    			add_location(option1, file, 54, 3, 993);
-    			attr_dev(select1, "class", "svelte-oq8ycy");
+    			add_location(option1, file, 59, 3, 1162);
+    			attr_dev(select1, "class", "svelte-vlqc96");
     			if (/*type*/ ctx[2] === void 0) add_render_callback(() => /*select1_change_handler*/ ctx[9].call(select1));
-    			add_location(select1, file, 52, 2, 935);
-    			attr_dev(div2, "class", "field-wrap svelte-oq8ycy");
-    			add_location(div2, file, 50, 1, 875);
-    			add_location(label3, file, 59, 2, 1067);
+    			add_location(select1, file, 57, 2, 1094);
+    			attr_dev(div2, "class", "field-wrap svelte-vlqc96");
+    			add_location(div2, file, 55, 1, 1034);
+    			add_location(label3, file, 64, 2, 1246);
     			attr_dev(input1, "type", "number");
-    			attr_dev(input1, "class", "svelte-oq8ycy");
-    			add_location(input1, file, 60, 2, 1089);
-    			attr_dev(div3, "class", "field-wrap svelte-oq8ycy");
-    			add_location(div3, file, 58, 1, 1040);
-    			add_location(label4, file, 64, 2, 1167);
+    			attr_dev(input1, "class", "svelte-vlqc96");
+    			add_location(input1, file, 65, 2, 1268);
+    			attr_dev(div3, "class", "field-wrap svelte-vlqc96");
+    			add_location(div3, file, 63, 1, 1219);
+    			add_location(label4, file, 69, 2, 1346);
     			attr_dev(input2, "type", "number");
-    			attr_dev(input2, "class", "svelte-oq8ycy");
-    			add_location(input2, file, 65, 2, 1199);
-    			add_location(br1, file, 65, 45, 1242);
-    			attr_dev(div4, "class", "field-wrap svelte-oq8ycy");
-    			add_location(div4, file, 63, 1, 1140);
-    			attr_dev(button, "class", "btn-add svelte-oq8ycy");
-    			add_location(button, file, 68, 1, 1259);
-    			attr_dev(div5, "class", "form svelte-oq8ycy");
-    			add_location(div5, file, 34, 0, 573);
+    			attr_dev(input2, "class", "svelte-vlqc96");
+    			add_location(input2, file, 70, 2, 1378);
+    			add_location(br1, file, 70, 45, 1421);
+    			attr_dev(div4, "class", "field-wrap svelte-vlqc96");
+    			add_location(div4, file, 68, 1, 1319);
+    			attr_dev(button, "class", "btn-add svelte-vlqc96");
+    			add_location(button, file, 73, 1, 1438);
+    			attr_dev(div5, "class", "form svelte-vlqc96");
+    			add_location(div5, file, 34, 0, 578);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2076,27 +2274,10 @@ var app = (function () {
     			}
 
     			if (dirty & /*treatmentCategories*/ 1) {
-    				each_value = /*treatmentCategories*/ ctx[0];
+    				const each_value = /*treatmentCategories*/ ctx[0];
     				validate_each_argument(each_value);
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(select0, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-
-    				each_blocks.length = each_value.length;
+    				validate_each_keys(ctx, each_value, get_each_context, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, select0, destroy_block, create_each_block, null, get_each_context);
     			}
 
     			if (dirty & /*category, treatmentCategories*/ 33) {
@@ -2119,7 +2300,11 @@ var app = (function () {
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div5);
-    			destroy_each(each_blocks, detaching);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+
     			mounted = false;
     			run_all(dispose);
     		}
@@ -2140,8 +2325,8 @@ var app = (function () {
     	let { treatmentCategories } = $$props;
     	let dispatch = createEventDispatcher();
     	let name = "";
-    	let category = "";
-    	let type = "";
+    	let category = 1;
+    	let type = 1;
     	let selections = [];
     	let price = "";
     	let maxPrice = "";
@@ -2153,7 +2338,14 @@ var app = (function () {
     	}
 
     	function notifySubmit() {
-    		let treatment = { name, category, type, price, maxPrice };
+    		let treatment = {
+    			name,
+    			category,
+    			selection_type: type,
+    			price,
+    			limit: maxPrice
+    		};
+
     		dispatch("submit", treatment);
     	}
 
@@ -2271,11 +2463,43 @@ var app = (function () {
     }
 
     /* src/App.svelte generated by Svelte v3.23.2 */
+
+    const { console: console_1$1 } = globals;
     const file$1 = "src/App.svelte";
+
+    // (40:1) {#if lastRecordSuccess}
+    function create_if_block$1(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Амжилттай хадгалагдлаа";
+    			add_location(div, file$1, 40, 2, 847);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(40:1) {#if lastRecordSuccess}",
+    		ctx
+    	});
+
+    	return block;
+    }
 
     function create_fragment$1(ctx) {
     	let main;
     	let treatmentform;
+    	let t;
     	let current;
 
     	treatmentform = new TreatmentForm({
@@ -2285,14 +2509,17 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	treatmentform.$on("submit", handleSubmit);
+    	treatmentform.$on("submit", /*handleSubmit*/ ctx[2]);
+    	let if_block = /*lastRecordSuccess*/ ctx[1] && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
     			main = element("main");
     			create_component(treatmentform.$$.fragment);
-    			attr_dev(main, "class", "svelte-1eiecvv");
-    			add_location(main, file$1, 14, 0, 253);
+    			t = space();
+    			if (if_block) if_block.c();
+    			attr_dev(main, "class", "svelte-1d578n2");
+    			add_location(main, file$1, 34, 0, 723);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2300,9 +2527,26 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
     			mount_component(treatmentform, main, null);
+    			append_dev(main, t);
+    			if (if_block) if_block.m(main, null);
     			current = true;
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			const treatmentform_changes = {};
+    			if (dirty & /*treatmentCategories*/ 1) treatmentform_changes.treatmentCategories = /*treatmentCategories*/ ctx[0];
+    			treatmentform.$set(treatmentform_changes);
+
+    			if (/*lastRecordSuccess*/ ctx[1]) {
+    				if (if_block) ; else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					if_block.m(main, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(treatmentform.$$.fragment, local);
@@ -2315,6 +2559,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
     			destroy_component(treatmentform);
+    			if (if_block) if_block.d();
     		}
     	};
 
@@ -2329,16 +2574,37 @@ var app = (function () {
     	return block;
     }
 
-    function handleSubmit(event) {
-    	let treatment = event.detail.treatment;
-    }
-
     function instance$1($$self, $$props, $$invalidate) {
-    	let treatmentCategories = ["Emchilgee", "Gajig zasal"];
+    	let treatmentCategories = [];
+
+    	let categories = axios$1.post("/admin/treatment/categories").then(response => {
+    		$$invalidate(0, treatmentCategories = response.data);
+    	});
+
+    	let lastRecordSuccess = false;
+
+    	window.addEventListener("click", function (event) {
+    		event.preventDefault();
+    		$$invalidate(1, lastRecordSuccess = false);
+    	});
+
+    	function handleSubmit(event) {
+    		let treatment = event.detail;
+
+    		axios$1.post("/admin/treatment/store", treatment).then(response => {
+    			console.log(response);
+    			$$invalidate(1, lastRecordSuccess = true);
+    		}).catch(err => {
+    			alert("Алдаа гарлаа");
+    			console.log(err);
+    			$$invalidate(1, lastRecordSuccess = false);
+    		});
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	let { $$slots = {}, $$scope } = $$props;
@@ -2348,18 +2614,22 @@ var app = (function () {
     		axios: axios$1,
     		TreatmentForm,
     		treatmentCategories,
+    		categories,
+    		lastRecordSuccess,
     		handleSubmit
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("treatmentCategories" in $$props) $$invalidate(0, treatmentCategories = $$props.treatmentCategories);
+    		if ("categories" in $$props) categories = $$props.categories;
+    		if ("lastRecordSuccess" in $$props) $$invalidate(1, lastRecordSuccess = $$props.lastRecordSuccess);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [treatmentCategories];
+    	return [treatmentCategories, lastRecordSuccess, handleSubmit];
     }
 
     class App extends SvelteComponentDev {

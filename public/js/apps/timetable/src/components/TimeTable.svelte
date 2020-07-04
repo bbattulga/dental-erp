@@ -2,36 +2,63 @@
 	
 	import Cell from './Cell.svelte';
 	import {createEventDispatcher} from 'svelte';
+	import Modal from './modal/Modal.svelte';
+	import UserModal from './modal/UserModal.svelte';
 
 	export let appointments;
+
+	let currentDetail = null;
+	let currentTime = null;
 
 	let times = [];
 	for (let i=9; i<21; i++) times.push(""+i+":00");
 
 	let dispatch = createEventDispatcher();
+	
+	let showModal = false;
 
+	// adds times array to appointments
+	// details are passed to Cells as <Cell {user} {doctor {time}}/>
+
+	let rows = [];
+	let cells = [];
 
 	appointments.forEach(appointment=>{
 
-		appointment.times = [];
-		
+		appointment.cells = [];
+		let row = [];
+		let cells = [];
+
 		times.forEach(time=>{
 			let hasUser = false;
 			let users = appointment.users;
 			for (let i =0; i<users.length; i++){
 				if (users[i].start == time){
-					appointment.times.push({user: users[i]});
+					appointment.cells.push({user: users[i]});
+
+					let cell = {
+						user: users[i]
+					}
+					row.push(cell);
 					hasUser = true;
 					break;
 				}
 			}
+			rows.push(row);
 			if (!hasUser)
-				appointment.times.push(null);
+				appointment.cells.push({user:null});
 		})
 	});
 	
 	function handleCell(event){
-		dispatch('queryCell', {user: event.detail.user});
+		showModal = true;
+		//dispatch('queryCell', {user: event.detail.user});
+		//alert(JSON.stringify(event.detail.user));
+		currentDetail = event.detail;
+	}
+
+	function handleSubmit(event){
+		showModal = false;
 	}
 </script>
 
@@ -51,21 +78,26 @@
 	<tr>
 		<td>{appointment.doctor_shift.doctor.name}</td>
 
-		{#each appointment.times as time}
-		{#if time != null}
-
+		<!-- now each cell knows which doctor, which patient, which time
+			and reports those details through on:click -->
+		{#each appointment.cells as cell}
 			<Cell 
 				on:click={handleCell}
-				user={time.user} />
-
-			{:else}
-				<Cell 
-					on:click={handleCell}
-					user={null} />
-		{/if}
+				user={cell.user} 
+				doctor={appointment.doctor_shift.doctor}/>
 		{/each}
 	</tr>
 	{/each}
+
+
+	<Modal
+		bind:showModal={showModal}>
+
+		<UserModal 
+			detail={currentDetail}
+			on:submit={handleSubmit}/>
+	</Modal>
+
 </table>
 
 <style>

@@ -1,7 +1,6 @@
 <script>
 	export let name;
 	import TimeTable from './components/TimeTable.svelte';
-	import Dialog from './components/Dialog.svelte';
 
 	let data = {
 		"appointments": [
@@ -25,7 +24,7 @@
 					"phone": "8899xxxx",
 					"start": "14:00",
 					"end": "17:00",
-					"registered": "1|0"
+					"registered": "0"
 				}
 				]
 			},
@@ -89,13 +88,9 @@
 		};
 
 		let title = "table title";
-
-		let currentUser = null;
-		let dialogActive = false;
+		let showModal = false;
 		function handleQueryCell(event){
-			dialogActive = true;
-			currentUser = event.detail.user;
-			console.log(currentUser);
+			showModal = true;
 		}
 
 	</script>
@@ -105,11 +100,6 @@
 		<TimeTable 
 			on:queryCell={handleQueryCell}
 			appointments={data.appointments} />
-
-		<Dialog 
-			user={currentUser}
-			bind:active={dialogActive} />
-
 	</main>
 
 	<style>

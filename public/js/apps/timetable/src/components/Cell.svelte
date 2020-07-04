@@ -3,31 +3,50 @@
 
 	import {createEventDispatcher} from 'svelte';
 
-	export let user;
+	export let user = null;
+	export let doctor = null;
+	export let time = null;
 
 	const dispatch = createEventDispatcher();
-	let noUser =(user == null);
-	if (noUser){
-		user = {name: "Цаг захиалах"}
-	}
+
+	let title = user == null? 'Цаг захиалах':user.name;
+	let subtitle = user == null? '': user.phone;
 
 	function notifyClick(event){
 		dispatch('click', {
-			user: user
+			user,
+			doctor,
+			time
 		});
+	}
+
+	let d = 1;
+	if (user != null){
+		let start = user.start;
+		let end = user.end;
+
+		let colon = start.indexOf(':');
+
+		let sh = start.slice(0, colon);
+		let sm = start.slice(colon+1, start.length);
+
+		let eh = end.slice(0, colon);
+		let em = end.slice(colon+1, end.length);
+		d =  parseInt(eh) - parseInt(sh);
 	}
 
 </script>
 
 
 <td 
+	colspan={d}
 	on:click={notifyClick}
-	class:empty={noUser}
-	class:registered={!noUser && (user.registered=="1")}
-	class:newuser={!noUser && (!user.registered=="0")}>
+	class:empty={user==null}
+	class:registered={(user!=null) && (user.registered=="1")}
+	class:newuser={(user!=null) && (!user.registered=="0")}>
 	<div>
-		<p>{user.name}</p>
-		<p>{user.phone == null? "":user.phone}</p>
+		<p>{title}</p>
+		<p>{subtitle}</p>
 	</div>
 </td>
 

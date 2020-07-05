@@ -1,6 +1,10 @@
 <script type="text/javascript">
 	
 	import {createEventDispatcher} from 'svelte';
+	import RegisterForm from './RegisterForm.svelte';
+	import {fly} from 'svelte/transition';
+	import Modal from '../modal/Modal.svelte';
+
 
 	export let show = true;
 	export let shift;
@@ -8,6 +12,8 @@
 	export let appointment;
 	export let time;
 
+	let showAppointmentForm = true;
+	let showRegisterForm = false;
 	// dispatch events
 	let dispatch = createEventDispatcher();
 
@@ -22,7 +28,9 @@
 	$: end = start+hours;
 
 	function close(){
+		console.log('close');
 		show = false;
+		console.log(show);
 	}
 
 	function handleSubmit(){
@@ -59,11 +67,20 @@
 		dispatch('delete', appointment);
 	}
 
+	function toggleForm(){
+		showAppointmentForm = !showAppointmentForm;
+		showRegisterForm = !showRegisterForm;
+	}
 </script>
 
 {#if show}
-<div class="form" target="#"
-	on:click|stopPropagation>
+
+<Modal bind:showModal={show}>
+
+{#if showAppointmentForm}
+<div
+	class="form" target="#"
+	transition:fly="{{y:-100, duration: 550}}">
 
 
 	<header>
@@ -71,19 +88,6 @@
 	</header>
 
 	<div class="main">
-
-		<div class="title-sub">
-			<div>{doctor.name}</div>
-			<div>{(start)+':00'} - {(end)%24+':00'}</div>
-		</div>
-		<!-- show input fields if user is null -->
-		<!-- i.e no user in this cell -->
-		{#if appointment == null}
-		<div class="row-input">
-			<label>Хугацаа(цагаар):</label> <br />
-			<input type="number" bind:value={hours} style="max-width: 10%;">
-		</div>
-		{/if}
 
 		<div class="row-input">
 			<label>Үйлчлүүлэгчийн нэр:</label>
@@ -94,6 +98,19 @@
 			<label>Утас:</label>	
 			<input bind:value={phone}>
 		</div>
+
+		<div class="title-sub">
+			<label>Эмчийн нэр  -   <strong>{doctor.name}</strong></label>
+			<div>Эмчилгээний цаг  -  {(start)+':00'} - {(end)%24+':00'}</div>
+		</div>
+		<!-- show input fields if user is null -->
+		<!-- i.e no user in this cell -->
+		{#if appointment == null}
+			<div class="row-input">
+				<label>Хугацаа(цагаар):</label> <br />
+				<input type="number" bind:value={hours} style="width: 100px;">
+			</div>
+		{/if}
 	</div>
 
 	<footer>
@@ -103,16 +120,22 @@
 			class="btn btn-add">ok</button>
 	<button 
 		class="btn-cancel"
-		on:click|stopPropagation={close}>x</button>
+		on:click|preventDefault|stopPropagation={close}>x</button>
 		
 		{#if appointment != null}
 			<button 
 				class="btn-del"
 				on:click={handleDelete}>cancel</button>
 		{/if}
-
+	<!--	<button on:click={toggleForm}>register</button> -->
+		<button><a href="/reception/user">register</a></button>
 	</footer>
 </div>
+{/if} <!-- show appointmentform -->
+{#if showRegisterForm}
+	<RegisterForm />
+{/if}
+</Modal>
 {/if}
 
 
@@ -120,37 +143,48 @@
 <style type="text/css">
 	
 	*{
+		box-sizing: border-box;
 		font-weight: 10;
 		font-family: Arial Helvetica sans-serif;
 	}
 
 	.form{
-		display: grid;
-		grid-template-rows: 1fr 8fr 1fr;
+		display: flex;
+		flex-direction: column;
 		top: 20px;
 		left: 50%;
 		position: fixed;
 		transform: translateX(-50%);
-		overflow: auto;
-		width: 500px;
-		height: 500px;
+		width: 600px;
 		padding: 1%;
 		border-radius: 10px;
 		background-color: white;
 	}
 
 	.title-sub{
-		font-size: 1.5em;
+		text-align: left;
+		margin: 30px;
 	}
 
 	.row-input{
-		font-size: 1.2em;
+		display: grid;
+		grid-template-columns: 3fr 7fr;
 		text-align: left;
 		max-width: 100%;
 		margin: 30px;
 	}
-
+	@media (max-height: 600px){
+		.row-input{
+			display: block;
+		}
+		.form{
+			width: 80%;
+			height: 80%;
+			overflow: auto;
+		}
+	}
 	.btn-add{
+		padding: 5px;
 		margin: 10px;
 	}
 
@@ -171,7 +205,6 @@
 	}
 
 	input{
-		font-size: 1em;
 		width: 100%;
 	}
 </style>

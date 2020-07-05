@@ -86,7 +86,7 @@
 
 
 <tr>
-	<td>{doctor.name}</td>
+	<th>{doctor.name}</th>
 	{#each cellsData as cellData (generateId(cellData))}
 		<Cell 
 			on:addAppointment={addAppointment}
@@ -98,6 +98,13 @@
 </tr>
 
 <style type="text/css">
+	th{
+		position: sticky;
+		left: 0;
+		margin: 0;
+		border: 3px solid #cccccc;;
+	}
+
 	td{
 		border: 3px solid #cccccc;
 	}

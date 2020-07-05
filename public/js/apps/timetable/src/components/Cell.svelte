@@ -4,7 +4,7 @@
 	import {createEventDispatcher} from 'svelte';
 
 	import Modal from './modal/Modal.svelte';
-	import AppointmentForm from './form/AppointmentForm.svelte';
+	import AppointmentModal from './form/AppointmentModal.svelte';
 	import axios from 'axios';
 
 
@@ -83,9 +83,7 @@
 			<p>{appointment.phone}</p>
 		{/if}
 	</div>
-	<Modal
-		bind:showModal={showModal}>
-		<AppointmentForm 
+		<AppointmentModal
 			bind:show={showModal}
 			on:submit={handleSubmit}
 			on:delete={handleDelete}
@@ -93,7 +91,6 @@
 			{time}
 			doctor={shift.doctor}
 			appointment={appointment} />
-	</Modal>
 </td>
 
 
@@ -106,10 +103,15 @@
 	}
 
 	.u{
+		cursor: pointer;
 		background-color: #333333;
 		margin: 5px;
 		padding: 2px;
 		border-radius: 10px;
+	}
+
+	td:hover .u{
+		background-color: #f05e30;
 	}
 
 	.empty{

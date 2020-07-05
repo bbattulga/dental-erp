@@ -48,7 +48,6 @@
 
 	td, tr, th{
 		transition: 0.3s;
-		padding: 5px;
 		border-collapse: collapse;
 		border: 3px solid #cccccc;
 	}

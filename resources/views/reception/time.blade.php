@@ -192,7 +192,7 @@
                             <td height="90px">{{9+$i}}:00</td>
                             @foreach($shifts as $shift)
 
-                                @if($shift->shift_id == 1 || $shift->shift_id ==3)
+                                @if($shift->shift_type_id == 1 || $shift->shift_type_id ==3)
                                     @if($appointment = $shift->appointments->where('start', 9+$i)->first())
                                         <td height="90px" rowspan="{{$appointment->end - $appointment->start}}">
                                             <button class="btn  @if(\App\CheckIn::where('shift_id', $shift->id)->where('user_id', $appointment->user_id)->first())
@@ -228,7 +228,7 @@
                         <tr>
                             <td height="90px">{{9+$i}}:00</td>
                             @foreach($shifts as $shift)
-                                @if($shift->shift_id == 2 || $shift->shift_id ==3)
+                                @if($shift->shift_type_id == 2 || $shift->shift_type_id ==3)
                                     @if($appointment = $shift->appointments->where('start', 9+$i)->first())
                                         <td height="90px" rowspan="{{$appointment->end - $appointment->start}}">
                                             <button class="btn  @if(\App\CheckIn::where('shift_id', $shift->id)->where('user_id', $appointment->user_id)->first())

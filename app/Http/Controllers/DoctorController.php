@@ -16,7 +16,7 @@ class DoctorController extends Controller
     }
     public function index(){
         $doctor = Auth::user();
-        $shifts = Shift::all()->where('date', date('Y-m-d'))->where('doctor_id',$doctor->id)->first();
+        $shifts = Shift::all()->where('date', date('Y-m-d'))->where('user_id',$doctor->id)->first();
         if(empty($shifts)) {
             $checkins = null;
         } else {

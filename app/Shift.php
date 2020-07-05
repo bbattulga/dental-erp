@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Shift extends Model
 {
-    protected $fillable = ['doctor_id','shift_type_id','date','created_by'];
+    protected $fillable = ['user_id','shift_type_id','date','created_by'];
 
     public function doctor() {
-        return $this->hasOne('App\User', 'id', 'doctor_id');
+        return $this->hasOne('App\User', 'id', 'user_id');
     }
 
     public function appointments() {

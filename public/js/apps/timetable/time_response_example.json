@@ -1,7 +1,8 @@
 {
-	"times":[
+	// list of shits
+	"shifts":[
 
-		// shift
+		// shift object
 		{	
 			"doctor": {
 				"name": "doctor_firstname",
@@ -21,8 +22,37 @@
 
 				// appointment
 				{
-					"id": 1,
-					"name": "patient 1",
+					"id": 2,
+					"name": "patient 2",
+					"phone": "94382938",
+					"start": "15",
+					"end": "16"
+				},
+			]
+		},
+
+		// shift object
+		{	
+			"doctor": {
+				"name": "doctor 2",
+				"last_name": "doctor 2 lastname"
+			},
+
+			"appointments":[
+
+				// appointment
+				{
+					"id": 3,
+					"name": "patient 3",
+					"phone": "94382938",
+					"start": "15",
+					"end": "16"
+				},
+
+				// appointment
+				{
+					"id": 4,
+					"name": "patient 4",
 					"phone": "94382938",
 					"start": "15",
 					"end": "16"

@@ -16,6 +16,6 @@ class UserRole extends Model
         return $this->hasOne('App\User', 'id', 'user_id');
     }
     public function shifts() {
-        return $this->hasMany('App\Time', 'doctor_id', 'user_id');
+        return $this->hasMany('App\Shift', 'doctor_id', 'user_id');
     }
 }

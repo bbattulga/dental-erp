@@ -177,7 +177,7 @@
                             <td height="90px">{{9+$i}}:00</td>
                             @for($d = 0; $d < 30; $d++)
                                 @if($shift = $shifts->where('date', date('Y-m-d', strtotime("+".$d." Days")))->first())
-                                    @if($shift->shift_id == 0 || $shift->shift_id ==2)
+                                    @if($shift->shift_type_id == 0 || $shift->shift_type_id ==2)
                                         @if($appointment = $shift->appointments->where('start', 9+$i)->first())
                                             <td height="90px" rowspan="{{$appointment->end - $appointment->start}}">
                                                 <button class="btn @if(\App\CheckIn::where('shift_id', $shift->id)->where('user_id', $appointment->user_id)->first())
@@ -224,7 +224,7 @@
                             <td height="90px">{{9+$i}}:00</td>
                             @for($d = 0; $d < 30; $d++)
                                 @if($shift = $shifts->where('date', date('Y-m-d', strtotime("+".$d." Days")))->first())
-                                    @if($shift->shift_id == 1 || $shift->shift_id ==2)
+                                    @if($shift->shift_type_id == 1 || $shift->shift_type_id ==2)
                                         @if($appointment = $shift->appointments->where('start', 9+$i)->first())
                                             <td height="90px" rowspan="{{$appointment->end - $appointment->start}}">
                                                 <button class="btn @if(\App\CheckIn::where('shift_id', $shift->id)->where('user_id', $appointment->user_id)->first())

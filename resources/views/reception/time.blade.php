@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
 
+     <link rel="stylesheet"
+        href="{{asset('js/apps/timetable/public/build/bundle.css')}}"></script>
+
     <style>
         .hidden {
             opacity: 0;
@@ -19,6 +22,19 @@
         .hidden:hover, .hidden:focus {
             opacity: 0.2;
             background-color: #8f8f8f;
+        }
+
+        #timetable{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+        }
+
+        #container{
+            background-color: white;
+            width: 100%;
+            height: 100%;
         }
 
     </style>
@@ -142,6 +158,12 @@
             </div>
         </div>
     </div>
+
+    <div id="container">
+        <div id="timetable"></div>
+    </div>
+
+    <!--
     <div class="row">
         {{--<div class="col-md-12">--}}
         <div class="card">
@@ -266,7 +288,8 @@
             {{--</div>--}}
         </div>
 
-    </div>
+    </div> -->
+
 @endsection
 @section('footer')
     <script>
@@ -346,6 +369,7 @@
                 }
     </script>
 
+    <script src="{{asset('js/apps/timetable/public/build/bundle.js')}}"></script>
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
     <script src="{{asset('js/vendor/moment.min.js')}}"></script>

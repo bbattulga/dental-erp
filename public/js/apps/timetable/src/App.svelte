@@ -31,13 +31,9 @@
 
 	<style>
 		main {
-			position: inherit;
-			height: inherit;
+			background-color: white;
 			overflow: auto;
-			text-align: center;
-			padding: 20px;
-			max-width: 240px;
-			margin: 0 auto;
+			width: 100%;
 		}
 
 		h1 {

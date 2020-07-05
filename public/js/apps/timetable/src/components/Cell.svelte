@@ -106,7 +106,7 @@
 		cursor: pointer;
 		background-color: #333333;
 		margin: 5px;
-		padding: 2px;
+		padding: 10px;
 		border-radius: 10px;
 	}
 

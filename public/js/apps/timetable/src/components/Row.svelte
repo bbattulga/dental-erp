@@ -99,9 +99,6 @@
 
 <style type="text/css">
 	th{
-		position: sticky;
-		left: 0;
-		margin: 0;
 		border: 3px solid #cccccc;;
 	}
 

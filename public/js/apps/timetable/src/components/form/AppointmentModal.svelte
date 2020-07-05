@@ -149,15 +149,16 @@
 	}
 
 	.form{
+
 		display: flex;
 		flex-direction: column;
-		top: 20px;
+		top: 50%;
 		left: 50%;
-		position: fixed;
-		transform: translateX(-50%);
-		width: 600px;
-		padding: 1%;
+		position: relative;
+		transform: translate(-50%, -50%);
+		width: 200px;
 		border-radius: 10px;
+		padding: 10px;
 		background-color: white;
 	}
 
@@ -178,20 +179,24 @@
 			display: block;
 		}
 		.form{
-			width: 80%;
-			height: 80%;
+			width: 450px;
+			height: 70%;
 			overflow: auto;
 		}
 	}
 	.btn-add{
-		padding: 5px;
-		margin: 10px;
+		margin: 10px auto;
+		padding: 10px 20px;
+		background-color: orange;
+		color: white;
 	}
 
 	.btn-del{
 		position: absolute;
 		top: 0;
 		left: 0;
+		background-color: orange;
+		color: white;
 	}
 
 	.btn-add:hover{

@@ -5,13 +5,15 @@
 	import Modal from './modal/Modal.svelte';
 	import Row from './Row.svelte';
 
-	export let appointments;
+	// contains {doctor, appointments}
+	export let doctorShifts = [];
+
 	export let times;
 	
 </script>
 
 
-<table class="main-table">
+<table class="main-table ">
 	<!-- Title columns -->
 	<tr class="header-row">
 		<td></td>
@@ -20,25 +22,37 @@
 		{/each}
 	</tr>
 
-	{#each appointments as appointment}
+	{#each doctorShifts as shift}
 		<Row 
-			{times}
-			{appointment} />
+			doctor={shift.doctor}
+			appointments={shift.appointments} 
+			{times}/>
 	{/each}
 </table>
 
 
 <style>
 
+	table{
+		border-collapse: collapse;
+		border: 1px solid black;
+	}
+
 	th{
 		width: 200px;
 	}
 
-	.main-table{
+	td, tr, th{
+		width: 80px;
+		transition: 0.3s;
+		padding: 5px;
+		border-collapse: collapse;
+		border: 3px solid #cccccc;
+	}
 
-		background-color: #e7e7e7e7;
+	.main-table{
 		overflow: auto;
-		border: 1px solid black;
+		border: 1px solid #333333;
 	}
 
 	.header-row{
@@ -46,6 +60,5 @@
 		min-width: 100%;
 		position: sticky;
 		top: 0px;
-		background-color: #abd6dfff;
 	}
 </style>

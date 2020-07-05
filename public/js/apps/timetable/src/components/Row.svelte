@@ -8,13 +8,12 @@
 
 	// EXPECTS TIME FORMATS AS hh:mm
 
-	export let appointment;
+	export let doctor;
+	export let appointments;
 	export let times;
-
-	let users = appointment.users;
+	let users = appointments;
 	let currentUserDetail = null;
 	let showModal = false;
-	let doctor = appointment.doctor_shift.doctor;
 
 	// it must be cells.length == times.length
 	let cells = [];
@@ -28,7 +27,7 @@
 		let d = 1;
 		for (let j=0; j<users.length; j++){
 
-			if (users[j].start != time){
+			if (""+users[j].start+":00" != time){
 				continue;
 			}
 
@@ -36,8 +35,8 @@
 			// expects hh:mm
 			user = users[j];
 			console.log(user.name+' match '+time);
-			let sh = parseInt(user.start.slice(0, user.start.indexOf(':')));
-			let eh = parseInt(user.end.slice(0, user.end.indexOf(':')));
+			let sh = user.start;
+			let eh = user.end;
 			d = eh - sh;
 
 			// if d>1 then next available time will be i+1 or i+2 or i+timeGap
@@ -55,7 +54,7 @@
 		};
 		cells.push(cell);
 	}
-
+	console.log('cells', cells);
 	const handleCellClick = (event)=>{
 		let detail = event.detail;
 		currentUserDetail = detail;	
@@ -67,13 +66,24 @@
 		let detail = event.detail;
 		console.log('trying to add user to appointments');
 		let user = detail.user;
-		user.id = 0;
-		user.shift_id = appointment.doctor_shift.id;
+		user.user_id = 0;
+		user.shift_id = appointments[0].shift_id;
+		user.time = user.start;
 		detail.user = user;
-
-		axios.post('/reception/time/add', detail)
+		console.log('sent like ');
+		console.log(detail.user);
+		axios.post('/reception/time/add', detail.user)
 			.then(response=>{
-				console.log(response);
+				console.log('response data');
+				console.log(response.data);
+				let id = parseInt(response.data);
+				let cell = {
+					user,
+					doctor,
+					time: user.time,
+					hours: user.hours,
+				};
+				cells = [...cells, cell];
 			})
 			.catch(err=>{
 				console.log(err);

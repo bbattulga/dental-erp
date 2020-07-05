@@ -19,7 +19,7 @@ class ReceptionTimeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('reception');
+       // $this->middleware('reception');
     }
     public function time() {
         $shifts = Time::all()->where('date', date('Y-m-d'));
@@ -55,8 +55,7 @@ class ReceptionTimeController extends Controller
 
     public function store(Request $request) {
 
-        return $request['user'];
-
+        /*
         $shift = Time::find($request['shift_id']);
         if ($shift->shift_id == 2) {
             $times = [15, 16, 17, 18, 19, 20];
@@ -94,17 +93,20 @@ class ReceptionTimeController extends Controller
                 }
             }
         }
+        */
 
+      //  return 'a';
+        $id = -1;
         if($request['user_id'] == 0) {
-            Appointment::create([
+            $id = Appointment::create([
                 'shift_id'=>$request['shift_id'],
                 'user_id'=>0,
                 'name'=>$request['name'], 
                 'phone'=>$request['phone'], 
                 'start'=>$request['time'], 
                 'end'=>$request['time']+$request['hours'], 
-                'created_by'=>Auth::user()->id]);
-        } else {
+                'created_by'=>2])->id;
+            } else {
             $user = User::find($request['user_id']);
             Appointment::create([
                 'shift_id'=>$request['shift_id'], 
@@ -114,7 +116,7 @@ class ReceptionTimeController extends Controller
                 'end'=>$request['time']+$request['hours'], 
                 'created_by'=>Auth::user()->id]);
         }
-        return back();
+        return $id;
     }
 
 
@@ -134,5 +136,11 @@ class ReceptionTimeController extends Controller
         $shift_id = Appointment::find($appointment_id)->shift_id;
         CheckIn::create(['shift_id'=>$shift_id, 'user_id'=>$user->id, 'state'=>0, 'created_by'=>Auth::user()->id,'nurse_id'=>0]);
         return redirect('/reception/time');
+    }
+
+    // for ajax requests
+    public function raw_appointments(){
+        $appointments = Time::with('appointments', 'doctor')->get();
+        return $appointments;
     }
 }

@@ -190,6 +190,9 @@ Route::get('/reception/product','ReceptionPaymentController@product');
 Route::get('/reception/product/{id}','ReceptionPaymentController@show');
 Route::post('/reception/decrease_product','ReceptionPaymentController@decrease_product');
 
+// reception ajax
+Route::post('/reception/time/appointments', 'ReceptionTimeController@raw_appointments');
+
 //--DOCTOR STARTING--
 Route::get('/doctor','DoctorController@index');
 Route::get('/doctor/dash','DoctorController@dash');

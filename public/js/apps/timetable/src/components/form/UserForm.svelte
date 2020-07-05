@@ -13,11 +13,13 @@
 	let phone = user == null? "":user.phone;
 
 	let start = parseInt(detail.time.slice(0, detail.time.indexOf(':')));
-	let hours = null;
+	let hours = 1;
 
 	function close(){
 		show = false;
 	}
+
+	let till = detail.time;
 
 	function handleSubmit(){
 
@@ -32,6 +34,7 @@
 				name,
 				phone,
 				start,
+				hours,
 				end: start+hours
 			}
 
@@ -52,7 +55,7 @@
 
 	<div class="row-input">
 		<h4>Эмчийн нэр: {detail.doctor.name}</h4>
-		<h4>{user == null? detail.time+'-': user.start+"-"+user.end}</h4>
+		<h4>Хугацаа: {user == null? (detail.time+'-'+(start+hours)+':00'): user.start+"-"+user.end}</h4>
 
 		{#if user == null}
 		<input style="width: 60px;" type="number" bind:value={hours}>
@@ -67,7 +70,7 @@
 
 	<div class="row-input">
 		<label >Утас:</label>
-		<input bind:value={phone}>
+		<input type="number" bind:value={phone}>
 	</div>
 	<button class="btn btn-add" on:click={handleSubmit}>ok</button>
 </div>
@@ -99,7 +102,8 @@
 
 	.row-input{
 		text-align: left;
-		width: 100%;
+		max-width: 100%;
+		margin: 30px;
 	}
 
 	.btn-add{

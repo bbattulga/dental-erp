@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CheckIn;
-use App\Time;
+use App\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +16,7 @@ class DoctorController extends Controller
     }
     public function index(){
         $doctor = Auth::user();
-        $shifts = Time::all()->where('date', date('Y-m-d'))->where('doctor_id',$doctor->id)->first();
+        $shifts = Shift::all()->where('date', date('Y-m-d'))->where('doctor_id',$doctor->id)->first();
         if(empty($shifts)) {
             $checkins = null;
         } else {
@@ -26,13 +26,13 @@ class DoctorController extends Controller
     }
     public function dashboard() {
         $user = Auth::user();
-        $shifts = Time::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+        $shifts =  Shift::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
         return view('doctor.dashboard',compact('user', 'shifts'));
     }
     
     public function search($start_date, $end_date) {
         $user = Auth::user();
-        $shifts = Time::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
+        $shifts =  Shift::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
         return view('doctor.dashboard', compact('user', 'shifts','start_date', 'end_date'));
     }
     public function by_month(Request $request){

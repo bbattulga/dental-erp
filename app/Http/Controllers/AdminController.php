@@ -11,8 +11,7 @@ use App\Products;
 use App\UserRole;
 use Aloha\Twilio\Support\Laravel\Facade as Twilio;
 
-use App\Time;
-use App\DoctorShift;
+use App\Shift;
 
 use App\Transaction;
 use App\User;
@@ -60,7 +59,7 @@ class AdminController extends Controller
     public function profile($id){
         $user = User::find($id);
         if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = DoctorShift::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+            $shifts = Shift::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile',compact('user', 'shifts'));
         } else if($user->role->role_id == RoleId::nurse()) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();

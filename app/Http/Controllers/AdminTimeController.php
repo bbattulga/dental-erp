@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\UserRole;
-use App\Time;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,31 +19,31 @@ class AdminTimeController extends Controller
     //
     public function index() {
         $doctors = UserRole::all()->where('role_id', Roles::doctor()->id);
-        $shifts = Time::all()->where('date', '>=', date('Y-m-d'));
+        $shifts = Shift::all()->where('date', '>=', date('Y-m-d'));
         return view('admin.time',compact('doctors', 'shifts'));
 
     }
     public function store($i, $doctor_staff_id, $shift_id){
         $date = date('Y-m-d', strtotime("+".$i." Days"));
-        if (!is_null($time = Time::all()->where('date', $date)->where('doctor_id', $doctor_staff_id)->first())) {
+        if (!is_null($time =  Shift::all()->where('date', $date)->where('doctor_id', $doctor_staff_id)->first())) {
                 //Full time
                 $time->shift_id = 2;
                 $time->save();
         } else {
             //Half time
-            Time::create(['doctor_id'=>$doctor_staff_id, 'date'=>$date,'shift_id'=>$shift_id,'created_by'=>Auth::user()->id]);
+             Shift::create(['doctor_id'=>$doctor_staff_id, 'date'=>$date,'shift_id'=>$shift_id,'created_by'=>Auth::user()->id]);
         }
         return redirect('admin/shifts');
     }
 
     public function cancel(Request $request){
         $id = $request['time_id'];
-        Time::find($id)->delete();
+         Shift::find($id)->delete();
         return redirect('/admin/time');
     }
 
     public function time() {
-        $shifts = Time::all()->where('date', date('Y-m-d'));
+        $shifts =  Shift::all()->where('date', date('Y-m-d'));
         return view('admin.day', compact('shifts'));
     }
 
@@ -56,7 +55,7 @@ class AdminTimeController extends Controller
     }
     public function storeAppointment(Request $request) {
 
-        $shift = Time::find($request['shift_id']);
+        $shift =  Shift::find($request['shift_id']);
         if ($shift->shift_id == 0) {
             $times = [15, 16, 17, 18, 19, 20];
         } elseif ($shift->shift_id == 1) {

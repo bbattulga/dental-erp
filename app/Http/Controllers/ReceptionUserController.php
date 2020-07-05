@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\CheckIn;
 use App\UserRole;
-use App\Time;
+use App\Shift;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -99,7 +99,7 @@ class ReceptionUserController extends Controller
     public function check_in($id,$appointment_id){
         $app = Appointment::find($appointment_id);
         $shift = $app->shift_id;
-        $doctor = Time::find($shift)->doctor_id;
+        $doctor = Shift::find($shift)->doctor_id;
         CheckIn::create(['user_id'=>$id,'doctor_id'=>$doctor, ]);
         return back();
     }

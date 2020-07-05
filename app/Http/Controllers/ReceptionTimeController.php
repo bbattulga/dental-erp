@@ -6,7 +6,7 @@ use App\Appointment;
 use App\Log;
 use App\CheckIn;
 use App\UserRole;
-use App\Time;
+use App\Shift;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,12 +22,12 @@ class ReceptionTimeController extends Controller
        // $this->middleware('reception');
     }
     public function time() {
-        $shifts = Time::all()->where('date', date('Y-m-d'));
+        $shifts = Shift::all()->where('date', date('Y-m-d'));
         return view('reception.time', compact('shifts'));
     }
     public function appointment($id) {
         $user = User::find($id);
-        $shifts = Time::all()->where('date', date('Y-m-d'));
+        $shifts = Shift::all()->where('date', date('Y-m-d'));
         return view('reception.time', compact('shifts', 'user'));
     }
 
@@ -140,7 +140,7 @@ class ReceptionTimeController extends Controller
 
     // for ajax requests
     public function raw_appointments(){
-        $appointments = Time::with('appointments', 'doctor')->get();
+        $appointments = Shift::with('appointments', 'doctor')->get();
         return $appointments;
     }
 }

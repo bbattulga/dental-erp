@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CheckIn;
-use App\Time;
-use App\DoctorShift;
+use App\Shift;
 
 use App\User;
 use Illuminate\Http\Request;
@@ -63,7 +62,7 @@ class AdminStaffController extends Controller
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
         if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = Time::all()->where('doctor_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
+            $shifts = Shift::all()->where('doctor_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
             return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date'));
         } else if($user->role->role_id == Roles::doctor()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();

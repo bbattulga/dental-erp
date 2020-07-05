@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\CheckIn;
 use App\Time;
+use App\DoctorShift;
+
 use App\User;
 use Illuminate\Http\Request;
 use App\Roles;

@@ -3,15 +3,14 @@
 	import TimeTable from './components/TimeTable.svelte';
 	import axios from 'axios';
 
-	let data = [];
+	let shifts = [];
 
 		axios.post('/reception/time/appointments')
 			.then(response=>{
 				console.log('appointments from server');
 				let sdata = response.data;
 				console.log(sdata);
-				console.log(data);
-				data = sdata;
+				shifts = sdata;
 			}).catch(err=>{
 				console.log(err);
 			});
@@ -26,7 +25,7 @@
 	<main>
 		<h1>{title}</h1>
 		<TimeTable 
-			doctorShifts={data}
+			{shifts}
 			{times} />
 	</main>
 

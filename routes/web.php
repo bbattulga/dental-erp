@@ -172,7 +172,7 @@ Route::get('/reception/time', 'ReceptionTimeController@time');
 Route::get('/reception/time/week/{id}', 'ReceptionTimeController@timeWeek');
 Route::get('/reception/time/week/{id}/{user_id}', 'ReceptionTimeController@timeWeekAppointment');
 Route::post('/reception/time/add', 'ReceptionTimeController@store');
-Route::get('/reception/time/cancel','ReceptionTimeController@cancel');
+Route::post('/reception/time/cancel','ReceptionTimeController@cancel');
 Route::get('/reception/time/{id}','ReceptionTimeController@appointment');
 Route::get('/reception/user_check/{id}','ReceptionUserController@user_check');
 Route::get('/reception/user_check/{id}/update','ReceptionUserController@user_update');

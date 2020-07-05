@@ -4,52 +4,95 @@
 	import {createEventDispatcher} from 'svelte';
 
 	import Modal from './modal/Modal.svelte';
-	import UserForm from './form/UserForm.svelte';
-	import {onMount} from 'svelte';
-	onMount(()=>{console.log('cell onMount')});
+	import AppointmentForm from './form/AppointmentForm.svelte';
+	import axios from 'axios';
+
 
 	// dispatch events
 	let dispatch = createEventDispatcher();
 
-	export let data = null;
+	export let shift;
+	export let appointment;
+	export let time;
+
 
 	// conditional classes
-	let empty =  (data.user === null);
-	let newUser = !empty && (data.user.user_id == "0");
-	let registered = !empty && (data.user.user_id != "0");
+	let empty =  appointment == null;
+	let newAppointment = !empty && (appointment.user_id == "0");
+	let registered = !empty && (appointment.user_id != "0");
 
+	// values
+	let colSpan = empty? 1: appointment.end-appointment.start;
+
+	// flags
 	let showModal = false;
 
+	// functions
 	function handleClick(){
 		showModal = true;
 	}
 
-	const handleSubmit = ()=>{
+	const handleSubmit = (event)=>{
 		console.log('cell handle submit');
+		console.log(event.detail);
+
+		let appointment = event.detail.appointment;
+
+		let id = -1;
+		axios.post('/reception/time/add', appointment)
+			.then(response=>{
+				id = response.data;
+				appointment.id = id;
+				empty = false;
+				newAppointment = true;
+				dispatch('addAppointment', appointment);
+			})
+			.catch(err=>console.log(err));
+	}
+
+	const handleDelete = (event)=>{
+		let appointment = event.detail;
+		let count = 0;
+		console.log('cell got appointment ', appointment);
+		let d = {
+			appointment_id: appointment.id,
+			code: '1111',
+			description: 'test'
+		}
+		console.log('sent like ', d);
+		axios.post('/reception/time/cancel', d).then(response=>{
+			count = response.data;
+			console.log(response);
+		}).catch(err=>console.log(err));
+		dispatch('deleteAppointment', appointment.id);
 	}
 
 </script>
 
 
-<td colspan={data.hours} 
-on:click={handleClick}>
+<td colspan={colSpan} 
+	on:click={handleClick}>
 	<div class="u"
 	class:registered={registered}
 	class:empty={empty}
-	class:newuser={newUser}>
-		{#if data.user == null}
+	class:newAppointment={newAppointment}>
+		{#if appointment == null}
 			<h4>Цаг захиалах</h4>
 		{:else}
-			<p>{data.user.name}</p>
-			<p>{data.user.phone}</p>
+			<p>{appointment.name}</p>
+			<p>{appointment.phone}</p>
 		{/if}
 	</div>
 	<Modal
 		bind:showModal={showModal}>
-		<UserForm 
+		<AppointmentForm 
 			bind:show={showModal}
 			on:submit={handleSubmit}
-			detail={data} />
+			on:delete={handleDelete}
+			{shift}
+			{time}
+			doctor={shift.doctor}
+			appointment={appointment} />
 	</Modal>
 </td>
 
@@ -87,7 +130,7 @@ on:click={handleClick}>
 		animation: fadein 0.7s;
 	}
 
-	.newuser{
+	.newAppointment{
 		color: white;
 		background-color: #f05e23;
 	}
@@ -97,7 +140,7 @@ on:click={handleClick}>
 		background-color: green;
 	}
 
-	.newuser:hover{
+	.newAppointment:hover{
 		color: white;
 		background-color: #f05e23;
 	}

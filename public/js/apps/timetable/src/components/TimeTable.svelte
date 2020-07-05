@@ -5,7 +5,7 @@
 	import Row from './Row.svelte';
 
 	// contains {doctor, appointments}
-	export let doctorShifts = [];
+	export let shifts = [];
 
 	export let times;
 	
@@ -21,11 +21,9 @@
 		{/each}
 	</tr>
 
-	{#each doctorShifts as shift}
+	{#each shifts as shift}
 		<Row 
-			shift_id={shift.id}
-			doctor={shift.doctor}
-			appointments={shift.appointments} 
+			{shift} 
 			{times}/>
 	{/each}
 </table>
@@ -35,7 +33,6 @@
 
 	table{
 		border-collapse: collapse;
-		border: 1px solid black;
 	}
 
 	*{
@@ -46,6 +43,7 @@
 
 	th{
 		width: 200px;
+		border: 3px solid #cccccc;
 	}
 
 	td, tr, th{

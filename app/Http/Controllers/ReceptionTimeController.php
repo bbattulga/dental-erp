@@ -96,6 +96,8 @@ class ReceptionTimeController extends Controller
         */
 
       //  return 'a';
+        // trivial add
+        
         $id = -1;
         if($request['user_id'] == 0) {
             $id = Appointment::create([
@@ -103,17 +105,18 @@ class ReceptionTimeController extends Controller
                 'user_id'=>0,
                 'name'=>$request['name'], 
                 'phone'=>$request['phone'], 
-                'start'=>$request['time'], 
-                'end'=>$request['time']+$request['hours'], 
+                'start'=>$request['start'], 
+                'end'=>$request['end'], 
                 'created_by'=>2])->id;
             } else {
             $user = User::find($request['user_id']);
             Appointment::create([
                 'shift_id'=>$request['shift_id'], 
                 'user_id'=>$request['user_id'], 
-                'name'=>$user->name,'phone'=>$request['phone'],
+                'name'=>$user->name,
+                'phone'=>$request['phone'],
                 'start'=>$request['time'], 
-                'end'=>$request['time']+$request['hours'], 
+                'end'=>$request['end'], 
                 'created_by'=>Auth::user()->id]);
         }
         return $id;
@@ -121,11 +124,12 @@ class ReceptionTimeController extends Controller
 
 
     public function cancel(Request $request){
+
         if($request['code'] == '1111'){
             $id = $request['appointment_id'];
-            Appointment::find($id)->delete();
-            Log::create(['type'=>2,'type_id'=>$id,'user_id'=>Auth::user()->id,'action_id'=>0,'description'=>$request['description']]);
-            return back();
+            $d = Appointment::find($id)->delete();
+            Log::create(['type'=>2,'type_id'=>$id,'user_id'=>2,'action_id'=>0,'description'=>$request['description']]);
+            return $d;
         }
         else{
             return back();

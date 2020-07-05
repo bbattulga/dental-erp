@@ -16,7 +16,7 @@ class RenameColInDoctorShifts extends Migration
         Schema::table('doctor_shifts', function (Blueprint $table) {
             //
             $table->renameColumn('shift_id', 'shift_type_id');
-
+            
         });
     }
 

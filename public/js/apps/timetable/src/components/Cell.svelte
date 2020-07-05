@@ -3,56 +3,54 @@
 
 	import {createEventDispatcher} from 'svelte';
 
-	export let user = null;
-	export let doctor = null;
-	export let shift_id = null;
-	export let colspan = 1;
-	export let start = null
-	export let time = null;
-	export let end = null;
-	export let hours = null;
-
-	console.log('cell got user ', user);
-	console.log('cell shift_id ', shift_id);
-
-	// conditional classes
-	let empty =  user == null;
-	let newUser = !empty && (user.user_id == "0");
-	let registered = !empty && (user.user_id != "0");
+	import Modal from './modal/Modal.svelte';
+	import UserForm from './form/UserForm.svelte';
+	import {onMount} from 'svelte';
+	onMount(()=>{console.log('cell onMount')});
 
 	// dispatch events
 	let dispatch = createEventDispatcher();
 
-	const handleClick = ()=>{
+	export let data = null;
 
-		let detail = {
-			user,
-			doctor,
-			time,
-			start,
-			hours,
-			end
-		};
+	// conditional classes
+	let empty =  (data.user === null);
+	let newUser = !empty && (data.user.user_id == "0");
+	let registered = !empty && (data.user.user_id != "0");
 
-		dispatch('click', detail);
+	let showModal = false;
+
+	function handleClick(){
+		showModal = true;
 	}
+
+	const handleSubmit = ()=>{
+		console.log('cell handle submit');
+	}
+
 </script>
 
 
-<td {colspan} 
+<td colspan={data.hours} 
 on:click={handleClick}>
-
-<div class="user"
+	<div class="u"
 	class:registered={registered}
 	class:empty={empty}
 	class:newuser={newUser}>
-	{#if user == null}
-	<h4>Цаг захиалах</h4>
-	{:else}
-	<p>{user.name}</p>
-	<p>{user.phone}</p>
-	{/if}
-</div>
+		{#if data.user == null}
+			<h4>Цаг захиалах</h4>
+		{:else}
+			<p>{data.user.name}</p>
+			<p>{data.user.phone}</p>
+		{/if}
+	</div>
+	<Modal
+		bind:showModal={showModal}>
+		<UserForm 
+			bind:show={showModal}
+			on:submit={handleSubmit}
+			detail={data} />
+	</Modal>
 </td>
 
 
@@ -60,13 +58,11 @@ on:click={handleClick}>
 	
 	td{
 		width: 80px;
-		color: grey;
 		transition: 0.3s;
 		border: 3px solid #cccccc;
-
 	}
 
-	.user{
+	.u{
 		background-color: #333333;
 		margin: 5px;
 		padding: 2px;
@@ -82,12 +78,13 @@ on:click={handleClick}>
 		background-color: grey;
 		color: white;
 		display: block;
+		cursor:pointer;
 
 		-webkit-animation: fadein 0.7s; /* Safari, Chrome and Opera > 12.1 */
-       	-moz-animation: fadein 0.7s; /* Firefox < 16 */
-        -ms-animation: fadein 0.7s; /* Internet Explorer */
-         -o-animation: fadein 0.7s; /* Opera < 12.1 */
-            animation: fadein 0.7s;
+		-moz-animation: fadein 0.7s; /* Firefox < 16 */
+		-ms-animation: fadein 0.7s; /* Internet Explorer */
+		-o-animation: fadein 0.7s; /* Opera < 12.1 */
+		animation: fadein 0.7s;
 	}
 
 	.newuser{

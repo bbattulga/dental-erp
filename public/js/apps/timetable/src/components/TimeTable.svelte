@@ -2,7 +2,6 @@
 	
 	import Cell from './Cell.svelte';
 	import {createEventDispatcher} from 'svelte';
-	import Modal from './modal/Modal.svelte';
 	import Row from './Row.svelte';
 
 	// contains {doctor, appointments}
@@ -24,6 +23,7 @@
 
 	{#each doctorShifts as shift}
 		<Row 
+			shift_id={shift.id}
 			doctor={shift.doctor}
 			appointments={shift.appointments} 
 			{times}/>
@@ -38,12 +38,17 @@
 		border: 1px solid black;
 	}
 
+	*{
+		font-size: 16px;
+		font-weight: 10;
+		font-family: Arial sans-serif;
+	}
+
 	th{
 		width: 200px;
 	}
 
 	td, tr, th{
-		width: 80px;
 		transition: 0.3s;
 		padding: 5px;
 		border-collapse: collapse;

@@ -17,11 +17,9 @@
 
 
 {#if showModal}
-<div class="backdrop" on:click|self={close}>
-	<div class="modal">
+<div class="backdrop" on:click|self|stopPropagation={close}>
 		<h2>{title}</h2>
-		<slot></slot>
-	</div>
+		<slot></slot>	
 </div>
 {/if}
 
@@ -35,23 +33,13 @@
 		position: fixed;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.7);
+		background-color: rgba(0, 0, 0, 0.5	);
 
 		 -webkit-animation: fadein 0.3s; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: fadein 0.3s; /* Firefox < 16 */
         -ms-animation: fadein 0.3s; /* Internet Explorer */
          -o-animation: fadein 0.3s; /* Opera < 12.1 */
             animation: fadein 0.3s;
-	}
-
-	.modal{
-		text-align: center;	
-		margin: 10px auto;
-		width: 500px;
-
-		background-color: white;
-		border-radius: 10px;
-		padding: 20px;
 	}
 
 	@keyframes fadein {

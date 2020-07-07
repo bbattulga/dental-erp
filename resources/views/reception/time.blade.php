@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
 
      <link rel="stylesheet"
-        href="{{asset('js/apps/timetable/public/build/bundle.css')}}"></script>
+        href="{{asset('js/apps/timetable/public/build/bundle.css')}}"/>
 
     <style>
+
         .hidden {
             opacity: 0;
             background-color: white;
@@ -27,15 +28,12 @@
         #timetable{
             position: relative;
             width: 100%;
-            height: 100%;
+            height: 80vh;
+            margin: 0;
+            padding: 0;
             background-color: white;
         }
 
-        #container{
-            background-color: white;
-            width: 100%;
-            height: 100%;
-        }
 
     </style>
     {{--End css style gh met link file oruulna--}}
@@ -45,123 +43,8 @@
     <script>
         document.getElementById('receptionTime').classList.add('active');
     </script>
-    <div class="modal fade" id="exampleModalRight" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalRight" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Цаг захиалах<br><span id="nameShow">Алимаа</span> <span
-                                id="timeShow"></span>:00</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="form111" action="{{url('reception/time/add')}}" method="post">
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-4 col-form-label text-right">Нэр:</label>
-                            <div class="col-sm-8">
-                                <input id="ner" name="name" autocomplete="off" type="text" class="form-control"
-                                       placeholder=""
-                                       @if(!empty($user)) value="{{$user->name}}" readonly @endif>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-4 col-form-label text-right">Утасны дугаар:</label>
-                            <div class="col-sm-8">
-                                <input id="utas" name="phone" autocomplete="off" type="text" class="form-control"
-                                       placeholder=""
-                                       @if(!empty($user))value="{{$user->phone_number}}" readonly @endif>
-                            </div>
-                        </div>
-                        <input type="hidden" name="user_id" value="@if(!empty($user)) {{$user->id}} @else 0 @endif">
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-4 col-form-label text-right">Хугацаа
-                                (цагаар):</label>
-                            <div class="col-sm-8">
-                                <input id="hugatsaa" name="hours" autocomplete="off" type="number" class="form-control"
-                                       placeholder="">
-                            </div>
-                        </div>
 
-
-                        <input type="hidden" name="time" id="timeInput">
-                        <input type="hidden" name="shift_id" id="shiftInput">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button onclick="validation(document.getElementById('shiftInput').value)" type="button"
-                                class="btn btn-primary">ЦАГ ЗАХИАЛАХ
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- DELETE Modal -->
-    <div class="modal fade" id="deleteAppointment" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id = "form11" action="{{url('/reception/time/cancel')}}">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">
-                            Захиалгын мэдээллэл <br>
-
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            {{--sdfdsafsa--}}
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h5><span id="da_doctor_name"></span></h5>
-                        <span id="da_date"></span>, <span id="da_time"></span>
-
-                        <br>
-                        <br>
-
-                        <div class="row">
-                            <div class="col-md-5" style="color: grey">Үйлчлүүлэгч:</div>
-                            <div class="col-md-7"><a id="da_user_link"><span id="da_user_name"></span></a></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5" style="color: grey">Холбогдох утас:</div>
-                            <div class="col-md-7"><span id="da_user_phone"></span></div>
-                        </div>
-                        <input type="hidden" name="appointment_id" id="da_id">
-                        <br>
-
-                    </div>
-                    <div class="modal-footer">
-                        <div class="col-md-8 input-group">
-                            <input id="ps" name="code" autocomplete="off" type="password" class="form-control input-sm"
-                                   placeholder="Нууц үг" required>
-                            <input id="ds" name="description" autocomplete="off" type="text"
-                                   class="form-control input-sm" required
-                                   placeholder="Тайлбар">
-                            <button class="btn btn-light" type="submit" style="border-radius: 0px">
-                                Цуцлах
-                            </button>
-                        </div>
-                        <a id="variableLink">
-                            <button onclick="gh()" type="button" id="variableButton" class="btn btn-primary"
-                                    style="border-radius: 0px">Эмчилгээнд
-                                оруулах
-                            </button>
-                        </a>
-
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-
-    <div id="container">
-        <div id="timetable"></div>
-    </div>
+       <div id="timetable"></div>
 
     <!--
     <div class="row">

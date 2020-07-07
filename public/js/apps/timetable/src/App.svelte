@@ -1,51 +1,223 @@
 <script>
-	export let name;
 	import TimeTable from './components/TimeTable.svelte';
 	import axios from 'axios';
 
+	import TableFilter from './components/TableFilter.svelte';
+	import Modal from './components/modal/Modal.svelte';
+
+	import {fly} from 'svelte/transition';
+	import {fade} from 'svelte/transition';
+
+
 	let shifts = [];
 
-		axios.post('/reception/time/appointments')
+	// /api/shift -shifts of day
+	// /api/shifts - all shifts
+
+	axios.post('/api/shift/today')
+		.then(response=>{
+			console.log('shifts from server');
+			let sdata = response.data;
+			console.log(sdata);
+			shifts = sdata;
+		}).catch(err=>{
+			console.log(err);
+		});
+
+	let select = 0;
+	let times = [];
+	for (let i=9; i<21; i++) {
+		let prefix = (i<10)? '0': '';
+		times.push(prefix+i+":00")
+	};
+
+	const dateFormat = (date) =>{
+		return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+	}
+
+	const handleSelectDate = (event) => {
+		let detail = event.detail;
+		console.log('post details', detail);
+		axios.post('/api/shift', detail)
 			.then(response=>{
-				console.log('appointments from server');
-				let sdata = response.data;
-				console.log(sdata);
-				shifts = sdata;
-			}).catch(err=>{
+				console.log('response to tablefilter');
+				console.log(response);
+				shifts = response.data;
+			})
+			.catch(err=>{
 				console.log(err);
-			});
+			})
+	}
 
-		let times = [];
-		for (let i=9; i<21; i++) times.push(""+i+":00");
+	let fullscreen = false;
 
-		let title = "table title";
+	const handleFullscreen = (event) => {
+		fullscreen=!fullscreen;
+		console.log('fullscreen');
+	}
+</script>
 
-	</script>
+<div 
+	transition:fly={{y:-100, duration: 550}}
+	class="main-container"
+	class:background={fullscreen} on:click|self={()=>fullscreen=!fullscreen}>
+	{#if fullscreen}
+		<div class="btn-close-fullsreen" 
+			on:hover={()=>console.log('onhover')}
+			on:click={()=>fullscreen=!fullscreen}>
+			<img src="/js/apps/timetable/src/components/assets/close-red-512.png" alt="close">
+		</div>
+	{/if}
 
-	<main>
-		<h1>{title}</h1>
-		<TimeTable 
-			{shifts}
-			{times} />
-	</main>
+	{#if !fullscreen}
+	<div class="btn-fullscreen" on:click={handleFullscreen}>
+		<img src="/js/apps/timetable/src/components/assets/fullscreen-100218.png" alt="close">
+	</div>
+	{/if}
 
-	<style>
-		main {
-			background-color: white;
-			overflow: auto;
-			width: 100%;
-		}
+	<div
+		class:fcenter={fullscreen}>
+		<TableFilter
 
-		h1 {
-			color: #ff3e00;
-			text-transform: uppercase;
-			font-size: 1.2em;
-			font-weight: 100;
-		}
+			on:selectDate={handleSelectDate}
+			bind:shifts={shifts}
+			{times}/>
+	</div>
+</div>
 
-		@media (min-width: 640px) {
-			main {
-				max-width: none;
-			}
-		}
-	</style>
+<style>
+	.main-container{
+		width: 100%;
+		background: white;
+		position: relative;
+		overflow: auto;
+		background: white;
+		height: 100%;
+
+		box-shadow: 1px 1px 2px grey;
+		padding: 10px;
+	}
+
+	.main-div{
+		background: white;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+
+		box-shadow: 1px 1px 2px grey;
+		padding: 10px;
+		-webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1s; /* Firefox < 16 */
+        -ms-animation: fadein 1s; /* Internet Explorer */
+         -o-animation: fadein 1s; /* Opera < 12.1 */
+            animation: fadein 1s;
+
+	}
+
+		@keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Firefox < 16 */
+	@-moz-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Safari, Chrome and Opera > 12.1 */
+	@-webkit-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Internet Explorer */
+	@-ms-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Opera < 12.1 */
+	@-o-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+	.fcenter{
+		position: fixed;
+		width: 95vw;
+		height: 95vh;
+		background: white;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		margin: 10px auto;
+		display: flex;
+		overflow: auto;
+	}
+
+	.btn-fullscreen{
+		z-index: 10000;
+		display: block; 
+		width: 32px;
+		height: 32px;
+		margin: 10px;
+		position:absolute; 
+		top: 0; right: 0;
+
+		cursor: pointer;
+	}
+
+	.btn-close-fullsreen{
+		z-index:1000000;
+		width: 32px;
+		height: 32px;
+		position: fixed;
+		top: 10px;
+		right: 10px;
+		cursor: pointer;
+	}
+
+	.btn-close-fullsreen > img{
+		max-width: 100%;
+		height: auto;
+	}
+
+	.btn-fullscreen > img{
+		max-width: 100%;
+		height: auto;
+	}
+
+	.background{
+		z-index: 100000;
+		top: 0;
+		left: 0;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5	);
+
+		-webkit-animation: fadein 0.3s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 0.3s; /* Firefox < 16 */
+        -ms-animation: fadein 0.3s; /* Internet Explorer */
+         -o-animation: fadein 0.3s; /* Opera < 12.1 */
+            animation: fadein 0.3s;
+	}
+
+	h1 {
+		color: #ff3e00;
+		text-transform: uppercase;
+		font-size: 1.2em;
+		font-weight: 100;
+	}
+
+	.top{
+		padding: 10px;
+		margin: 10px;
+	}
+
+	.row{
+		display: flex;
+	}
+</style>

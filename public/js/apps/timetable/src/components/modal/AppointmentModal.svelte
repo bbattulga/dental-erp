@@ -1,9 +1,8 @@
 <script type="text/javascript">
 	
 	import {createEventDispatcher} from 'svelte';
-	import RegisterForm from './RegisterForm.svelte';
 	import {fly} from 'svelte/transition';
-	import Modal from '../modal/Modal.svelte';
+	import Modal from './Modal.svelte';
 
 
 	export let show = true;
@@ -24,6 +23,8 @@
 	let hours = empty? 1: appointment.end-appointment.start;
 	let start = parseInt(time.slice(0, time.indexOf(':')));
 	let end = 0;
+	let cancelCode = '';
+
 	// re-eval end on user change hours
 	$: end = start+hours;
 
@@ -64,6 +65,7 @@
 
 	function handleDelete(){
 		//console.log('form trying to del ', appointment);
+		appointment.code = cancelCode;
 		dispatch('delete', appointment);
 	}
 
@@ -71,13 +73,20 @@
 		showAppointmentForm = !showAppointmentForm;
 		showRegisterForm = !showRegisterForm;
 	}
+
+	function handleRegister(){
+		close();
+		let currentData = {
+			name,
+			phone
+		}
+		dispatch('openRegister', currentData);
+	}
+
 </script>
 
-{#if show}
 
 <Modal bind:showModal={show}>
-
-{#if showAppointmentForm}
 <div
 	class="form" target="#"
 	transition:fly="{{y:-100, duration: 550}}">
@@ -85,18 +94,19 @@
 
 	<header>
 		<h1>{(appointment == null)? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
+		<hr>
 	</header>
 
 	<div class="main">
 
 		<div class="row-input">
 			<label>Үйлчлүүлэгчийн нэр:</label>
-			<input bind:value={name}>
+			<input bind:value={name} readonly="{appointment != null}">
 		</div>
 
 		<div class="row-input">
 			<label>Утас:</label>	
-			<input bind:value={phone}>
+			<input bind:value={phone} readonly="{appointment != null}">
 		</div>
 
 		<div class="title-sub">
@@ -105,42 +115,69 @@
 		</div>
 		<!-- show input fields if user is null -->
 		<!-- i.e no user in this cell -->
-		{#if appointment == null}
+		{#if (appointment == null)}
 			<div class="row-input">
 				<label>Хугацаа(цагаар):</label> <br />
 				<input type="number" bind:value={hours} style="width: 100px;">
+
+				<div style="text-align: right;">
+				<button 
+			on:click|preventDefault|stopPropagation={handleSubmit}
+			class="btn btn-add">Цаг захиалах</button>
+		</div>
 			</div>
 		{/if}
+
+		<hr>
 	</div>
 
-	<footer>
 
-		<button 
-			on:click|preventDefault|stopPropagation={handleSubmit}
-			class="btn btn-add">ok</button>
-	<button 
+		<div 
 		class="btn-cancel"
-		on:click|preventDefault|stopPropagation={close}>x</button>
+		on:click|preventDefault|stopPropagation={close}>
+			<img src="/js/apps/timetable/src/components/assets/close.png">
+		</div>
+	<footer>
 		
-		{#if appointment != null}
-			<button 
-				class="btn-del"
-				on:click={handleDelete}>cancel</button>
+		{#if (appointment != null)}
+
+		{#if (appointment.registered != '1')}
+		<button 
+			on:click|preventDefault|stopPropagation={handleRegister}
+			class="btn btn-add">Бүртгэх</button>
 		{/if}
-	<!--	<button on:click={toggleForm}>register</button> -->
-		<button><a href="/reception/user">register</a></button>
+			<div class="container-cancel">
+
+				<input hint="нууц код" class="input-cancel" type="text" bind:value={cancelCode}>
+			<button 
+				on:click={handleDelete}>Цуцлах</button>
+			</div>
+		{/if}
 	</footer>
 </div>
-{/if} <!-- show appointmentform -->
-{#if showRegisterForm}
-	<RegisterForm />
-{/if}
 </Modal>
-{/if}
 
 
 
 <style type="text/css">
+
+	input{
+		background: white;
+		width: 100%;
+		border: 1px solid grey;
+
+		padding: 10px;
+		border-radius: 3px;
+	}
+
+	footer{
+		position: relative;
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: center;
+		width: 100%;
+	}
+
 	
 	*{
 		box-sizing: border-box;
@@ -149,16 +186,16 @@
 	}
 
 	.form{
-
 		display: flex;
 		flex-direction: column;
-		top: 50%;
-		left: 50%;
 		position: relative;
-		transform: translate(-50%, -50%);
-		width: 200px;
+		top: 10%;
+		left: 50%;
+		width: 60%;
+		max-height: 80%;
+		transform: translate(-50%, -10%);
 		border-radius: 10px;
-		padding: 10px;
+		padding: 30px;
 		background-color: white;
 	}
 
@@ -172,44 +209,73 @@
 		grid-template-columns: 3fr 7fr;
 		text-align: left;
 		max-width: 100%;
-		margin: 30px;
+		margin-bottom: 10px;
 	}
-	@media (max-height: 600px){
+
+	@media (max-width:  900px){
+
+		label{
+		margin-right: 5px;
+	}
+
+
 		.row-input{
 			display: block;
 		}
 		.form{
-			width: 450px;
-			height: 70%;
-			overflow: auto;
+			min-width: 80%;
+			max-height: 100%;
 		}
 	}
-	.btn-add{
-		margin: 10px auto;
-		padding: 10px 20px;
-		background-color: orange;
-		color: white;
+	@media (max-width: 700px){
+		.row-input{
+			display: block;
+		}
+		.form{
+			min-width: 80%;
+			max-height: 100%;
+		}
 	}
 
-	.btn-del{
-		position: absolute;
-		top: 0;
-		left: 0;
-		background-color: orange;
+	.btn-add{
+		display: inline-block;
+		padding: 10px 20px;
+		width: 40%;
+		float: right;
+		background-color: #0c374d;
 		color: white;
 	}
 
 	.btn-add:hover{
-		background-color: 1px 2px 4px black;
+		background-color: #093145;
 	}
 
 	.btn-cancel{
 		position: absolute;
 		top: 0;
 		right: 0;
+		width: 32px;
+		height: 32px;
+		margin: 10px;
 	}
 
-	input{
-		width: 100%;
+	.btn-cancel img{
+		max-width: 100%;
+		height: auto;
+		cursor: pointer;
+	}
+
+	.container-cancel{
+		position: absolute;
+		left: 0;
+		display: grid;
+		grid-template-columns: 7fr 3fr;
+		grid-gap: 5px;
+		background: white;
+		width: 50%;
+	}
+
+	.input-cancel{
+
 	}
 </style>

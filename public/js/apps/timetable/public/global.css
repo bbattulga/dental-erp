@@ -67,15 +67,3 @@ button:focus {
 *{
 		box-sizing: border-box;
 	}
-
-td{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-.btn{
-	background-color: #f95700ff;
-	color: white;
-	padding: 10px 30px;
-	border-radius: 10px;
-}

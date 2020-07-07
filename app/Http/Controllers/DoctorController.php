@@ -26,7 +26,7 @@ class DoctorController extends Controller
     }
     public function dashboard() {
         $user = Auth::user();
-        $shifts =  Shift::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+        $shifts =  Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
         return view('doctor.dashboard',compact('user', 'shifts'));
     }
     

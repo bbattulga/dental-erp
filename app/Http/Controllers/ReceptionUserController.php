@@ -32,6 +32,7 @@ class ReceptionUserController extends Controller
     }
 
     public function store(Request $request) {
+
         $validatedData = $request->validate([
             'last_name' => 'required|max:255',
 //            'email'=>'max:255',
@@ -44,9 +45,24 @@ class ReceptionUserController extends Controller
         $pass = bcrypt($pass);
         if(empty($request['email']))
             $request['email'] = 'nomail@gmail.com';
-        $date = explode('/', $request['birth_date']);
-        $birth_date = $date[2] . '-' . $date[0] . '-' . $date[1];
-        $user = User::create(['last_name'=>$request['last_name'],'name'=>$request['name'],'register'=>$request['register'],'phone_number'=>$request['phone_number'],'email'=>$request['email'],'birth_date'=>$birth_date,'location'=>$request['location'],'description'=>$request['info'],'password'=>$pass,'sex'=>$request['sex']]);
+
+      //  $date = explode('/', $request['birth_date']);
+       // $birth_date = $date[2] . '-' . $date[0] . '-' . $date[1];
+
+      //  return 'before create user';
+        $user = User::create([
+                'last_name'=>$request['last_name'],
+                'name'=>$request['name'],
+                'register'=>$request['register'],
+                'phone_number'=>$request['phone_number'],
+                'email'=>$request['email'],
+                'birth_date'=>$request['birth_date'],
+                'location'=>$request['location'],
+                'description'=>$request['info'],
+                'password'=>$pass,
+                'sex'=>$request['sex']
+            ]);
+
         if($request['appointment_id']) {
             $appointment = Appointment::find(intval($request['appointment_id']));
             $appointment->user_id = $user->id;
@@ -54,7 +70,7 @@ class ReceptionUserController extends Controller
             $shift_id = $appointment->shift_id;
             CheckIn::create(['shift_id'=>$shift_id, 'user_id'=>$user->id, 'state'=>0, 'created_by'=>Auth::user()->id,'nurse_id'=>0]);
         }
-        return redirect('/reception/user');
+        return $user;
     }
     public function update(Request $request) {
         $user = User::find($request['user_id']);

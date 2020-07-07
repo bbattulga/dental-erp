@@ -11,13 +11,29 @@
 	let doctor = shift.doctor;
 	let appointments = shift.appointments;
 
-	export let times;
+	export let times = [];
+
 
 	function handleSubmit(event){
 
 	}
 
-	function calc(times, appointments){
+		const handleCellClick = (event) => {
+		console.log('row handle click');
+	}
+
+	const addAppointment = (event) => {
+		let appointment = event.detail;
+		console.log('adding new appointment ', appointment);
+		appointments = [...appointments, appointment];
+		//cellsData = calc(times, appointments);
+	}
+
+	const deleteAppointment = (event) => {
+		appointments = appointments.filter((a)=>a.id!=event.detail);
+	}
+
+	const calc = (times, appointments) => {
 
 		let cellsData = [];
 		for (let i=0; i<times.length; i++){
@@ -37,7 +53,6 @@
 				// calculate appointment's time
 				// expects hh:mm
 				appointment = appointments[j];
-				console.log(appointment.name+' match '+time);
 				let sh = appointment.start;
 				let eh = appointment.end;
 				d = eh - sh;
@@ -59,21 +74,6 @@
 		return cellsData;
 	}
 
-	const handleCellClick = (event)=> {
-		console.log('row handle click');
-	}
-
-	const addAppointment = (event)=> {
-		let appointment = event.detail;
-		console.log('adding new appointment ', appointment);
-		appointments = [...appointments, appointment];
-		//cellsData = calc(times, appointments);
-	}
-
-	const deleteAppointment = (event)=>{
-		appointments = appointments.filter((a)=>a.id!=event.detail);
-	}
-
 	let cellsData = [];
 	$: cellsData = calc(times, appointments);
 
@@ -85,8 +85,15 @@
 </script>
 
 
-<tr>
-	<th>{doctor.name}</th>
+<tr class="main-row">
+	<th class="th-doctor">
+		<div class="doctor">
+			<div class="doctor-icon">
+				<img src="/js/apps/timetable/src/components/assets/doctor.png">
+			</div>
+			{doctor.name}
+		</div>
+	</th>
 	{#each cellsData as cellData (generateId(cellData))}
 		<Cell 
 			on:addAppointment={addAppointment}
@@ -98,11 +105,46 @@
 </tr>
 
 <style type="text/css">
+
+	.main-row{
+
+	}
+
+	.th-doctor{
+		position: sticky;
+		left:0;
+		z-index: 2;
+	}
+
+	.doctor{
+
+		background-color: white;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin: 5px;
+	}
+
+	.doctor-icon{
+		width: 100px;
+		height: 100px;
+	}
+
+	.doctor-icon img{
+		max-width: 100%;
+		height: auto;
+	}
+
 	th{
 		border: 3px solid #cccccc;;
 	}
 
 	td{
 		border: 3px solid #cccccc;
+	}
+
+	tr{
+		height: 100%;
 	}
 </style>

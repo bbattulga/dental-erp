@@ -19,7 +19,7 @@ class ReceptionTimeController extends Controller
 
     public function __construct()
     {
-       // $this->middleware('reception');
+        $this->middleware('reception');
     }
     public function time() {
         $shifts = Shift::all()->where('date', date('Y-m-d'));
@@ -107,7 +107,8 @@ class ReceptionTimeController extends Controller
                 'phone'=>$request['phone'], 
                 'start'=>$request['start'], 
                 'end'=>$request['end'], 
-                'created_by'=>2])->id;
+                'created_by'=> Auth::user()->id
+            ])->id;
             } else {
             $user = User::find($request['user_id']);
             Appointment::create([
@@ -116,7 +117,8 @@ class ReceptionTimeController extends Controller
                 'name'=>$user->name,
                 'phone'=>$request['phone'],
                 'start'=>$request['time'], 
-                'end'=>$request['end'], 
+                'end'=>$request['end'
+            ], 
                 'created_by'=>Auth::user()->id]);
         }
         return $id;
@@ -128,7 +130,7 @@ class ReceptionTimeController extends Controller
         if($request['code'] == '1111'){
             $id = $request['appointment_id'];
             $d = Appointment::find($id)->delete();
-            Log::create(['type'=>2,'type_id'=>$id,'user_id'=>2,'action_id'=>0,'description'=>$request['description']]);
+            Log::create(['type'=>2,'type_id'=>$id,'user_id'=>Ath::user()->id,'action_id'=>0,'description'=>$request['description']]);
             return $d;
         }
         else{
@@ -143,8 +145,22 @@ class ReceptionTimeController extends Controller
     }
 
     // for ajax requests
-    public function raw_appointments(){
-        $appointments = Shift::with('appointments', 'doctor')->get();
-        return $appointments;
+    public function api_shift(Request $request){
+
+        $date = $request['date'];
+        if (count($date) == 1){
+        $shifts = Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('date' , '=',$date[0])
+            ->get();
+        return $shifts;
+        }
+    return 'asd';
+    }
+
+    public function api_shift_today(){
+        $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('shifts.date',Date('Y-m-d'))
+            ->get();
+        return $shifts;
     }
 }

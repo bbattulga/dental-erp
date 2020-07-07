@@ -3,8 +3,11 @@
 
 	import {createEventDispatcher} from 'svelte';
 
+	import {fade} from 'svelte/transition';
+	import {fly} from 'svelte/transition';
 	import Modal from './modal/Modal.svelte';
-	import AppointmentModal from './form/AppointmentModal.svelte';
+	import AppointmentModal from './modal/AppointmentModal.svelte';
+	import RegisterModal from './modal/RegisterModal.svelte';
 	import axios from 'axios';
 
 
@@ -14,25 +17,36 @@
 	export let shift;
 	export let appointment;
 	export let time;
-
+	let disabled = false;
+	let shift_type = shift.shift_type_id;
+	if ((shift_type == 1) && (time >= '15:00')){
+		disabled = true;
+	}else if ((shift_type == 2) && (time < '15:00')){
+		disabled = true;
+	}
 
 	// conditional classes
-	let empty =  appointment == null;
-	let newAppointment = !empty && (appointment.user_id == "0");
-	let registered = !empty && (appointment.user_id != "0");
+	let empty =  (appointment == null) && !disabled;
+	let newAppointment = !empty && !disabled && (appointment.user_id == "0");
+	let registered = !empty && !disabled && (appointment.user_id != "0");
 
 	// values
-	let colSpan = empty? 1: appointment.end-appointment.start;
+	let colSpan = (appointment==null)? 1: appointment.end-appointment.start;
 
 	// flags
-	let showModal = false;
+	let showAppointmentModal = false;
+	let showRegisterModal = false;
 
 	// functions
 	function handleClick(){
-		showModal = true;
+		if (disabled){
+			return;
+		}
+		console.log('cell handle click');
+		showAppointmentModal = true;
 	}
 
-	const handleSubmit = (event)=>{
+	const handleSubmit = (event) => {
 		console.log('cell handle submit');
 		console.log(event.detail);
 
@@ -47,16 +61,23 @@
 				newAppointment = true;
 				dispatch('addAppointment', appointment);
 			})
-			.catch(err=>console.log(err));
+			.catch(err=>{
+				alert('Алдаа гарлаа');
+			});
 	}
 
-	const handleDelete = (event)=>{
+	const handleDelete = (event) => {
 		let appointment = event.detail;
+		if (appointment.code != '1111'){
+			alert('Код буруу байна');
+			return;
+		}
+
 		let count = 0;
 		console.log('cell got appointment ', appointment);
 		let d = {
 			appointment_id: appointment.id,
-			code: '1111',
+			code: appointment.code,
 			description: 'test'
 		}
 		console.log('sent like ', d);
@@ -67,51 +88,109 @@
 		dispatch('deleteAppointment', appointment.id);
 	}
 
+	const handleRegisterModal = (event) => {
+		console.log('cell show registermodal');
+		showRegisterModal = true;
+	}
+
+	const handleRegister = (event) => {
+		console.log('cell handle register');
+		
+		let user = event.detail.user;
+	/*	let dummy = {
+			last_name: 'dummylastname',
+	         name: 'dummyname',
+	         sex: 1,
+	         register: 'ИР89382716',
+	         phone_number: '89382716',
+	         email: 'joonjiinaze@mail.com',
+	         birth_date: '2000-02-02',
+	         location: 'zaisan',
+	         info: 'nodescription'
+		} */
+		user.appointment_id = appointment.id;
+		console.log('sent like ', user);
+		axios.post('/reception/user/store', user)
+			.then(response=>{
+				//user.id = response;
+				appointment.registered = '1';
+				registered = true;
+			})
+			.catch(err=>{
+				alert('Алдаа гарлаа');
+				console.log(err);
+			})
+	}
+
 </script>
 
 
-<td colspan={colSpan} 
-	on:click={handleClick}>
+<td transition:fade
+	colspan={colSpan} 
+	on:click={handleClick}
+	class:disabled = {disabled}>
 	<div class="u"
 	class:registered={registered}
 	class:empty={empty}
 	class:newAppointment={newAppointment}>
+	<div style="display: inline-block;">
 		{#if appointment == null}
-			<h4>Цаг захиалах</h4>
+			<h4>{disabled? '':'Цаг захиалах'}</h4>
 		{:else}
-			<p>{appointment.name}</p>
+			<h4>{appointment.name}</h4>
 			<p>{appointment.phone}</p>
 		{/if}
 	</div>
+	</div>
 		<AppointmentModal
-			bind:show={showModal}
+			bind:show={showAppointmentModal}
 			on:submit={handleSubmit}
+			on:openRegister={handleRegisterModal}
 			on:delete={handleDelete}
 			{shift}
 			{time}
 			doctor={shift.doctor}
 			appointment={appointment} />
+		<RegisterModal
+			bind:show={showRegisterModal} 
+			on:submit={handleRegister}/>
 </td>
 
 
 <style type="text/css">
 	
 	td{
-		width: 80px;
-		transition: 0.3s;
+		transition: 0.4s;
 		border: 3px solid #cccccc;
+		height: 100%;
+	}
+
+	.disabled{
+		background-color: grey;
+		color: grey;
 	}
 
 	.u{
+		z-index: 1;
+		position: relative;
+
 		cursor: pointer;
-		background-color: #333333;
 		margin: 5px;
-		padding: 10px;
 		border-radius: 10px;
+
+		display: block;
+		height: 80%;
+	}
+
+	.u > div{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	td:hover .u{
-		background-color: #f05e30;
+
 	}
 
 	.empty{
@@ -133,8 +212,9 @@
 	}
 
 	.newAppointment{
+		font-size: 1.5em;
 		color: white;
-		background-color: #f05e23;
+		background-color: #4a4c4c;
 	}
 
 	.registered{
@@ -143,12 +223,11 @@
 	}
 
 	.newAppointment:hover{
-		color: white;
-		background-color: #f05e23;
+
 	}
 
 	.registered:hover{
-		background-color: green;
+
 	}
 
 	@keyframes fadein {

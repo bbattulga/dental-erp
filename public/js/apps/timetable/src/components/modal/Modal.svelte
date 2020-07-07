@@ -28,6 +28,7 @@
 <style type="text/css">
 	
 	.backdrop{
+		z-index: 10000;
 		top: 0;
 		left: 0;
 		position: fixed;

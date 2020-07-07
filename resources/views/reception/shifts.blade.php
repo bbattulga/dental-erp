@@ -110,7 +110,7 @@
 
                                     @else
                                         <td>
-                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->staff->id.'/1')}}">
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->staff->id.'/2')}}">
                                                 <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
                                                                                                           style="font-size: 10px">ээлж тавих</span>
                                                 </button>

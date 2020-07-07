@@ -58,14 +58,15 @@ class AdminController extends Controller
     //---------------
     public function profile($id){
         $user = User::find($id);
+        $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
         if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = Shift::where('doctor_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
-            return view('admin.staff_profile',compact('user', 'shifts'));
-        } else if($user->role->role_id == RoleId::nurse()) {
-            $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+            $shifts = Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+            return view('admin.staff_profile',compact('user', 'shifts', 'checkins'));
+        } else if($user->role->role_id == Roles::nurse()->id) {
+            
             return view('admin.staff_profile', compact('user', 'checkins'));
         }
-        return view('admin.staff_profile', compact('user'));
+        return view('admin.staff_profile', compact('user', 'checkins'));
     }
     public function fire($id){
         $user=User::find($id);
@@ -93,9 +94,9 @@ class AdminController extends Controller
     }
     public function user_check($id){
         $user = User::find($id);
-        $check_ins = CheckIn::all()->where('state','>=',3)->where('user_id',$id);
+        $checkins = CheckIn::all()->where('state','>=',3)->where('user_id',$id);
 
-        return view('admin.user_check',compact('user','check_ins'));
+        return view('admin.user_check',compact('user','checkins'));
 
     }
 

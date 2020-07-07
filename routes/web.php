@@ -63,6 +63,8 @@ Route::post('/admin/update_staff','AdminStaffController@update');
 Route::get('/admin/staff_check/{id}/{start_date}/{end_date}', 'AdminStaffController@search');
 Route::post('/admin/staff/by_month', 'AdminStaffController@by_month');
 Route::post('/admin/staff/date', 'AdminStaffController@date');
+// for ajax
+Route::delete('/admin/staff/delete', 'AdminStaffController@delete');
 
 
 Route::get('/admin/promotion','AdminPromotionController@index');
@@ -190,8 +192,10 @@ Route::get('/reception/product','ReceptionPaymentController@product');
 Route::get('/reception/product/{id}','ReceptionPaymentController@show');
 Route::post('/reception/decrease_product','ReceptionPaymentController@decrease_product');
 
-// reception ajax
-Route::post('/reception/time/appointments', 'ReceptionTimeController@raw_appointments');
+// RECEPTION REST API
+Route::post('/api/shift', 'ReceptionTimeController@api_shift');
+Route::post('/api/shift/today', 'ReceptionTimeController@api_shift_today');
+Route::post('/api/shift_interval', 'ReceptionTimeController@json_shifts_interval');
 
 //--DOCTOR STARTING--
 Route::get('/doctor','DoctorController@index');

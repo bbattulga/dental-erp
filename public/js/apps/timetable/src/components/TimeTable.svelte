@@ -1,5 +1,7 @@
 <script type="text/javascript">
 	
+	import {fade} from 'svelte/transition';
+
 	import Cell from './Cell.svelte';
 	import {createEventDispatcher} from 'svelte';
 	import Row from './Row.svelte';
@@ -12,18 +14,19 @@
 </script>
 
 
-<table class="main-table ">
+<table 
+	class="main-table ">
 	<!-- Title columns -->
 	<tr class="header-row">
-		<td></td>
+		<td style="text-align: center; z-index: 100000;">Эмч/Цаг</td>
 		{#each times as time}
-		<th>{time} цаг</th>
+		<th class="time-container">{time}</th>
 		{/each}
 	</tr>
 
-	{#each shifts as shift}
+	{#each shifts as shift (shift.id)}
 		<Row 
-			{shift} 
+			{shift}
 			{times}/>
 	{/each}
 </table>
@@ -32,6 +35,7 @@
 <style>
 
 	table{
+		position: relative;
 		border-collapse: collapse;
 	}
 
@@ -42,8 +46,14 @@
 	}
 
 	th{
-		width: 200px;
+		z-index: 100000;
+		background: white;
+		min-width: 150px;
 		border: 3px solid #cccccc;
+	}
+
+	.time-container{
+		text-align: center;
 	}
 
 	td, tr, th{
@@ -53,12 +63,10 @@
 	}
 
 	.main-table{
-		overflow: auto;
 		border: 1px solid #333333;
 	}
 
 	.header-row{
-		height: 100px;
 		min-width: 100%;
 		position: sticky;
 		top: 0px;

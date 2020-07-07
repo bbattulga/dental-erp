@@ -150,11 +150,12 @@
                             <th>Овог</th>
                             <th>Мэргэжил</th>
                             <th>Утас</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($roles as $role)
-                            <tr>
+                            <tr id={{$role->staff->id}}>
                                 <td>
                                     <p class="list-item-heading">
                                         <a href="{{url('/admin/add_staff/'.$role->staff->id.'/profile')}}">{{$role->staff->name}}</a>
@@ -171,7 +172,7 @@
                                             Эмч
                                         @elseif($role->role_id ==1)
                                             Сувилагч
-                                        @elseif($role->role_id ==4)
+                                        @elseif($role->role_id ==4) 
                                             Нягтлан бодогч
                                         @elseif($role->role_id ==5)
                                             Админ
@@ -181,6 +182,14 @@
                                 </td>
                                 <td>
                                     <p class="text-muted">{{$role->staff->phone_number}}</p>
+                                </td>
+                                <td>
+                                    <div>
+                                        @php
+                                            $staffid=$role->staff->id
+                                        @endphp
+                                        <button onclick="deleteStaff({{$staffid}})">Устгах</button>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach 
@@ -205,6 +214,8 @@
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
     <script src="{{asset('js/validation.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
         var i;
         var has = document.getElementById('registernum').value;
@@ -230,6 +241,21 @@
             else{
                 return false
             }
+        }
+
+        function removeElement(id){
+            let e = document.getElementById(id.id);
+            return e.parentNode.removeChild(e);
+        }
+
+        function deleteStaff(id){
+            console.log('delete with id ', id);
+            axios.delete('/admin/staff/delete', {id: id})
+                .then(response=>{
+                    console.log(response);
+                    removeElement(document.getElementById(id));
+                })
+                .catch(err=>console.log(err));
         }
 
     </script>

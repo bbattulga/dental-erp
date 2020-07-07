@@ -61,11 +61,12 @@ class AdminStaffController extends Controller
 
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
+        $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
         if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Shift::all()->where('doctor_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
-            return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date'));
+            return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date', 'checkins'));
         } else if($user->role->role_id == Roles::doctor()->id) {
-            $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
+            
             return view('admin.staff_profile', compact('user', 'checkins', 'start_date', 'end_date'));
         }
     }
@@ -88,5 +89,11 @@ class AdminStaffController extends Controller
         $end_date = explode('/', $end_date);
         $end_date = strtotime($end_date[2] . '-' . $end_date[0] . '-' . $end_date[1]);
         return redirect('/admin/staff_check/'. $request['staff_id']. '/'  . $start_date.'/'.$end_date);
+    }
+
+    public function delete(Request $request){
+        $id = $request['id'];
+        $user = User::find($id);
+        return $user;
     }
 }

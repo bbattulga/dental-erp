@@ -37,13 +37,13 @@
                                 </p>
                                 <p class="text-muted text-small mb-2">Мэргэжил</p>
                                 <p class="mb-3">
-                                    @if($user->role->role_id == 0)
+                                    @if($user->role->role_id == 5)
                                         Админ
-                                    @elseif($user->role->role_id == 1)
-                                        Ресепшн
                                     @elseif($user->role->role_id == 2)
-                                        Эмч
+                                        Ресепшн
                                     @elseif($user->role->role_id == 3)
+                                        Эмч
+                                    @elseif($user->role->role_id == 1)
                                         Сувилагч
                                     @elseif($user->role->role_id == 4)
                                         Нягтлан

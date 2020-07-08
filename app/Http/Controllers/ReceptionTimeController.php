@@ -10,6 +10,7 @@ use App\Shift;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Roles;
 
 
@@ -54,49 +55,6 @@ class ReceptionTimeController extends Controller
 
 
     public function store(Request $request) {
-
-        /*
-        $shift = Time::find($request['shift_id']);
-        if ($shift->shift_id == 2) {
-            $times = [15, 16, 17, 18, 19, 20];
-        } elseif ($shift->shift_id == 1) {
-            $times = [9, 10, 11, 12, 13, 14];
-        } else {
-            $times = [];
-        }
-
-        //Generating database's array
-
-        $appointments = $shift->appointments->sortBy('start');
-        foreach ($appointments as $appointment) {
-            $start = $appointment->start;
-            $end = $appointment->end;
-            for ($i = $start; $i<$end; $i++) {
-                array_push($times, $i);
-            }
-        }
-
-        //Generating input's array
-        $time = [];
-        $start = $request['time'];
-        $end = $request['time']+$request['hours'];
-        for ($i = $start; $i<$end; $i++) {
-            array_push($time, $i);
-        }
-
-        //Checking appointment
-        for ($i = 0; $i<count($time); $i++) {
-            for ($c = 0; $c<count($times); $c++) {
-                if ($times[$c] == $time[$i]) {
-                    //Return validation message
-                    return 'shit';
-                }
-            }
-        }
-        */
-
-      //  return 'a';
-        // trivial add
         
         $id = -1;
         if($request['user_id'] == 0) {
@@ -146,17 +104,39 @@ class ReceptionTimeController extends Controller
 
     // for ajax requests
     public function api_shift(Request $request){
-
+        // $date is optional.
         $date = $request['date'];
-        if (count($date) == 1){
+        if ($date == null){
+            $date = Date('Y-m-d');
+        }
         $shifts = Shift::with('appointments', 'appointments.user', 'doctor')
-            ->where('date' , '=',$date[0])
+            ->where('shifts.date' , '=', $date)
             ->get();
         return $shifts;
-        }
-    return 'asd';
     }
 
+    public function api_doctors(){
+         $doctors = DB::table('user_role')
+                    ->join('users', function($join){
+                        $join->on('users.id', '=', 'user_role.user_id')
+                            ->where('user_role.role_id', '=', Roles::doctor()->id);
+                    })->get();
+        return $doctors;
+    }
+
+    public function api_shifts_interval(Request $request){
+
+        $date1 = $request['date1'];
+        $date2 = $request['date2'];
+        $user_id = $request['user_id'];
+
+        $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('shifts.date','>=',$date1)
+            ->where('shifts.date', '<=',$date2)
+            ->where('shifts.user_id', '=', $user_id)
+            ->get();
+        return $shifts;
+    }
     public function api_shift_today(){
         $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
             ->where('shifts.date',Date('Y-m-d'))

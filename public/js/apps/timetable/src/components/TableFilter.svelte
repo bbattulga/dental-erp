@@ -2,10 +2,10 @@
 	
 	import TimeTable from './TimeTable.svelte';
 	import {createEventDispatcher} from 'svelte';
-	import moment from 'moment';
 
-	export let shifts;
+	export let shifts = [];
 	export let times;
+	export let doctors = [];
 
 	const dispatch = createEventDispatcher();
 
@@ -20,25 +20,30 @@
 		return d;
 	}
 
-	let m = moment();
-
 	let date = new Date();
 
 	let lastDay = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
 
-	let dates = [
-	{name:'Өнөөдөр', 
-	selected: true,
-	readonly: true,
+	let showDoctors = true;
 
-	period: [
-		dateFormat(date)
-		]},
+	let dates = [
+		{
+			name:'Өнөөдөр', 
+			selected: true, // optional
+			readonly: true, // optional
+
+			period: [
+				dateFormat(date)
+			]
+		},
+
 		{
 			name:'Энэ сарын', 
+			readonly: true,
 			period: [
-			dateFormat(addDays(date, -(date.getDate())+1)), 
-			dateFormat(addDays(new Date(), lastDay-date.getDate() ))]
+				dateFormat(addDays(date, -(date.getDate())+1)), 
+				dateFormat(addDays(new Date(), lastDay-date.getDate() ))
+			]
 		},
 
 		{
@@ -52,25 +57,41 @@
 		}
 	];
 
-	let selectedDoctor;
-
-	// get doctors
-	let doctors = shifts.map(shift=>shift.doctor);
-	//$:{doctors = shifts.map(shift=>shift.doctor);}
+	let selectedDoctor = '*';
 
 	let selectedDate = dates[0];
 
-	const handleSelect = (event) => {
-		if (selectedDoctor == null){
-			console.log('selected doctor null');
+	const handleSelectDateType = (event) => {
+		console.log('selected date ', selectedDate);
+		if (selectedDate.period.length > 1)
+			selectedDoctor = null;
+		else
+			selectedDoctor = '*';
+		shifts = [];
+		handleDateChange();
+	}
+
+	const handleSelectDoctor = (event) =>{
+		if (selectedDoctor == null)
 			return;
-		}
-			selectedDate = selectedDate;
 		handleDateChange();
 	}
 
 	const handleDateChange = (event) => {
+		console.log('handleDateChange',selectedDoctor)
 
+		if (selectedDoctor == null){
+			console.log('selected doctor null');
+			showDoctors = false;
+			return;
+		}
+
+		showDoctors = true;
+		selectedDate = selectedDate;
+		if (selectedDate.period.length > 1){
+			showDoctors = false;
+		}
+		console.log('selected doctor: ', selectedDoctor);
 		let detail = {
 			doctor: selectedDoctor,
 			date: selectedDate.period
@@ -89,27 +110,31 @@
 			<div class="date-container">
 				<div class="row">
 					<label>Өдөр</label>
-					<select bind:value={selectedDate} on:change={handleSelect} on:blur={handleSelect}>
+					<select bind:value={selectedDate} on:change={handleSelectDateType}>
 						{#each dates as date}
 						<option value={date} selected={date.selected}>{date.name}</option>
 						{/each}
 					</select>
 				</div>
 				<div class="col">
-					<input on:blur={handleDateChange} type="date" bind:value={selectedDate.period[0]} readonly="{selectedDate.readonly}">
+					<input on:blur={handleDateChange} type="date" 
+							bind:value={selectedDate.period[0]} 
+							readonly="{selectedDate.readonly}">
 					{#if selectedDate.period.length>1}
-					- <input on:blur={handleDateChange} type="date" bind:value={selectedDate.period[1]}>
+					- <input on:blur={handleDateChange} type="date" 
+							bind:value={selectedDate.period[1]}
+							readonly="{selectedDate.readonly}">
 					{/if}
 				</div>
 			</div>
 
 			<div class="row">
 				<label>Эмч</label>
-				<select bind:value={selectedDoctor} on:change={handleSelect} on:blur={handleSelect}>
+				<select bind:value={selectedDoctor} on:change={handleSelectDoctor}>
 					{#if selectedDate.period.length == 1}
 					<option value={'*'}>Бүх эмч</option>
 					{:else}
-					<option value={null} selected="{true}">Эмч сонгох</option>
+					<option value={null} selected>Эмч сонгох</option>
 					{#each doctors as doctor}
 					<option value={doctor}>{doctor.name}</option>
 					{/each}
@@ -120,8 +145,9 @@
 	</div>
 
 	<TimeTable
-	bind:shifts={shifts}
-	{times} />
+		bind:shifts={shifts}
+		{showDoctors}
+		{times}/>
 
 </div>
 

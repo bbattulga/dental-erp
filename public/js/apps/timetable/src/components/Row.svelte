@@ -46,7 +46,10 @@
 			let d = 1;
 			for (let j=0; j<appointments.length; j++){
 
-				if (""+appointments[j].start+":00" != time){
+
+			let prefix = (appointments[j].start<10)? '0': '';
+
+				if (prefix+appointments[j].start+":00" != time){
 					continue;
 				}
 
@@ -88,10 +91,7 @@
 <tr class="main-row">
 	<th class="th-doctor">
 		<div class="doctor">
-			<div class="doctor-icon">
-				<img src="/js/apps/timetable/src/components/assets/doctor.png">
-			</div>
-			{doctor.name}
+			<slot name="th"></slot>
 		</div>
 	</th>
 	{#each cellsData as cellData (generateId(cellData))}
@@ -126,18 +126,9 @@
 		margin: 5px;
 	}
 
-	.doctor-icon{
-		width: 100px;
-		height: 100px;
-	}
-
-	.doctor-icon img{
-		max-width: 100%;
-		height: auto;
-	}
-
 	th{
-		border: 3px solid #cccccc;;
+		border: 3px solid #cccccc;
+		min-height: 80px;
 	}
 
 	td{

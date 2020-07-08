@@ -17,6 +17,7 @@
 	export let shift;
 	export let appointment;
 	export let time;
+	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
 	if ((shift_type == 1) && (time >= '15:00')){
@@ -59,6 +60,7 @@
 				appointment.id = id;
 				empty = false;
 				newAppointment = true;
+				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
 			})
 			.catch(err=>{
@@ -138,7 +140,7 @@
 			<h4>{disabled? '':'Цаг захиалах'}</h4>
 		{:else}
 			<h4>{appointment.name}</h4>
-			<p>{appointment.phone}</p>
+			<h5>{appointment.phone}</h5>
 		{/if}
 	</div>
 	</div>
@@ -213,8 +215,8 @@
 
 	.newAppointment{
 		font-size: 1.5em;
-		color: white;
-		background-color: #4a4c4c;
+		color: #222222;
+		background-color: #f2aa4fff;
 	}
 
 	.registered{

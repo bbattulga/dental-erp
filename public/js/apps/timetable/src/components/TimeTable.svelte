@@ -1,16 +1,15 @@
 <script type="text/javascript">
-	
-	import {fade} from 'svelte/transition';
 
 	import Cell from './Cell.svelte';
-	import {createEventDispatcher} from 'svelte';
 	import Row from './Row.svelte';
 
 	// contains {doctor, appointments}
 	export let shifts = [];
-
+	console.log('timetable got shifts', shifts);
 	export let times;
 	
+	export let showDoctors = true;
+
 </script>
 
 
@@ -18,7 +17,7 @@
 	class="main-table ">
 	<!-- Title columns -->
 	<tr class="header-row">
-		<td style="text-align: center; z-index: 100000;">Эмч/Цаг</td>
+		<td style="text-align: center; z-index: 100000;">{showDoctors? 'Эмч/Цаг':'Өдөр/Цаг'}</td>
 		{#each times as time}
 		<th class="time-container">{time}</th>
 		{/each}
@@ -27,7 +26,24 @@
 	{#each shifts as shift (shift.id)}
 		<Row 
 			{shift}
-			{times}/>
+			{times}>
+
+			<div slot="th">
+
+			{#if showDoctors}
+			<div class="doctor-icon">
+				<img name="th-icon" src="/js/apps/timetable/src/components/assets/doctor.png">
+			</div>
+
+			<h4>
+				{shift.doctor.name}
+			</h4> 
+			<!-- end if showDoctors -->
+			{:else}
+				{shift.date}
+			{/if}
+		</div>
+		</Row>
 	{/each}
 </table>
 
@@ -37,6 +53,7 @@
 	table{
 		position: relative;
 		border-collapse: collapse;
+		line-height: 80px;
 	}
 
 	*{
@@ -70,5 +87,15 @@
 		min-width: 100%;
 		position: sticky;
 		top: 0px;
+	}
+
+		.doctor-icon{
+		width: 100px;
+		height: 100px;
+	}
+
+	.doctor-icon img{
+		max-width: 100%;
+		height: auto;
 	}
 </style>

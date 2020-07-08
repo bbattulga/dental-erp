@@ -12,6 +12,7 @@
 
 	function close(){
 		showModal = false;
+		console.log('close modal');
 	}
 </script>
 

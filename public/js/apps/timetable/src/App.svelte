@@ -11,6 +11,7 @@
 
 	let shifts = [];
 	let doctors = [];
+	let LOADING = true;
 
 	// /api/shift -shifts of day
 	// /api/shifts - all shifts
@@ -24,6 +25,7 @@
 			let sdata = response.data;
 			console.log(sdata);
 			shifts = sdata;
+			LOADING = false;
 		}).catch(err=>{
 			console.log(err);
 		});
@@ -32,8 +34,9 @@
 		.then(response=>{
 			doctors = response.data;
 			console.log('all doctors:',doctors);
+			LOADING = false;
 		})
-		.catch(err=>console.log(err));
+		.catch(err=>{console.log(err);LOADING = false;});
 
 	let times = [];
 	for (let i=9; i<21; i++) {
@@ -53,8 +56,9 @@
 		console.log('request detail', detail);
 
 		let promise = null;
+		LOADING = true;
 		if (date.length == 1){
-			promise = axios.get(`/api/reception/shift/${date}`)
+			promise = axios.get(`/api/reception/shift/${date}`);
 		}else if (date.length == 2){
 			let doctorId = doctor == null? null:doctor.id;
 			let url = `/api/reception/shift_interval/${date[0]}/${date[1]}/${doctorId}`
@@ -66,9 +70,11 @@
 					console.log('response to tablefilter');
 					console.log(response);
 					shifts = response.data;
+					LOADING = false;
 				})
 				.catch(err=>{
 					console.log(err);
+					LOADING = false;
 				});
 	}
 
@@ -79,11 +85,18 @@
 		console.log('fullscreen');
 	}
 </script>
-
 <div 
 	transition:fly={{y:-100, duration: 550}}
 	class="main-container"
 	class:background={fullscreen} on:click|self={()=>fullscreen=!fullscreen}>
+
+	<div 
+		class:hidden={!LOADING}
+		class="loading-container">
+		<img src="/js/apps/timetable/src/components/assets/loading-200-200-grey.gif" alt="loading">
+	</div>
+
+
 	{#if fullscreen}
 	<div class="btn-close-fullsreen" 
 		on:hover={()=>console.log('onhover')}
@@ -103,10 +116,16 @@
 		<TableFilter
 
 			on:selectDate={handleSelectDate}
+<<<<<<< HEAD
 			shifts={shifts}
 			{times}/>
+=======
+			bind:shifts={shifts}
+			{times}
+			bind:doctors={doctors}/>
+>>>>>>> svelteapps
 	</div>
-	
+
 </div>
 
 <style>
@@ -120,6 +139,25 @@
 
 		box-shadow: 1px 1px 2px grey;
 		padding: 10px;
+	}
+
+	.hidden{
+		display: none;
+	}
+
+	.loading-container{
+		width: 200px;
+		height: 200px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 2000000000;
+	}
+
+	.loading-container > img{
+		max-width: 100%;
+		height: auto;
 	}
 
 	.main-div{

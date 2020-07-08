@@ -54,6 +54,7 @@
 		position: relative;
 		border-collapse: collapse;
 		line-height: 80px;
+		border: 3px solid #cccccc;
 	}
 
 	*{
@@ -70,6 +71,7 @@
 	}
 
 	.time-container{
+		border: 3px solid #cccccc;
 		text-align: center;
 	}
 
@@ -87,6 +89,7 @@
 		min-width: 100%;
 		position: sticky;
 		top: 0px;
+		border: 3px solid #cccccc;
 	}
 
 		.doctor-icon{

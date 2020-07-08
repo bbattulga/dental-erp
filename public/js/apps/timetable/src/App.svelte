@@ -80,7 +80,7 @@
 		<TableFilter
 
 			on:selectDate={handleSelectDate}
-			bind:shifts={shifts}
+			shifts={shifts}
 			{times}/>
 	</div>
 </div>

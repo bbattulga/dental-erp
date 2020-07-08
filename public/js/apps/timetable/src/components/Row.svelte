@@ -136,6 +136,7 @@
 	}
 
 	tr{
+		border: 3px solid #cccccc;
 		height: 100%;
 	}
 </style>

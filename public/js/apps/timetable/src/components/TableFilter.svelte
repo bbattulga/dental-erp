@@ -2,6 +2,7 @@
 	
 	import TimeTable from './TimeTable.svelte';
 	import {createEventDispatcher} from 'svelte';
+	import {fade} from 'svelte/transition';
 
 	export let shifts = [];
 	export let times;
@@ -9,6 +10,7 @@
 
 	const dispatch = createEventDispatcher();
 
+	
 
 	const dateFormat = (date) => {
 		return date.toLocaleDateString('en-CA');
@@ -102,7 +104,8 @@
 </script>
 
 
-<div class="main-div">
+<div 
+	class="main-div">
 
 	<div class="filter-container">
 		<div class="filter-container-select">

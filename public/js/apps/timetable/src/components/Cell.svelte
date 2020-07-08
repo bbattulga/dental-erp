@@ -162,6 +162,7 @@
 <style type="text/css">
 	
 	td{
+		z-index: 1000;
 		transition: 0.4s;
 		border: 3px solid #cccccc;
 		height: 100%;

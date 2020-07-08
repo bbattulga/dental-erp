@@ -16,7 +16,7 @@ class AdminTreatmentController extends Controller
     }
     public function index() {
         $treatments = Treatment::all();
-        return view('admin.btt_treatments', compact('treatments'));
+        return view('admin.treatments', compact('treatments'));
     }
 
     public function treatmentCategories(){

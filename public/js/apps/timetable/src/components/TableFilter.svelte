@@ -4,7 +4,6 @@
 	import {createEventDispatcher} from 'svelte';
 
 	export let shifts = [];
-	console.log('tablefilter got shifts', shifts);
 	export let times;
 	export let doctors = [];
 
@@ -92,6 +91,7 @@
 		if (selectedDate.period.length > 1){
 			showDoctors = false;
 		}
+		console.log('selected doctor: ', selectedDoctor);
 		let detail = {
 			doctor: selectedDoctor,
 			date: selectedDate.period
@@ -110,7 +110,7 @@
 			<div class="date-container">
 				<div class="row">
 					<label>Өдөр</label>
-					<select bind:value={selectedDate} on:change={handleSelectDateType} on:blur={handleSelectDateType}>
+					<select bind:value={selectedDate} on:change={handleSelectDateType}>
 						{#each dates as date}
 						<option value={date} selected={date.selected}>{date.name}</option>
 						{/each}
@@ -130,7 +130,7 @@
 
 			<div class="row">
 				<label>Эмч</label>
-				<select bind:value={selectedDoctor} on:change={handleSelectDoctor} on:blur={handleSelectDoctor}>
+				<select bind:value={selectedDoctor} on:change={handleSelectDoctor}>
 					{#if selectedDate.period.length == 1}
 					<option value={'*'}>Бүх эмч</option>
 					{:else}

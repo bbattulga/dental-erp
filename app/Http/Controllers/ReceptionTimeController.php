@@ -55,49 +55,6 @@ class ReceptionTimeController extends Controller
 
 
     public function store(Request $request) {
-
-        /*
-        $shift = Time::find($request['shift_id']);
-        if ($shift->shift_id == 2) {
-            $times = [15, 16, 17, 18, 19, 20];
-        } elseif ($shift->shift_id == 1) {
-            $times = [9, 10, 11, 12, 13, 14];
-        } else {
-            $times = [];
-        }
-
-        //Generating database's array
-
-        $appointments = $shift->appointments->sortBy('start');
-        foreach ($appointments as $appointment) {
-            $start = $appointment->start;
-            $end = $appointment->end;
-            for ($i = $start; $i<$end; $i++) {
-                array_push($times, $i);
-            }
-        }
-
-        //Generating input's array
-        $time = [];
-        $start = $request['time'];
-        $end = $request['time']+$request['hours'];
-        for ($i = $start; $i<$end; $i++) {
-            array_push($time, $i);
-        }
-
-        //Checking appointment
-        for ($i = 0; $i<count($time); $i++) {
-            for ($c = 0; $c<count($times); $c++) {
-                if ($times[$c] == $time[$i]) {
-                    //Return validation message
-                    return 'shit';
-                }
-            }
-        }
-        */
-
-      //  return 'a';
-        // trivial add
         
         $id = -1;
         if($request['user_id'] == 0) {
@@ -159,10 +116,10 @@ class ReceptionTimeController extends Controller
     }
 
     public function api_doctors(){
-         $doctors = DB::table('users')
-                    ->join('user_role', function($join){
+         $doctors = DB::table('user_role')
+                    ->join('users', function($join){
                         $join->on('users.id', '=', 'user_role.user_id')
-                            ->where('user_role.role_id', '=', 3);
+                            ->where('user_role.role_id', '=', Roles::doctor()->id);
                     })->get();
         return $doctors;
     }
@@ -179,7 +136,6 @@ class ReceptionTimeController extends Controller
             ->where('shifts.user_id', '=', $user_id)
             ->get();
         return $shifts;
-
     }
     public function api_shift_today(){
         $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')

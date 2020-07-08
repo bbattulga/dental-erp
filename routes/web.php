@@ -194,7 +194,7 @@ Route::post('/reception/decrease_product','ReceptionPaymentController@decrease_p
 
 // RECEPTION REST API
 Route::get('/api/reception/shift/{date?}', 'ReceptionTimeController@api_shift');
-Route::get('/api/reception/shift_interval/{date1}/{date2}/{user_id?}', 'ReceptionTimeController@api_shifts_interval');
+Route::get('/api/reception/shift_interval/{date1}/{date2}/{user_id}', 'ReceptionTimeController@api_shifts_interval');
 Route::post('/api/reception/doctors/{id?}', 'ReceptionTimeController@api_doctors');
 
 //--DOCTOR STARTING--

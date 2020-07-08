@@ -17,7 +17,6 @@
 	export let shift;
 	export let appointment;
 	export let time;
-	console.log('cell got appointment', appointment);
 	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -141,7 +140,7 @@
 			<h4>{disabled? '':'Цаг захиалах'}</h4>
 		{:else}
 			<h4>{appointment.name}</h4>
-			<p>{appointment.phone}</p>
+			<h5>{appointment.phone}</h5>
 		{/if}
 	</div>
 	</div>
@@ -216,8 +215,8 @@
 
 	.newAppointment{
 		font-size: 1.5em;
-		color: white;
-		background-color: #4a4c4c;
+		color: #222222;
+		background-color: #f2aa4fff;
 	}
 
 	.registered{

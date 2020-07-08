@@ -31,6 +31,7 @@
 	axios.post('/api/reception/doctors')
 		.then(response=>{
 			doctors = response.data;
+			console.log('all doctors:',doctors);
 		})
 		.catch(err=>console.log(err));
 
@@ -54,9 +55,10 @@
 		let promise = null;
 		if (date.length == 1){
 			promise = axios.get(`/api/reception/shift/${date}`)
-		}else if (date.length > 1){
+		}else if (date.length == 2){
 			let doctorId = doctor == null? null:doctor.id;
 			let url = `/api/reception/shift_interval/${date[0]}/${date[1]}/${doctorId}`
+			console.log('sent url: ',url);
 			promise = axios.get(url);
 		}
 
@@ -103,7 +105,7 @@
 			on:selectDate={handleSelectDate}
 			bind:shifts={shifts}
 			{times}
-			{doctors}/>
+			bind:doctors={doctors}/>
 	</div>
 	
 </div>

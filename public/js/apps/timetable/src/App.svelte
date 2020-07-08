@@ -116,13 +116,9 @@
 		<TableFilter
 
 			on:selectDate={handleSelectDate}
-			shifts={shifts}
-			{times}/>
 			bind:shifts={shifts}
-			{times}
-			bind:doctors={doctors}/>
-
-			
+			bind:doctors={doctors}
+			{times}/>
 	</div>
 
 </div>

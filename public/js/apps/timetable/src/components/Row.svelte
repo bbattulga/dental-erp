@@ -92,6 +92,7 @@
 	<th class="th-doctor">
 		<div class="doctor">
 			<slot name="th"></slot>
+			<slot></slot>
 		</div>
 	</th>
 	{#each cellsData as cellData (generateId(cellData))}

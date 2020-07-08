@@ -23,7 +23,7 @@
 		{/each}
 	</tr>
 
-	{#each shifts as shift (shift.id)}
+	{#each shifts as shift}
 		<Row 
 			{shift}
 			{times}>

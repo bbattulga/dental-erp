@@ -28,6 +28,8 @@
 
 	let showDoctors = true;
 
+	$:{console.log('shifts changed',shifts)}
+
 	let dates = [
 		{
 			name:'Өнөөдөр', 
@@ -69,7 +71,6 @@
 			selectedDoctor = null;
 		else
 			selectedDoctor = '*';
-		shifts = [];
 		handleDateChange();
 	}
 
@@ -81,7 +82,7 @@
 
 	const handleDateChange = (event) => {
 		console.log('handleDateChange',selectedDoctor)
-
+		shifts = [];
 		if (selectedDoctor == null){
 			console.log('selected doctor null');
 			showDoctors = false;

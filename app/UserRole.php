@@ -15,6 +15,11 @@ class UserRole extends Model
     public function staff() {
         return $this->hasOne('App\User', 'id', 'user_id');
     }
+
+    public function users(){
+        return $this->hasMany('App\User', 'id', 'user_id');
+    }
+    
     public function shifts() {
         return $this->hasMany('App\Shift', 'doctor_id', 'user_id');
     }

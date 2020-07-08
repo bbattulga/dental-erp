@@ -118,7 +118,7 @@
 		{#if (appointment == null)}
 			<div class="row-input">
 				<label>Хугацаа(цагаар):</label> <br />
-				<input type="number" bind:value={hours} style="width: 100px;">
+				<input style="display: inline-block; width: 100px;" type="number" bind:value={hours}>
 
 				<div style="text-align: right;">
 				<button 
@@ -166,7 +166,6 @@
 		width: 100%;
 		border: 1px solid grey;
 
-		padding: 10px;
 		border-radius: 3px;
 	}
 
@@ -186,8 +185,6 @@
 	}
 
 	.form{
-		display: flex;
-		flex-direction: column;
 		position: relative;
 		top: 10%;
 		left: 50%;
@@ -197,6 +194,7 @@
 		border-radius: 10px;
 		padding: 30px;
 		background-color: white;
+		overflow: auto;
 	}
 
 	.title-sub{
@@ -209,8 +207,9 @@
 		grid-template-columns: 3fr 7fr;
 		text-align: left;
 		max-width: 100%;
-		margin-bottom: 10px;
 	}
+
+	/*
 
 	@media (max-width:  900px){
 
@@ -224,7 +223,7 @@
 		}
 		.form{
 			min-width: 80%;
-			max-height: 100%;
+			max-height: 80%;
 		}
 	}
 	@media (max-width: 700px){
@@ -236,6 +235,7 @@
 			max-height: 100%;
 		}
 	}
+	*/
 
 	.btn-add{
 		display: inline-block;

@@ -193,9 +193,9 @@ Route::get('/reception/product/{id}','ReceptionPaymentController@show');
 Route::post('/reception/decrease_product','ReceptionPaymentController@decrease_product');
 
 // RECEPTION REST API
-Route::post('/api/shift', 'ReceptionTimeController@api_shift');
-Route::post('/api/shift/today', 'ReceptionTimeController@api_shift_today');
-Route::post('/api/shift_interval', 'ReceptionTimeController@json_shifts_interval');
+Route::get('/api/reception/shift/{date?}', 'ReceptionTimeController@api_shift');
+Route::get('/api/reception/shift_interval/{date1}/{date2}/{user_id?}', 'ReceptionTimeController@api_shifts_interval');
+Route::post('/api/reception/doctors/{id?}', 'ReceptionTimeController@api_doctors');
 
 //--DOCTOR STARTING--
 Route::get('/doctor','DoctorController@index');

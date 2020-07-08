@@ -17,6 +17,8 @@
 	export let shift;
 	export let appointment;
 	export let time;
+	console.log('cell got appointment', appointment);
+	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
 	if ((shift_type == 1) && (time >= '15:00')){
@@ -59,6 +61,7 @@
 				appointment.id = id;
 				empty = false;
 				newAppointment = true;
+				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
 			})
 			.catch(err=>{

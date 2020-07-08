@@ -28,7 +28,7 @@
 <style type="text/css">
 	
 	.backdrop{
-		z-index: 10000;
+		z-index: 2000000000;
 		top: 0;
 		left: 0;
 		position: fixed;

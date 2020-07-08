@@ -10,11 +10,15 @@
 
 
 	let shifts = [];
+	let doctors = [];
 
 	// /api/shift -shifts of day
 	// /api/shifts - all shifts
+	// /api/shift_interval - shift interval like 2020-07-01-2020-07-01
+	// shift interval should specify staff with id. else things will get messy.
 
-	axios.post('/api/shift/today')
+	// intial data
+	axios.get('/api/reception/shift')
 		.then(response=>{
 			console.log('shifts from server');
 			let sdata = response.data;
@@ -24,7 +28,12 @@
 			console.log(err);
 		});
 
-	let select = 0;
+	axios.post('/api/reception/doctors')
+		.then(response=>{
+			doctors = response.data;
+		})
+		.catch(err=>console.log(err));
+
 	let times = [];
 	for (let i=9; i<21; i++) {
 		let prefix = (i<10)? '0': '';
@@ -37,16 +46,28 @@
 
 	const handleSelectDate = (event) => {
 		let detail = event.detail;
-		console.log('post details', detail);
-		axios.post('/api/shift', detail)
-			.then(response=>{
-				console.log('response to tablefilter');
-				console.log(response);
-				shifts = response.data;
-			})
-			.catch(err=>{
-				console.log(err);
-			})
+		let date = detail.date;
+		let doctor = detail.doctor;
+
+		console.log('request detail', detail);
+
+		let promise = null;
+		if (date.length == 1){
+			promise = axios.get(`/api/reception/shift/${date}`)
+		}else if (date.length > 1){
+			let doctorId = doctor == null? null:doctor.id;
+			let url = `/api/reception/shift_interval/${date[0]}/${date[1]}/${doctorId}`
+			promise = axios.get(url);
+		}
+
+		promise.then(response=>{
+					console.log('response to tablefilter');
+					console.log(response);
+					shifts = response.data;
+				})
+				.catch(err=>{
+					console.log(err);
+				});
 	}
 
 	let fullscreen = false;
@@ -62,11 +83,11 @@
 	class="main-container"
 	class:background={fullscreen} on:click|self={()=>fullscreen=!fullscreen}>
 	{#if fullscreen}
-		<div class="btn-close-fullsreen" 
-			on:hover={()=>console.log('onhover')}
-			on:click={()=>fullscreen=!fullscreen}>
-			<img src="/js/apps/timetable/src/components/assets/close-red-512.png" alt="close">
-		</div>
+	<div class="btn-close-fullsreen" 
+		on:hover={()=>console.log('onhover')}
+		on:click={()=>fullscreen=!fullscreen}>
+		<img src="/js/apps/timetable/src/components/assets/close-red-512.png" alt="close">
+	</div>
 	{/if}
 
 	{#if !fullscreen}
@@ -81,8 +102,10 @@
 
 			on:selectDate={handleSelectDate}
 			bind:shifts={shifts}
-			{times}/>
+			{times}
+			{doctors}/>
 	</div>
+	
 </div>
 
 <style>
@@ -158,7 +181,7 @@
 	}
 
 	.btn-fullscreen{
-		z-index: 10000;
+		z-index: 10000;	
 		display: block; 
 		width: 32px;
 		height: 32px;

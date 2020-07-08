@@ -46,7 +46,10 @@
 			let d = 1;
 			for (let j=0; j<appointments.length; j++){
 
-				if (""+appointments[j].start+":00" != time){
+
+			let prefix = (appointments[j].start<10)? '0': '';
+
+				if (prefix+appointments[j].start+":00" != time){
 					continue;
 				}
 

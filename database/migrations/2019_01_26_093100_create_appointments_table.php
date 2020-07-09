@@ -20,9 +20,7 @@ class CreateAppointmentsTable extends Migration
             $table->integer('shift_id')->unsigned();
             $table->foreign('shift_id')->references('id')->on('times');
 
-            $table->index('user_id');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
 
             $table->string('name');
             $table->string('phone', 20);

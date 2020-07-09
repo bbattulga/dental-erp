@@ -15,6 +15,7 @@ class RemoveFkFromDoctorShifts extends Migration
     {
         Schema::table('doctor_shifts', function (Blueprint $table) {
             //
+            /*
             $table->dropForeign('times_doctor_id_foreign');
             $table->dropIndex('times_doctor_id_index');
 
@@ -23,6 +24,7 @@ class RemoveFkFromDoctorShifts extends Migration
 
             $table->dropForeign('times_created_by_foreign');
             $table->dropIndex('times_created_by_index');
+            */
         });
     }
 

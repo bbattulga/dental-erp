@@ -15,6 +15,7 @@ class AddFksToDoctorShifts extends Migration
     {
         Schema::table('doctor_shifts', function (Blueprint $table) {
             //
+            /*
             $table->index('doctor_id');
             $table->foreign('doctor_id')->references('id')->on('users');
 
@@ -23,7 +24,7 @@ class AddFksToDoctorShifts extends Migration
 
             $table->index('created_by');
             $table->foreign('created_by')->references('id')->on('users');
-
+            */
         });
     }
 

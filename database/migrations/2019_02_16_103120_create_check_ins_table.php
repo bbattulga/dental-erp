@@ -30,9 +30,7 @@ class CreateCheckInsTable extends Migration
             //Emchilgeenii tulbur tulsun - 2
             $table->integer('created_by');
 
-            $table->index('nurse_id');
             $table->integer('nurse_id')->unsigned();
-            $table->foreign('nurse_id')->references('id')->on('users');
 
             $table->timestamps();
         });

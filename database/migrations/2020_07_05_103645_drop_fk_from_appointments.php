@@ -15,9 +15,10 @@ class DropFkFromAppointments extends Migration
     {
         Schema::table('appointments', function (Blueprint $table) {
             //
+            /*
             $table->dropForeign('appointments_shift_id_foreign');
             $table->dropIndex('appointments_shift_id_index');
-            
+            */
         });
     }
 

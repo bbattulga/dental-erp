@@ -15,8 +15,10 @@ class RemoveFkUserIdFromAppointments extends Migration
     {
         Schema::table('appointments', function (Blueprint $table) {
             //
+            /*
             $table->dropForeign('appointments_user_id_foreign');
             $table->dropIndex('appointments_user_id_index');
+            */
         });
     }
 

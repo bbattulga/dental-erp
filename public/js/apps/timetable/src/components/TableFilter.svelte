@@ -67,6 +67,7 @@
 
 	const handleSelectDateType = (event) => {
 		console.log('selected date ', selectedDate);
+		shifts = [];
 		if (selectedDate.period.length > 1)
 			selectedDoctor = null;
 		else
@@ -82,7 +83,6 @@
 
 	const handleDateChange = (event) => {
 		console.log('handleDateChange',selectedDoctor)
-		shifts = [];
 		if (selectedDoctor == null){
 			console.log('selected doctor null');
 			showDoctors = false;

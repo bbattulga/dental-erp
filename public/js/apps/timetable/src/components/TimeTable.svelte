@@ -19,11 +19,11 @@
 	<tr class="header-row">
 		<td style="text-align: center; z-index: 100000;">{showDoctors? 'Эмч/Цаг':'Өдөр/Цаг'}</td>
 		{#each times as time}
-		<th class="time-container">{time}</th>
+		<td class="time-container"><p>{time}</p></td>
 		{/each}
 	</tr>
 
-	{#each shifts as shift}
+	{#each shifts as shift (shift.id)}
 		<Row 
 			{shift}
 			{times}>
@@ -63,16 +63,17 @@
 		font-family: Arial sans-serif;
 	}
 
-	th{
+
+	.time-container{
 		z-index: 100000;
 		background: white;
 		min-width: 150px;
 		border: 3px solid #cccccc;
 	}
 
-	.time-container{
-		border: 3px solid #cccccc;
+	.time-container > p{
 		text-align: center;
+		background: white;
 	}
 
 	td, tr, th{

@@ -128,7 +128,8 @@
 		width: 100%;
 		background: white;
 		position: relative;
-		overflow: auto;
+		overflow-x: auto;
+		
 		background: white;
 		height: 100%;
 
@@ -215,7 +216,7 @@
 	}
 
 	.btn-fullscreen{
-		z-index: 10000;	
+		z-index: 1000;	
 		display: block; 
 		width: 32px;
 		height: 32px;

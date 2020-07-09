@@ -57,8 +57,7 @@ class AdminTreatmentController extends Controller
         //return $request['treatment'];
        $record = Treatment::create(['name'=>$request['name'], 'selection_type'=>$request['selection_type'],
            'category'=>$request['category'], 'price'=>$request['price'], 'limit'=>$request['limit']]);
-        //return redirect()->back();
-       return $record->id;
+        return redirect()->back();
     }
     
     public function storeTreatmentSelection(Request $request) {

@@ -52,7 +52,7 @@
 		console.log(event.detail);
 
 		let appointment = event.detail.appointment;
-
+		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
 		axios.post('/reception/time/add', appointment)
 			.then(response=>{
@@ -64,7 +64,7 @@
 				dispatch('addAppointment', appointment);
 			})
 			.catch(err=>{
-				alert('Алдаа гарлаа');
+				alert('Алдаа гарлаа', err);
 			});
 	}
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use App\Roles;
+use Illuminate\Http\Request;
 
 
 class LoginController extends Controller
@@ -22,6 +23,16 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    public function loginToken(Request $request){
+        $this->validateLogin($request);
+        if ($this->attemptLogin($request)){
+            $user = $this->guard()->user();
+            $user->generateToken();
+            return response()->json(['data'=>$user->toArray()]);
+        }
+        return $this->sendFailedLoginResponse($request);
+    }
 
     protected function authenticated()
     {

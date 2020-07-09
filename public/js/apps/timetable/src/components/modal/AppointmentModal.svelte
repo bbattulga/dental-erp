@@ -3,7 +3,8 @@
 	import {createEventDispatcher} from 'svelte';
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
-
+	import axios from 'axios';
+	import SameUsersModal from './SameUsersModal.svelte';
 
 	export let show = true;
 	export let shift;
@@ -25,6 +26,8 @@
 	let end = 0;
 	let cancelCode = '';
 
+	let sameUsers = [];
+
 	// re-eval end on user change hours
 	$: {end = start+hours;}
 
@@ -42,14 +45,31 @@
 			return;
 		}
 
-		console.log('submit new user');
+		axios.post('/api/reception/sameusers', {name, phone})
+			.then(response=>{
+				let same = response.data;
+				console.log('same users', same);
+				if (same.length>0){
+					sameUsers = same;
+					return;
+				}
+				store();
+			})
+			.catch(err=>console.log(err));
+	}
 
+	function handleSubmitUser(event){
+		let detail = event.detail;
+		store(detail.user);
+	}
+
+	function store(user=null){
 		let _detail = {
 			appointment:{
 				shift_id: shift.id,
-				user_id: 0,
-				name: name,
-				phone: phone,
+				user_id: user==null? 0:user.id,
+				name: user==null? name: user.name,
+				phone: user==null? phone: user.phone_number,
 				hours,
 				start,
 				end
@@ -65,7 +85,7 @@
 
 	function handleDelete(){
 		//console.log('form trying to del ', appointment);
-		appointment.code = cancelCode;
+		appointment.code = '1111';
 		dispatch('delete', appointment);
 	}
 
@@ -88,6 +108,7 @@
 
 <Modal 
 	bind:showModal={show}>
+
 <div id="form-main">
   <div id="form-div"
   		transition:fly="{{y: -200, duration: 500}}">
@@ -95,6 +116,7 @@
   		on:click|preventDefault|stopPropagation={close}>
   		<img src="/js/apps/timetable/src/components/assets/close.png">
   	</div>
+  	{#if sameUsers.length == 0}
     <form class="form" id="form1">
       
       <h1>{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
@@ -128,18 +150,23 @@
       <div class="submit">
 
       	{#if appointment == null}
-        <input on:click|preventDefault|stopPropagation|preventDefault={handleSubmit}
+        <input on:click|preventDefault|stopPropagation={handleSubmit}
         	type="submit" value="Цаг захиалах" id="button-blue"/>
         <div class="ease"></div>
         {:else}
-        <input on:click|preventDefault|stopPropagation|preventDefault={handleRegister}
+        <input on:click|preventDefault|stopPropagation={handleRegister}
         	type="submit" 
         	value="{appointment.user_id==0?'Бүртгэх&Эмчилгээнд оруулах':'Бүртгэсэн'}" 
         	id="button-blue"
         	disabled="{appointment.user_id!=0}" />
+        	<button on:click|preventDefault|stopPropagation={handleDelete}>цуцлах</button>
         {/if}
       </div>
     </form>
+     <!-- found same users -->
+  {:else}
+  <SameUsersModal on:submit={handleSubmitUser} users={sameUsers} />
+  {/if}
   </div>
 </Modal>
 

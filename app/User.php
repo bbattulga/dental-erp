@@ -20,7 +20,26 @@ class User extends Authenticatable
         'last_name', 'name', 'email', 'password','sex','location','register','birth_date','description','phone_number'
     ];
 
+    public function generateToken(){
+        $this->api_token = $this->str_random();
+        $this->save();
+        return $this->api_token;
+    }
     
+    function str_random(
+    int $length = 64,
+    string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+): string {
+    if ($length < 1) {
+        throw new \RangeException("Length must be a positive integer");
+    }
+    $pieces = [];
+    $max = mb_strlen($keyspace, '8bit') - 1;
+    for ($i = 0; $i < $length; ++$i) {
+        $pieces []= $keyspace[random_int(0, $max)];
+    }
+    return implode('', $pieces);
+}
 
     // basically, each account does one thing,
     // which means no need to have multiple roles,

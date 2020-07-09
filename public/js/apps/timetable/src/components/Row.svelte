@@ -83,7 +83,7 @@
 	function generateId(cell){
 		if (cell.appointment == null)
 			return Math.random();
-		return cell.appointment.id;
+		return `${cell.appointment.id}-${cell.appointment.start}`;
 	}
 </script>
 

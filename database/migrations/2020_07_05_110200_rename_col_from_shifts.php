@@ -27,6 +27,7 @@ class RenameColFromShifts extends Migration
         });
     }
 
+
     /**
      * Reverse the migrations.
      *

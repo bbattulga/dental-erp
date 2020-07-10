@@ -13,6 +13,7 @@ class CreateUserTreatmentsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('user_treatments');
         Schema::create('user_treatments', function (Blueprint $table) {
             $table->increments('id');
 

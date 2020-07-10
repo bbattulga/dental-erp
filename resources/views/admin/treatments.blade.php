@@ -77,10 +77,14 @@
                         <br>
                         Төрөл:
                         <select class="form-control" name="category">
-                                <option value="0">Эмчилгээ</option>
-                                <option value="1">Гажиг засал</option>
-                                <option value="2">Согог засал</option>
-                                <option value="3">Мэс засал</option>
+                            @foreach(App\TreatmentCategory::all() as $tcategory)
+
+                            @if ($loop->first)
+                            <option value="{{$tcategory->id}}" selected>{{$tcategory->name}}</option>
+                            @else
+                             <option value="{{$tcategory->id}}">{{$tcategory->name}}</option>
+                             @endif
+                            @endforeach
                         </select>
                         <br>
 

@@ -25,7 +25,7 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $category = 0;
+            $category = 1;
             $treatments = Treatment::where('category', $category)->get();;
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
@@ -38,7 +38,7 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $category = 1;
+            $category = 2;
             $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
@@ -51,7 +51,7 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $category = 2;
+            $category = 3;
             $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();
@@ -64,7 +64,7 @@ class DoctorTreatmentController extends Controller
         $checkin = CheckIn::find($checkin_id);
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
-            $category = 3;
+            $category = 4;
             $treatments = Treatment::where('category', $category)->get();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = UserRole::where('role_id', Roles::nurse()->id)->get();

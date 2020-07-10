@@ -48,7 +48,7 @@
                                 <td>{{$item->id}}</td>
                                 <td><a href="{{url('admin/treatment/'.$item->id)}}">{{$item->name}}</a></td>
                                 <td>@if($item->selection_type == 1) Нэг шүд @else Бүх шүд @endif</td>
-                                <td>@if($item->category == 0) Эмчилгээ @elseif($item->category == 1) Гажиг засал @elseif($item->category == 2) Согог засал @else Мэс засал @endif</td>
+                                <td>@if($item->category == 1) Эмчилгээ @elseif($item->category == 2) Гажиг засал @elseif($item->category == 3) Согог засал @else Мэс засал @endif</td>
                                 <td>@if(empty($item->price)) Хоосон @else {{$item->price}}₮ @endif</td>
                                 <td>@if(empty($item->limit)) Хоосон @else {{$item->limit}}₮ @endif</td>
                                 <td>{{$item->treatmentSelection->count()}}</td>
@@ -82,28 +82,14 @@
                         <br>
                         Төрөл:
                         <select class="form-control" name="category">
-                            @if($treatment->category == 0)
-                                <option value="0">Эмчилгээ</option>
-                                <option value="1">Гажиг засал</option>
-                                <option value="2">Согог засал</option>
-                                <option value="3">Мэс засал</option>
-                            @elseif($treatment->category == 1)
-                                <option value="1">Гажиг засал</option>
-                                <option value="2">Согог засал</option>
-                                <option value="3">Мэс засал</option>
-                                <option value="0">Эмчилгээ</option>
-                            @elseif($treatment->category == 2)
-                                <option value="2">Согог засал</option>
-                                <option value="3">Мэс засал</option>
-                                <option value="0">Эмчилгээ</option>
-                                <option value="1">Гажиг засал</option>
+                            @foreach(App\TreatmentCategory::all() as $tcategory)
 
-                            @elseif($treatment->category == 3)
-                                <option value="3">Мэс засал</option>
-                                <option value="0">Эмчилгээ</option>
-                                <option value="1">Гажиг засал</option>
-                                <option value="2">Согог засал</option>
-                            @endif
+                            @if ($tcategory->id==$treatment->category)
+                            <option value="{{$tcategory->id}}" selected>{{$tcategory->name}}</option>
+                            @else
+                             <option value="{{$tcategory->id}}">{{$tcategory->name}}</option>
+                             @endif
+                            @endforeach
                         </select>
                         <br>
 

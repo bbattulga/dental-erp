@@ -272,56 +272,18 @@
                                     if($resetTreatment = $tooth_treatments->where('treatment_id', 2)->first()) {
                                         $limit_date = $resetTreatment->created_at;
                                     }
-                                    $tooth_treatments = $tooth_treatments->where('created_at', '>', $limit_date);
-                                    foreach($tooth_treatments as $tooth_treatment) {
-                                        for($a = 0; $a<sizeof($tooth_special_treatments); $a++) {
-                                            if($tooth_treatment->treatment_id == $tooth_special_treatments[$a]) {
-                                                $special_treatment = $tooth_special_treatments[$a];
-                                                break;
-                                            }
-                                        }
-                                    }
+                                    $tooth_treatments = $tooth_treatments->where('created_at', '>', $limit_date)
+                                        ->first();
                                     ?>
-                                    <td>
-                                        @switch($special_treatment)
-                                            @case(3)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_burees.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(4)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_extraction.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(5)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_implant.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(6)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_paalan.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(7)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_post.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(8)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_post_cast.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(9)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_canal.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @case(23)
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'_canal.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                            @default
-                                            <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'.png')}}"
-                                                 onclick="changeStyle({{$i}})">
-                                            @break
-                                        @endswitch
 
+                                    <td>
+                                    @if ($tooth_treatments == null)
+                                    <img id='{{$i}}' src="{{url('img/toothImages/'.$i.'.png')}}"
+                                                 onclick="changeStyle({{$i}})">
+                                    @else
+                                    <img id='{{$i}}' src="{{asset('img/toothImages/'.$tooth_treatments->image)}}"
+                                                 onclick="changeStyle({{$i}})">
+                                    @endif
                                     </td>
                                 @endfor
                                 @for($i = 21; $i<=28; $i++)
@@ -762,24 +724,25 @@
         })
     </script>
 </div><!-- Tooth images ending-->
+
 <div class="col-md-3">
     <select class="form-control" onchange="location = this.value;">
-        @if($category == 1)
+        @if($category == 0)
             <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
             <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
             <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
             <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
+        @elseif($category == 1)
+            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
+            <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
+            <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
+            <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
         @elseif($category == 2)
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
             <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
             <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
             <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
+            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
         @elseif($category == 3)
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
-        @elseif($category == 4)
             <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
             <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
             <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>

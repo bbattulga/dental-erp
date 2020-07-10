@@ -56,7 +56,7 @@ class ReceptionTimeController extends Controller
 
     public function store(Request $request) {
         
-        $id = -1;
+        $id = 0;
         if($request['user_id'] == 0) {
             $id = Appointment::create([
                 'shift_id'=>$request['shift_id'],
@@ -78,6 +78,8 @@ class ReceptionTimeController extends Controller
                 'end'=>$request['end'
             ], 
                 'created_by'=>Auth::user()->id]);
+            $shift_id = $request['shift_id'];
+            CheckIn::create(['shift_id'=>$shift_id, 'user_id'=>$user->id, 'state'=>0, 'created_by'=>Auth::user()->id,'nurse_id'=>0]);
         }
         return $id;
     }

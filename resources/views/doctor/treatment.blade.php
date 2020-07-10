@@ -1246,6 +1246,15 @@ function singleTreatmentWithLimit() {
 @endsection
 @section('footer')
 
+<script src="https://unpkg.com/axios/dist/axios.min.js" type="text/javascript"></script>
+
+<script>
+    axios.get('/api/dummy')
+        .then((response)=>{
+            console.log(response);
+        })
+        .catch(err=>console.log(err));
+</script>
 
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
 <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>

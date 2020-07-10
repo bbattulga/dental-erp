@@ -19,3 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // del later
 Route::post('/admin/treatment/categories', 'AdminTreatmentController@treatmentCategories');
+
+Route::get('/dummy', function(){
+	$data = [
+		'name' => 'jonjo',
+		'phone' => 89384837
+	];
+	return $data;
+});

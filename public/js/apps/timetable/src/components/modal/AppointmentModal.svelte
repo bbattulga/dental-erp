@@ -37,6 +37,10 @@
 		console.log(show);
 	}	
 
+	function findSameUsers(name, phone){
+		return axios.post('/api/reception/sameusers', {name, phone});
+	}
+
 	function handleSubmit(){
 
 		// just visited or edited existing user cell
@@ -45,7 +49,7 @@
 			return;
 		}
 
-		axios.post('/api/reception/sameusers', {name, phone})
+		findSameUsers(name, phone)
 			.then(response=>{
 				let same = response.data;
 				console.log('same users', same);
@@ -95,12 +99,25 @@
 	}
 
 	function handleRegister(){
-		close();
+		findSameUsers(name, phone)
+			.then(response=>{
+				let same = response.data;
+				console.log('same users', same);
+				if (same.length>0){
+					sameUsers = same;
+					return;
+				}
+				close();
 		let currentData = {
 			name,
 			phone
 		}
 		dispatch('openRegister', currentData);
+			})
+			.catch(err=>{
+				console.log(err);
+				alert('алдаа гарлаа')
+			});
 	}
 
 </script>

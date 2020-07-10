@@ -63,7 +63,8 @@
             <div class="card m-1">
                 <div  class="card-body">
                     <h5>Шинэ эмчилгээ оруулах</h5>
-                    <form method="post" action="{{url('admin/treatment/store')}}">
+                    <form method="post" action="{{url('admin/treatment/store')}}"
+                            enctype="multipart/form-data">
                         @csrf
                         Нэр:
                         <input class="form-control" type="text" name="name" required>
@@ -93,11 +94,15 @@
                                 <input class="form-control" name="limit" type="number" >
                             </div>
                         </div>
+                        <br>
+                        Зураг:
+                        <input class="form-control" type="file" name="image"
+                            accept="image/png, image/jpeg">
+                        <br>
 
                         <br>
                         <button class="btn btn-primary" type="submit">Оруулах</button>
                     </form>
-                
                 </div>
             </div>
         </div>
@@ -105,7 +110,6 @@
 @endsection
 @section('footer')
 
-    <script src="{{asset('js/apps/add_treatment/public/build/bundle.js')}}"></script>
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
     <script src="{{asset('js/vendor/moment.min.js')}}"></script>

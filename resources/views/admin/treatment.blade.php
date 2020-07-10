@@ -119,6 +119,12 @@
                         </div>
 
                         <br>
+                        Зураг:
+                        <input class="form-control" type="file" name="image"
+                            accept="image/png, image/jpeg">
+                        <br>
+
+                        <br>
                         <button class="btn btn-primary" type="submit">Засах</button>
                     </form>
                 </div>

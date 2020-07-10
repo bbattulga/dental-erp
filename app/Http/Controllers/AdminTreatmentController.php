@@ -42,6 +42,7 @@ class AdminTreatmentController extends Controller
         $treatment->category = $request['category'];
         $treatment->price = $request['price'];
         $treatment->limit = $request['limit'];
+        $treatment->image = $request['image'];
         $treatment->save();
         return redirect()->back();
     }
@@ -55,8 +56,14 @@ class AdminTreatmentController extends Controller
     }
     public function store(Request $request) {
         //return $request['treatment'];
-       $record = Treatment::create(['name'=>$request['name'], 'selection_type'=>$request['selection_type'],
-           'category'=>$request['category'], 'price'=>$request['price'], 'limit'=>$request['limit']]);
+       $record = Treatment::create([
+            'name'=>$request['name'], 
+            'selection_type'=>$request['selection_type'],
+           'category'=>$request['category'], 
+           'price'=>$request['price'], 
+           'limit'=>$request['limit'],
+           'image'=>$request['image']
+       ]);
         return redirect()->back();
     }
     

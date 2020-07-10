@@ -800,7 +800,6 @@
     </li>
 </ul>
 <div class="tab-content">
-
     <div class="tab-pane show active scroll" id="first" role="tabpanel" aria-labelledby="first-tab">
             @foreach($user_treatments as $user_treatment)
             <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}">
@@ -1131,6 +1130,7 @@ function myFunction(ruby) {
             alert("Та ломбоо сонгоно уу.")
         }
         console.log(decayLevel);
+        treatmentSelectionIdWithLimit();
     }
 
 

@@ -1130,7 +1130,6 @@ function myFunction(ruby) {
             alert("Та ломбоо сонгоно уу.")
         }
         console.log(decayLevel);
-        treatmentSelectionIdWithLimit();
     }
 
 

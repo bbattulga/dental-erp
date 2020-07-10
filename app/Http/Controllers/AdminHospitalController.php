@@ -52,7 +52,7 @@ class AdminHospitalController extends Controller
                 $date = strtotime($user->checkins->whereIn('state', [3,4])->first()->created_at);
 
                 if($treatment_type_2 == 1) {
-                    $user->sex == 0 ? $treatment_type_2_count_male++ : $treatment_type_2_count_female++;
+                    $user->sex == 0 ? $treatment_type_2_count_female++ : $treatment_type_2_count_male++;
                     $treatment_type_2_count++;
                     if($date > $beginning) {
                         $treatment_type_2_count_first++;
@@ -68,7 +68,7 @@ class AdminHospitalController extends Controller
                 }
 
                 $user_age = date_diff(date_create($user->birth_date), date_create('today'))->y;
-                if($user->sex == 0) {
+                if($user->sex == 1) {
                     $user_age >= 60 ? $age_male[15]++ : $age_male[(int)((int)($user_age)/4)]++;
                     $count_male++;
                 } else {

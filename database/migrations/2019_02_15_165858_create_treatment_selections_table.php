@@ -12,7 +12,7 @@ class CreateTreatmentSelectionsTable extends Migration
      * @return void
      */
     public function up()
-    {
+    {   
         Schema::create('treatment_selections', function (Blueprint $table) {
             $table->increments('id');
 

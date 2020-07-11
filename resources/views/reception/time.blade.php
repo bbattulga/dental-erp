@@ -45,22 +45,6 @@
 
        <div id="timetable"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="text/javascript">
-
-        let date1 = '2020-07-01';
-        let date2 = '2020-07-10';
-        let url = `/api/reception/time`
-        axios.get(url)
-            .then(response => {
-                console.log('using api in time.blade.php');
-                console.log(response);
-                document.getElementById('result').innerText = response.data;
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    </script>
     <!--
     <div class="row">
         {{--<div class="col-md-12">--}}

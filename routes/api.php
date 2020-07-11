@@ -24,7 +24,7 @@ Route::post('/test', 'ReceptionTimeController@test');
 ///////////// USERS ///////////////////////
 
 /////////////// RECEPTION START ///////////////////
-Route::get('reception/time/{date?}', 'ReceptionTimeController@index'); 
+Route::get('reception/time/{date?}', 'ReceptionTimeController@index');
 Route::post('reception/time/create', 'ReceptionTimeController@store');
 Route::get('reception/time/{id}', 'ReceptionTimeController@show');
 Route::put('reception/time/update', 'ReceptionTimeController@update');
@@ -36,4 +36,4 @@ Route::get('reception/time/{date1}/{date2}/{doctor_id}', 'ReceptionTimeControlle
 
 Route::post('reception/sameusers', 'UserController@query');
 Route::post('reception/doctors/{id?}', 'ReceptionTimeController@api_doctors');
-Route::post('reception/sameusers', 'UserController@query');
+Route::post('reception/sameusers', 'ReceptionTimeController@queryUser');

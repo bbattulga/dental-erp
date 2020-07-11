@@ -20,7 +20,8 @@ class ReceptionTimeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('reception');
+        //$this->middleware('reception');
+        //  $this->middleware('guest');
     }
 
     public function time() {
@@ -184,5 +185,14 @@ class ReceptionTimeController extends Controller
             ->where('shifts.date',Date('Y-m-d'))
             ->get();
         return $shifts;
+    }
+
+    public function queryUser(Request $request){
+        $phone = $request['phone'];
+        $name = $request['name'];
+        $results = User::where('phone_number', '=', $phone)
+                    ->orWhere('name','=', $name)
+                    ->get();
+        return $results;
     }
 }

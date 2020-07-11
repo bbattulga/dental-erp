@@ -19,7 +19,7 @@ class Reception
     public function handle($request, Closure $next)
     {
         if (!Auth::check())
-            return response()->json('auth false rec');
+            return redirect('login');
 
         $role = Auth::user()->role->role_id;
 

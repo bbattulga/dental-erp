@@ -38,7 +38,7 @@ class LoginController extends Controller
     {
         if (!Auth::check())
             return redirect('login');
-
+            
         if (is_null(Auth::user()->role))
             return redirect('login');
 

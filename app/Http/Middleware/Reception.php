@@ -19,11 +19,11 @@ class Reception
     public function handle($request, Closure $next)
     {
         if (!Auth::check())
-            return redirect('login');
+            return response()->json('auth false rec');
 
         $role = Auth::user()->role->role_id;
 
-        if ($role==Roles::reception()->id || $role==Roles::admin()->id) {
+        if (($role==Roles::reception()->id) ||($role==Roles::admin()->id)) {
             return $next($request);
         }
         return redirect('login');

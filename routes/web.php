@@ -11,9 +11,10 @@
 |
 */
 
+
 Route::get('/test', function() {
-	$data = Session::get('data');
-    return view('test', ['data'=>$data]);
+
+    return view('test');
 });
 
 Route::get('/', function () {
@@ -167,6 +168,7 @@ Route::get('/reception/user', 'ReceptionUserController@index');
 Route::post('/reception/user/store','ReceptionUserController@store');
 Route::post('/reception/user/update','ReceptionUserController@update');
 Route::get('/reception/user/register/{name}/{phone}/{appointment_id}', 'ReceptionUserController@fromAppointment');
+
 Route::get('/reception/search', 'ReceptionUserController@search');
 Route::get('/reception/time', 'ReceptionTimeController@time');
 Route::get('/reception/time/week/{id}', 'ReceptionTimeController@timeWeek');
@@ -189,12 +191,6 @@ Route::get('/reception/lease/store','ReceptionPaymentController@lease_store');
 Route::get('/reception/product','ReceptionPaymentController@product');
 Route::get('/reception/product/{id}','ReceptionPaymentController@show');
 Route::post('/reception/decrease_product','ReceptionPaymentController@decrease_product');
-
-// RECEPTION REST API
-Route::get('/api/reception/shift/{date?}', 'ReceptionTimeController@api_shift');
-Route::get('/api/reception/shift_interval/{date1}/{date2}/{user_id}', 'ReceptionTimeController@api_shifts_interval');
-Route::post('/api/reception/doctors/{id?}', 'ReceptionTimeController@api_doctors');
-Route::post('/api/reception/sameusers', 'UserController@query');
 
 //--DOCTOR STARTING--
 Route::get('/doctor','DoctorController@index');

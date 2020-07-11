@@ -19,7 +19,7 @@
 	// shift interval should specify staff with id. else things will get messy.
 
 	// intial data
-	axios.get('/api/reception/shift')
+	axios.get('/api/reception/time')
 		.then(response=>{
 			console.log('shifts from server');
 			let sdata = response.data;
@@ -58,10 +58,10 @@
 		let promise = null;
 		LOADING = true;
 		if (date.length == 1){
-			promise = axios.get(`/api/reception/shift/${date}`);
+			promise = axios.get(`/api/reception/time/${date}`);
 		}else if (date.length == 2){
 			let doctorId = doctor == null? null:doctor.id;
-			let url = `/api/reception/shift_interval/${date[0]}/${date[1]}/${doctorId}`
+			let url = `/api/reception/time/${date[0]}/${date[1]}/${doctorId}`
 			console.log('sent url: ',url);
 			promise = axios.get(url);
 		}

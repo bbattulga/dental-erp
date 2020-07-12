@@ -16,6 +16,7 @@ class Roles extends Model
 	private static $DOCTOR;
 	private static $RECEPTION;
 	private static $NURSE;
+    private static $PATIENT;
 
     public static function admin(){
     	if (self::$ADMIN== null){
@@ -55,5 +56,13 @@ class Roles extends Model
     		->orWhere('name', 'like', 'Сув%')->firstOrFail();
     	}
     	return self::$NURSE;
+    }
+
+    public static function patient(){
+        if (self::$PATIENT == null){
+            self::$PATIENT = self::where('name', 'like', 'Par%')
+            ->orWhere('name', 'like', 'Өв%')->firstOrFail();
+        }
+        return self::$PATIENT;
     }
 }

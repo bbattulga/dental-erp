@@ -150,11 +150,7 @@ class ReceptionTimeController extends Controller
     }
 
     public function api_doctors(){
-         $doctors = DB::table('user_role')
-                    ->join('users', function($join){
-                        $join->on('users.id', '=', 'user_role.user_id')
-                            ->where('user_role.role_id', '=', Roles::doctor()->id);
-                    })->get();
+         $doctors = User::all()->where('role_id', '=',Roles::doctor()->id);
         return $doctors;
     }
 

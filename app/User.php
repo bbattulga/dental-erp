@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use App\Roles;
+
 
 class User extends Authenticatable
 {
@@ -46,7 +48,7 @@ class User extends Authenticatable
     // just having 1 role is enough
     
     public function role(){
-        return $this->hasOne('App\UserRole', 'user_id');
+        return $this->hasOne('App\Role');
     }
 
     public function photos(){

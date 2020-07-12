@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRoleidToUsers extends Migration
+class AddRoleIdToUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,7 @@ class AddRoleidToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->index('role_id');
-            $table->integer('role_id')->default(1);
-            $table->foreign('role_id')->references('id')->on('Roles');
+            $table->integer('role_id')->nullable();
         });
     }
 
@@ -30,9 +28,6 @@ class AddRoleidToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->dropIndex('users_index_role_id');
-            $table->dropForeign('users_foreign_role_id');
-            $table->dropColumn('role_id');
         });
     }
 }

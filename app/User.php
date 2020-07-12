@@ -48,7 +48,7 @@ class User extends Authenticatable
     // just having 1 role is enough
     
     public function role(){
-        return $this->hasOne('App\Role');
+        return $this->belongsTo('App\Roles', 'role_id', 'id');
     }
 
     public function photos(){

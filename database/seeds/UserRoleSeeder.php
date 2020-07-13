@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Doctor;
+
+use App\UserRole;
 
 
-class DoctorSeeder extends Seeder
+class UserRoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,10 +15,6 @@ class DoctorSeeder extends Seeder
     public function run()
     {
         //
-        $quantity = 5;
-
-
-        factory(Doctor::class, $quantity)
-        	->create();
+        factory(UserRole::class, 10);
     }
 }

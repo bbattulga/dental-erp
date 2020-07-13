@@ -4,9 +4,19 @@
 
 use App\Model;
 use Faker\Generator as Faker;
+use App\UserRole;
+use App\Roles;
 
-$factory->define(Model::class, function (Faker $faker) {
+
+$factory->define(UserRole::class, function (Faker $faker) {
+
+	$users = User::all()->where('role_id', '!=', null);
+	$roles = Roles::all();
+
     return [
-        //
+        
+        // must be overriden...
+        'user_id' => $users->random()->id,
+        'role_id' => $roles->random()->id
     ];
 });

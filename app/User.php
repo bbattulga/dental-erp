@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'last_name', 'name', 'email', 'password','sex','location','register','birth_date','description','phone_number'
+        'last_name', 'name', 'email', 'password','sex','location','register','birth_date','description','phone_number', 'role_id'
     ];
 
     public function generateToken(){
@@ -25,7 +25,7 @@ class User extends Authenticatable
         $this->save();
         return $this->api_token;
     }
-    
+
     function str_random(
     int $length = 64,
     string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -46,7 +46,7 @@ class User extends Authenticatable
     // just having 1 role is enough
     
     public function role(){
-        return $this->hasOne('App\UserRole', 'user_id');
+        return $this->belongsTo('App\Roles', 'role_id', 'id');
     }
 
     public function photos(){

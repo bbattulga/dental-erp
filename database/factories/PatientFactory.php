@@ -4,27 +4,25 @@
 
 use App\Model;
 use Faker\Generator as Faker;
-use App\Doctor;
-use App\Roles;
+use App\Patient;
 
-$factory->define(Doctor::class, function (Faker $faker) {
 
-	$birth_date = $faker->datetimeBetween('-50 years', '-24 years');
-	$doctor_id = Roles::doctor()->id;
+$factory->define(Patient::class, function (Faker $faker) {
+    $birth_date = $faker->datetimeBetween('-50 years', '-5 years');
+
+    // null role_id is considered as a patient.
 
     return [
         'name'=> $faker->firstName,
         'last_name' => $faker->lastName,
         'register' => 'ДК'.($faker->numberBetween(11111111, 99999999)),
         'phone_number' => $faker->numberBetween(86000000, 96000000),
-        'email' => $faker->email,
+        'email' => $faker->numberBetween(0, 1),
         'sex' => $faker->numberBetween(0, 1),
         'birth_date' => $birth_date,
         'location' => $faker->address,
         'description' => $faker->text(100),
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm',
-        'remember_token' => $faker->text(100),
-
-        'role_id' => $doctor_id
+        'remember_token' => $faker->text(100)
     ];
 });

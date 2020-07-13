@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Roles;
+use App\Doctor;
 
 
 class ReceptionTimeController extends Controller
@@ -20,7 +21,7 @@ class ReceptionTimeController extends Controller
 
     public function __construct()
     {
-        //$this->middleware('reception');
+        $this->middleware('reception');
         //  $this->middleware('guest');
     }
 
@@ -150,11 +151,7 @@ class ReceptionTimeController extends Controller
     }
 
     public function api_doctors(){
-         $doctors = DB::table('user_role')
-                    ->join('users', function($join){
-                        $join->on('users.id', '=', 'user_role.user_id')
-                            ->where('user_role.role_id', '=', Roles::doctor()->id);
-                    })->get();
+         $doctors = Doctor::all();
         return $doctors;
     }
 

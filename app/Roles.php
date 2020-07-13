@@ -17,6 +17,15 @@ class Roles extends Model
 	private static $RECEPTION;
 	private static $NURSE;
 
+    protected $table = 'roles';
+
+    // give alias to Roles.id
+    // Roles.id = Roles.role_id
+    protected $appends = 'role_id';
+    public function getRoleIdAttribute(){
+        return $this->id;
+    }
+
     public static function admin(){
     	if (self::$ADMIN== null){
     		self::$ADMIN = self::where('name', 'like', 'Ad%')

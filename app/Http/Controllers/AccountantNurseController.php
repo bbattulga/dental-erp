@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\CheckIn;
 use Illuminate\Http\Request;
+use App\Shift;
+
 
 class AccountantNurseController extends Controller
 {
@@ -18,7 +20,7 @@ class AccountantNurseController extends Controller
     }
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
-        $shifts = Time::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
+        $shifts = Shift::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
         return view('accountant.staff_profile', compact('user', 'shifts','start_date', 'end_date'));
     }
     public function by_month(Request $request){

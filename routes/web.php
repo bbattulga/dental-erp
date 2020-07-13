@@ -12,6 +12,8 @@
 */
 
 
+////////////// WEB ROUTES START ////////
+
 Route::get('/test', function() {
 
     return view('test');
@@ -46,7 +48,7 @@ Route::get('/user','UserController@index')->name('user');
 Auth::routes();
 Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');  
 
 
 //--ADMIN STARTING--

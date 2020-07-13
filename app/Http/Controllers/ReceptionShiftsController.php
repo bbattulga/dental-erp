@@ -8,7 +8,7 @@ use App\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Roles;
-
+use App\Doctor;
 
 class ReceptionShiftsController extends Controller
 {
@@ -18,7 +18,8 @@ class ReceptionShiftsController extends Controller
         $this->middleware('reception');
     }
     public function index() {
-        $doctors = UserRole::all()->where('role_id', Roles::doctor()->id);
+      //  $doctors = UserRole::all()->where('role_id', Roles::doctor()->id);
+        $doctors = Doctor::all();
         $shifts = Shift::all()->where('date', '>=', date('Y-m-d'));
         return view('reception.shifts',compact('doctors', 'shifts'));
     }

@@ -14,6 +14,11 @@ class AdminTreatmentController extends Controller
     {
         $this->middleware('admin');
     }
+
+    public function test(){
+        return 'test response from AdminTreatmentController';
+    }
+    
     public function index() {
         $treatments = Treatment::all();
         return view('admin.treatments', compact('treatments'));

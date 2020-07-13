@@ -70,25 +70,25 @@
                             </tr>
                             <tr>
                                 <th rowspan="2"><br><br><br>
-                                    {{$doctor->staff->name}}</th>
+                                    {{$doctor->name}}</th>
                                 @for($i = 0; $i < 30; $i++)
-                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->staff->id)->where('shift_type_id', 1)->first(); ?>
+                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 1)->first(); ?>
                                     @if($time)
                                         <td>
-                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->staff->name}}', 'Өдрийн ээлж', '{{$time->date}}')">Өглөөний ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 'Өдрийн ээлж', '{{$time->date}}')">Өглөөний ээлж<br><span class="text-right"
                                                                                                                                                                                                                                     style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
 
-                                    @elseif($time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->staff->id)->where('shift_type_id', 3)->first())
+                                    @elseif($time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 3)->first())
                                         <td rowspan="2">
-                                            <button class="btn btn-primary" style="height: 140px; border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->staff->name}}', 'Бүтэн ээлж', '{{$time->date}}')">Бүтэн ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="height: 140px; border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 'Бүтэн ээлж', '{{$time->date}}')">Бүтэн ээлж<br><span class="text-right"
                                                                                                                                                                                                                                                style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
                                     @else
                                         <td>
-                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->staff->id.'/1')}}">
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/1')}}">
                                                 <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
                                                                                                           style="font-size: 10px">ээлж тавих</span>
                                                 </button>
@@ -99,18 +99,18 @@
                             </tr>
                             <tr>
                                 @for($i = 0; $i < 30; $i++)
-                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->staff->id)->where('shift_type_id', 2)->first(); ?>
+                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 2)->first(); ?>
                                     @if($time)
                                         <td>
-                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->staff->name}}', 'Оройн ээлж', '{{$time->date}}')">Оройний ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->name}}', 'Оройн ээлж', '{{$time->date}}')">Оройний ээлж<br><span class="text-right"
                                                                                                                                                                                                                                   style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
-                                    @elseif( $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->staff->id)->where('shift_type_id', 3)->first())
+                                    @elseif( $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 3)->first())
 
                                     @else
                                         <td>
-                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->staff->id.'/2')}}">
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/2')}}">
                                                 <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
                                                                                                           style="font-size: 10px">ээлж тавих</span>
                                                 </button>

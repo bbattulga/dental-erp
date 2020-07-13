@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Doctor;
+use App\UserRole;
+use App\Roles;
 
 
 class DoctorSeeder extends Seeder
@@ -14,10 +16,17 @@ class DoctorSeeder extends Seeder
     public function run()
     {
         //
-        $quantity = 5;
-
+        $quantity = 3;
 
         factory(Doctor::class, $quantity)
-        	->create();
+        	->create()
+        	->each(function ($doctor){
+        		factory(UserRole::class, 1)
+        			->create([
+        				'user_id' => $doctor->id,
+        				'role_id' => Roles::doctor()->id,
+        				'state' => 1
+        			]);
+        	});
     }
 }

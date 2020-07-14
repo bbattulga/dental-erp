@@ -12,13 +12,24 @@ use Faker\Generator as Faker;
 | model instances for testing / seeding your application's database.
 |
 */
+use App\Roles;
 
 $factory->define(App\User::class, function (Faker $faker) {
+
+	$roles = Roles::all();
+
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-        'remember_token' => str_random(10),
+        'name'=> $faker->firstName,
+        'last_name' => $faker->lastName,
+        'register' => 'ДК'.($faker->numberBetween(11111111, 99999999)),
+        'phone_number' => $faker->numberBetween(86000000, 96000000),
+        'email' => $faker->numberBetween(0, 1),
+        'sex' => $faker->numberBetween(0, 1),
+        'birth_date' => $birth_date,
+        'location' => $faker->address,
+        'description' => $faker->text(100),
+        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', //secret
+        'remember_token' => $faker->text(100),
+        'role_id' => $roles->random()->id
     ];
 });

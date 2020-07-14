@@ -38,7 +38,7 @@
 	}	
 
 	function findSameUsers(name, phone){
-		return axios.post('/api/reception/sameusers', {name, phone});
+		return axios.post('/api/user/query', {name, phone});
 	}
 
 	function handleSubmit(){

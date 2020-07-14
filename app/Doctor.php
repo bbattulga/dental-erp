@@ -17,7 +17,7 @@ class Doctor extends Model
     			->get();
     }
 
-    // legacy receptino.shifts needs this
+    // legacy reception.shifts needs this
     protected $appends = 'staff';
     public function getStaffAttribute(){
         return $this;

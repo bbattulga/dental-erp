@@ -9,8 +9,11 @@ class Appointment extends Model
     //
     protected $fillable = ['shift_id', 'user_id','name', 'phone', 'start', 'end', 'created_by'];
 
+    // eager load by default
+    protected $with = ['shift', 'shift.doctor'];
+
     public function shift() {
-        return $this->hasOne('App\Shift', 'id', 'shift_id');
+        return $this->belongsTo('App\Shift', 'shift_id', 'id');
     }
 
     public function user(){

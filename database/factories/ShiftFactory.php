@@ -8,25 +8,21 @@ use App\Doctor;
 use App\Roles;
 use App\User;
 use App\Shift;
+use App\Reception;
 
 
 $factory->define(Shift::class, function (Faker $faker) {
-
-	$doctors = Doctor::all();
-
-	$receptions = User::where('role_id', Roles::reception()->id)
-			->get();
 
 	$date = $faker->dateTimeBetween('now', '7 days')->format('Y-m-d');
 
     return [
 
-        // must be overriden
-    	'user_id' => $doctors->random()->id,
+        // should be overriden
+    	'user_id' => factory(Doctor::class)->create()->id,
 
     	// should be overriden
     	'date' => $date,
-    	'created_by' => $receptions->random()->id,
+    	'created_by' => factory(Reception::class)->create()->id,
 
     	'shift_type_id' => $faker->numberBetween(1, 3),
     ];

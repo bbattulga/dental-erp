@@ -54,7 +54,7 @@
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
-		axios.post('/reception/time/add', appointment)
+		axios.post('/api/reception/time/create', appointment)
 			.then(response=>{
 				id = response.data;
 				appointment.id = id;
@@ -64,7 +64,8 @@
 				dispatch('addAppointment', appointment);
 			})
 			.catch(err=>{
-				alert('Алдаа гарлаа', err);
+				alert('Алдаа гарлаа');
+				console.log(err);
 			});
 	}
 
@@ -83,7 +84,7 @@
 			description: 'test'
 		}
 		console.log('sent like ', d);
-		axios.post('/reception/time/cancel', d).then(response=>{
+		axios.post('/api/reception/time/cancel', d).then(response=>{
 			count = response.data;
 			console.log(response);
 		}).catch(err=>console.log(err));
@@ -112,7 +113,7 @@
 		} */
 		user.appointment_id = appointment.id;
 		console.log('sent like ', user);
-		axios.post('/reception/user/store', user)
+		axios.post('/api/user/create', user)
 			.then(response=>{
 				//user.id = response;
 				appointment.registered = '1';

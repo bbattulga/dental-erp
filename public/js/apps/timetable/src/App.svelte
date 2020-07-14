@@ -18,8 +18,8 @@
 	// /api/shift_interval - shift interval like 2020-07-01-2020-07-01
 	// shift interval should specify staff with id. else things will get messy.
 
-	// intial data
-	axios.get('/api/reception/time/date/today')
+	// initial data
+	axios.get('/api/shifts/today')
 		.then(response=>{
 			console.log('shifts from server');
 			let sdata = response.data;
@@ -30,7 +30,7 @@
 			console.log(err);
 		});
 
-	axios.post('/api/reception/doctors')
+	axios.post('/api/doctors')
 		.then(response=>{
 			doctors = response.data;
 			console.log('all doctors:',doctors);
@@ -58,7 +58,7 @@
 		let promise = null;
 		LOADING = true;
 		if (date.length == 1){	
-			promise = axios.get(`/api/reception/time/date/${date}`);
+			promise = axios.get(`/api/shifts/date/${date}`);
 		}else if (date.length == 2){
 			let doctorId = doctor == null? null:doctor.id;
 			let data = {
@@ -66,7 +66,7 @@
 				'date2': date[1],
 				'doctor_id': doctorId
 			}
-			let url = `/api/reception/time/date/datebetween`
+			let url = `/api/shifts/date/datebetween`
 			console.log('sent url: ',url);
 			promise = axios.post(url, data);
 		}

@@ -77,4 +77,45 @@ class ShiftController extends Controller
 	public function destroy($id){
 		return Shift::destroy($id);
 	}
+
+
+	public function showDate($date){
+        if ($date == null){
+            $date = Date('Y-m-d');
+        }
+        return Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('shifts.date', $date)
+            ->get();
+    }
+    public function today(){
+        return Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('shifts.date', Date('Y-m-d'))
+            ->get();    
+    }
+    public function showDateBetween(Request $request){
+        $request->validate([
+            'date1' => 'string|max:10',
+            'date2' => 'string|max:10',
+            'user_id' => 'integer',
+        ]);
+
+        $date1 = $request['date1'];
+        $date2 = $request['date2'];
+        $user_id = $request['doctor_id'];
+
+        if ($user_id == null){
+            $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('shifts.date','>=',$date1)
+            ->where('shifts.date', '<=',$date2)
+            ->get();
+            return $shifts;
+        }
+
+        $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+            ->where('shifts.date','>=',$date1)
+            ->where('shifts.date', '<=',$date2)
+            ->where('shifts.user_id', '=', $user_id)
+            ->get();
+        return $shifts;
+    }
 }

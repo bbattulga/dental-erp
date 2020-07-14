@@ -22,4 +22,7 @@ class Shift extends Model
         return $this->hasOne('App\User', 'id', 'created_by');
     }
 
+    public function delete(){
+
+    }
 }

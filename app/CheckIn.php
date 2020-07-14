@@ -28,4 +28,9 @@ class CheckIn extends Model
     }
 
 
+    public function delete(){
+
+        $this->treatments->delete();
+        return parent::delete();
+    }
 }

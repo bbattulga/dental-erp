@@ -19,7 +19,7 @@ class AppointmentController extends Controller
     //
     public function index(){
         // return all appointments with relations
-        return Appointment::all();
+        return Appointment::with(['shift', 'shift.doctor'])->get();
     }
 
     public function store(Request $request) {

@@ -10,22 +10,25 @@ use App\CheckIn;
 class CheckInController extends Controller
 {
     public function index(){
-		return CheckIn::all();
+		return CheckIn::with('shift', 'shift.doctor','user')
+				->get();
 	}
 
 	public function show($id){
 		$request->validate(['id'=>'required|integer']);
-		return CheckIn::findOrFail($id);
+		return CheckIn::with('shift', 'shift.doctor','user')
+				->where('id', $id)
+				->get();
 	}
 
 	public function store(Request $request){
-		$request->validate([
-			'shift_id' => 'required|integer',
-			'user_id' => 'required|integer',
-			'state' => 'required|integer',
-			'created_by' => 'required|integer'
+		$checkin = CheckIn::create([
+			'shift_id' => $request['shift_id'],
+			'user_id' => $request['user_id'],
+			'state' => 0,
+			'created_by' => Auth::user()->id,
+			'nurse_id' => 0
 		]);
-		$checkin = CheckIn::create($request->all());
 		return $checkin->id;
 	}
 

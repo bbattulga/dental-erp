@@ -57,13 +57,18 @@
 
 		let promise = null;
 		LOADING = true;
-		if (date.length == 1){
+		if (date.length == 1){	
 			promise = axios.get(`/api/reception/time/date/${date}`);
 		}else if (date.length == 2){
 			let doctorId = doctor == null? null:doctor.id;
-			let url = `/api/reception/time/${date[0]}/${date[1]}/${doctorId}`
+			let data = {
+				'date1': date[0],
+				'date2': date[1],
+				'doctor_id': doctorId
+			}
+			let url = `/api/reception/time/date/datebetween`
 			console.log('sent url: ',url);
-			promise = axios.get(url);
+			promise = axios.post(url, data);
 		}
 
 		promise.then(response=>{

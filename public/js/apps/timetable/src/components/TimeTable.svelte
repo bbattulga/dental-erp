@@ -53,7 +53,7 @@
 	table{
 		position: relative;
 		border-collapse: collapse;
-		line-height: 80px;
+		line-height: 50px;
 		border: 3px solid #cccccc;
 	}
 
@@ -63,11 +63,10 @@
 		font-family: Arial sans-serif;
 	}
 
-
 	.time-container{
 		z-index: 100000;
 		background: white;
-		min-width: 150px;
+		width: 10%;
 		border: 3px solid #cccccc;
 	}
 

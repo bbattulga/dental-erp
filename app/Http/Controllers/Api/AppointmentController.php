@@ -59,7 +59,7 @@ class AppointmentController extends Controller
         return Appointment::findOrFail($id)->update($request->all());
     }
 
-    public function show($id, $date){
+    public function show($id){
         if ($id)
             return Appointment::findOrfail($id);
         if ($date){

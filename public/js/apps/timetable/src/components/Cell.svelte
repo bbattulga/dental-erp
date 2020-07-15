@@ -8,7 +8,7 @@
 	import Modal from './modal/Modal.svelte';
 	import AppointmentModal from './modal/AppointmentModal.svelte';
 	import RegisterModal from './modal/RegisterModal.svelte';
-	import SameUsersModal from './modal/SameUsersModal';
+	import SameUsersModal from './modal/SameUsersModal.svelte';
 	import axios from 'axios';
 
 
@@ -18,6 +18,8 @@
 	export let shift;
 	export let appointment;
 	export let time;
+	
+	let sameUsers = [];
 	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -49,6 +51,11 @@
 		showAppointmentModal = true;
 	}
 
+	const findSameUsers = (data) => {
+		let d = {name: data.name, phone: data.phone};
+		return axios.post('/api/users/query', d);
+	}
+
 	const checkInUser = (userId, shiftId) => {
 		let d = {
 			user_id: userId,
@@ -64,6 +71,7 @@
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
+
 		axios.post('/api/appointments/create', appointment)
 			.then(response=>{
 				id = response.data;
@@ -72,10 +80,10 @@
 				newAppointment = true;
 				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
-				if (appointment.user == null){
+				if (appointment.user_id == 0){
 					return;
 				}
-				checkInUser(appointment.user.id, appointment.shift_id)
+				checkInUser(appointment.user_id, appointment.shift_id)
 					.then(response=>console.log('checkin added'))
 					.catch(err=>console.log('couldnt create checkin'));
 			})
@@ -115,36 +123,24 @@
 		console.log('cell handle register');
 		
 		let user = event.detail.user;
-	/*	let dummy = {
-			last_name: 'dummylastname',
-	         name: 'dummyname',
-	         sex: 1,
-	         register: 'ИР89382716',
-	         phone_number: '89382716',
-	         email: 'joonjiinaze@mail.com',
-	         birth_date: '2000-02-02',
-	         location: 'zaisan',
-	         info: 'nodescription'
-		} */
-		user.appointment_id = appointment.id;
-		console.log('sent like ', user);
 		registerUser(user)
-			.then(response=>{
-				user.id = response;
-				appointment.registered = '1';
-				registered = true;
-				checkInUser(user.id, appointment.shift_id)
-					.then(response=>console.log('created checkin'))
-					.catch(err=>console.log('couldnt create checkin ',err));
-			})
-			.catch(err=>{
-				alert('Алдаа гарлаа');
-				console.log(err);
-			})
+		.then(response=>{
+			axios.put('/api/appointment/update', {user_id: response.data});
+			user.id = response.data;
+			appointment.registered = '1';
+			registered = true;
+			checkInUser(user.id, appointment.shift_id)
+				.then(response=>console.log('created checkin'))
+				.catch(err=>console.log('couldnt create checkin ',err));
+		})
+		.catch(err=>{
+			alert('Алдаа гарлаа');
+			console.log(err);
+		})
 	}
 
 	const handleSubmitUser = (event) => {
-
+		console.log('checkin existing', event.detail);
 	}
 
 </script>
@@ -184,7 +180,8 @@
 
 		<SameUsersModal
 			bind:show={showSameUsersModal}
-			on:submit={handleSubmitUser}/>
+			on:submit={handleSubmitUser}
+			bind:users = {sameUsers}/>
 </td>
 
 

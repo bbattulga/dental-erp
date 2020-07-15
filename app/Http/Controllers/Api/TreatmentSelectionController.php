@@ -11,11 +11,14 @@ class TreatmentSelectionController extends Controller
 {
     
     public function index(){
-		return TreatmentSelections::all();
+		return TreatmentSelections::with(['treatment'])
+				->get();
 	}
 
 	public function show($id){
-		return TreatmentSelections::findOrFail($id);
+		return TreatmentSelections::with(['treatment'])
+				->where('id', $id)
+				->get();
 	}
 
 	public function store(Request $request){

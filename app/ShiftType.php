@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ShiftType extends Model
 {
     //
+	protected $table = 'shift_types';
 	
 	public static function morning(){
 		return 1;

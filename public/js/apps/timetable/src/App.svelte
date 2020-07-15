@@ -13,13 +13,8 @@
 	let doctors = [];
 	let LOADING = true;
 
-	// /api/shift -shifts of day
-	// /api/shifts - all shifts
-	// /api/shift_interval - shift interval like 2020-07-01-2020-07-01
-	// shift interval should specify staff with id. else things will get messy.
-
 	// initial data
-	axios.get('/api/shifts/today')
+	axios.get('/api/shifts/date/today')
 		.then(response=>{
 			console.log('shifts from server');
 			let sdata = response.data;

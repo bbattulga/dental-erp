@@ -20,20 +20,13 @@ and fits with the legacy code
 $namespace = 'Api';
 // $api_prefix = '/api/';
 
-// ACCESSIBLE TO ANYONE
+// ACCESSIBLE TO AUTHENTCATED
 Route::group(['middleware' => 'auth',
             'namespace' => $namespace,
             'prefix'=>'/api/'],function(){
-});
-
-Route::group(['middleware' => 'reception',
-            'namespace' => $namespace,
-            'prefix'=>'/api/'],function(){
-
     
 });
 
-///// GENERAL end(array)
 
 
 // ADMIN API
@@ -42,7 +35,6 @@ Route::group(['middleware' => 'admin',
             'prefix'=>'/api/'], function(){
 
     // treatment
-    Route::get('treatments', 'TreatmentController@index');
     Route::get('treatments/{id}', 'TreatmentController@show');
     Route::post('treatments/create', 'TreatmentController@store');
     Route::put('treatments/update', 'TreatmentController@update');
@@ -56,6 +48,22 @@ Route::group(['middleware' => 'admin',
     Route::delete('treatments-selection/delete/{id}', 'TreatmentSelectionController@destroy');
 
 }); // ADMIN API END
+
+// DOCTOR API
+Route::group([ 'middleware' => 'doctor',
+            'namespace' => $namespace, 
+            'prefix'=>'/api/'],function(){
+    
+    Route::get('treatment-categories', 'TreatmentCategoryController@index');
+    Route::get('treatments', 'TreatmentController@index');
+
+    Route::get('user-treatments', 'UserTreatmentController@index');
+    Route::get('user-treatments/{id}', 'UserTreatmentController@show');
+    Route::post('user-treatments/create', 'UserTreatmentController@store');
+    Route::put('user-treatments/update', 'UserTreatmentController@update');
+    Route::delete('user-treatments/delete/{id}', 'UserTreatmentController@destroy');
+}); // END DOCTOR API
+
 
 // RECEPTION API
 Route::group(['middleware'=>'reception',
@@ -89,7 +97,10 @@ Route::group(['middleware'=>'reception',
     Route::get('shifts/date/today', 'ShiftController@today');
     Route::get('shifts/date/{date}', 'ShiftController@showDate');
     Route::post('shifts/date/datebetween', 'ShiftController@showDateBetween');
-    
+
+    Route::get('shifts/types/all', 'ShiftController@showShiftTypes');
+    Route::get('shifts/types/{id}', 'ShiftController@showShiftType');
+
     Route::get('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
     Route::post('users/create', 'UserController@store');
@@ -98,18 +109,10 @@ Route::group(['middleware'=>'reception',
     Route::post('users/query', 'UserController@query');
 }); // END RECEPTON API
 
-// DOCTOR API
-Route::group(['namespace' => $namespace, 'prefix'=>'/api/'],function(){
-    
-    Route::get('user-treatments', 'UserTreatmentController@index');
-    Route::get('user-treatments/{id}', 'UserTreatmentController@show');
-    Route::post('user-treatments/create', 'UserTreatmentController@store');
-    Route::put('user-treatments/update', 'UserTreatmentController@update');
-    Route::delete('user-treatments/delete/{id}', 'UserTreatmentController@destroy');
-}); // END DOCTOR API
-
 // ACCOUNTANT API
-Route::group(['namespace' => $namespace, 'prefix'=>'/api/accountant'],function(){
+Route::group([ 'middleware' => 'accountant',
+            'namespace' => $namespace, 
+            'prefix'=>'/api/accountant'],function(){
     Route::get('/', function(){
         return 'api test index web.php';
     });

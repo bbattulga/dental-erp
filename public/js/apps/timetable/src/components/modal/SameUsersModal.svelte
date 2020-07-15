@@ -1,7 +1,8 @@
 <script type="text/javascript">
 		
 	import {createEventDispatcher} from 'svelte';
-	export let users;
+	export let users = [];
+	export let show = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -12,6 +13,7 @@
 	}
 </script>
 
+{#if show}
 <div>
 	<h3>Хэрэглэгч бүртгэлтэй байж магадгүй байна</h3>
 	{#each users as user}
@@ -21,6 +23,7 @@
 		</div>
 	{/each}
 </div>
+{/if}
 
 <style>
 	.row{

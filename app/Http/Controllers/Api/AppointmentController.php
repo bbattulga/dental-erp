@@ -25,15 +25,14 @@ class AppointmentController extends Controller
     public function store(Request $request) {
         
         // validate then create
-        /*
+        
         $request->validate([
-        	'name' => 'required|string|max:60',
-        	'phone' => 'required|string|max:50',
-        	'created_by' => 'required|integer',
+        	'name' => 'required|max:60',
+        	'phone' => 'required|max:50',
         	'shift_id' => 'required|integer',
         	'user_id' => 'required|integer'
         ]);
-        */
+        
 
         $appointment = Appointment::create([
                 'shift_id'=>$request['shift_id'],
@@ -49,8 +48,8 @@ class AppointmentController extends Controller
 
     public function update(Request $request){
         $request->validate([
-            'name' => 'string|max:60',
-            'phone' => 'string|max:50',
+            'name' => 'max:60',
+            'phone' => 'max:50',
             'created_by' => 'integer',
             'shift_id' => 'integer',
             'user_id' => 'integer',
@@ -84,6 +83,7 @@ class AppointmentController extends Controller
             ->where('shifts.date', Date('Y-m-d'))
             ->get();    
     }
+    
     public function showDateBetween(Request $request){
         $request->validate([
             'date1' => 'string|max:10',

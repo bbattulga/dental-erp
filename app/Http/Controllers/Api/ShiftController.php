@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Shift;
+use App\ShiftType;
 
 
 class ShiftController extends Controller
@@ -37,6 +38,10 @@ class ShiftController extends Controller
 
 		return $shifts;
 	}
+
+    public function store(Request $request){
+        return Shift::create($request->all());
+    }
 
 	public function showBetween(Request $request){
 
@@ -117,5 +122,13 @@ class ShiftController extends Controller
             ->where('shifts.user_id', '=', $user_id)
             ->get();
         return $shifts;
+    }
+
+    public function showShiftTypes(){
+        return ShiftType::all();
+    }
+
+    public function showShiftType($id){
+        return ShiftType::findOrFail($id);
     }
 }

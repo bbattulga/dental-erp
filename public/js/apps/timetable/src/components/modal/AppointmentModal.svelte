@@ -39,10 +39,8 @@
 	function handleSubmit(){
 
 		// just visited or edited existing user cell
-		if (appointment!= null){
-			close();
-			return;
-		}
+
+		let user = appointment == null? null: appointment.user;
 		let _detail = {
 			appointment:{
 				shift_id: shift.id,
@@ -76,25 +74,11 @@
 	}
 
 	function handleRegister(){
-		findSameUsers(name, phone)
-			.then(response=>{
-				let same = response.data;
-				console.log('same users', same);
-				if (same.length>0){
-					sameUsers = same;
-					return;
-				}
-				close();
 		let currentData = {
 			name,
 			phone
 		}
 		dispatch('openRegister', currentData);
-			})
-			.catch(err=>{
-				console.log(err);
-				alert('алдаа гарлаа')
-			});
 	}
 
 </script>

@@ -17,7 +17,8 @@ use App\Roles;
 $factory->define(App\User::class, function (Faker $faker) {
 
 	$roles = Roles::all();
-
+    $birth_date = $faker->datetimeBetween('-50 years', '-5 years');
+    
     return [
         'name'=> $faker->firstName,
         'last_name' => $faker->lastName,

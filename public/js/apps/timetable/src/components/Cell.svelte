@@ -8,7 +8,6 @@
 	import Modal from './modal/Modal.svelte';
 	import AppointmentModal from './modal/AppointmentModal.svelte';
 	import RegisterModal from './modal/RegisterModal.svelte';
-	import SameUsersModal from './modal/SameUsersModal.svelte';
 	import axios from 'axios';
 
 
@@ -18,8 +17,6 @@
 	export let shift;
 	export let appointment;
 	export let time;
-	
-	let sameUsers = [];
 	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -40,7 +37,6 @@
 	// flags
 	let showAppointmentModal = false;
 	let showRegisterModal = false;
-	let showSameUsersModal = false;
 
 	// functions
 	function handleClick(){
@@ -51,28 +47,14 @@
 		showAppointmentModal = true;
 	}
 
-	const findSameUsers = (data) => {
-		let d = {name: data.name, phone: data.phone};
-		return axios.post('/api/users/query', d);
-	}
-
-	const checkInUser = (userId, shiftId) => {
-		let d = {
-			user_id: userId,
-			shift_id: shiftId
-		}
-		return axios.post('/api/checkins/create', d);
-	}
-
-	const handleAppointment = (event) => {
+	const handleSubmit = (event) => {
 		console.log('cell handle submit');
 		console.log(event.detail);
 
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
-
-		axios.post('/api/appointments/create', appointment)
+		axios.post('/api/appointment/create', appointment)
 			.then(response=>{
 				id = response.data;
 				appointment.id = id;
@@ -80,12 +62,6 @@
 				newAppointment = true;
 				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
-				if (appointment.user_id == 0){
-					return;
-				}
-				checkInUser(appointment.user_id, appointment.shift_id)
-					.then(response=>console.log('checkin added'))
-					.catch(err=>console.log('couldnt create checkin'));
 			})
 			.catch(err=>{
 				alert('Алдаа гарлаа');
@@ -108,39 +84,45 @@
 			description: 'test'
 		}
 		console.log('sent like ', d);
-		axios.post('/api/appointments/cancel', d).then(response=>{
+		axios.post('/api/appointment/cancel', d).then(response=>{
 			count = response.data;
 			console.log(response);
 		}).catch(err=>console.log(err));
 		dispatch('deleteAppointment', appointment.id);
 	}
 
-	const registerUser = (user) => {
-		return axios.post('/api/users/create', user);
+	const handleRegisterModal = (event) => {
+		console.log('cell show registermodal');
+		showRegisterModal = true;
 	}
 
 	const handleRegister = (event) => {
 		console.log('cell handle register');
 		
 		let user = event.detail.user;
-		registerUser(user)
-		.then(response=>{
-			axios.put('/api/appointment/update', {user_id: response.data});
-			user.id = response.data;
-			appointment.registered = '1';
-			registered = true;
-			checkInUser(user.id, appointment.shift_id)
-				.then(response=>console.log('created checkin'))
-				.catch(err=>console.log('couldnt create checkin ',err));
-		})
-		.catch(err=>{
-			alert('Алдаа гарлаа');
-			console.log(err);
-		})
-	}
-
-	const handleSubmitUser = (event) => {
-		console.log('checkin existing', event.detail);
+	/*	let dummy = {
+			last_name: 'dummylastname',
+	         name: 'dummyname',
+	         sex: 1,
+	         register: 'ИР89382716',
+	         phone_number: '89382716',
+	         email: 'joonjiinaze@mail.com',
+	         birth_date: '2000-02-02',
+	         location: 'zaisan',
+	         info: 'nodescription'
+		} */
+		user.appointment_id = appointment.id;
+		console.log('sent like ', user);
+		axios.post('/api/users/create', user)
+			.then(response=>{
+				//user.id = response;
+				appointment.registered = '1';
+				registered = true;
+			})
+			.catch(err=>{
+				alert('Алдаа гарлаа');
+				console.log(err);
+			})
 	}
 
 </script>
@@ -163,25 +145,18 @@
 		{/if}
 	</div>
 	</div>
-	
 		<AppointmentModal
 			bind:show={showAppointmentModal}
-			on:submit={handleAppointment}
-			on:openRegister={()=>showRegisterModal = true}
+			on:submit={handleSubmit}
+			on:openRegister={handleRegisterModal}
 			on:delete={handleDelete}
 			{shift}
 			{time}
 			doctor={shift.doctor}
 			appointment={appointment} />
-
 		<RegisterModal
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
-
-		<SameUsersModal
-			bind:show={showSameUsersModal}
-			on:submit={handleSubmitUser}
-			bind:users = {sameUsers}/>
 </td>
 
 

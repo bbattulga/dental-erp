@@ -13,8 +13,13 @@
 	let doctors = [];
 	let LOADING = true;
 
-	// initial data
-	axios.get('/api/shifts/date/today')
+	// /api/shift -shifts of day
+	// /api/shifts - all shifts
+	// /api/shift_interval - shift interval like 2020-07-01-2020-07-01
+	// shift interval should specify staff with id. else things will get messy.
+
+	// intial data
+	axios.get('/api/shifts/today')
 		.then(response=>{
 			console.log('shifts from server');
 			let sdata = response.data;
@@ -52,18 +57,13 @@
 
 		let promise = null;
 		LOADING = true;
-		if (date.length == 1){	
+		if (date.length == 1){
 			promise = axios.get(`/api/shifts/date/${date}`);
 		}else if (date.length == 2){
 			let doctorId = doctor == null? null:doctor.id;
-			let data = {
-				'date1': date[0],
-				'date2': date[1],
-				'doctor_id': doctorId
-			}
-			let url = `/api/shifts/date/datebetween`
+			let url = `/api/reception/time/${date[0]}/${date[1]}/${doctorId}`
 			console.log('sent url: ',url);
-			promise = axios.post(url, data);
+			promise = axios.get(url);
 		}
 
 		promise.then(response=>{

@@ -4,6 +4,7 @@
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
+	import SameUsersModal from './SameUsersModal.svelte';
 
 	export let show = true;
 	export let shift;
@@ -36,11 +37,37 @@
 		console.log(show);
 	}	
 
+	function findSameUsers(name, phone){
+		return axios.post('/api/users/query', {name, phone});
+	}
+
 	function handleSubmit(){
 
 		// just visited or edited existing user cell
+		if (appointment!= null){
+			close();
+			return;
+		}
 
-		let user = appointment == null? null: appointment.user;
+		findSameUsers(name, phone)
+			.then(response=>{
+				let same = response.data;
+				console.log('same users', same);
+				if (same.length>0){
+					sameUsers = same;
+					return;
+				}
+				store();
+			})
+			.catch(err=>console.log(err));
+	}
+
+	function handleSubmitUser(event){
+		let detail = event.detail;
+		store(detail.user);
+	}
+
+	function store(user=null){
 		let _detail = {
 			appointment:{
 				shift_id: shift.id,
@@ -54,12 +81,10 @@
 		}
 
 		dispatch('submit', _detail);
+		// create new user
+		// if cell did not have user
+		
 		close();
-	}
-
-	function handleSubmitUser(event){
-		let detail = event.detail;
-		store(detail.user);
 	}
 
 	function handleDelete(){
@@ -74,11 +99,25 @@
 	}
 
 	function handleRegister(){
+		findSameUsers(name, phone)
+			.then(response=>{
+				let same = response.data;
+				console.log('same users', same);
+				if (same.length>0){
+					sameUsers = same;
+					return;
+				}
+				close();
 		let currentData = {
 			name,
 			phone
 		}
 		dispatch('openRegister', currentData);
+			})
+			.catch(err=>{
+				console.log(err);
+				alert('алдаа гарлаа')
+			});
 	}
 
 </script>

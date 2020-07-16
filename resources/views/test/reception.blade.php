@@ -50,15 +50,15 @@
         {{--Search box--}}
 
 
-            <div class="search">
-                <form action="{{url('/admin/search')}}" method="get" role="search">
-                    @csrf
-                    <input placeholder="Хайх..." name="key" autocomplete="off">
-                    <span class="search-icon">
-                    <i class="simple-icon-magnifier"></i>
+        <div class="search">
+            <form id="search" action="{{url('/reception/search')}}" method="get" role="search">
+                @csrf
+                <input placeholder="Хайх..." name="key" autocomplete="off">
+                <span class="search-icon">
+                    <i class="simple-icon-magnifier" onclick="document.getElementById('search').submit()"></i>
                 </span>
-                </form>
-            </div>
+            </form>
+        </div>
 
     </div>
 
@@ -89,80 +89,37 @@
     <div class="main-menu">
         <div class="scroll">
             <ul class="list-unstyled">
-                <li id="admin">
-                    <a href="{{url('/admin/dashboard')}}">
-                        <i class="iconsmind-Digital-Drawing"></i>
-                        <span>Самбар</span>
+                <li id="receptionTime">
+                    <a href="{{url('/reception/time')}}">
+                        <i class="iconsmind-Alarm"></i> Цаг
                     </a>
                 </li>
-                <li id="adminStaff">
-                    <a href="{{url('/admin/add_staff')}}">
-                        <i class="iconsmind-Administrator"></i> Ажилчид
+                <li id="receptionPayment">
+                    <a href="{{url('/reception/payment')}}">
+                        <i class="iconsmind-Money-2"></i> Төлбөр
                     </a>
                 </li>
-                <li id="adminUsers">
-                    <a href="{{url('/admin/users')}}">
-                        <i class="iconsmind-Administrator"></i> Үйлчлүүлэгчид
+                <li id="receptionUser">
+                    <a href="{{url('/reception/user')}}">
+                        <i class="iconsmind-Administrator"></i> Үйлчлүүлэгч
                     </a>
                 </li>
-                {{--<li id="adminTime">--}}
-                    {{--<a href="#time">--}}
-                        {{--<i class="iconsmind-Alarm"></i> Цаг--}}
-                    {{--</a>--}}
-                {{--</li>--}}
-                <li id="adminReport">
-                    <a href="#report">
-                        <i class="iconsmind-Inbox-Full"></i> Тайлан
+                <li id="receptionShifts">
+                    <a href="{{url('/reception/shifts')}}">
+                        <i class="iconsmind-Calendar-3"></i> Ээлж
                     </a>
                 </li>
-                <li id="adminTreatments">
-                    <a href="{{url('/admin/treatment')}}">
-                        <i class="iconsmind-Nurse"></i> Эмчилгээ
+                <li id="receptionLease">
+                    <a href="{{url('/reception/lease')}}">
+                        <i class="iconsmind-Money-Bag"></i> Зээл
                     </a>
                 </li>
-                <li id="adminLog">
-                    <a href="{{url('/admin/logs')}}">
-                         <i class="iconsmind-Inbox-Full"></i> Түүх
+                <li id="receptionProduct">
+                    <a href="{{url('/reception/product')}}">
+                        <i class="iconsmind-Present"></i> Бараа
                     </a>
                 </li>
-                <li id="adminPromotion">
-                    <a href="{{url('/admin/promotion')}}">
-                        <i class="iconsmind-Pricing"></i> Урамшуулал
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="sub-menu">
-        <div class="scroll">
-            <ul class="list-unstyled" data-link="time">
-                <li>
-                    <a href="{{url('/admin/shifts')}}">
-                        <i class="iconsmind-Calendar-4"></i> Ээлж
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('/admin/time')}}">
-                        <i class="iconsmind-Alarm-Clock"></i> Захиалга
-                    </a>
-                </li>
-            </ul>
-            <ul class="list-unstyled" data-link="report">
-                <li>
-                    <a href="{{url('/admin/hospital')}}">
-                        <i class="iconsmind-Hospital"></i> Эмнэлэг
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('/admin/transaction')}}">
-                        <i class="iconsmind-Calculator-3"></i> Санхүү
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('/admin/product')}}">
-                        <i class="iconsmind-Medicine-2"></i> Материал
-                    </a>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -170,11 +127,6 @@
 
 </div>
 <main>
-    <div style="margin: 10px; display: grid; grid-gap: 10px;">
-        <a href="/reception/time">reception</a>
-        <a href="/doctor/dashboard">doctor</a>
-        <a href="/accountant/transactions">accountant</a>
-    </div>
     <div class="container-fluid">
         @yield('content')
     </div>

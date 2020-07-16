@@ -49,17 +49,31 @@
 
         {{--Search box--}}
 
+        {{--@if(\Illuminate\Support\Facades\Auth::user()->role == null)--}}
 
-            <div class="search">
-                <form action="{{url('/admin/search')}}" method="get" role="search">
-                    @csrf
-                    <input placeholder="Хайх..." name="key" autocomplete="off">
-                    <span class="search-icon">
-                    <i class="simple-icon-magnifier"></i>
-                </span>
-                </form>
-            </div>
+        {{--@elseif(\Illuminate\Support\Facades\Auth::user()->role->role_id == 1)--}}
+        {{--<div class="search">--}}
+            {{--<form action="{{url('/reception/search')}}" method="get" role="search">--}}
+                {{--@csrf--}}
+                {{--<input placeholder="Хайх..." name="key" autocomplete="off">--}}
+                {{--<span class="search-icon">--}}
+                    {{--<i class="simple-icon-magnifier"></i>--}}
+                {{--</span>--}}
+            {{--</form>--}}
+        {{--</div>--}}
+        {{--@elseif(\Illuminate\Support\Facades\Auth::user()->role->role_id == 0)--}}
+            {{--<div class="search">--}}
+                {{--<form action="{{url('/admin/search')}}" method="get" role="search">--}}
+                    {{--@csrf--}}
+                    {{--<input placeholder="Хайх..." name="key" autocomplete="off">--}}
+                    {{--<span class="search-icon">--}}
+                    {{--<i class="simple-icon-magnifier"></i>--}}
+                {{--</span>--}}
+                {{--</form>--}}
+            {{--</div>--}}
+        {{--@else--}}
 
+        {{--@endif--}}
     </div>
 
 
@@ -76,7 +90,7 @@
         <div class="user d-inline-block">
             <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                <span class="name">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
+                <span class="name">Цэлмэг</span>
             </button>
 
             <div class="dropdown-menu dropdown-menu-right mt-3">
@@ -89,47 +103,7 @@
     <div class="main-menu">
         <div class="scroll">
             <ul class="list-unstyled">
-                <li id="admin">
-                    <a href="{{url('/admin/dashboard')}}">
-                        <i class="iconsmind-Digital-Drawing"></i>
-                        <span>Самбар</span>
-                    </a>
-                </li>
-                <li id="adminStaff">
-                    <a href="{{url('/admin/add_staff')}}">
-                        <i class="iconsmind-Administrator"></i> Ажилчид
-                    </a>
-                </li>
-                <li id="adminUsers">
-                    <a href="{{url('/admin/users')}}">
-                        <i class="iconsmind-Administrator"></i> Үйлчлүүлэгчид
-                    </a>
-                </li>
-                {{--<li id="adminTime">--}}
-                    {{--<a href="#time">--}}
-                        {{--<i class="iconsmind-Alarm"></i> Цаг--}}
-                    {{--</a>--}}
-                {{--</li>--}}
-                <li id="adminReport">
-                    <a href="#report">
-                        <i class="iconsmind-Inbox-Full"></i> Тайлан
-                    </a>
-                </li>
-                <li id="adminTreatments">
-                    <a href="{{url('/admin/treatment')}}">
-                        <i class="iconsmind-Nurse"></i> Эмчилгээ
-                    </a>
-                </li>
-                <li id="adminLog">
-                    <a href="{{url('/admin/logs')}}">
-                         <i class="iconsmind-Inbox-Full"></i> Түүх
-                    </a>
-                </li>
-                <li id="adminPromotion">
-                    <a href="{{url('/admin/promotion')}}">
-                        <i class="iconsmind-Pricing"></i> Урамшуулал
-                    </a>
-                </li>
+                @yield('menu')
             </ul>
         </div>
     </div>
@@ -146,23 +120,7 @@
                         <i class="iconsmind-Alarm-Clock"></i> Захиалга
                     </a>
                 </li>
-            </ul>
-            <ul class="list-unstyled" data-link="report">
-                <li>
-                    <a href="{{url('/admin/hospital')}}">
-                        <i class="iconsmind-Hospital"></i> Эмнэлэг
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('/admin/transaction')}}">
-                        <i class="iconsmind-Calculator-3"></i> Санхүү
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('/admin/product')}}">
-                        <i class="iconsmind-Medicine-2"></i> Материал
-                    </a>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -170,11 +128,6 @@
 
 </div>
 <main>
-    <div style="margin: 10px; display: grid; grid-gap: 10px;">
-        <a href="/reception/time">reception</a>
-        <a href="/doctor/dashboard">doctor</a>
-        <a href="/accountant/transactions">accountant</a>
-    </div>
     <div class="container-fluid">
         @yield('content')
     </div>

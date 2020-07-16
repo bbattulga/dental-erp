@@ -16,7 +16,6 @@
     <script>
         document.getElementById('admin').classList.add('active');
     </script>
-
     <div class="row mb-3"><!-- row-->
         <div class="col-md-3">
             <div class="card">

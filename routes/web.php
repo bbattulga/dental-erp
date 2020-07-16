@@ -11,14 +11,7 @@
 |
 */
 
-
 ////////////// WEB ROUTES START ////////
-
-Route::get('/test', function() {
-
-    return view('test');
-});
-
 Route::get('/', function () {
 	$roles = App\UserRole::all();
     //return view('welcome', compact('roles'));

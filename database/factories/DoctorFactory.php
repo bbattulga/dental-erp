@@ -4,12 +4,12 @@
 
 use App\Model;
 use Faker\Generator as Faker;
-use App\Doctor;
+
 use App\Roles;
+use App\Doctor;
 
 $factory->define(Doctor::class, function (Faker $faker) {
-
-	$birth_date = $faker->datetimeBetween('-50 years', '-24 years');
+    $birth_date = $faker->datetimeBetween('-50 years', '-24 years');
 	$doctor_id = Roles::doctor()->id;
 
     return [

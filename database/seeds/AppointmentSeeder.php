@@ -2,8 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use App\Shift;
+use App\ShiftType;
 use App\Appointment;
 use App\Patient;
+use App\Doctor;
 use Faker\Factory as Faker;
 
 
@@ -20,15 +22,18 @@ class AppointmentSeeder extends Seeder
         $shifts = Shift::where('date', '>=', Date('Y-m-d'))->get();
         $faker = Faker::create();
 
+        $min = 3;
+        $max = 5;
+
         foreach($shifts as $shift){
 
         	// number of appointments to each shift
-        	$size = $faker->numberBetween(3, 5);
+        	$size = $faker->numberBetween($min, $max)  ;
 
         	$shift_type = $shift->shift_type_id;
 
         	// initial start time, end time
-        	if ($shift_type != Shift::evening()){
+        	if ($shift_type != ShiftType::evening()){
         		$start = 9;
         		$end = 10;
         	}else{

@@ -60,24 +60,7 @@
 </head>
 <body>
 
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-	<div id="result"></div>
-
-	<script type="text/javascript">
-
-		let date1 = '2020-07-01';
-		let date2 = '2020-07-10';
-		let url = `/api/reception/time`
-		axios.get(url)
-			.then(response => {
-				console.log('response');
-				console.log(response);
-				document.getElementById('result').innerText = response.data;
-			})
-			.catch(err => {
-				console.log(err);
-			})
+	<script src="{{ asset('js/apps/appointment-modal/build/') }}">
 	</script>
 </body>
 </html>

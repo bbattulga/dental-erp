@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Promotion;
 
-use App\UserRole;
 
-
-class UserRoleSeeder extends Seeder
+class PromotionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +14,7 @@ class UserRoleSeeder extends Seeder
     public function run()
     {
         //
-        factory(UserRole::class, 10);
+        $quantity = 10;
+        factory(Promotion::class, $quantity)->create();
     }
 }

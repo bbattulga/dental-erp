@@ -18,8 +18,15 @@ class Shift extends Model
     public function checkins(){
         return $this->hasMany('App\CheckIn','shift_id','id');
     }
+
+    public function type(){
+        return $this->hasOne('App\ShiftType', 'id', 'shift_type_id');
+    }
     public function createdby() {
         return $this->hasOne('App\User', 'id', 'created_by');
     }
 
+    public function delete(){
+
+    }
 }

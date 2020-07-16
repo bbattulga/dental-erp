@@ -16,20 +16,18 @@ class AppointmentSeeder extends Seeder
      */
     public function run()
     {
-        //
+        // assign appointments to existing shifts
         $shifts = Shift::where('date', '>=', Date('Y-m-d'))->get();
         $faker = Faker::create();
 
-        // assign appointments to existing shifts
         foreach($shifts as $shift){
 
         	// number of appointments to each shift
         	$size = $faker->numberBetween(3, 5);
 
-        	// initial start time, end time
-
         	$shift_type = $shift->shift_type_id;
 
+        	// initial start time, end time
         	if ($shift_type != Shift::evening()){
         		$start = 9;
         		$end = 10;
@@ -41,10 +39,12 @@ class AppointmentSeeder extends Seeder
         	// assign appointments to shift
         	for($i=0; $i<$size; $i++){
 
+        		// make registered or not
         		 $register = 0;
 
         		// uncomment this line to create some registered users
         		// $register = $faker->numberBetween(0, 1);
+
         		if ($register == 1){
 
         			$patient = factory(Patient::class)->create();

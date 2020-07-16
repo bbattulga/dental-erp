@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
     <style>
-        .hidden {
+        .hidden {   
             border-radius: 10px;
             opacity: 0;
             background-color: white;

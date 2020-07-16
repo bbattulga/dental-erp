@@ -29,6 +29,12 @@ class ReceptionTimeController extends Controller
         $shifts = Shift::all()->where('date', date('Y-m-d'));
         return view('reception.time', compact('shifts'));
     }
+
+    public function time2() {
+        $shifts = Shift::all()->where('date', date('Y-m-d'));
+        return view('reception.shifts2', compact('shifts'));
+    }
+
     public function appointment($id) {
         $user = User::find($id);
         $shifts = Shift::all()->where('date', date('Y-m-d'));

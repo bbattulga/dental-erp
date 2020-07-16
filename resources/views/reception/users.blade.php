@@ -238,10 +238,10 @@
 
             for (let i=0; i<user_rows.length; i++){
                 let cols = user_rows[i].getElementsByClassName('user_col');
-                for (let j=0; j<cols.length; j++){
+                for (let j=0; j<cols.length; j++){  
                     let col = cols[j];
 
-                   if (col.innerText.match(value)){
+                   if (col.innerText.search(value)){
                     console.log(value, ' match ', col.innerText);
                     user_rows_html[i].classList.remove('hidden');
                     console.log('after remove hidden ',user_rows_html[i].classList);

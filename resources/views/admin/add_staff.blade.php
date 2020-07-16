@@ -150,7 +150,6 @@
                             <th>Овог</th>
                             <th>Мэргэжил</th>
                             <th>Утас</th>
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -182,14 +181,6 @@
                                 </td>
                                 <td>
                                     <p class="text-muted">{{$role->staff->phone_number}}</p>
-                                </td>
-                                <td>
-                                    <div>
-                                        @php
-                                            $staffid=$role->staff->id
-                                        @endphp
-                                        <button onclick="deleteStaff({{$staffid}})">Устгах</button>
-                                    </div>
                                 </td>
                             </tr>
                         @endforeach 
@@ -249,8 +240,8 @@
         }
 
         function deleteStaff(id){
-            console.log('delete with id ', id);
-            axios.delete('/admin/staff/delete', {id: id})
+            console.log('delete id ', id);
+            axios.get(`/api/user/delete/${id}`)
                 .then(response=>{
                     console.log(response);
                     removeElement(document.getElementById(id));

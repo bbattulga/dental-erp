@@ -17,6 +17,6 @@ class Patient extends Model
     	parent::boot();
     	static::addGlobalScope('patient', function(Builder $builder){
     		$builder->where('role_id', null);
-    	})
+    	});
     }
 }

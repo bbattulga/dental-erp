@@ -61,9 +61,10 @@
                             <p class="mb-3">
                                 {{$user->description}}
                             </p>
-                            @if($user->role->state == 0)
+                            @if($user->role == null)
                                 Халагдсан
                             @else
+
                             @endif
                         </div>
                     </div>
@@ -150,7 +151,7 @@
                     @foreach($shifts as $shift)
                         @foreach($shift->checkins->where('state','>=', 3) as $check_in)
                             <?php $users++;?>
-                            <div class="col-md-12">
+                            <div class="scroll col-md-12">
 
                                 <div class="card">
                                     <div class="card-body">

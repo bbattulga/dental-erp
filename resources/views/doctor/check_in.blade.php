@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
 
+    <style>
+        .mbtm{
+            margin-bottom: 15px;
+        }
+    </style>
     {{--End css style gh met link file oruulna--}}
 @endsection
 @section('content')
@@ -23,7 +28,7 @@
         @else
             @foreach($checkins as $checkin)
                 <div class="col-md-3">
-                    <div class="card ">
+                    <div class="card mbtm">
                         <div class="card-body">
                             <div class="text-center">
                                 <p class="list-item-heading mb-1">

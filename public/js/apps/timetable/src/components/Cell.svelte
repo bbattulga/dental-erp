@@ -2,6 +2,7 @@
 <script>
 
 	import {createEventDispatcher} from 'svelte';
+	import {onDestroy} from 'svelte';
 
 	import {fade} from 'svelte/transition';
 	import {fly} from 'svelte/transition';
@@ -54,7 +55,8 @@
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
-		axios.post('/api/appointment/create', appointment)
+
+		axios.post('/api/appointments/create', appointment)
 			.then(response=>{
 				id = response.data;
 				appointment.id = id;
@@ -62,6 +64,17 @@
 				newAppointment = true;
 				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
+
+				if (!appointment.user_id)
+					return;
+
+				let checkin = {
+					user_id: appointment.user_id,
+					shift_id: appointment.shift_id
+				};
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>console.log('checkin created'))
+					.catch(err=>console.log(err));
 			})
 			.catch(err=>{
 				alert('Алдаа гарлаа');
@@ -84,7 +97,7 @@
 			description: 'test'
 		}
 		console.log('sent like ', d);
-		axios.post('/api/appointment/cancel', d).then(response=>{
+		axios.post('/api/appointments/cancel', d).then(response=>{
 			count = response.data;
 			console.log(response);
 		}).catch(err=>console.log(err));
@@ -118,12 +131,22 @@
 				//user.id = response;
 				appointment.registered = '1';
 				registered = true;
+
+				let checkin = {
+					user_id: response,
+					shift_id: appointment.shift_id
+				};
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>console.log('checkin created'))
+					.catch(err=>console.log(err));
 			})
 			.catch(err=>{
 				alert('Алдаа гарлаа');
 				console.log(err);
-			})
+			});
 	}
+
+onDestroy(()=>appointment=null);
 
 </script>
 
@@ -153,7 +176,7 @@
 			{shift}
 			{time}
 			doctor={shift.doctor}
-			appointment={appointment} />
+			bind:appointment={appointment} />
 		<RegisterModal
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>

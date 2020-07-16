@@ -1,5 +1,4 @@
-@extends('layouts.reception')
-@section('header')
+<head>
       <meta charset="UTF-8">
       <title>date</title>
       <meta name="robots" content="noindex">
@@ -20,10 +19,8 @@
       <script src="https://static.codepen.io/assets/editor/iframe/iframeRuntimeErrors-29f059e28a3c6d3878960591ef98b1e303c1fe1935197dae7797c017a3ca1e82.js"></script>
       <script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/41/5/common.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/41/5/util.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/41/5/controls.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/41/5/places_impl.js"></script>
 
-
-@endsection
-
-@section('content')
+</head>
+<body>
       <div class="row">
   
 
@@ -228,4 +225,4 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
       <script src="{{ asset('/js/shifts.js') }}"></script>
-@endsection
+</body>

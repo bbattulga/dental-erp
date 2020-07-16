@@ -1,6 +1,7 @@
 <script type="text/javascript">
 	
 	import {createEventDispatcher} from 'svelte';
+	import {onDestroy} from 'svelte';
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
@@ -11,6 +12,8 @@
 	export let doctor;
 	export let appointment;
 	export let time;
+
+	onDestroy(()=>appointment=null);
 
 	let showAppointmentForm = true;
 	let showRegisterForm = false;

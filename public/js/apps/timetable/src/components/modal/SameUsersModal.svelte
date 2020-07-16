@@ -16,21 +16,41 @@
 	<h3>Хэрэглэгч бүртгэлтэй байж магадгүй байна</h3>
 	{#each users as user}
 		<div class="row">
-			<p>{user.name} - {user.phone_number}</p>
-			<button on:click={()=>handleChoose(user)} class="btn-add">Цаг захиалах</button>
+			<div class="user-info"><p>{user.name} - {user.phone_number}</p></div>
+			<div class="btn-add" on:click={()=>handleChoose(user)}>Цаг захиалах</div>
 		</div>
 	{/each}
 </div>
 
 <style>
 	.row{
-		display: flex;
-		flex-flow: row wrap;
-		max-height: 100px;
+		display: grid;
+		grid-template-columns: 8fr 2fr;
 		width: 100%;
+		background-color: #e3e3e3e3;
+		max-height: 50px;
 	}
 
+	.row *{
+		font-size: 0.7em;
+	}
+
+	.user-info{
+		float: left;
+		display: flex;
+		align-items: center;
+	}
+
+
 	.btn-add{
-		display: inline-block;
+		float: left;
+		font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+		border: #fbfbfb solid 4px;
+		cursor:pointer;
+		background-color: #3498db;
+		color:white;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		transition: all 0.3s;
 	}
 </style>

@@ -107,6 +107,16 @@ Route::group(['middleware'=>'reception',
     Route::put('users/update', 'UserController@update');
     Route::delete('users/delete/{id}', 'UserController@destroy');
     Route::post('users/query', 'UserController@query');
+
+
+    Route::get('promotions', 'PromotionController@index');
+    Route::get('promotions/{id}', 'PromotionController@show');
+    Route::get('promotions/code/{code}', 'PromotionController@showByCode');
+
+    Route::post('promotions/create', 'PromotionController@store');
+    Route::put('promotions/update', 'PromotionController@update');
+    Route::delete('promotions/delete/{id}', 'PromotionController@destroy');
+
 }); // END RECEPTON API
 
 // ACCOUNTANT API

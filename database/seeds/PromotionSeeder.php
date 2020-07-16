@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\CheckIn;
+use App\Promotion;
 
 
-class CheckInSeeder extends Seeder
+class PromotionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,8 +14,7 @@ class CheckInSeeder extends Seeder
     public function run()
     {
         //
-        $quantity = 5;
-        factory(CheckIn::class, $quantity)->create();
-        
+        $quantity = 10;
+        factory(Promotion::class, $quantity)->create();
     }
 }

@@ -10,13 +10,16 @@ use App\CheckIn;
 class CheckInController extends Controller
 {
     public function index(){
-		return CheckIn::with('shift', 'shift.doctor','user')
+		return CheckIn::with('shift', 'shift.type', 'shift.doctor','user', 
+			'treatments', 'treatments.treatment', 'treatments.treatmentSelection')
 				->get();
 	}
 
 	public function show($id){
 		$request->validate(['id'=>'required|integer']);
-		return CheckIn::with('shift', 'shift.doctor','user')
+		return CheckIn::with('shift', 'shift.type', 'shift.doctor','user',
+			'treatments',
+			'treatments.treatment', 'treatments.treatmentSelection')
 				->where('id', $id)
 				->get();
 	}

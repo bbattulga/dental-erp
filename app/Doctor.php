@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\User;
 use App\Roles;
 
@@ -12,9 +13,10 @@ class Doctor extends Model
     //
     protected $table = 'users';	
 
-    public static function all($columns = Array()){
-    	return User::where('role_id', Roles::doctor()->id)
-    			->get();
+    protected static function boot(){
+        static::addGlobalScope('doctor', function(Builder $builder){
+            $builder->where('role_id', Roles::doctor()->id);
+        });
     }
 
     // legacy reception.shifts needs this

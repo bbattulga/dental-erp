@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('/test', function(){
+    return view('test');
+});
+
+
 ////////////// WEB ROUTES START ////////
 Route::get('/', function () {
 	$roles = App\UserRole::all();

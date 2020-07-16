@@ -41,8 +41,6 @@ Route::group(['middleware' => 'admin',
     Route::delete('treatments/delete/{id}', 'TreatmentController@destroy');
 
     //treatments selection
-    Route::get('treatments-selection', 'TreatmentSelectionController@index');
-    Route::get('treatments-selection/{id}', 'TreatmentSelectionController@show');
     Route::post('treatments-selection/create', 'TreatmentSelectionController@store');
     Route::put('treatments-selection/update', 'TreatmentSelectionController@update');
     Route::delete('treatments-selection/delete/{id}', 'TreatmentSelectionController@destroy');
@@ -57,6 +55,9 @@ Route::group([ 'middleware' => 'doctor',
     Route::get('treatment-categories', 'TreatmentCategoryController@index');
     Route::get('treatments', 'TreatmentController@index');
 
+    Route::get('treatments-selection', 'TreatmentSelectionController@index');
+    Route::get('treatments-selection/{id}', 'TreatmentSelectionController@show');
+    
     Route::get('user-treatments', 'UserTreatmentController@index');
     Route::get('user-treatments/{id}', 'UserTreatmentController@show');
     Route::post('user-treatments/create', 'UserTreatmentController@store');

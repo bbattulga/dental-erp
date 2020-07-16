@@ -33,7 +33,7 @@ class UserController extends Controller
             $request['password'] = 'secret';
         }
         $user = User::create($request->all());
-        return $user->id;
+        return $user;
 	}
 
 	public function update(Request $request){

@@ -1,19 +1,29 @@
-@extends('layouts.reception')
+@extends('layouts.admin')
 @section('header')
-    <link rel="stylesheet" href="{{asset('css/vendor/fullcalendar.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/dataTables.bootstrap4.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/datatables.responsive.bootstrap4.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/select2.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/owl.carousel.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('css/vendor/fullcalendar.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/dataTables.bootstrap4.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/datatables.responsive.bootstrap4.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/select2.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/owl.carousel.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
+    <link href="{{asset('plugin/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{asset('plugin/datatables/buttons.bootstrap4.min.css')}}" rel="stylesheet" type="text/css"/>
+    <!-- Responsive datatable examples -->
+    <link href="{{asset('plugin/datatables/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css"/>
 
-    {{--End css style gh met link file oruulna--}}
+    <link href="{{asset('plugin/switchery/switchery.min.css')}}" rel="stylesheet"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
     <style>
-        
-        .hidden{
-            display: none;
+        .btn-newuser{
+            z-index: 10000;
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            margin: 10px;
         }
 
         .row-crud-user{
@@ -21,16 +31,20 @@
             display: flex;
             flex-direction: row;
             align-content: space-around;
-            margin-left: 30px;
+            justify-content: center;
         }
 
         .crud-ic{
+            flex-direction: column;
+            justify-content: center;
+
             max-width: 30px;
             max-height: 30px;
             margin: 0 5px;
 
             cursor: pointer;
             transition: 0.4s;
+            display: flex;
         }
 
         .crud-ic:hover{
@@ -43,19 +57,49 @@
             height: auto;
         }
 
+        .tooltip-my{
+            display: inline-block;
+        }
+
+        .tooltiptext{
+            visibility: hidden;
+            font-size: 10px;
+            width: 200px;
+            background-color: #333333;
+            color: #e7e7e7e7;
+        }
+
+        .tooltip-my:hover .tooltiptext{
+            visibility: visible;
+        }
 
     </style>
 @endsection
 @section('content')
-    <script>document.getElementById('receptionUser').classList.add('active');</script>
+    <script>
+        document.getElementById('adminUsers').classList.add('active');
+    </script>
 
-    <div class="row">
-        <div class="col-md-6 hidden">
-            <div class="card mb-4">
+    <div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg btn-newuser" 
+            data-toggle="modal" 
+            data-target="#registerModal">Шинэ үйлчлүүлэгч бүртгэх
+    </button>
 
-                
+  <!-- Modal -->
+  <div class="modal fade" id="registerModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          
                 <div class="card-body">
-                    <h5 class="mb-4">Шинэ үйлчлүүлэгч нэмэх</h5>
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -66,7 +110,7 @@
                         </div>
                     @endif
 
-                    <form action="{{url('/reception/user/store')}}" method="post" enctype="multipart/form-data" id="form">
+                    <form action="#" method="post" enctype="multipart/form-data" id="form">
                         @csrf
                         <input type="hidden" name="appointment" value="@if(!empty($param)) 1 @else 0 @endif">
                         <div class="form-row">
@@ -149,96 +193,239 @@
                         <div class="form-group row mb-0">
                             <div class="col-sm-10">
                                 <br>
-                                <button onclick="validate()" type="button" class="btn btn-primary mb-0">Хэрэглэгч нэмэх</button>
+                                <button id="btnSubmitNewUser" type="button" 
+                                    class="btn btn-primary" 
+                                    data-toggle="modal" 
+                                    data-target="#registerModal">
+                                        Үйлчлүүлэгч нэмэх
+                                </button>
                             </div>
                         </div>
                         <input type="hidden" name="appointment_id" value="@if(!empty($param)) {{$param[2]}} @endif">
                     </form>
-                </div>
-            -->
-            </div>
         </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
 
-        <div class="col-xl-6 col-lg-12 mb-4"><!--table-->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Бүх бүртгэлтэй хэрэглэгчид</h5>
 
-                    <table class="data-table">
-                        <thead>
+
+  <!-- Modal -->
+  <div class="modal fade" id="checkinModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Цаг захиалах</h4>
+        </div>
+        <div class="modal-body">
+          modal body
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <table id="datatable-buttons" class="table table-striped table-bordered" cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Овог</th>
+                        <th>Нэр</th>
+                        <th>Хүйс</th>
+                        <th>Нас</th>
+                        <th>Регистрийн дугаар</th>
+                        <th>Утасны дугаар</th>
+                        <th>Цаг захиалсан эсэх</th>
+                        <th>Сүүлд үйлчлүүлсэн хугацаа</th>
+                       <!-- <th>Цахим хаяг</th> -->
+                       <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="usersRowsContainer">
+                    <?php $i = 1?>
+                    @foreach($users as $user)
+                        @if(is_null($user->role))
                         <tr>
 
-                            <th>Нэр</th>
-                            <th>Овог</th>
-                            <th>Хүйс</th>
-                            <th>Утас</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($users as $user)
-                            @if(is_null($user->role))
-                                <tr class="user_row">
-                                    <td>
-                                        <p class="list-item-heading">
-                                            <a href="{{url('/reception/user_check/'.$user->id)}}"
-                                            class="user_col">{{$user->name}}</a>
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p class="text-muted user_col">{{$user->last_name}}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-muted">{{$user->sex ? 'Эм':'Эр'}}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-muted user_col">{{$user->phone_number}}</p>
-                                    </td>
-
-                                    <td>
-                                        <div class="row-crud-user">
-                                            <div class="crud-ic">
-                                                <img src="{{ asset('/img/icon/teethcare.png') }}">
-                                            </div>
-                                            <div class="crud-ic">
-                                                <img src="{{ asset('/img/icon/pen.png') }}">
-                                            </div>
-                                            <div class="crud-ic">
-                                                <img src="{{ asset('/img/icon/trashbin.png') }}">
-                                            </div>
+                            <td>{{$i}}</td>
+                            <td>{{$user->last_name}}</td>
+                            <td> <a href="{{url('/admin/user_check/'.$user->id)}}">{{$user->name}}</a></td>
+                                <td>
+                                @if($user->sex == 0)
+                                Эр
+                                @elseif($user->sex == 1)
+                                    Эм
+                                    @endif
+                                </td>
+                            <td> {{Carbon\Carbon::parse($user->birth_date)->age}}
+                            </td>
+                            <td>{{$user->register}}</td>
+                            <td>{{$user->phone_number}}</td>
+                            <td>tsag zahialsan</td>
+                            <td>2020-06-01</td>
+                            <td>
+                                {{--$user->email--}}
+                                <div class="row-crud-user">
+                                    <div class="crud-ic tooltip-my">
+                                        <img src="{{ asset('/img/icon/teethcare.png') }}">
+                                        <div class="tooltiptext"
+                                            type="button"
+                                            data-toggle="modal" 
+                                            data-target="#checkinModal">
+                                            Эмчилгээнд оруулах
                                         </div>
-                                    </td>
-                                </tr>
-                                @endif
-                        @endforeach
-
-                        </tbody>
-                    </table>
-                </div>
+                                    </div>
+                                    <div class="crud-ic tooltip-my">
+                                        <img src="{{ asset('/img/icon/pen.png') }}">
+                                        <div class="tooltiptext">
+                                             Засах
+                                        </div>
+                                    </div>
+                                    <div onclick="deleteUser({{$user->id}})"
+                                        class="crud-ic tooltip-my">
+                                        <img src="{{ asset('/img/icon/trashbin.png') }}">
+                                        <div class="tooltiptext">
+                                            Хаяг устгах
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                         <?php $i++;?>
+                        @endif
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div><!-- table end-->
+        </div>
     </div>
+
+
+</div>
+
+
 @endsection
 @section('footer')
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+    <script src="{{asset('plugin/datatables/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <!-- Buttons examples -->
+    <script src="{{asset('plugin/datatables/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/buttons.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/jszip.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/pdfmake.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/vfs_fonts.js')}}"></script>
+    <script src="{{asset('plugin/datatables/buttons.html5.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/buttons.print.min.js')}}"></script>
 
-    <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
-    <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
-    <script src="{{asset('js/vendor/moment.min.js')}}"></script>
-    <script src="{{asset('js/vendor/fullcalendar.min.js')}}"></script>
-    <script src="{{asset('js/vendor/datatables.min.js')}}"></script>
-    <script src="{{asset('js/vendor/owl.carousel.min.js')}}"></script>
-    <script src="{{asset('js/vendor/progressbar.min.js')}}"></script>
-    <script src="{{asset('js/vendor/jquery.barrating.min.js')}}"></script>
+    <!-- Key Tables -->
+    <script src="{{asset('plugin/datatables/dataTables.keyTable.min.js')}}"></script>
+
+    <!-- Responsive examples -->
+    <script src="{{asset('plugin/datatables/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('plugin/datatables/responsive.bootstrap4.min.js')}}"></script>
+
+    <!-- Selection table -->
+    <script src="{{asset('plugin/datatables/dataTables.select.min.js')}}"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // Default Datatable
+            $('#datatable').DataTable();
+
+            //Buttons examples
+            
+            var table = $('#datatable-buttons').DataTable({
+                lengthChange: false,
+                buttons: ['copy', 'excel', 'pdf']
+            }); 
+        
+            // Key Tables
+
+            $('#key-table').DataTable({
+                keys: true
+            });
+            
+            // Responsive Datatable
+            $('#responsive-datatable').DataTable();
+        
+            // Multi Selection Datatable
+            $('#selection-datatable').DataTable({
+                select: {
+                    style: 'multi'
+                }
+            });
+
+            table.buttons().container()
+                .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+        });
+
+
+    let userCreateUrl = '/api/users/create';
+    let userDeleteUrl = '/api/users/delete';
+    function addNewUser(data){
+        /*
+            user = {
+                user_id: 1,
+                last_name: 'Jonjo',
+                name: 'Naji',
+                register: 'ИШ29384736',
+                phone_number: 80394837,
+                email: 'jonjonaze@mail.com',
+                birth_date: '2002-10-04',
+                sex: 1,
+                location: 'jonjo location',
+                'description': 'jonjodescription'
+            }
+        */
+    }   
+
+    function deleteUser(id){
+        let url = `/api/users/delete/${id}`;
+        $.ajax({
+            type: 'DELETE',
+            url: userDeleteUrl,
+            success: function(){alert('deleted')},
+            fail: function(err){alert(`error ${err}`)}
+        });
+    }
+
+    $("#btnSubmitNewUser").click(function(){
+        let url = '/api/users/create';
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: $("#form").serialize(),
+            success: addNewUser,
+            fail: function(err){console.log('failed to create new user')}
+        });
+        return true;
+    })
+
+    </script>
+
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
+
     <script src="{{asset('js/validation.js')}}"></script>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        axios.get('/api/shifts')
-    </script>
-    {{--Scriptuudiig include hiiideg heseg--}}
 @endsection

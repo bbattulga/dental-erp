@@ -13,6 +13,12 @@
 @endsection
 @section('content')
     <!-- Menu active-->
+    <div style="margin: 10px; display: grid; grid-gap: 10px;">
+        <a href="/reception/time">reception</a>
+        <a href="/doctor/dashboard">doctor</a>
+        <a href="/accountant/transactions">accountant</a>
+    </div>
+    
     <script>
         document.getElementById('admin').classList.add('active');
     </script>

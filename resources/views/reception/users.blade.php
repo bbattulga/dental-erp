@@ -11,41 +11,49 @@
 
     {{--End css style gh met link file oruulna--}}
     <style>
+        
         .hidden{
             display: none;
         }
+
+        .row-crud-user{
+            min-width: 96px;
+            display: flex;
+            flex-direction: row;
+            align-content: space-around;
+            margin-left: 30px;
+        }
+
+        .crud-ic{
+            max-width: 30px;
+            max-height: 30px;
+            margin: 0 5px;
+
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .crud-ic:hover{
+            max-width: 36px;
+            max-height: 36px;
+        }
+
+        .crud-ic > img{
+            max-width: 100%;
+            height: auto;
+        }
+
+
     </style>
 @endsection
 @section('content')
     <script>document.getElementById('receptionUser').classList.add('active');</script>
 
-    @if (isset($same_users))
-        <div>Хэрэглэгч бүртгэлтэй эсэх/Төстэй хэрэглэгчид</div>
-        @foreach($same_users as $same_user)
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-
-                        <div>
-                            <div style="display: inline-block; width:50%;">
-                               <span>{{$same_user->name}}</span>
-                               <span>  -   {{$same_user->phone_number}}   </span>
-                           </div>
-                           <button class="btn btn-primary mb-0">Эмчилгээнд оруулах</button>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-        @endforeach
-
-    @endif <!-- isset($same_users -->
-
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 hidden">
             <div class="card mb-4">
+
+                
                 <div class="card-body">
                     <h5 class="mb-4">Шинэ үйлчлүүлэгч нэмэх</h5>
                     @if ($errors->any())
@@ -147,6 +155,7 @@
                         <input type="hidden" name="appointment_id" value="@if(!empty($param)) {{$param[2]}} @endif">
                     </form>
                 </div>
+            -->
             </div>
         </div>
 
@@ -154,9 +163,6 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Бүх бүртгэлтэй хэрэглэгчид</h5>
-
-                    <!-- onchange="filterUsers()" in script tag-->
-                    <input id="input_filter_users" placeholder="хайх">
 
                     <table class="data-table">
                         <thead>
@@ -166,6 +172,7 @@
                             <th>Овог</th>
                             <th>Хүйс</th>
                             <th>Утас</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -187,6 +194,20 @@
                                     <td>
                                         <p class="text-muted user_col">{{$user->phone_number}}</p>
                                     </td>
+
+                                    <td>
+                                        <div class="row-crud-user">
+                                            <div class="crud-ic">
+                                                <img src="{{ asset('/img/icon/teethcare.png') }}">
+                                            </div>
+                                            <div class="crud-ic">
+                                                <img src="{{ asset('/img/icon/pen.png') }}">
+                                            </div>
+                                            <div class="crud-ic">
+                                                <img src="{{ asset('/img/icon/trashbin.png') }}">
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endif
                         @endforeach
@@ -199,6 +220,7 @@
     </div>
 @endsection
 @section('footer')
+
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
     <script src="{{asset('js/vendor/moment.min.js')}}"></script>
@@ -213,45 +235,10 @@
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
     <script src="{{asset('js/validation.js')}}"></script>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-
-        var input = document.getElementById('input_filter_users');
-        input.onkeyup = filterUsers;
-
-      //  var usersParent = document.getElementById('reg_users_tbody');
-       // var username = usersParent.getElementById('a_username');
-        //var lastName = usersParent.getElementById('p_lastname');;
-        //var phno = usersParent.getElementById('p_phno');
-
-        var user_rows_html = document.getElementsByClassName('user_row');
-        var user_rows = Array.prototype.slice.call( user_rows_html );
-        console.log(user_rows_html);
-        function filterUsers(){
-            let threshold = 2;
-
-            // filter with this
-            let value = input.value;
-
-            if (value.length < threshold)
-                return;
-            console.log(user_rows);
-
-            for (let i=0; i<user_rows.length; i++){
-                let cols = user_rows[i].getElementsByClassName('user_col');
-                for (let j=0; j<cols.length; j++){  
-                    let col = cols[j];
-
-                   if (col.innerText.search(value)){
-                    console.log(value, ' match ', col.innerText);
-                    user_rows_html[i].classList.remove('hidden');
-                    console.log('after remove hidden ',user_rows_html[i].classList);
-                   }else{
-                    user_rows_html[i].classList.add('hidden');
-                    console.log(user_rows_html[i].classList);
-                   }
-                }
-            }
-        }
+        axios.get('/api/shifts')
     </script>
     {{--Scriptuudiig include hiiideg heseg--}}
 @endsection

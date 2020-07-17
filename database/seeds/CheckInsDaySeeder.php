@@ -28,6 +28,6 @@ class CheckInsDaySeeder extends Seeder
 	        	'user_id' => factory(Patient::class)->create()
 	        	]);
         	}
-        }
+        
     }
 }

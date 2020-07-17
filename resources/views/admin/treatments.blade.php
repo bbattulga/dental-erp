@@ -51,7 +51,7 @@
                                 <td>@if($treatment->category == 0) Эмчилгээ @elseif($treatment->category == 1) Гажиг засал @elseif($treatment->category == 2) Согог засал @else Мэс засал @endif</td>
                                 <td>@if(empty($treatment->price)) Хоосон @else {{$treatment->price}}₮ @endif</td>
                                 <td>@if(empty($treatment->limit)) Хоосон @else {{$treatment->limit}}₮ @endif</td>
-                                <td>{{$treatment->treatmentSelection->count()}}</td>
+                                <td>{{$treatment->treatment_selections->count()}}</td>
                             </tr>
                             @endforeach
                         </tbody>

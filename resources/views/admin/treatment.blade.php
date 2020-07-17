@@ -51,7 +51,7 @@
                                 <td>@if($item->category == 1) Эмчилгээ @elseif($item->category == 2) Гажиг засал @elseif($item->category == 3) Согог засал @else Мэс засал @endif</td>
                                 <td>@if(empty($item->price)) Хоосон @else {{$item->price}}₮ @endif</td>
                                 <td>@if(empty($item->limit)) Хоосон @else {{$item->limit}}₮ @endif</td>
-                                <td>{{$item->treatmentSelection->count()}}</td>
+                                <td>{{$item->treatment_selections->count()}}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -118,7 +118,7 @@
             <div class="card m-1">
                 <div class="card-body">
                     <h5>Төрлүүд</h5>
-                    @if(empty($treatmentSelection))
+                    @if(empty($treatment_selections))
                         <form method="post" action="{{url('admin/treatment/storeTreatmentSelection')}}">
                             @csrf
                             <input type="hidden" name="s_treatment_id" value="{{$treatment->id}}">
@@ -138,15 +138,15 @@
                     @else
                         <form method="post" action="{{url('admin/treatment/updateTreatmentSelection')}}">
                             @csrf
-                            <input type="hidden" name="treatment_selection_id" value="{{$treatmentSelection->id}}">
-                            <input class="form-control" type="text" placeholder="Нэр" name="s_u_name" value="{{$treatmentSelection->name}}">
+                            <input type="hidden" name="treatment_selection_id" value="{{$treatment_selections->id}}">
+                            <input class="form-control" type="text" placeholder="Нэр" name="s_u_name" value="{{$treatment_selections->name}}">
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Үнэ" name="s_u_price" value="{{$treatmentSelection->price}}" required>
+                                    <input type="number" class="form-control" placeholder="Үнэ" name="s_u_price" value="{{$treatment_selections->price}}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control" placeholder="Үнийн хязгаар" value="{{$treatmentSelection->limit}}" name="s_u_limit">
+                                    <input type="number" class="form-control" placeholder="Үнийн хязгаар" value="{{$treatment_selections->limit}}" name="s_u_limit">
                                 </div>
                             </div>
                             <br>
@@ -161,7 +161,7 @@
                             <th>Үнийн хязгаар</th>
                         </thead>
                          <tbody>
-                         @foreach($treatment->treatmentSelection as $selection)
+                         @foreach($treatment->treatment_selections as $selection)
                          <tr>
                              <td><a href="{{url('admin/treatment/'. $treatment->id .'/' . $selection->id)}}">{{$selection->name}}</a></td>
                              <td>@if($selection->price != null){{$selection->price}}₮@endif</td>

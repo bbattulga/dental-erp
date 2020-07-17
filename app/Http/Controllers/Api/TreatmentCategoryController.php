@@ -12,12 +12,17 @@ class TreatmentCategoryController extends Controller
     //
 
     public function index(){
-    	return TreatmentCategory::with(['treatments'])->get();
+    	return TreatmentCategory::with(['treatments', 'treatments.treatment_selections'])->get();
     }
 
-    
 	public function show($id){
 		return TreatmentCategory::findOrFail($id);
+	}
+
+	public function withTreatments($id){
+		return TreatmentCategory::with('treatments', 'treatments.treatment_selections')
+				->where('id', $id)
+				->get();
 	}
 
 	public function store(Request $request){

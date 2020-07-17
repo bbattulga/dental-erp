@@ -3,6 +3,7 @@
 	import Cell from './Cell.svelte';
 	import Column from './Column.svelte';
 
+
 	// contains {doctor, appointments}
 	export let shifts = [];
 	console.log('timetable got shifts', shifts);
@@ -27,12 +28,9 @@
 		{/each}
 	</table>
 	{#each shifts as shift (`${shift.id}${showDoctors}`)}
-
 		<Column 
 			{shift}
-			{times}>
-		</Column>
-
+			{times}/>
 	{/each}
 </div>
 

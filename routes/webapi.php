@@ -36,15 +36,14 @@ Route::group(['middleware' => 'admin',
             'prefix'=>'/api/'], function(){
 
     // treatment
-    Route::get('treatments/{id}', 'TreatmentController@show');
     Route::post('treatments/create', 'TreatmentController@store');
     Route::put('treatments/update', 'TreatmentController@update');
     Route::delete('treatments/delete/{id}', 'TreatmentController@destroy');
 
     //treatments selection
-    Route::post('treatments-selection/create', 'TreatmentSelectionController@store');
-    Route::put('treatments-selection/update', 'TreatmentSelectionController@update');
-    Route::delete('treatments-selection/delete/{id}', 'TreatmentSelectionController@destroy');
+    Route::post('treatments-selections/create', 'TreatmentSelectionController@store');
+    Route::put('treatments-selections/update', 'TreatmentSelectionController@update');
+    Route::delete('treatments-selections/delete/{id}', 'TreatmentSelectionController@destroy');
 
 }); // ADMIN API END
 
@@ -54,10 +53,14 @@ Route::group([ 'middleware' => 'doctor',
             'prefix'=>'/api/'],function(){
     
     Route::get('treatment-categories', 'TreatmentCategoryController@index');
-    Route::get('treatments', 'TreatmentController@index');
+    Route::get('treatment-categories/treatments/{id}', 'TreatmentCategoryController@withTreatments');
 
-    Route::get('treatments-selection', 'TreatmentSelectionController@index');
-    Route::get('treatments-selection/{id}', 'TreatmentSelectionController@show');
+    Route::get('treatments', 'TreatmentController@index');
+    Route::get('treatments/{id}', 'TreatmentController@show');
+    Route::get('treatments/category/{id}', 'TreatmentController@showByCategory');
+
+    Route::get('treatments-selections', 'TreatmentSelectionController@index');
+    Route::get('treatments-selections/{id}', 'TreatmentSelectionController@show');
     
     Route::get('user-treatments', 'UserTreatmentController@index');
     Route::get('user-treatments/{id}', 'UserTreatmentController@show');

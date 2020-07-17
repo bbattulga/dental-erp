@@ -15,8 +15,14 @@ class TreatmentController extends Controller
 	}
 
 	public function show($id){
-		return Treatment::with('category')
+		return Treatment::with('category', 'treatment_selections')
 				->where('id', $id)
+				->get();
+	}
+
+	public function showByCategory($categoryId){
+		return Treatment::with('treatment_selections')
+				->where('category', $categoryId)
 				->get();
 	}
 

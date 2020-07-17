@@ -7,6 +7,7 @@ use App\UserRole;
 use App\Transaction;
 use App\Treatment;
 use App\TreatmentSelections;
+use App\TreatmentCategory;
 use App\User;
 use App\UserTreatments;
 use Illuminate\Http\Request;
@@ -26,10 +27,11 @@ class DoctorTreatmentController extends Controller
         if($checkin->state == 0) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $category = 1;
-            $treatments = Treatment::where('category', $category)->get();;
+            $treatments = Treatment::where('category', $category)->get();
+            $treatmentCategories = TreatmentCategory::all();
             $user_treatments = UserTreatments::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $nurses = User::where('role_id', Roles::nurse()->id)->get();
-            return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category'));
+            return view('doctor.treatment',compact('checkin', 'treatments','user_treatments', 'checkin_all', 'nurses', 'category', 'treatmentCategories'));
         } else {
             return redirect('404');
         }

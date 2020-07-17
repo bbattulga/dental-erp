@@ -757,11 +757,7 @@
         </div>
     </div>
 
-    <button id="tempbtn" onclick="temp()">temp</button>
     <script>
-        function temp(){
-            $('#treatmentTypeModal').modal('toggle');
-        }
 
         $(document).ready(function() {
             $('#ex1').zoom({magnify: 2});
@@ -769,28 +765,14 @@
     </script>
 </div><!-- Tooth images ending-->
 <div class="col-md-3">
-    <select class="form-control" onchange="location = this.value;">
-        @if($category == 1)
-            <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
-        @elseif($category == 2)
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
-        @elseif($category == 3)
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
-        @elseif($category == 4)
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/mes')}}">Мэс засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id)}}">Эмчилгээ</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/gajig')}}">Гажиг засал</option>
-            <option value="{{url('doctor/treatment/'.$checkin->id.'/sogog')}}">Согог засал</option>
-        @endif
+    <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event)">
+        @foreach($treatmentCategories as $treatmentCategory)
+            @if ($loop->first)
+                <option value="{{ $treatmentCategory->id }}" selected> {{ $treatmentCategory->name }} </option>
+            @else
+            <option value="{{ $treatmentCategory->id }}"> {{ $treatmentCategory->name }} </option>
+            @endif
+        @endforeach
 
     </select>
     <br>
@@ -829,7 +811,7 @@
     </div>
 
     <div class="tab-pane scroll" id="second" role="tabpane2" aria-labelledby="second-tab">
-        <div class="card-body">
+        <div id="treatmentsContainer" class="card-body">
             @foreach($treatments as $treatment)
                 <!--
                 In case of special treatment
@@ -844,10 +826,10 @@
 
                             <div class="col-md-12 text-left" onclick="reset()">
                                 {{$treatment->name}} <br> 
-                                {{$treatment->treatmentSelection()->count()}} төрөлтэй
+                                {{$treatment->treatment_selections()->count()}} төрөлтэй
                             </div>
 
-                            @foreach($treatment->treatmentSelection as $selection)
+                            @foreach($treatment->treatment_selections as $selection)
                                 <input type="hidden" value="{{$selection->name}}/{{$selection->id}}/{{$selection->price}}/{{$selection->limit}}"
                                        class="treatment_{{$treatment->id}}">
                             @endforeach
@@ -866,7 +848,7 @@
                         @else
                             multiple
                         @endif"
-                        @if($treatment->treatmentSelection->count() != 0)
+                        @if($treatment->treatment_selections->count() != 0)
                             onclick="treatmentButton('{{$treatment->id}}')"
                         @else
                             onclick="singleTreatment('{{$treatment->id}}', '{{$treatment->price}}', '{{$treatment->limit}}')"
@@ -874,9 +856,9 @@
                     >
                         <div class="row">
                             <div class="col-md-9 text-left">
-                                {{$treatment->name}}<br> {{$treatment->treatmentSelection->count()}}
+                                {{$treatment->name}}<br> {{$treatment->treatment_selections->count()}}
                                 төрөлтэй
-                                @foreach($treatment->treatmentSelection as $selection)
+                                @foreach($treatment->treatment_selections as $selection)
                                     <input type="hidden" value="{{$selection->name}}/{{$selection->id}}/{{$selection->price}}/{{$selection->limit}}"
                                            class="treatment_{{$treatment->id}}">
                                 @endforeach
@@ -938,6 +920,97 @@
 </div>
 </div>
 <script>
+    function handleSelectTreatmentCategory(e, categoryId=null){
+
+        e.preventDefault();
+        e.stopPropagation();
+        if (categoryId == null)
+            categoryId = document.getElementById('treatmentCategorySelect').value;
+        let url = `/api/treatments/category/${categoryId}`;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(treatmentsResponse){setTreatmentsHTML(treatmentsResponse)},
+            fail: function(err){console.log(err)}
+        });
+    }
+    document.getElementById('treatmentCategorySelect').value = 1;
+    handleSelectTreatmentCategory(new Event('click'), 1);
+    document.getElementById('18').click();
+    document.getElementById('18').click();
+    
+    function setTreatmentsHTML(treatments){
+        console.log('treatments');
+        console.log(treatments);
+        let container = document.getElementById('treatmentsContainer');
+        let html = '';
+        for (let i=0; i<treatments.length; i++){
+            let treatment = treatments[i];
+            if (treatment.id == 1){
+                html += `<button class="btn btn-primary btn-block single"` +
+                            `data-toggle="modal"`+
+                            `data-target="#exampleModal">`+
+                            `<div class="row">`+
+                                `<div class="col-md-12 text-left" onclick="reset()">`+
+                                    `${treatment.name} <br>`+
+                                    `${treatment.treatment_selections.length} төрөлтэй`+
+                                `</div>`;
+
+                let inner = '';
+                for (let j=0; j<treatment.treatment_selections.length; j++){
+                    let selection = treatment.treatment_selections[j];
+                    inner += `<input type="hidden" `+
+                    `value="${selection.name}/${selection.id}/${selection.price}/${selection.limit}"`+
+                                      `class="treatment_${treatment.id}">`;
+                }
+                html += inner + '</div>';
+                html += '</button>';
+                continue; // end condition treatment.id==1
+            }
+
+            // treatment.id != 1
+
+            let cls = null;
+            if (treatment.selection_type == 0)
+                cls = 'all';
+            else if (treatment.selection_type == 1)
+                cls = 'single';
+            else
+                cls = 'multiple';
+
+            let onClickStr = '';
+            console.log(treatment.name);
+            console.log('treatment selection type')
+            console.log(treatment.selection_type);
+            if (treatment.selection_type == 1)
+                onClickStr = `onclick="treatmentButton('${treatment.id}')"`;
+            else
+                onClickStr = `onclick="singleTreatment('${treatment.id}',`+
+                            `'${treatment.price}', '${treatment.limit}')"`;
+
+            outer = `<button ${onClickStr} class="btn btn-primary btn-block ${cls}">` +
+                      `<div class="row">`+
+                            `<div class="col-md-9 text-left">`+
+                                `${treatment.name}<br> ${treatment.treatment_selections.length}
+                                төрөлтэй` + 
+                             `</div>` ;
+            let inner = '';
+            for (let i=0; i<treatment.treatment_selections.length; i++){
+                let selection = treatment.treatment_selections[i];
+                inner += `<input type="hidden"`+
+                    `value="${selection.name}/${selection.id}/${selection.price}/${selection.limit}"` +
+                                       `class="treatment_${treatment.id}">`;
+            }
+            outer += inner;
+            outer += '</div>';
+            outer += '</button>';
+
+            html += outer;
+        }
+        treatmentsContainer.innerHTML = html;
+
+    }
+
     function finishDate() {
         $("#treatmentHistoryModal").modal();
     }
@@ -975,6 +1048,7 @@ function reset() {
 
 
 }
+
 
 function changeStyle(ruby) {
     //----VALIDATION-----
@@ -1194,6 +1268,7 @@ function treatmentReset() {
 
 // start
 function treatmentButton(treatment) {
+    console.log('treatmentbutton', treatment);
     document.getElementById('treatmentSelectionId').value = null;
     document.getElementById('toothId').value = tooths;
     document.getElementById('treatmentId').value = treatment;
@@ -1204,6 +1279,7 @@ function treatmentButton(treatment) {
     treatmentReset();
     treatment = parseInt(treatment);
     var input = document.getElementsByClassName("treatment_" + treatment);
+
     for (i = 0; i < input.length; i++) {
         var buttonValue = input[i].value;
         var buttonLimit = buttonValue.split('/')[3];
@@ -1227,6 +1303,8 @@ function treatment(id, price ,limit) {
     }
 }
 function singleTreatment(id, price, limit) {
+    console.log('singletreatment', treatment);
+
     document.getElementById('treatmentSelectionId').value = null;
     if(limit === '' || limit === null) {
         document.getElementById('toothId').value = tooths;
@@ -1262,7 +1340,6 @@ function singleTreatmentWithLimit() {
     }
 }
 // end
-
 </script>
 @endsection
 @section('footer')

@@ -1,6 +1,9 @@
 <script type="text/javascript">
 
 	import Cell from './Cell.svelte';
+	import Grid from 'svelte-grid';
+	import gridHelp from 'svelte-grid/build/helper/index.mjs';
+
 
 	export let shift;
 	export let times = [];
@@ -17,7 +20,6 @@
 		let minPrefix = min<10? '0': '';
 		return `${hourPrefix}${hour}:${minPrefix}${min}`;
 	}
-	console.log(times);
 
 	const calc = (times, appointments) => {
 
@@ -94,52 +96,45 @@
 
 
 	function generateId(cell){
-		if (cell.appointment == null)
+		if (cell==null || (cell.appointment == null))
 			return Math.random();
 		return `${cell.appointment.id}-${cell.appointment.start}`;
 	}
-	console.log('screensize');
-	$:{console.log(screen.width)}
 
-	const resizeDefault = () => {
-		console.log('resize');
-	}
+	let gridItems = [gridHelp.item({id: generateId(null), x:0, y:0, w: 1, h: 3}),
+					gridHelp.item({id: generateId(null), x:1, y:0, w: 1, h: 3})];
+
 </script>
 
 
 <div>
 	<tr><td class="tbl-head">{shift.doctor.name}</td></tr>
 
-	{#each times as time}
-
-		
 	
-	<div class="cell-container">
-		{shift.doctor.name}
-		<button on:click={resizeDefault}>resize</button>
-	</div>
-		
-		<!--
-		<tr>
-			<td>
-				{time}
-			</td>
-		</tr>
-		-->
-		<!--
-		<Cell 
-			on:addAppointment={addAppointment}
-			on:deleteAppointment={deleteAppointment}
-			shift={cellData.shift}
-			time={cellData.time}
-			appointment={cellData.appointment}
-			rowSpan={cellData.rowSpan} /> -->
-
-	{/each}
+	<Grid 
+		bind:items={gridItems}
+		let:item
+		cols={2}
+		rowHeight={100}>
+			<div class="grid-item">grid item</div>
+	</Grid>
 </div>
 
 <style>
 
+	  :global(.svlt-grid-container) {
+	    background: #eee;
+	    width: 200px;
+	    height: 500px;
+	  }
+
+	.grid-item{
+		color: black;
+		background-color: white;
+		margin: 3px;
+		width: 100px;
+		height: 100%;
+	}
 	.column-container{
 		display: flex;
 		flex-flow: column nowrap;

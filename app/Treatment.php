@@ -9,7 +9,7 @@ class Treatment extends Model
     //
     protected $fillable = ['name','category','price','selection_type', 'category','limit'];
 
-    public function treatmentSelection() {
+    public function treatment_selections() {
         return $this->hasMany('App\TreatmentSelections', 'treatment_id', 'id');
     }
 

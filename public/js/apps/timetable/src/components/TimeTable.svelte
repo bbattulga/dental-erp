@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 	import Cell from './Cell.svelte';
-	import Row from './Row.svelte';
+	import Column from './Column.svelte';
 
 	// contains {doctor, appointments}
 	export let shifts = [];
@@ -14,84 +14,44 @@
 </script>
 
 
-<table 
+<div
 	class="main-table ">
-	<!-- Title columns -->
-	<tr class="header-row">
-		<td style="text-align: center; z-index: 100000;">{showDoctors? 'Эмч/Цаг':'Өдөр/Цаг'}</td>
+	<table>
+		<tr><td class="tbl-head">Эмч/Цаг</td></tr>
 		{#each times as time}
-		<td class="time-container"><p>{time}</p></td>
+			<tr>
+				<td>
+					{time}
+				</td>
+			</tr>
 		{/each}
-	</tr>
-
+	</table>
 	{#each shifts as shift (`${shift.id}${showDoctors}`)}
-		<Row 
+
+		<Column 
 			{shift}
 			{times}>
+		</Column>
 
-			<div slot="th">
-
-			{#if showDoctors}
-			<div class="doctor-icon">
-				<img name="th-icon" src="/js/apps/timetable/src/components/assets/doctor.png">
-			</div>
-
-			<h4>
-				{shift.doctor.name}
-			</h4> 
-			<!-- end if showDoctors -->
-			{:else}
-				{shift.date}
-			{/if}
-		</div>
-		</Row>
 	{/each}
-</table>
+</div>
 
 
 <style>
 
-	table{
-		position: relative;
-		border-collapse: collapse;
-		line-height: 80px;
-		border: 3px solid #cccccc;
+	.tbl-head{
+		height: 80px;
 	}
-
-	*{
-		font-size: 16px;
-		font-weight: 10;
-		font-family: Arial sans-serif;
-	}
-
-
-	.time-container{
-		z-index: 100000;
-		background: white;
-		min-width: 150px;
-		border: 3px solid #cccccc;
-	}
-
-	.time-container > p{
-		text-align: center;
-		background: white;
-	}
-
-	td, tr, th{
+	td{
+		height: 50px;
 		transition: 0.3s;
 		border-collapse: collapse;
 		border: 3px solid #cccccc;
 	}
 
 	.main-table{
-		border: 1px solid #333333;
-	}
-
-	.header-row{
-		min-width: 100%;
-		position: sticky;
-		top: 0px;
-		border: 3px solid #cccccc;
+		display: grid;
+		grid-auto-flow: column;
 	}
 
 		.doctor-icon{

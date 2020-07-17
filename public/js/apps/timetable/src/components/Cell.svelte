@@ -18,6 +18,7 @@
 	export let shift;
 	export let appointment;
 	export let time;
+	export let rowSpan = 1;
 	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -31,9 +32,6 @@
 	let empty =  (appointment == null) && !disabled;
 	let newAppointment = !empty && !disabled && (appointment.user_id == "0");
 	let registered = !empty && !disabled && (appointment.user_id != "0");
-
-	// values
-	let colSpan = (appointment==null)? 1: appointment.end-appointment.start;
 
 	// flags
 	let showAppointmentModal = false;
@@ -150,9 +148,9 @@ onDestroy(()=>appointment=null);
 
 </script>
 
-
+<!--
 <td transition:fade
-	colspan={colSpan} 
+	rowspan="{rowSpan}"
 	on:click={handleClick}
 	class:disabled = {disabled}>
 	<div class="u"
@@ -181,7 +179,29 @@ onDestroy(()=>appointment=null);
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
 </td>
-
+-->
+<tr>
+	<td transition:fade
+	on:click={handleClick}
+	class:disabled = {disabled}>
+	{#if !appointment}
+		Цаг захиалах
+	{/if}
+	
+		<AppointmentModal
+			bind:show={showAppointmentModal}
+			on:submit={handleSubmit}
+			on:openRegister={handleRegisterModal}
+			on:delete={handleDelete}
+			{shift}
+			{time}
+			doctor={shift.doctor}
+			bind:appointment={appointment} />
+		<RegisterModal
+			bind:show={showRegisterModal} 
+			on:submit={handleRegister}/>
+	</td>
+</tr>
 
 <style type="text/css">
 	
@@ -202,11 +222,8 @@ onDestroy(()=>appointment=null);
 		position: relative;
 
 		cursor: pointer;
-		margin: 5px;
-		border-radius: 10px;
 
 		display: block;
-		height: 80%;
 	}
 
 	.u > div{
@@ -239,7 +256,7 @@ onDestroy(()=>appointment=null);
 	}
 
 	.newAppointment{
-		font-size: 1.5em;
+
 		color: #222222;
 		background-color: #f2aa4fff;
 	}

@@ -19,11 +19,10 @@ class CheckInsDaySeeder extends Seeder
         $quantity = 5;
         $date = Date('Y-m-d');
 
+
         $shifts = Shift::where('date', $date)->get();
 
         foreach($shifts as $shift){
-
-        	for ($i=0; $i<$quantity; $i++){
         		factory(CheckIn::class, $quantity)->create([
 	        	'shift_id' => $shift->id,
 	        	'user_id' => factory(Patient::class)->create()

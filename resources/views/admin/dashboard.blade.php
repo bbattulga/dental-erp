@@ -48,7 +48,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-5 text-center"><i class="iconsmind-Money text-primary" style="font-size: 50px;"></i></div>
-                        <div class="col-md-7 text-right"><h4>{{$appointments}}</h4>Захиалгууд</div>
+                        <div class="col-md-7 text-right"><h4>{{$appointments}}</h4>Цаг захиалсан</div>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                                 @endfor
                             ],
                             series: [
-                                [12, 9, 7, 8, 5],
+                                {{$workloads}}
                             ]
                         }, {
                             fullWidth: true,
@@ -107,4 +107,8 @@
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
+
+    <script type="text/javascript">
+        
+    </script>
 @endsection

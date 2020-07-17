@@ -24,7 +24,8 @@ $namespace = 'Api';
 Route::group(['middleware' => 'auth',
             'namespace' => $namespace,
             'prefix'=>'/api/'],function(){
-    
+
+        // auth middleware has bug.
 });
 
 
@@ -71,6 +72,8 @@ Route::group(['middleware'=>'reception',
             'namespace' => $namespace, 
             'prefix'=>'/api/'],function(){
 
+    Route::get('doctors', 'DoctorController@index');
+
     Route::get('appointments', 'AppointmentController@index');
     Route::get('appointments/{id}', 'AppointmentController@show');
     Route::post('appointments/create', 'AppointmentController@store');
@@ -87,8 +90,6 @@ Route::group(['middleware'=>'reception',
     Route::post('checkins/create', 'CheckInController@store');
     Route::put('checkins/update', 'CheckInController@update');
     Route::delete('checkins/delete/{id}', 'CheckInController@destroy');
-
-    Route::post('doctors', 'DoctorController@index');
 
     Route::get('shifts', 'ShiftController@index');
     Route::get('shifts/{id}', 'ShiftController@show');

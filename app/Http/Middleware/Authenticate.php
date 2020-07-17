@@ -15,11 +15,11 @@ class Authenticate extends Middleware
      * @return string
      */
 
-    public function handle($request, Closure $next){
+    public function handle($request, Closure $next, ...$guards){
         if (Auth::check()){
             $next($request);
         }
-        return redirectTo($request);
+        return $this->redirectTo('login');
     }
 
     protected function redirectTo($request)

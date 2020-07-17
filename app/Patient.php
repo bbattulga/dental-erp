@@ -13,9 +13,8 @@ class Patient extends Model
 
     protected $table = 'users';
 
-    protected static function boot(){
-    	parent::boot();
-    	static::addGlobalScope('patient', function(Builder $builder){
+    protected static function booted(){
+    	static::addGlobalScope('is_patient', function(Builder $builder){
     		$builder->where('role_id', null);
     	});
     }

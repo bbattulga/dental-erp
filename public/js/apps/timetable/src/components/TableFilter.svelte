@@ -3,14 +3,18 @@
 	import TimeTable from './TimeTable.svelte';
 	import {createEventDispatcher} from 'svelte';
 	import {fade} from 'svelte/transition';
-
-	export let shifts = [];
-	export let times;
-	export let doctors = [];
+	import {storeShifts, storeDoctors, storeTimes} from '../stores/stores.js';
 
 	const dispatch = createEventDispatcher();
 
-	
+	let shifts = [];
+	const unsubscribeShifts = storeShifts.subscribe(val=>shifts=val);
+
+	let doctors = [];
+	const unsubscribeDoctors = storeDoctors.subscribe(val=>doctors=val);
+
+	let times = [];
+	let unsubscribeStoreTimes = storeTimes.subscribe(val=>times=val);
 
 	const dateFormat = (date) => {
 		return date.toLocaleDateString('en-CA');

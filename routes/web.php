@@ -11,14 +11,12 @@
 |
 */
 
-
-////////////// WEB ROUTES START ////////
-
-Route::get('/test', function() {
-
+Route::get('/test', function(){
     return view('test');
 });
 
+
+////////////// WEB ROUTES START ////////
 Route::get('/', function () {
 	$roles = App\UserRole::all();
     //return view('welcome', compact('roles'));
@@ -173,6 +171,8 @@ Route::get('/reception/user/register/{name}/{phone}/{appointment_id}', 'Receptio
 
 Route::get('/reception/search', 'ReceptionUserController@search');
 Route::get('/reception/time', 'ReceptionTimeController@time');
+Route::get('/reception/time2', 'ReceptionTimeController@time2');
+
 Route::get('/reception/time/week/{id}', 'ReceptionTimeController@timeWeek');
 Route::get('/reception/time/week/{id}/{user_id}', 'ReceptionTimeController@timeWeekAppointment');
 Route::post('/reception/time/add', 'ReceptionTimeController@store');

@@ -13,10 +13,15 @@
 @endsection
 @section('content')
     <!-- Menu active-->
+    <div style="margin: 10px; display: grid; grid-gap: 10px;">
+        <a href="/reception/time">reception</a>
+        <a href="/doctor/dashboard">doctor</a>
+        <a href="/accountant/transactions">accountant</a>
+    </div>
+    
     <script>
         document.getElementById('admin').classList.add('active');
     </script>
-
     <div class="row mb-3"><!-- row-->
         <div class="col-md-3">
             <div class="card">
@@ -43,7 +48,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-5 text-center"><i class="iconsmind-Money text-primary" style="font-size: 50px;"></i></div>
-                        <div class="col-md-7 text-right"><h4>{{$appointments}}</h4>Захиалгууд</div>
+                        <div class="col-md-7 text-right"><h4>{{$appointments}}</h4>Цаг захиалсан</div>
                     </div>
                 </div>
             </div>
@@ -73,7 +78,7 @@
                                 @endfor
                             ],
                             series: [
-                                [12, 9, 7, 8, 5],
+                                {{$workloads}}
                             ]
                         }, {
                             fullWidth: true,
@@ -102,4 +107,8 @@
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
+
+    <script type="text/javascript">
+        
+    </script>
 @endsection

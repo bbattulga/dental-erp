@@ -17,7 +17,7 @@ $factory->define(Patient::class, function (Faker $faker) {
         'last_name' => $faker->lastName,
         'register' => 'ДК'.($faker->numberBetween(11111111, 99999999)),
         'phone_number' => $faker->numberBetween(86000000, 96000000),
-        'email' => $faker->numberBetween(0, 1),
+        'email' => $faker->email,
         'sex' => $faker->numberBetween(0, 1),
         'birth_date' => $birth_date,
         'location' => $faker->address,

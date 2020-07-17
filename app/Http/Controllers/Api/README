@@ -1,0 +1,2 @@
+currently, these Api controllers itself, doesnt have middleware
+middlewares are given from webapi.php

@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use App\Roles;
+
 
 class Patient extends Model
 {
@@ -10,7 +13,9 @@ class Patient extends Model
 
     protected $table = 'users';
 
-    public static function all($columns=Array()){
-    	return Users::where('role_id', null)->get();
+    protected static function booted(){
+    	static::addGlobalScope('is_patient', function(Builder $builder){
+    		$builder->where('role_id', null);
+    	});
     }
 }

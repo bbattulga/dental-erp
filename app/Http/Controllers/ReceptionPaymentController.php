@@ -26,12 +26,12 @@ class ReceptionPaymentController extends Controller
     {
         $this->middleware('reception');
     }
+    
     public function index() {
         $treatment_done_users = CheckIn::all()->where('state',2);
-
         return view('reception.payment',compact('treatment_done_users'));
-
     }
+
     public function store(Request $request){
         $user_treatments = UserTreatments::all()->where('checkin_id',$request['checkin_id']);
         $total = 0;
@@ -52,7 +52,7 @@ class ReceptionPaymentController extends Controller
             $update->update(['state' => 3]);
         }
         elseif (!empty($request['promotion_code']) and empty($request['lease'])) {
-            if($promotion = Promotion::where('promotion_end_date','>',date('Y-m-d'))->where('promotion_code',$request['promotion_code'])->first()){
+            if($promotion = Promotion::where('promotion_end_date','>=',date('Y-m-d'))->where('promotion_code',$request['promotion_code'])->first()){
                 $total = $total - $total*$promotion->percentage/100;
                 $transaction = Transaction::create(['price'=>$total,'type'=>4,'type_id'=>$request['checkin_id'],'created_by'=>Auth::user()->id]);
                 UserPromotions::create(['checkin_id'=>$request['checkin_id'],'promotion_id'=>$promotion->id, 'created_by'=>Auth::user()->id]);

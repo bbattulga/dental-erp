@@ -20,10 +20,10 @@ class AdminStaffController extends Controller
 
     public function edit($id){
         $user = User::find($id);
-        //Admin->0
-        //Reception->1
-        //Doctor->2
-        //Assistant->3
+        //Admin->5
+        //Reception->2
+        //Doctor->3
+        //Assistant->1
         //Accountant->4
         $update = ['Админ','Ресепшн','Эмч','Сувилагч','Нягтлан','Бусад'];
         return view('admin.staff_profile', compact('user', 'update'));

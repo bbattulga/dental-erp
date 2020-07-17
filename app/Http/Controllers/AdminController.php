@@ -12,9 +12,11 @@ use App\UserRole;
 use Aloha\Twilio\Support\Laravel\Facade as Twilio;
 
 use App\Shift;
+use App\UserTreatments;
 
 use App\Transaction;
 use App\User;
+use App\Patient;
 use App\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,12 +79,21 @@ class AdminController extends Controller
     //DASHBOARD
     //--------------
     public function dashboard() {
-        $users = User::all()->count();
+        $users = Patient::all()->count();
         $roles = UserRole::all()->count();
         $users_number = $users - $roles;
         $appointments = Appointment::all()->where('created_at','>',date('Y-m-d 00:00:00'))->count();
-        $checkins = CheckIn::where('created_at','>',date('Y-m-d'))->count();
-        return view('admin.dashboard',compact('users_number','roles','appointments','checkins'));
+        $checkins = CheckIn::where('created_at','>=',date('Y-m-d'))->count();
+
+        // find workload of the week
+        $workloads = [];
+        for ($i=6; $i>=0; $i--){
+            $date = date('Y-m-d', strtotime('-'.$i.' Days'));
+            $workload = UserTreatments::where('created_at', 'like',"$date%")->get()->count();
+            array_push($workloads, $workload);
+        }
+        $workloads = json_encode($workloads);
+        return view('admin.dashboard',compact('users_number','roles','appointments','checkins', 'workloads'));
     }
     public function logs(){
         $logs=Log::all();

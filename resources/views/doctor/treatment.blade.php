@@ -756,7 +756,13 @@
             </div>
         </div>
     </div>
+
+    <button id="tempbtn" onclick="temp()">temp</button>
     <script>
+        function temp(){
+            $('#treatmentTypeModal').modal('toggle');
+        }
+
         $(document).ready(function() {
             $('#ex1').zoom({magnify: 2});
         })
@@ -837,8 +843,14 @@
                         <div class="row">
 
                             <div class="col-md-12 text-left" onclick="reset()">
-                                {{$treatment->name}}<br> төрөлтэй
+                                {{$treatment->name}} <br> 
+                                {{$treatment->treatmentSelection()->count()}} төрөлтэй
                             </div>
+
+                            @foreach($treatment->treatmentSelection as $selection)
+                                <input type="hidden" value="{{$selection->name}}/{{$selection->id}}/{{$selection->price}}/{{$selection->limit}}"
+                                       class="treatment_{{$treatment->id}}">
+                            @endforeach
                         </div>
                     
                     </button>
@@ -1107,10 +1119,13 @@ function myFunction(ruby) {
 //            hidden value
     var x = document.getElementById('hiddenDecayChart').value = total;
     console.log(ruby);
+    console.log('lombo total', total);
     document.getElementById("toothId").value = tooths;
 }
-
+    
     function decaySubmit() {
+
+        let tselectionid = document.getElementById('treatmentSelectionId').value;
         console.log("Decay");
         var decayLevel = document.getElementsByName('decayLevel');
         for (var i = 0; i < decayLevel.length; i++) {
@@ -1123,6 +1138,13 @@ function myFunction(ruby) {
         }
         document.getElementById('treatmentId').value = 1;
         document.getElementById('valueId').value = document.getElementById('hiddenDecayChart').value;
+
+        if($("#treatmentPrice").value == null ||
+            ($("#treatmentPrice") == '')){
+            $("#exampleModal").modal('hide');
+            treatmentButton(1);
+            return;
+        }
 
         if (decayValidation > 0){
             document.getElementById('treatmentForm').submit();
@@ -1248,11 +1270,7 @@ function singleTreatmentWithLimit() {
 <script src="https://unpkg.com/axios/dist/axios.min.js" type="text/javascript"></script>
 
 <script>
-    axios.get('/api/dummy')
-        .then((response)=>{
-            console.log(response);
-        })
-        .catch(err=>console.log(err));
+
 </script>
 
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>

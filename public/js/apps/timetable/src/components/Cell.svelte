@@ -2,6 +2,7 @@
 <script>
 
 	import {createEventDispatcher} from 'svelte';
+	import {onDestroy} from 'svelte';
 
 	import {fade} from 'svelte/transition';
 	import {fly} from 'svelte/transition';
@@ -17,6 +18,7 @@
 	export let shift;
 	export let appointment;
 	export let time;
+	export let rowSpan = 1;
 	
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -30,9 +32,6 @@
 	let empty =  (appointment == null) && !disabled;
 	let newAppointment = !empty && !disabled && (appointment.user_id == "0");
 	let registered = !empty && !disabled && (appointment.user_id != "0");
-
-	// values
-	let colSpan = (appointment==null)? 1: appointment.end-appointment.start;
 
 	// flags
 	let showAppointmentModal = false;
@@ -54,7 +53,8 @@
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
-		axios.post('/reception/time/add', appointment)
+
+		axios.post('/api/appointments/create', appointment)
 			.then(response=>{
 				id = response.data;
 				appointment.id = id;
@@ -62,9 +62,21 @@
 				newAppointment = true;
 				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
+
+				if (!appointment.user_id)
+					return;
+
+				let checkin = {
+					user_id: appointment.user_id,
+					shift_id: appointment.shift_id
+				};
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>console.log('checkin created'))
+					.catch(err=>console.log(err));
 			})
 			.catch(err=>{
-				alert('Алдаа гарлаа', err);
+				alert('Алдаа гарлаа');
+				console.log(err);
 			});
 	}
 
@@ -83,7 +95,7 @@
 			description: 'test'
 		}
 		console.log('sent like ', d);
-		axios.post('/reception/time/cancel', d).then(response=>{
+		axios.post('/api/appointments/cancel', d).then(response=>{
 			count = response.data;
 			console.log(response);
 		}).catch(err=>console.log(err));
@@ -112,23 +124,33 @@
 		} */
 		user.appointment_id = appointment.id;
 		console.log('sent like ', user);
-		axios.post('/reception/user/store', user)
+		axios.post('/api/users/create', user)
 			.then(response=>{
 				//user.id = response;
 				appointment.registered = '1';
 				registered = true;
+
+				let checkin = {
+					user_id: response,
+					shift_id: appointment.shift_id
+				};
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>console.log('checkin created'))
+					.catch(err=>console.log(err));
 			})
 			.catch(err=>{
 				alert('Алдаа гарлаа');
 				console.log(err);
-			})
+			});
 	}
+
+onDestroy(()=>appointment=null);
 
 </script>
 
-
+<!--
 <td transition:fade
-	colspan={colSpan} 
+	rowspan="{rowSpan}"
 	on:click={handleClick}
 	class:disabled = {disabled}>
 	<div class="u"
@@ -152,12 +174,34 @@
 			{shift}
 			{time}
 			doctor={shift.doctor}
-			appointment={appointment} />
+			bind:appointment={appointment} />
 		<RegisterModal
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
 </td>
-
+-->
+<tr>
+	<td transition:fade
+	on:click={handleClick}
+	class:disabled = {disabled}>
+	{#if !appointment}
+		Цаг захиалах
+	{/if}
+	
+		<AppointmentModal
+			bind:show={showAppointmentModal}
+			on:submit={handleSubmit}
+			on:openRegister={handleRegisterModal}
+			on:delete={handleDelete}
+			{shift}
+			{time}
+			doctor={shift.doctor}
+			bind:appointment={appointment} />
+		<RegisterModal
+			bind:show={showRegisterModal} 
+			on:submit={handleRegister}/>
+	</td>
+</tr>
 
 <style type="text/css">
 	
@@ -178,11 +222,8 @@
 		position: relative;
 
 		cursor: pointer;
-		margin: 5px;
-		border-radius: 10px;
 
 		display: block;
-		height: 80%;
 	}
 
 	.u > div{
@@ -215,7 +256,7 @@
 	}
 
 	.newAppointment{
-		font-size: 1.5em;
+
 		color: #222222;
 		background-color: #f2aa4fff;
 	}

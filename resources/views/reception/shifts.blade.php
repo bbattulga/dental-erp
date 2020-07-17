@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <style>
-        .hidden {
+        .hidden {   
             border-radius: 10px;
             opacity: 0;
             background-color: white;

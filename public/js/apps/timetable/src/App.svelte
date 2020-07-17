@@ -8,9 +8,9 @@
 	import {fly} from 'svelte/transition';
 	import {fade} from 'svelte/transition';
 
+	import {storeShifts, storeDoctors, storeTimes} from './stores/stores.js';
 
-	let shifts = [];
-	let doctors = [];
+	const unsubscribeDoctors = storeDoctors.subscribe((old)=>null);
 	let LOADING = true;
 
 	// /api/shift -shifts of day
@@ -18,13 +18,13 @@
 	// /api/shift_interval - shift interval like 2020-07-01-2020-07-01
 	// shift interval should specify staff with id. else things will get messy.
 
+	const unsubscribeShifts = storeShifts.subscribe(val=>[]);
 	// intial data
 	axios.get('/api/shifts/today')
 		.then(response=>{
 			console.log('shifts from server');
-			let sdata = response.data;
-			console.log(sdata);
-			shifts = sdata;
+			console.log(response.data);
+			storeShifts	.update(prev=>response.data);
 			LOADING = false;
 		}).catch(err=>{
 			console.log(err);
@@ -32,17 +32,18 @@
 
 	axios.post('/api/doctors')
 		.then(response=>{
-			doctors = response.data;
-			console.log('all doctors:',doctors);
+			storeDoctors.update(old=>response.data);
 			LOADING = false;
 		})
 		.catch(err=>{console.log(err);LOADING = false;});
 
 	let times = [];
+	const unsubscribeStoreTimes = storeTimes.subscribe((val)=>null);
 	for (let i=9; i<21; i++) {
 		let prefix = (i<10)? '0': '';
 		times.push(prefix+i+":00")
 	};
+	storeTimes.update(old=>times);
 
 	const dateFormat = (date) =>{
 		return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -66,14 +67,14 @@
 				date1: date[0],
 				date2: date[1]
 			}
-			let url = '/api/shifts/datebetween';
+			let url = '/api/shifts/date/datebetween';
 			promise = axios.post(url, data);
 		}
 
 		promise.then(response=>{
 					console.log('response to tablefilter');
 					console.log(response);
-					shifts = response.data;
+					storeShifts	.update(prev=>response.data);
 					LOADING = false;
 				})
 				.catch(err=>{
@@ -118,11 +119,7 @@
 	<div
 		class:fcenter={fullscreen}>
 		<TableFilter
-
-			on:selectDate={handleSelectDate}
-			bind:shifts={shifts}
-			bind:doctors={doctors}
-			{times}/>
+			on:selectDate={handleSelectDate}/>
 	</div>
 
 </div>

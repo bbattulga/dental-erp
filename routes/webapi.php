@@ -72,7 +72,7 @@ Route::group(['middleware'=>'reception',
             'namespace' => $namespace, 
             'prefix'=>'/api/'],function(){
 
-    Route::get('doctors', 'DoctorController@index');
+    Route::post('doctors', 'DoctorController@index');
 
     Route::get('appointments', 'AppointmentController@index');
     Route::get('appointments/{id}', 'AppointmentController@show');

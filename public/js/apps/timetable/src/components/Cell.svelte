@@ -174,7 +174,7 @@
 	}
 
 	.u{
-		z-index: 1;
+		z-index: 100;
 		position: relative;
 
 		cursor: pointer;
@@ -193,7 +193,7 @@
 	}
 
 	td:hover .u{
-
+		
 	}
 
 	.empty{

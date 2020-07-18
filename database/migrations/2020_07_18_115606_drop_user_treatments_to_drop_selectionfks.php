@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCheckinStates extends Migration
+class DropUserTreatmentsToDropSelectionfks extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,7 @@ class CreateCheckinStates extends Migration
      */
     public function up()
     {
-        Schema::create('checkin_states', function (Blueprint $table) {
-            $table->tinyIncrements('id');
-            $table->string('name', 45);
-            $table->timestamps();
-        });
+        Schema::dropIfExists('user_treatments');
     }
 
     /**
@@ -27,6 +23,8 @@ class CreateCheckinStates extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('checkin_states');
+        Schema::table('drop_selectionfks', function (Blueprint $table) {
+            //
+        });
     }
 }

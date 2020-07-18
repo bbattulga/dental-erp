@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateUserTreatmentsTable extends Migration
+class CreateUserTreatments extends Migration
 {
     /**
      * Run the migrations.
@@ -44,19 +44,7 @@ class CreateUserTreatmentsTable extends Migration
      * @return void
      */
     public function down()
-    {   
-        Schema::table('user_treatments', function($table){
-             $this->drops($table, ['user_id', 'checkin_id', 'treatment_id', 'treatment_selection_id']);
-        });
-
-        
+    {
         Schema::dropIfExists('user_treatments');
-    }
-
-    private function drops($table, $list){
-        foreach($list as $item){
-            $table->dropForeign($item);
-            $table->dropIndex($item);
-        }
     }
 }

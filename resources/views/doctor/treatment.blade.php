@@ -162,6 +162,7 @@
                     <h5>Үнэн дүнг оруулна уу</h5><br>
                     <input type="number" class="form-control" id="treatmentWithLimitPrice">
                     <input type="hidden" id="treatmentWithLimitPriceMin">
+                    <input type="hidden" id="treatmentWithLimitPriceMax">
                     <input type="hidden" id="treatmentSelectionIdWithLimit">
                     <br>
                     <button class="btn btn-primary" style="border-radius: 0px" onclick="treatmentSelectionWithLimit()">Оруулах</button>
@@ -176,6 +177,7 @@
                     <h5>Үнэн дүнг оруулна уу</h5><br>
                     <input type="number" class="form-control" id="singleTreatmentWithLimitPrice">
                     <input type="hidden" id="singleTreatmentWithLimitPriceMin">
+                    <input type="hidden" id="singleTreatmentWithLimitPriceMax">
                     <input type="hidden" id="singleTreatmentWithLimitId">
                     <br>
                     <button class="btn btn-primary" style="border-radius: 0px" onclick="singleTreatmentWithLimit()">Оруулах</button>
@@ -796,7 +798,7 @@
                 <div class="row">
                     <div class="text-muted col-md-6">
                         @if(is_null($user_treatment->treatment_selection_id) || $user_treatment->treatment_selection_id == 0)
-                            Төрөлгүй
+
                             @else
                         {{\App\TreatmentSelections::find($user_treatment->treatment_selection_id)->name}}
                         @endif
@@ -826,7 +828,10 @@
 
                             <div class="col-md-12 text-left" onclick="reset()">
                                 {{$treatment->name}} <br> 
-                                {{$treatment->treatment_selections()->count()}} төрөлтэй
+
+                                @if($treatment->treatment_selections()->count() != 0)
+                                    {{$treatment->treatment_selections()->count()}} төрөлтэй
+                                @endif
                             </div>
 
                             @foreach($treatment->treatment_selections as $selection)
@@ -856,8 +861,12 @@
                     >
                         <div class="row">
                             <div class="col-md-9 text-left">
-                                {{$treatment->name}}<br> {{$treatment->treatment_selections->count()}}
+                                {{$treatment->name}}<br> 
+
+                                @if ($treatment->treatment_selections()->count() != 0)
+                                {{$treatment->treatment_selections->count()}}
                                 төрөлтэй
+                                @endif
                                 @foreach($treatment->treatment_selections as $selection)
                                     <input type="hidden" value="{{$selection->name}}/{{$selection->id}}/{{$selection->price}}/{{$selection->limit}}"
                                            class="treatment_{{$treatment->id}}">
@@ -877,7 +886,7 @@
         <select class="form-control" name="nurse_id">
             <option value="0">Сувилагч сонгох</option>
             @foreach($nurses as $nurse)
-                <option value="{{$nurse->staff->id}}">{{$nurse->staff->name}}</option>
+                <option value="{{$nurse->role->id}}">{{substr($nurse->last_name, 0, 2)}}. {{$nurse->name}}</option>
             @endforeach
         </select>
         <br>
@@ -892,13 +901,17 @@
                     <br>
                     @foreach($user_treatments->where('checkin_id', $checkin->id) as $treatment_history)
                         <a href="{{url('/doctor/treatment/history/'.$treatment_history->id)}}">
-                            <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}">
-                                <b>Шүд #{{$treatment_history->tooth_id}} - {{\App\Treatment::find($treatment_history->treatment_id)->name}}</b>
+                            <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}">     
+                                @if ($treatment_history->tooth_id == null)
+                                    <b>Бүх шүд<b>
+                                @else
+                                    <b>#{{$treatment_history->tooth_id}} - {{\App\Treatment::find($treatment_history->treatment_id)->name}}</b>
+                                @endif
                                 <br>
                                 <div class="row">
                                     <div class="text-muted col-md-6">
                                         @if(is_null($treatment_history->treatment_selection_id) || $treatment_history->treatment_selection_id == 0)
-                                            Төрөлгүй
+                                            
                                         @else
                                             {{\App\TreatmentSelections::find($treatment_history->treatment_selection_id)->name}}
                                         @endif
@@ -935,9 +948,7 @@
         });
     }
     document.getElementById('treatmentCategorySelect').value = 1;
-    handleSelectTreatmentCategory(new Event('click'), 1);
-    document.getElementById('18').click();
-    document.getElementById('18').click();
+    //handleSelectTreatmentCategory(new Event('click'), 1);
     
     function setTreatmentsHTML(treatments){
         console.log('treatments');
@@ -953,7 +964,7 @@
                             `<div class="row">`+
                                 `<div class="col-md-12 text-left" onclick="reset()">`+
                                     `${treatment.name} <br>`+
-                                    `${treatment.treatment_selections.length} төрөлтэй`+
+                                    `${treatment.treatment_selections.length == 0? '':treatment.treatment_selections.length+' төрөлтэй'}`+
                                 `</div>`;
 
                 let inner = '';
@@ -979,10 +990,7 @@
                 cls = 'multiple';
 
             let onClickStr = '';
-            console.log(treatment.name);
-            console.log('treatment selection type')
-            console.log(treatment.selection_type);
-            if (treatment.selection_type == 1)
+            if (treatment.treatment_selections && (treatment.treatment_selections.length > 0))
                 onClickStr = `onclick="treatmentButton('${treatment.id}')"`;
             else
                 onClickStr = `onclick="singleTreatment('${treatment.id}',`+
@@ -991,8 +999,7 @@
             outer = `<button ${onClickStr} class="btn btn-primary btn-block ${cls}">` +
                       `<div class="row">`+
                             `<div class="col-md-9 text-left">`+
-                                `${treatment.name}<br> ${treatment.treatment_selections.length}
-                                төрөлтэй` + 
+                                `${treatment.name}<br> ${treatment.treatment_selections.length == 0? '':treatment.treatment_selections.length+' төрөлтэй'}` + 
                              `</div>` ;
             let inner = '';
             for (let i=0; i<treatment.treatment_selections.length; i++){
@@ -1008,7 +1015,6 @@
             html += outer;
         }
         treatmentsContainer.innerHTML = html;
-
     }
 
     function finishDate() {
@@ -1298,6 +1304,7 @@ function treatment(id, price ,limit) {
     } else {
         document.getElementById('treatmentSelectionIdWithLimit').value = id;
         document.getElementById('treatmentWithLimitPriceMin').value = price;
+        document.getElementById('treatmentWithLimitPriceMax').value = limit;
         $("#treatmentTypeModal").modal("hide");
         $("#treatmentWithLimit").modal();
     }
@@ -1313,15 +1320,22 @@ function singleTreatment(id, price, limit) {
     } else {
         document.getElementById('singleTreatmentWithLimitId').value = id;
         document.getElementById('singleTreatmentWithLimitPriceMin').value = price;
+        document.getElementById('singleTreatmentWithLimitPriceMax').value = limit;
         $("#treatmentTypeModal").modal("hide");
         $("#singleTreatmentWithLimit").modal();
     }
 }
 function treatmentSelectionWithLimit() {
-    var checkLimitValue = document.getElementById('treatmentWithLimitPriceMin').value;
-    if (checkLimitValue > document.getElementById('treatmentWithLimitPrice').value) {
-        alert('Үнийн дүн буруу байна! Үнийн дүн ' + checkLimitValue + '-ээс их байх ёстой');
-    } else {
+    let price = parseInt(document.getElementById('treatmentWithLimitPrice').value);
+    var minPrice = parseInt(document.getElementById('treatmentWithLimitPriceMin').value);
+    let maxPrice = parseInt(document.getElementById('treatmentWithLimitPriceMax').value);
+
+    console.log('price ', price);
+    console.log('min;max -> ', minPrice, maxPrice);
+    if ((price < minPrice) || (price > maxPrice)) {
+        alert(`Үнийн дүн буруу байна! Үнийн дүн ${minPrice}₮-${maxPrice}₮ хооронд байх ёстой`);
+    } 
+    else {
         document.getElementById('treatmentPrice').value = document.getElementById('treatmentWithLimitPrice').value;
         document.getElementById('treatmentSelectionId').value = document.getElementById('treatmentSelectionIdWithLimit').value;
         document.getElementById('treatmentForm').submit();
@@ -1329,10 +1343,13 @@ function treatmentSelectionWithLimit() {
 
 }
 function singleTreatmentWithLimit() {
-    var checkLimitValue = document.getElementById('singleTreatmentWithLimitPriceMin').value;
-    if (checkLimitValue > document.getElementById('singleTreatmentWithLimitPrice').value) {
-        alert('Үнийн дүн буруу байна! Үнийн дүн '  + checkLimitValue + '-ээс их байх ёстой');
-    } else {
+    let price = parseInt(document.getElementById('singleTreatmentWithLimitPrice').value);
+    var minPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMin').value);
+    var maxPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMax').value);
+    if ((price < minPrice) || (price > maxPrice)) {
+        alert(`Үнийн дүн буруу байна! Үнийн дүн ${minPrice}₮-${maxPrice}₮ хооронд байх ёстой`);
+    } 
+    else {
         document.getElementById('treatmentPrice').value = document.getElementById('singleTreatmentWithLimitPrice').value;
         document.getElementById('treatmentId').value = document.getElementById('singleTreatmentWithLimitId').value;
         document.getElementById('toothId').value = tooths;

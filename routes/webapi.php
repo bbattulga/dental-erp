@@ -52,17 +52,17 @@ Route::group([ 'middleware' => 'doctor',
             'namespace' => $namespace, 
             'prefix'=>'/api/'],function(){
     
-    Route::get('treatment-categories', 'TreatmentCategoryController@index');
+    Route::post('treatment-categories', 'TreatmentCategoryController@index');
     Route::get('treatment-categories/treatments/{id}', 'TreatmentCategoryController@withTreatments');
 
-    Route::get('treatments', 'TreatmentController@index');
+    Route::post('treatments', 'TreatmentController@index');
     Route::get('treatments/{id}', 'TreatmentController@show');
     Route::get('treatments/category/{id}', 'TreatmentController@showByCategory');
 
-    Route::get('treatments-selections', 'TreatmentSelectionController@index');
+    Route::post('treatments-selections', 'TreatmentSelectionController@index');
     Route::get('treatments-selections/{id}', 'TreatmentSelectionController@show');
     
-    Route::get('user-treatments', 'UserTreatmentController@index');
+    Route::post('user-treatments', 'UserTreatmentController@index');
     Route::get('user-treatments/{id}', 'UserTreatmentController@show');
     Route::post('user-treatments/create', 'UserTreatmentController@store');
     Route::put('user-treatments/update', 'UserTreatmentController@update');
@@ -77,7 +77,7 @@ Route::group(['middleware'=>'reception',
 
     Route::post('doctors', 'DoctorController@index');
 
-    Route::get('appointments', 'AppointmentController@index');
+    Route::post('appointments', 'AppointmentController@index');
     Route::get('appointments/{id}', 'AppointmentController@show');
     Route::post('appointments/create', 'AppointmentController@store');
     Route::put('appointments/update', 'AppointmentController@update');
@@ -88,13 +88,13 @@ Route::group(['middleware'=>'reception',
     Route::get('appointments/date/{date}', 'AppointmentController@showDate');
     Route::post('appointments/date/datebetween', 'AppointmentController@showDateBetween');
 
-    Route::get('checkins', 'CheckInController@index');
+    Route::post('checkins', 'CheckInController@index');
     Route::get('checkins/{id}', 'CheckInController@show');
     Route::post('checkins/create', 'CheckInController@store');
     Route::put('checkins/update', 'CheckInController@update');
     Route::delete('checkins/delete/{id}', 'CheckInController@destroy');
 
-    Route::get('shifts', 'ShiftController@index');
+    Route::post('shifts', 'ShiftController@index');
     Route::get('shifts/{id}', 'ShiftController@show');
     Route::post('shifts/create', 'ShiftController@store');
     Route::put('shifts/update', 'ShiftController@update');
@@ -106,15 +106,14 @@ Route::group(['middleware'=>'reception',
     Route::get('shifts/types/all', 'ShiftController@showShiftTypes');
     Route::get('shifts/types/{id}', 'ShiftController@showShiftType');
 
-    Route::get('users', 'UserController@index');
+    Route::post('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
     Route::post('users/create', 'UserController@store');
     Route::put('users/update', 'UserController@update');
     Route::delete('users/delete/{id}', 'UserController@destroy');
     Route::post('users/query', 'UserController@query');
 
-
-    Route::get('promotions', 'PromotionController@index');
+    Route::post('promotions', 'PromotionController@index');
     Route::get('promotions/{id}', 'PromotionController@show');
     Route::get('promotions/code/{code}', 'PromotionController@showByCode');
 

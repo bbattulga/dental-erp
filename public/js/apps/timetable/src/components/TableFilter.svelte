@@ -168,7 +168,7 @@
 
 	.main-div{
 		position: relative;
-		color: black;
+		overflow: hidden;
 	}
 
 	.filter-container{

@@ -7,7 +7,7 @@
 	// contains {doctor, appointments}
 	export let shifts = [];
 	console.log('timetable got shifts', shifts);
-	export let times;
+	export let times = [];
 	
 	export let showDoctors = true;
 
@@ -19,28 +19,23 @@
 
 	<div class="day time">
 		<div class="day_title">Time</div>
-		<div class="hour">8:00</div>
-		<div class="hour">9:00</div>
-		<div class="hour">10:00</div>
-		<div class="hour">11:00</div>
-		<div class="hour">12:00</div>
-		<div class="hour">13:00</div>
-		<div class="hour">14:00</div>
-		<div class="hour">15:00</div>
-		<div class="hour">16:00</div>
-		<div class="hour">17:00</div>
-		<div class="hour">18:00</div>
+    {#each times as time, i}
+        <div class="hour  ">{time}</div>
+    {/each}
 	</div>
 
 	{#each shifts as shift}
-		<Column />
+		<Column 
+      colWidth={`${100/shifts.length}%`}
+      {shift}
+      {times}/>
+
 	{/each}
 </div>
 
 <style>
 	@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
 
-html, body { height: 100%; margin: 0; }
 body {
   font-family: 'Open Sans', sans-serif;
   color: #efefef;
@@ -48,21 +43,27 @@ body {
 }
 
 .container{
-	width: 800px;
+	width: 100%;
 	height: 100%;
+  display: flex;
 }
 
+*{
+  box-sizing: border-box;
+}
 .hour {
-  height: 10%;
+  height: 10vh;
   background-color: rgba(52, 73, 94,0.9);
   font-size: 12px;
   text-align: center;
   line-height: 10vh;
+  border: 1px solid white;
+  width: 5vw;
 }
 
 .day {
   width: 18%;
-  height: 100vh;
+  height: 100%;
   float: left;
   background-color: #fff;
   background-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);
@@ -70,7 +71,7 @@ body {
 }
 
 
-.day.time { width: 10%; }
+.day.time { width: 5vw;}
 
 .day_title {
   height: 10%;

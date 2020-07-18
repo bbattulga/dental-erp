@@ -29,7 +29,7 @@
 	let end = 0;
 	let cancelCode = '';
 
-	let sameUsers = [];
+	let sameUsers = [];	
 
 	// re-eval end on user change hours
 	$: {end = start+hours;}

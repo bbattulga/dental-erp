@@ -2,7 +2,7 @@
 <script>
 
 	import {createEventDispatcher} from 'svelte';
-	import {onDestroy} from 'svelte';
+	import {onMount, onDestroy} from 'svelte';
 
 	import {fade} from 'svelte/transition';
 	import {fly} from 'svelte/transition';
@@ -18,8 +18,8 @@
 	export let shift;
 	export let appointment;
 	export let time;
-	export let rowSpan = 1;
-	
+	export let rowSpan;
+
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
 	if ((shift_type == 1) && (time >= '15:00')){
@@ -144,50 +144,28 @@
 			});
 	}
 
+
+let container = null;
+onMount(()=>{
+	container.style.height = `${rowSpan*10}vh`;
+});
+
 onDestroy(()=>appointment=null);
 
 </script>
 
-<!--
-<td transition:fade
-	rowspan="{rowSpan}"
-	on:click={handleClick}
-	class:disabled = {disabled}>
-	<div class="u"
-	class:registered={registered}
-	class:empty={empty}
-	class:newAppointment={newAppointment}>
-	<div style="display: inline-block;">
-		{#if appointment == null}
-			<h4>{disabled? '':'Цаг захиалах'}</h4>
+<div bind:this={container} 
+	class="container grey" data-tooltip="English Literature"
+	on:click={handleClick}>
+
+	{#if appointment != null}
+		<div class="content">
+			{appointment.name} <br />
+			{appointment.phone}
+		</div>
 		{:else}
-			<h4>{appointment.name}</h4>
-			<h5>{appointment.phone}</h5>
-		{/if}
-	</div>
-	</div>
-		<AppointmentModal
-			bind:show={showAppointmentModal}
-			on:submit={handleSubmit}
-			on:openRegister={handleRegisterModal}
-			on:delete={handleDelete}
-			{shift}
-			{time}
-			doctor={shift.doctor}
-			bind:appointment={appointment} />
-		<RegisterModal
-			bind:show={showRegisterModal} 
-			on:submit={handleRegister}/>
-</td>
--->
-<tr>
-	<td transition:fade
-	on:click={handleClick}
-	class:disabled = {disabled}>
-	{#if !appointment}
-		Цаг захиалах
+		<div class="content"></div>
 	{/if}
-	
 		<AppointmentModal
 			bind:show={showAppointmentModal}
 			on:submit={handleSubmit}
@@ -200,59 +178,29 @@ onDestroy(()=>appointment=null);
 		<RegisterModal
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
-	</td>
-</tr>
+</div>
 
 <style type="text/css">
-	
-	td{
-		z-index: 1000;
-		transition: 0.4s;
-		border: 3px solid #cccccc;
-		height: 100%;
+
+	.container {
+	  z-index: 100;
+	  width: 100%;
+	  height: 100%;
+	  transition: 0.4s;
+	  border: 1px solid white;
+	}
+
+	.content{
+		width: 100%; height: 100%;
+		display: flex;
+		flex-flow: column wrap;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.disabled{
 		background-color: grey;
 		color: grey;
-	}
-
-	.u{
-		z-index: 100;
-		position: relative;
-
-		cursor: pointer;
-
-		display: block;
-	}
-
-	.u > div{
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	}
-
-	td:hover .u{
-		
-	}
-
-	.empty{
-		visibility: hidden;
-	}
-
-	td:hover .empty{
-		visibility: visible;
-		background-color: grey;
-		color: white;
-		display: block;
-		cursor:pointer;
-
-		-webkit-animation: fadein 0.7s; /* Safari, Chrome and Opera > 12.1 */
-		-moz-animation: fadein 0.7s; /* Firefox < 16 */
-		-ms-animation: fadein 0.7s; /* Internet Explorer */
-		-o-animation: fadein 0.7s; /* Opera < 12.1 */
-		animation: fadein 0.7s;
 	}
 
 	.newAppointment{
@@ -266,13 +214,22 @@ onDestroy(()=>appointment=null);
 		background-color: green;
 	}
 
-	.newAppointment:hover{
+	.class.short { height: 7.5vh; line-height: 7.5vh; } /* 45min class */
+	.class.b15 { /* margin-top: 2.5vh;  */} /* after 15 min break */
+	.class.b45 { /* margin-top: 7.5vh;  */} /* after 45 min break */
+	.class.b90 { /* margin-top: 15vh;  */} /* after 2x45 min break */
+	.class.b135 { /* margin-top: 22.5vh ;*/ } /* after 3x45 min break */
 
-	}
-
-	.registered:hover{
-
-	}
+	.green { background-color: #2ecc71; }
+	.turquoise { background-color: #1abc9c; }
+	.navy { background-color: #34495e; }
+	.blue { background-color: #3498db; }
+	.purple { background-color: #9b59b6; }
+	.grey { background-color: #bdc3c7; color: #202020; }
+	.gray { background-color: #7f8c8d; }
+	.red { background-color: #e74c3c; }
+	.orange { background-color: #f39c12; }
+	.yellow { background-color: #f1c40f; color: #303030; }
 
 	@keyframes fadein {
 		from { opacity: 0; }

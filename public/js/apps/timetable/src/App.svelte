@@ -91,7 +91,6 @@
 	}
 </script>
 <div 
-	transition:fly={{y:-100, duration: 550}}
 	class="main-container"
 	class:background={fullscreen} on:click|self={()=>fullscreen=!fullscreen}>
 
@@ -129,10 +128,7 @@
 		width: 100%;
 		background: white;
 		position: relative;
-		overflow-x: auto;
-		
-		background: white;
-		height: 100%;
+		min-height: 100%;
 
 		box-shadow: 1px 1px 2px grey;
 		padding: 10px;
@@ -166,7 +162,6 @@
 		height: 100%;
 
 		box-shadow: 1px 1px 2px grey;
-		padding: 10px;
 		-webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: fadein 1s; /* Firefox < 16 */
         -ms-animation: fadein 1s; /* Internet Explorer */
@@ -262,18 +257,6 @@
         -ms-animation: fadein 0.3s; /* Internet Explorer */
          -o-animation: fadein 0.3s; /* Opera < 12.1 */
             animation: fadein 0.3s;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 1.2em;
-		font-weight: 100;
-	}
-
-	.top{
-		padding: 10px;
-		margin: 10px;
 	}
 
 	.row{

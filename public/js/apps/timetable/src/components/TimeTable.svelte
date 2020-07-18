@@ -17,16 +17,7 @@
 
 <div
 	class="main-table ">
-	<table>
-		<tr><td class="tbl-head">Эмч/Цаг</td></tr>
-		{#each times as time}
-			<tr>
-				<td>
-					{time}
-				</td>
-			</tr>
-		{/each}
-	</table>
+	
 	{#each shifts as shift (`${shift.id}${showDoctors}`)}
 		<Column 
 			{shift}

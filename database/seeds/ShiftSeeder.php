@@ -25,13 +25,13 @@ class ShiftSeeder extends Seeder
     		$day = 1;
     		$date = Date('Y-m-01');
 
-    		for ($i=1; $i<=30; $i++){
+    		for ($i=1; $i<=7; $i++){
     			$shift = factory(Shift::class)
     				->create([
     					'user_id' => $doctor->id,
     					'date' => $date
     				]);
-    			$date = date('Y-m-d', strtotime($date . '+ 1 days'));
+    			$date = date('Y-m-d', strtotime($date . "+$i days"));
     		}
     	}
     }

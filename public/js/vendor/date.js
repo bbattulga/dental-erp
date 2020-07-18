@@ -28,10 +28,10 @@ $(document).ready(function() {
             title:    '<div class="popoverTitleCalendar" style="background-color:'+ event.backgroundColor +'; color:'+ event.textColor +'">'+ event.title +'</div>',
             content:  '<div class="popoverInfoCalendar">' +
                       '<p><strong>Calendar:</strong> ' + event.calendar + '</p>' +
-                      '<p><strong>Username:</strong> ' + event.username + '</p>' +
+                      '<p><strong>Эмч:</strong> ' + event.username + '</p>' +
                       '<p><strong>Event Type:</strong> ' + event.type + '</p>' +
                       '<p><strong>Event Time:</strong> ' + displayEventDate + '</p>' +
-                      '<div class="popoverDescCalendar"><strong>Description:</strong> '+ event.description +'</div>' +
+                      '<div class="popoverDescCalendar"><strong>Тайлбар:</strong> '+ event.description +'</div>' +
                       '</div>',
             delay: { 
                show: "800", 
@@ -170,14 +170,10 @@ $(document).ready(function() {
          var $contextMenu = $("#contextMenu");
          
          var HTMLContent = '<ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">' +
-      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Appointment" +'")\'> <a tabindex="-1" href="#">Add Appointment</a></li>' +
-      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Check-in" +'")\'> <a tabindex="-1" href="#">Add Check-In</a></li>' +
-      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Checkout" +'")\'> <a tabindex="-1" href="#">Add Checkout</a></li>' +
-      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Inventory" +'")\'> <a tabindex="-1" href="#">Add Inventory</a></li>' +
-      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Valuation" +'")\'> <a tabindex="-1" href="#">Add Valuation</a></li>' +
-      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Viewing" +'")\'> <a tabindex="-1" href="#">Add Viewing</a></li>' +
+      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Appointment" +'")\'> <a tabindex="-1" href="#">Томилолт</a></li>' +
+      '<li onclick=\'newEvent("'+ startDate +'","'+ endDate +'","'+ "Check-in" +'")\'> <a tabindex="-1" href="#">Бүртгэх</a></li>' +
       '<li class="divider"></li>' +
-      '<li><a tabindex="-1" href="#">Close</a></li>' +
+      '<li><a tabindex="-1" href="#">Гарах</a></li>' +
     '</ul>';
           
           $(".fc-body").unbind('click');

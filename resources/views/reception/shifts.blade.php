@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/date.css')}}">
+    <link rel="stylesheet" href="{{asset('css/vendor/dates.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
     <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -36,45 +37,43 @@
   
     <div id="contextMenu" class="dropdown clearfix"></div>
 
-    <div class="panel panel-default hidden-print">
+    <div class="panel panel-default hidden-print" style="width:100%">
       <div class="panel-heading">
-        <h3 class="panel-title">Filter Calendar (Users, Calendar and Eventy Type)</h3>
+        <h3 class="panel-title">Ээлж хайх</h3>
       </div>
       <div class="panel-body">
         
         <div class="col-lg-4">
       
-      <label for="calendar_view">Filter Eventy Type</label>
-      <div class="input-group">
-          <select class="filter" id="type_filter" multiple="multiple">
-            <option value="Appointment">Appointment</option>
-            <option value="Check-in">Check-in</option>
-            <option value="Checkout">Checkout</option>
-            <option value="Inventory">Inventory</option>
-            <option value="Valuation">Valuation</option>
-            <option value="Viewing">Viewing</option>
-          </select>
-        </div>
+            <label for="calendar_view">Сонголтоор</label>
+            <div class="input-group">
+            <select class="filter" id="type_filter" multiple="multiple">
+                <option value="Appointment">Томилолт</option>
+                <option value="Check-in">Бүтгэсэн</option>
+            </select>
+            </div>
+      
     </div>
         
         <div class="col-lg-4">
       
-      <label for="calendar_view">Filter Calendars</label>
-      <div class="input-group">
-          <select class="filter" id="calendar_filter" multiple="multiple">
-            <option value="Sales">Sales</option>
-            <option value="Lettings">Lettings</option>
-          </select>
-        </div>
+            <label for="calendar_view">Хямдралтай өдөрөөр</label>
+              <div class="input-group">
+                <select class="filter" id="calendar_filter" multiple="multiple">
+                    <option value="Sales">Хямдрал</option>
+            
+                </select>
+                </div>
+       
     </div>
         
         <div class="col-lg-4">
       
-      <label for="calendar_view">Filter Users</label>
+      <label for="calendar_view">Эмч</label>
       <div class="input-group">
-          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Caio Vitorelli" checked>Caio Vitorelli</label>
-          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Peter Grant" checked>Peter Grant</label>
-          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Adam Rackham" checked>Adam Rackham</label>
+          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Caio Vitorelli" checked>Дулмаа</label>
+          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Peter Grant" checked>Сараа</label>
+          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Adam Rackham" checked>Болдоо</label>
       </div>
     </div>
         
@@ -93,55 +92,55 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title">Create new <span class="eventType"></span></h4>
+                   
+                  <h4 class="modal-title">Ээлж Тавих <span class="eventType"></span></h4>
                 </div>
                 <div class="modal-body">
                   
                   <div class="row">
                         <div class="col-xs-12">
-                            <label class="col-xs-4" for="title">All Day Event ?</label>
+                            <label class="col-xs-4" for="title">Бүтэн</label>
                             <input class='allDayNewEvent' type="checkbox"></label>
                         </div>
                     </div>
               
                     <div class="row">
                         <div class="col-xs-12">
-                            <label class="col-xs-4" for="title">Event title</label>
+                            <label class="col-xs-4" for="title">Гарчиг</label>
                             <input class="inputModal" type="text" name="title" id="title" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label class="col-xs-4" for="starts-at">Starts at</label>
+                            <label class="col-xs-4" for="starts-at">Эхлэх цаг</label>
                             <input class="inputModal" type="text" name="starts_at" id="starts-at" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label class="col-xs-4" for="ends-at">Ends at</label>
+                            <label class="col-xs-4" for="ends-at">Дуусах цаг</label>
                             <input class="inputModal" type="text" name="ends_at" id="ends-at" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label class="col-xs-4" for="calendar-type">Calendar</label>
+                            <label class="col-xs-4" for="calendar-type">Хямдралтай</label>
                             <select class="inputModal" type="text" name="calendar-type" id="calendar-type">
-                              <option value="Sales">Sales</option>
-                              <option value="Lettings">Lettings</option>
+                            <option value="lettings">Хямдралгүй</option>  
+                            <option value="Sales">Хямдрал</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <label class="col-xs-4" for="add-event-desc">Description</label>
+                            <label class="col-xs-4" for="add-event-desc">Тайлбар</label>
                             <textarea rows="4" cols="50" class="inputModal" name="add-event-desc" id="add-event-desc"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-event">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Гарах</button>
+                    <button type="button" class="btn btn-primary" id="save-event">Бүртгэх</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -222,7 +221,7 @@
 
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
-    <script src="{{asset('js/vendor/moment.min.js')}}"></script>
+    <!-- <script src="{{asset('js/vendor/moment.min.js')}}"></script> -->
     <script src="{{asset('js/vendor/fullcalendar.min.js')}}"></script>
     <script src="{{asset('js/vendor/datatables.min.js')}}"></script>
     <script src="{{asset('js/vendor/owl.carousel.min.js')}}"></script>
@@ -232,7 +231,7 @@
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
-    
+    <script src="{{asset('js/vendor/moments.js')}}">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/locale-all.js"></script>

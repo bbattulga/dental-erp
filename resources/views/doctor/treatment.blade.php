@@ -777,6 +777,13 @@
 
     </select>
     <br>
+    <form action="/action_page.php">
+    <input type="checkbox" id="шүд" name="шүд" value="шүд">
+    <label for="vehicle1"> Сүүн шүд</label><br>
+    <input type="checkbox" id="яшүд" name="яшүд" value="яшүд">
+    <label for="vehicle2"> Ясан шүд</label><br>
+    </form>
+    <br>
 <div class="card">
 <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
     <li class="nav-item">

@@ -20,7 +20,60 @@
             opacity: 0.2;
             background-color: #8f8f8f;
         }
+        .btn-newuser{
+            z-index: 10000;
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            margin: 10px;
+        }
 
+        .row-crud-user{
+            min-width: 96px;
+            display: flex;
+            flex-direction: row;
+            align-content: space-around;
+            justify-content: center;
+        }
+
+        .crud-ic{
+            flex-direction: column;
+            justify-content: center;
+
+            max-width: 30px;
+            max-height: 30px;
+            margin: 0 5px;
+
+            cursor: pointer;
+            transition: 0.4s;
+            display: flex;
+        }
+
+        .crud-ic:hover{
+            max-width: 36px;
+            max-height: 36px;
+        }
+
+        .crud-ic > img{
+            max-width: 100%;
+            height: auto;
+        }
+
+        .tooltip-my{
+            display: inline-block;
+        }
+
+        .tooltiptext{
+            visibility: hidden;
+            font-size: 10px;
+            width: 200px;
+            background-color: #333333;
+            color: #e7e7e7e7;
+        }
+
+        .tooltip-my:hover .tooltiptext{
+            visibility: visible;
+        }
     </style>
     {{--End css style gh met link file oruulna--}}
 @endsection
@@ -41,6 +94,7 @@
                             <th>Үнэ</th>
                             <th>Үнийн хязгаар</th>
                             <th>Сонголтын тоо</th>
+                            <th></th>
                         </thead>
                         <tbody>
                         @foreach($treatments as $treatment)
@@ -52,6 +106,23 @@
                                 <td>@if(empty($treatment->price)) Хоосон @else {{$treatment->price}}₮ @endif</td>
                                 <td>@if(empty($treatment->limit)) Хоосон @else {{$treatment->limit}}₮ @endif</td>
                                 <td>{{$treatment->treatment_selections->count()}}</td>
+                                <td>
+                                <div class="row-crud-user">
+                                  
+                                    <div class="crud-ic tooltip-my">
+                                        <img src="http://127.0.0.1:8000/img/icon/pen.png">
+                                        <div class="tooltiptext">
+                                             Засах
+                                        </div>
+                                    </div>
+                                    <div onclick="deleteUser(416)" class="crud-ic tooltip-my">
+                                        <img src="http://127.0.0.1:8000/img/icon/trashbin.png">
+                                        <div class="tooltiptext">
+                                            Хаяг устгах
+                                        </div>
+                                    </div>
+                                </div>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

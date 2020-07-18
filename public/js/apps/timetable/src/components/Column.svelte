@@ -54,7 +54,7 @@
 
 	let cellsData = [];
 	console.log('calc appointment times');
-	cellsData = calc(times, appointments);
+	$: cellsData = calc(times, appointments);
 	//console.log('calc appointment times done');
 
 	function handleSubmit(event){
@@ -91,7 +91,9 @@
 
 <div bind:this={container} class="day">
 
-	<div class="day_title">{shift.doctor.name}</div>
+	<div class="doctor-profile">
+		{shift.doctor.name}
+	</div>
 
 	{#each cellsData as cellData (generateId(cellData.appointment))}
 		<Cell
@@ -114,7 +116,7 @@
 	  background-size: 1px 20%;
 	}
 
-	.day_title {
+	.doctor-profile {
 	  height: 10%;
 	  background-color: #34495e;
 	  font-size: 12px;

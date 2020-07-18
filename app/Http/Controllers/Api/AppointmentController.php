@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Log;
 use App\Appointment;
 use App\User;
-use App\Checkin;
+use App\CheckIn;
 use App\Shift;
 
 
@@ -50,7 +51,6 @@ class AppointmentController extends Controller
         $request->validate([
             'name' => 'max:60',
             'phone' => 'max:50',
-            'created_by' => 'integer',
             'shift_id' => 'integer',
             'user_id' => 'integer',
         ]);
@@ -117,14 +117,21 @@ class AppointmentController extends Controller
 
     public function cancel(Request $request){
 
-        if($request['code'] == '1111'){
-            $id = $request['appointment_id'];
-            $d = Appointment::find($id)->delete();
-            Log::create(['type'=>2,'type_id'=>$id,'user_id'=>Ath::user()->id,'action_id'=>0,'description'=>$request['description']]);
-            return $d;
-        }
-        else{
+        if ($request['code'] != '1111'){
             return back();
         }
+
+        $id = $request['appointment_id'];
+        $d = Appointment::destroy($id);
+        Log::create(['type'=>2,'type_id'=>$id,'user_id'=>Auth::user()->id,'action_id'=>0,'description'=>$request['description']]);
+
+        // cancel checkin too
+        if (($user_id = $request['user_id'])
+            && $shift_id=$request['shift_id']){
+            CheckIn::where('user_id', $user_id)
+                    ->where('shift_id', $shift_id)
+                    ->delete();
+        }
+        return $d;
     }
 }

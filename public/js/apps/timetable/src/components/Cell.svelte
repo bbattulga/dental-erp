@@ -30,7 +30,7 @@
 
 	// conditional classes
 	let empty =  (appointment == null) && !disabled;
-	let newAppointment = !empty && !disabled && (appointment.user_id == "0");
+	let notregistered = !empty && !disabled && (appointment.user_id == "0");
 	let registered = !empty && !disabled && (appointment.user_id != "0");
 
 	// flags
@@ -59,7 +59,7 @@
 				id = response.data;
 				appointment.id = id;
 				empty = false;
-				newAppointment = true;
+				notregistered = true;
 				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
 
@@ -91,6 +91,8 @@
 		console.log('cell got appointment ', appointment);
 		let d = {
 			appointment_id: appointment.id,
+			shift_id: appointment.shift_id,
+			user_id: appointment.user_id,
 			code: appointment.code,
 			description: 'test'
 		}
@@ -126,14 +128,21 @@
 		console.log('sent like ', user);
 		axios.post('/api/users/create', user)
 			.then(response=>{
+				let user = response.data;
+				console.log('created user');
+				console.log(user);
 				//user.id = response;
+				appointment.user_id = user.id;
 				appointment.registered = '1';
 				registered = true;
+				axios.put('/api/appointments/update', {id: appointment.id, user_id: user.id});
 
 				let checkin = {
-					user_id: response,
+					user_id: user.id,
 					shift_id: appointment.shift_id
 				};
+				console.log('sent checkin');
+				console.log('checkin');
 				axios.post('/api/checkins/create', checkin)
 					.then(response=>console.log('checkin created'))
 					.catch(err=>console.log(err));
@@ -155,16 +164,21 @@ onDestroy(()=>appointment=null);
 </script>
 
 <div bind:this={container} 
-	class="container grey" data-tooltip="English Literature"
+	class="container grey"
 	on:click={handleClick}>
 
 	{#if appointment != null}
-		<div class="content">
+		<div class="content"
+			class:notregistered={notregistered}
+			class:registered={registered}>
 			{appointment.name} <br />
 			{appointment.phone}
 		</div>
 		{:else}
-		<div class="content"></div>
+		<div class="content empty">
+			Цаг захиалах <br />
+			<h8>{time}</h8>
+		</div>
 	{/if}
 		<AppointmentModal
 			bind:show={showAppointmentModal}
@@ -176,6 +190,7 @@ onDestroy(()=>appointment=null);
 			doctor={shift.doctor}
 			bind:appointment={appointment} />
 		<RegisterModal
+			{...appointment}
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
 </div>
@@ -186,27 +201,40 @@ onDestroy(()=>appointment=null);
 	  z-index: 100;
 	  width: 100%;
 	  height: 100%;
-	  transition: 0.4s;
 	  border: 1px solid white;
+	  padding: 0;
+	  color: #333333;
+	}
+
+	div:hover .content{
+		transition: 0.4s;
+		background-color: white;
+		color: #363636;
+		cursor: pointer;
 	}
 
 	.content{
-		width: 100%; height: 100%;
+		width: 100%; 
+		height: 100%;
 		display: flex;
 		flex-flow: column wrap;
 		justify-content: center;
 		align-items: center;
+		color: #332222;
 	}
 
-	.disabled{
-		background-color: grey;
-		color: grey;
+	.empty{
+		color: #bdc3c7;
+		background: #bdc3c7;
 	}
 
-	.newAppointment{
+	div:hover .empty{
+		background-color: white;
+	}
 
-		color: #222222;
-		background-color: #f2aa4fff;
+	.notregistered{
+
+		background-color: #fcd12a;
 	}
 
 	.registered{

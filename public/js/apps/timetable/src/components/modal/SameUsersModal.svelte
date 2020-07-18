@@ -1,6 +1,7 @@
 <script type="text/javascript">
 		
 	import {createEventDispatcher} from 'svelte';
+	import {fade} from 'svelte/transition';
 	export let users;
 
 	const dispatch = createEventDispatcher();
@@ -10,42 +11,98 @@
 		let detail = {user};
 		dispatch('submit', detail);
 	}
+
+	const handleCancel = (event) => {
+		dispatch('cancel');
+	}
 </script>
 
-<div>
-	<h3>Хэрэглэгч бүртгэлтэй байж магадгүй байна</h3>
-	{#each users as user}
+<div transition:fade>
+	<h3>Үйлчлүүлэгч бүртгэлтэй байж магадгүй байна:</h3>
+	<br />
+
+	<div class="row header-row">
+
+		<div class="row-item">
+			#
+		</div>
+
+		<div class="row-item">
+			Овог нэр
+		</div>
+
+		<div class="row-item">
+			Утас
+		</div>
+
+		<div class="row-item">
+			Регистр
+		</div>
+	</div>
+
+	{#each users as user, i}
 		<div class="row">
-			<div class="user-info"><p>{user.name} - {user.phone_number}</p></div>
+
+			<div class="row-item">
+				{i+1}
+			</div>
+
+			<div class="row-item">
+				{user.last_name[0]}. {user.name}
+			</div>
+
+			<div class="row-item">
+				{user.phone_number}
+			</div>
+
+			<div class="row-item">
+				{user.register}
+			</div>
 			<div class="btn-add" on:click={()=>handleChoose(user)}>Цаг захиалах</div>
 		</div>
 	{/each}
+
+	<footer>
+		<button on:click={handleCancel}>Буцах</button>
+	</footer>
 </div>
 
 <style>
+
+	*{
+		box-sizing: border-box;
+	}
+
+	.header-row{
+		font-size: 18px;
+		padding: 8px;
+		box-shadow: none;
+	}
+
 	.row{
 		display: grid;
-		grid-template-columns: 8fr 2fr;
+		justify-items: center;
+		grid-template-columns: 1fr 3fr 3fr 3fr 3fr;
+		grid-gap: 5px;
+		overflow-x: auto;
 		width: 100%;
-		background-color: #e3e3e3e3;
-		max-height: 50px;
+
+		box-shadow: 1px 1px 1px grey;
 	}
 
-	.row *{
-		font-size: 0.7em;
-	}
-
-	.user-info{
-		float: left;
+	.row-item{
 		display: flex;
+		justify-content: center;
 		align-items: center;
 	}
 
 
 	.btn-add{
-		float: left;
+		float: right;
 		font-family: 'Montserrat', Arial, Helvetica, sans-serif;
 		border: #fbfbfb solid 4px;
+		font-size: 14px;
+		padding: 10px;
 		cursor:pointer;
 		background-color: #3498db;
 		color:white;

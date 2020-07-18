@@ -8,8 +8,8 @@
 
 	// 2way binded.
 	// inital values can be set with props
-	export let fname = "";
-	export let lname ="";
+	export let name = "";
+	export let last_name ="";
 	export let phone = "";
 	export let gender = 1;
 	export let email = "";
@@ -29,8 +29,8 @@
 	const handleSubmit = (event) => {
 
 		let user = {
-			name: fname,
-			last_name: lname,
+			name: name,
+			last_name: last_name,
 			register,
 			phone_number: phone,
 			email,
@@ -65,12 +65,12 @@
       <h1>Шинэ үйлчлүүлэгч бүртгэх</h1>
       <p class="name">
       	<label>Овог</label>
-        <input bind:value={fname} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" />
+        <input bind:value={last_name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" />
       </p>
 
       <p class="name">
       	<label>Нэр</label>
-        <input bind:value={lname} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" />
+        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" />
       </p>
       
       <p class="email">

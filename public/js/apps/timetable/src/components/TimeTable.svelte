@@ -3,13 +3,10 @@
 	import Cell from './Cell.svelte';
 	import Column from './Column.svelte';
 
-
 	// contains {doctor, appointments}
 	export let shifts = [];
 	console.log('timetable got shifts', shifts);
 	export let times = [];
-	
-	export let showDoctors = true;
 
 
 </script>
@@ -18,7 +15,7 @@
 <div class="container">
 
 	<div class="day time">
-		<div class="day_title">Time</div>
+		<div class="day_title">Эмч/Цаг</div>
     {#each times as time, i}
         <div class="hour  ">{time}</div>
     {/each}
@@ -46,6 +43,10 @@ body {
 	width: 100%;
 	height: 100%;
   display: flex;
+  border: 1px solid #333333;
+  padding: 0;
+
+  color: #efefef;
 }
 
 *{
@@ -53,6 +54,7 @@ body {
 }
 .hour {
   height: 10vh;
+  color: #efefef;
   background-color: rgba(52, 73, 94,0.9);
   font-size: 12px;
   text-align: center;
@@ -62,7 +64,7 @@ body {
 }
 
 .day {
-  width: 18%;
+  width: 10%;
   height: 100%;
   float: left;
   background-color: #fff;

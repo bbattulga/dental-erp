@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\CheckIn;
 
@@ -32,7 +33,7 @@ class CheckInController extends Controller
 			'created_by' => Auth::user()->id,
 			'nurse_id' => 0
 		]);
-		return $checkin->id;
+		return $checkin;
 	}
 
 	public function update(Request $request){

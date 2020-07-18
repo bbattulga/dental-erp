@@ -123,6 +123,10 @@
 			});
 	}
 
+	const handleCancelSameUsers = (event) => {
+		sameUsers = [];
+	}
+
 </script>
 
 
@@ -179,13 +183,20 @@
         	value="{appointment.user_id==0?'Бүртгэх&Эмчилгээнд оруулах':'Бүртгэсэн'}" 
         	id="button-blue"
         	disabled="{appointment.user_id!=0}" />
-        	<button on:click|preventDefault|stopPropagation={handleDelete}>цуцлах</button>
+
+        	<div style="position:absolute: bottom:0; left: 0; margin: 10px;">
+	        	<input type="text" placeholder="цуцлах код">
+	        	<button on:click|preventDefault|stopPropagation={handleDelete}>цуцлах</button>
+	        </div>
         {/if}
       </div>
     </form>
      <!-- found same users -->
   {:else}
-  <SameUsersModal on:submit={handleSubmitUser} users={sameUsers} />
+  	<SameUsersModal 
+  			on:submit={handleSubmitUser} 
+  			on:cancel={handleCancelSameUsers}
+  			users={sameUsers} />
   {/if}
   </div>
 </Modal>

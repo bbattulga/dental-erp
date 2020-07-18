@@ -15,17 +15,42 @@ class CheckInsDaySeeder extends Seeder
      */
     public function run()
     {
-        // create $quantity checkins for shifts of the date
+
+        // set null to assign checkisn for all shifts of the day
+        // set id for doctor
+        $doctor_id = 3;
+
+
+        //$quantity - number of checkins for shifts of the date
         $quantity = 5;
         $date = Date('Y-m-d');
+        
 
+
+        if ($doctor_id){
+            $shift_id = Shift::where('date', $date)
+                            ->where('user_id', $doctor_id)
+                            ->first()->id;
+            if (!$shift_id){
+                error_log("shift not found for doctor with id $doctor_id");
+                return;
+            }
+
+            for ($i=0; $i<$quantity; $i++){
+                $patient = factory(Patient::class)->create();
+                factory(CheckIn::class)->create([
+                'shift_id' => $shift_id,
+                'user_id' => $patient->id
+                ]);
+            }
+            return;
+        }
 
         $shifts = Shift::where('date', $date)->get();
-
         foreach($shifts as $shift){
         		factory(CheckIn::class, $quantity)->create([
 	        	'shift_id' => $shift->id,
-	        	'user_id' => factory(Patient::class)->create()
+	        	'user_id' => factory(Patient::class)->create()->id
 	        	]);
         	}
         

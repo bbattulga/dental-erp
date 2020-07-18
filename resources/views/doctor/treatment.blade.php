@@ -323,7 +323,6 @@
                                                  onclick="changeStyle({{$i}})">
                                             @break
                                         @endswitch
-
                                     </td>
                                 @endfor
                                 @for($i = 21; $i<=28; $i++)
@@ -793,7 +792,7 @@
     <div class="tab-pane show active scroll" id="first" role="tabpanel" aria-labelledby="first-tab">
             @foreach($user_treatments as $user_treatment)
             <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}">
-                <b>Шүд #{{$user_treatment->tooth_id}} - {{\App\Treatment::find($user_treatment->treatment_id)->name}}</b>
+                <b>{{$user_treatment->tooth_id == null? 'Бүх шүд':"Шүд #".$user_treatment->tooth_id}} - {{\App\Treatment::find($user_treatment->treatment_id)->name}}</b>
                 <br>
                 <div class="row">
                     <div class="text-muted col-md-6">

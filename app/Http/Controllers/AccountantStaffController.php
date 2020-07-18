@@ -7,6 +7,7 @@ use App\UserRole;
 use App\Shift;
 use App\User;
 use Illuminate\Http\Request;
+use App\Roles;
 
 
 class AccountantStaffController extends Controller
@@ -25,7 +26,7 @@ class AccountantStaffController extends Controller
         if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile',compact('user', 'shifts'));
-        } else if($user->role->role_id == RoleId::nurse()->id) {
+        } else if($user->role->role_id == Roles::nurse()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('accountant.staff_profile', compact('user', 'checkins'));
         }

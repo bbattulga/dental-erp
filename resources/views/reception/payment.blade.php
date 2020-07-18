@@ -155,7 +155,7 @@
             </div>
         </div>
 
-        <input class="dnone" id="total{{$loop->index}}" value="{{$total}}">
+        <input type="hidden" class="dnone" id="total{{$loop->index}}" value="{{$total}}">
 
     @endforeach
 

@@ -100,7 +100,7 @@
 		<img src="/js/apps/timetable/src/components/assets/loading-200-200-grey.gif" alt="loading">
 	</div>
 
-
+	<!--
 	{#if fullscreen}
 	<div class="btn-close-fullsreen" 
 		on:hover={()=>console.log('onhover')}
@@ -108,13 +108,14 @@
 		<img src="/js/apps/timetable/src/components/assets/close-red-512.png" alt="close">
 	</div>
 	{/if}
-
+	-->
+	<!--
 	{#if !fullscreen}
 	<div class="btn-fullscreen" on:click={handleFullscreen}>
 		<img src="/js/apps/timetable/src/components/assets/fullscreen-100218.png" alt="close">
 	</div>
 	{/if}
-
+	-->
 	<div
 		class:fcenter={fullscreen}>
 		<TableFilter

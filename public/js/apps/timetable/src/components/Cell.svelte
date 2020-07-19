@@ -3,13 +3,14 @@
 
 	import {createEventDispatcher} from 'svelte';
 	import {onMount, onDestroy} from 'svelte';
-
 	import {fade} from 'svelte/transition';
 	import {fly} from 'svelte/transition';
 	import Modal from './modal/Modal.svelte';
+	import axios from 'axios';
+
 	import AppointmentModal from './modal/AppointmentModal.svelte';
 	import RegisterModal from './modal/RegisterModal.svelte';
-	import axios from 'axios';
+	import {storeSearch} from '../stores/stores.js';
 
 
 	// dispatch events
@@ -19,6 +20,7 @@
 	export let appointment;
 	export let time;
 	export let rowSpan;
+	export let width;
 
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -32,6 +34,29 @@
 	let empty =  (appointment == null) && !disabled;
 	let notregistered = !empty && !disabled && (appointment.user_id == "0");
 	let registered = !empty && !disabled && (appointment.user_id != "0");
+
+	let match = null;
+	let nomatch = null;
+	let keyword = null;
+	const unsubscribeSearch = storeSearch.subscribe(val=>keyword=val);
+	$:{
+
+		if (keyword == null){
+			match = false;
+			nomatch = false;
+		}
+		if (appointment){
+
+			let regex = new RegExp(keyword);
+			if (regex.exec(appointment.name) || regex.exec(appointment.phone)){
+				match = true;
+				nomatch = false;
+			}else{
+				match = false;
+				nomatch = true;
+			}
+		}
+	}
 
 	// flags
 	let showAppointmentModal = false;
@@ -156,6 +181,7 @@
 
 let container = null;
 onMount(()=>{
+	// container.style.width = width;
 	container.style.height = `${rowSpan*10}vh`;
 });
 
@@ -170,7 +196,9 @@ onDestroy(()=>appointment=null);
 	{#if appointment != null}
 		<div class="content"
 			class:notregistered={notregistered}
-			class:registered={registered}>
+			class:registered={registered}
+			class:match={match}
+			class:nomatch={nomatch}>
 			{appointment.name} <br />
 			{appointment.phone}
 		</div>
@@ -229,17 +257,31 @@ onDestroy(()=>appointment=null);
 	}
 
 	div:hover .empty{
+		color: #444444;
 		background-color: white;
 	}
 
 	.notregistered{
-
+		color: #444444;
 		background-color: #fcd12a;
 	}
 
 	.registered{
 		color: white;
-		background-color: green;
+	}
+
+	.match{
+		box-shadow: 1px 2px 3px grey;
+	}
+
+	.nomatch{
+		width: 100%; 
+		height: 100%;
+		display: flex;
+		flex-flow: column wrap;
+		justify-content: center;
+		align-items: center;
+		color: #332222;
 	}
 
 	.class.short { height: 7.5vh; line-height: 7.5vh; } /* 45min class */

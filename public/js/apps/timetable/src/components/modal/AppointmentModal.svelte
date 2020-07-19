@@ -143,7 +143,7 @@
   	{#if sameUsers.length == 0}
     <form class="form" id="form1">
       
-      <h1>{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
+      <h1 style="color: #444444;">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
       <p class="name">
       	<label>Үйлчлүүлэгчийн нэр</label>
         <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" 
@@ -223,7 +223,7 @@
 
 label{
 	font-size: 1.2em;
-	color: black;
+	color: #363636;
 }
 
 .treatment-hours{

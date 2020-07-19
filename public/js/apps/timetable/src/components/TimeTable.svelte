@@ -5,7 +5,6 @@
 
 	// contains {doctor, appointments}
 	export let shifts = [];
-	console.log('timetable got shifts', shifts);
 	export let times = [];
 
 
@@ -21,7 +20,7 @@
     {/each}
 	</div>
 
-	{#each shifts as shift}
+	{#each shifts as shift (shift.id)}
 		<Column 
       colWidth={`${100/shifts.length}%`}
       {shift}
@@ -45,8 +44,8 @@ body {
   display: flex;
   border: 1px solid #333333;
   padding: 0;
-
   color: #efefef;
+  padding: 7px;
 }
 
 *{

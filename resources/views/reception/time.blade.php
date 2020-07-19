@@ -13,7 +13,9 @@
         href="{{asset('js/apps/timetable/public/build/bundle.css')}}"/>
 
     <style>
-
+        body{
+            position: relative;
+        }
         .hidden {
             opacity: 0;
             background-color: white;
@@ -25,6 +27,15 @@
             background-color: #8f8f8f;
         }
 
+        #timetable-calendar{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            color: white;
+            width: 300px;
+            height: 300px;
+        }
         #timetable{
             position: relative;
             width: 100%;
@@ -42,7 +53,7 @@
         document.getElementById('receptionTime').classList.add('active');
     </script>
 
-       <div id="timetable"></div>
+    <div id="timetable"></div>
 
     <!--
     <div class="row">
@@ -173,6 +184,7 @@
 
 @endsection
 @section('footer')
+
     <script>
         var mTime;
         var mShift;

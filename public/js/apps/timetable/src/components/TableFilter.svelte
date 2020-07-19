@@ -1,20 +1,25 @@
 <script type="text/javascript">
 	
 	import TimeTable from './TimeTable.svelte';
+	import SearchInput from './SearchInput.svelte';
 	import {createEventDispatcher} from 'svelte';
 	import {fade} from 'svelte/transition';
-	import {storeShifts, storeDoctors, storeTimes} from '../stores/stores.js';
+	import {storeShifts, storeDoctors, storeTimes, storeSearch} from '../stores/stores.js';
 
 	const dispatch = createEventDispatcher();
 
 	let shifts = [];
+	$:{console.log('shifts changed',shifts)}
 	const unsubscribeShifts = storeShifts.subscribe(val=>shifts=val);
 
 	let doctors = [];
 	const unsubscribeDoctors = storeDoctors.subscribe(val=>doctors=val);
 
 	let times = [];
-	let unsubscribeStoreTimes = storeTimes.subscribe(val=>times=val);
+	let unsubscribeTimes = storeTimes.subscribe(val=>times=val);
+
+	let searchVal = null;
+	let unsubscribeSearch = storeSearch.subscribe(val=>searchVal);
 
 	const dateFormat = (date) => {
 		return date.toLocaleDateString('en-CA');
@@ -29,10 +34,6 @@
 	let date = new Date();
 
 	let lastDay = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
-
-	let showDoctors = true;
-
-	$:{console.log('shifts changed',shifts)}
 
 	let dates = [
 		{
@@ -89,21 +90,28 @@
 		console.log('handleDateChange',selectedDoctor)
 		if (selectedDoctor == null){
 			console.log('selected doctor null');
-			showDoctors = false;
 			return;
 		}
 
-		showDoctors = true;
 		selectedDate = selectedDate;
-		if (selectedDate.period.length > 1){
-			showDoctors = false;
-		}
+
 		console.log('selected doctor: ', selectedDoctor);
 		let detail = {
 			doctor: selectedDoctor,
 			date: selectedDate.period
 		}
 		dispatch('selectDate', detail);
+	}
+
+	// notifies to cells
+	const handleSearch = (event) => {
+		let value = event.detail.value;
+		storeSearch.update(old=>value);
+	}
+
+	const handleStopSearch = (event) => {
+		console.log('stop search');
+		storeSearch.update(old=>null);
 	}
 
 </script>
@@ -134,6 +142,12 @@
 							readonly="{selectedDate.readonly}">
 					{/if}
 				</div>
+
+				<SearchInput 
+					on:search={handleSearch}
+					on:stopsearch={handleStopSearch}
+					/>
+
 			</div>
 
 			<div class="row">
@@ -153,8 +167,7 @@
 	</div>
 
 	<TimeTable
-		bind:shifts={shifts}
-		{showDoctors}
+		{shifts}
 		{times}/>
 
 </div>
@@ -173,12 +186,12 @@
 
 	.filter-container{
 		position: relative;
-		display: inline-block;
+		width: 100%;
 		margin: 10px;
 	}
 
 	.filter-container-select{
-		display: flex;	
+		display: flex;
 		position: sticky;
 		left: 0;
 	}

@@ -81,7 +81,7 @@ class AppointmentSeeder extends Seeder
         		if ($end >= 21)
         			break;
 
-        		if($shift_type == Shift::morning() && ($end >= 15))
+        		if($shift_type == ShiftType::morning() && ($end >= 15))
         			break;
         	}
         }

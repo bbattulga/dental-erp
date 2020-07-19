@@ -7,9 +7,10 @@
 	export let times = [];
 
 	export let colWidth = '10%';
-
-	let appointments = shift.appointments;
-
+	$:console.log('column shift changed', shift);
+	let appointments = null;
+	$: appointments = shift.appointments;
+	
 	let step = 15;
 	let hour = 9;
 	let min = 0;
@@ -100,6 +101,7 @@
 			on:addAppointment={addAppointment}
 			on:deleteAppointment={deleteAppointment}
 			appointment={cellData.appointment}
+			width={colWidth}
 			rowSpan={cellData.rowSpan}
 			time={cellData.time}
 			{shift} />

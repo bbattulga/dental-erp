@@ -16,7 +16,7 @@ $factory->define(Appointment::class, function (Faker $faker) {
 	$start = 9;
 	$hours = 2;
 
-    $receptions = Reception::all()->get();
+    $receptions = Reception::all();
 
     $reception = count($receptions) == 0? factory(Reception::class)->create():$receptions->random();
     return [

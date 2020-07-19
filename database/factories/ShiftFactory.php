@@ -8,12 +8,14 @@ use App\Doctor;
 use App\Roles;
 use App\User;
 use App\Shift;
+use App\ShiftType;
 use App\Reception;
-
 
 $factory->define(Shift::class, function (Faker $faker) {
 
+	$receptions = Reception::all();
 	$date = $faker->dateTimeBetween('now', '7 days')->format('Y-m-d');
+	$shift_types = ShiftType::all();
 
     return [
 
@@ -22,8 +24,7 @@ $factory->define(Shift::class, function (Faker $faker) {
 
     	// should be overriden
     	'date' => $date,
-    	'created_by' => factory(Reception::class)->create()->id,
-
-    	'shift_type_id' => $faker->numberBetween(1, 3),
+    	'created_by' => $receptions->count()==0?factory(Reception::class)->create()->id : $receptions->random()->id,
+    	'shift_type_id' => $shift_types->random()->id
     ];
 });

@@ -41,8 +41,7 @@ class UserController extends Controller
 	}
 
 	public function destroy($id){
-
-		return User::destroy($id);
+		return User::findOrFail($id)->delete();
 	}
 
 	public function query(Request $request){

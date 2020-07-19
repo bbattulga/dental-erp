@@ -55,7 +55,6 @@ class User extends Authenticatable
     public function checkins(){
         return $this->hasMany('App\CheckIn','user_id','id');
     }
-    
     /**
      * The attributes that should be hidden for arrays.
      *

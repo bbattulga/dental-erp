@@ -66,7 +66,7 @@
         .tooltiptext{
             visibility: hidden;
             font-size: 10px;
-            width: 200px;
+            max-width: 200px;
             background-color: #333333;
             color: #e7e7e7e7;
         }
@@ -96,29 +96,30 @@
                             <th>Сонголтын тоо</th>
                             <th></th>
                         </thead>
-                        <tbody>
+                        <tbody id="treatments-table">
                         @foreach($treatments as $treatment)
-                            <tr>
+                            <tr id="treatment-row-{{$treatment->id}}">
                                 <td>{{$treatment->id}}</td>
                                 <td><a href="{{url('admin/treatment/'.$treatment->id)}}">{{$treatment->name}}</a></td>
                                 <td>@if($treatment->selection_type == 1) Нэг шүд @else Бүх шүд @endif</td>
-                                <td>@if($treatment->category == 0) Эмчилгээ @elseif($treatment->category == 1) Гажиг засал @elseif($treatment->category == 2) Согог засал @else Мэс засал @endif</td>
+                                <td>@if($treatment->category == 1) Эмчилгээ @elseif($treatment->category == 1) Гажиг засал @elseif($treatment->category == 2) Согог засал @else Мэс засал @endif</td>
                                 <td>@if(empty($treatment->price)) Хоосон @else {{$treatment->price}}₮ @endif</td>
                                 <td>@if(empty($treatment->limit)) Хоосон @else {{$treatment->limit}}₮ @endif</td>
                                 <td>{{$treatment->treatment_selections->count()}}</td>
                                 <td>
                                 <div class="row-crud-user">
                                   
-                                    <div class="crud-ic tooltip-my">
+                                    <a class="crud-ic tooltip-my"
+                                        href="{{url('admin/treatment/'.$treatment->id)}}">
                                         <img src="http://127.0.0.1:8000/img/icon/pen.png">
                                         <div class="tooltiptext">
                                              Засах
                                         </div>
-                                    </div>
-                                    <div onclick="deleteUser(416)" class="crud-ic tooltip-my">
+                                    </a>
+                                    <div onclick="deleteTreatment(this, {{$treatment->id}})" class="crud-ic tooltip-my">
                                         <img src="http://127.0.0.1:8000/img/icon/trashbin.png">
                                         <div class="tooltiptext">
-                                            Хаяг устгах
+                                            Устгах
                                         </div>
                                     </div>
                                 </div>
@@ -184,7 +185,24 @@
    </div>
 @endsection
 @section('footer')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <script type="text/javascript">
+
+        let treatmentsTable = document.getElementById('treatments-table');
+
+        function deleteTreatment(elem, id){
+
+            let treatmentRow = document.getElementById(`treatment-row-${id}`);
+            axios.delete(`/api/treatments/delete/${id}`)
+                .then(response=>{
+                    treatmentsTable.removeChild(treatmentRow);
+                }).catch(err=>{
+                    alert('Алдаа гарлаа');
+                    console.log(err);
+                });
+        }
+    </script>
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
     <script src="{{asset('js/vendor/moment.min.js')}}"></script>

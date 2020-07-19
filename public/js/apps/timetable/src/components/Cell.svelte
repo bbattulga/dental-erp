@@ -36,7 +36,7 @@
 	let registered = !empty && !disabled && (appointment.user_id != "0");
 
 	let match = null;
-	let nomatch = null;
+	let nomatch = false;
 	let keyword = null;
 	const unsubscribeSearch = storeSearch.subscribe(val=>keyword=val);
 	$:{
@@ -45,9 +45,9 @@
 			match = false;
 			nomatch = false;
 		}
-		if (appointment){
+		else if (appointment){
 
-			let regex = new RegExp(keyword);
+			let regex = new RegExp(keyword, 'i');
 			if (regex.exec(appointment.name) || regex.exec(appointment.phone)){
 				match = true;
 				nomatch = false;
@@ -64,6 +64,8 @@
 
 	// functions
 	function handleClick(){
+	
+
 		if (disabled){
 			return;
 		}
@@ -185,12 +187,15 @@ onMount(()=>{
 	container.style.height = `${rowSpan*10}vh`;
 });
 
-onDestroy(()=>appointment=null);
+onDestroy(()=>{
+	unsubscribeSearch();
+});
 
 </script>
 
 <div bind:this={container} 
-	class="container grey"
+class:disabled={disabled}
+	class="cell-container grey"
 	on:click={handleClick}>
 
 	{#if appointment != null}
@@ -225,18 +230,18 @@ onDestroy(()=>appointment=null);
 
 <style type="text/css">
 
-	.container {
-	  z-index: 100;
+	.cell-container {
 	  width: 100%;
 	  height: 100%;
 	  border: 1px solid white;
 	  padding: 0;
 	  color: #333333;
+	  position: relative;
 	}
 
 	div:hover .content{
 		transition: 0.4s;
-		background-color: white;
+		background-color: #e7e7e7e7;
 		color: #363636;
 		cursor: pointer;
 	}
@@ -258,7 +263,7 @@ onDestroy(()=>appointment=null);
 
 	div:hover .empty{
 		color: #444444;
-		background-color: white;
+		background-color: #e0e0e0e0;
 	}
 
 	.notregistered{
@@ -268,13 +273,10 @@ onDestroy(()=>appointment=null);
 
 	.registered{
 		color: white;
+		background-color: green;
 	}
 
 	.match{
-		box-shadow: 1px 2px 3px grey;
-	}
-
-	.nomatch{
 		width: 100%; 
 		height: 100%;
 		display: flex;
@@ -283,6 +285,22 @@ onDestroy(()=>appointment=null);
 		align-items: center;
 		color: #332222;
 	}
+
+	.nomatch{
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.disabled .content{
+		color: white;
+		background-color: white;
+	}
+
+	.disabled:hover .empty{
+		color: white;
+		background-color: white;
+		cursor: default;
+	}
+
 
 	.class.short { height: 7.5vh; line-height: 7.5vh; } /* 45min class */
 	.class.b15 { /* margin-top: 2.5vh;  */} /* after 15 min break */

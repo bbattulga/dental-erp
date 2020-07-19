@@ -112,20 +112,26 @@
 
 
 	.day {
+		position: relative;
 	  width: 10%;
 	  height: 100%;
 	  float: left;
 	  background-size: 1px 20%;
+	 /*  z-index: 1030; */
 	}
 
 	.doctor-profile {
-	  height: 10%;
+		/*
+		position: sticky;
+		top: 0;
+	  height: 10%;*/
 	  background-color: #34495e;
-	  font-size: 12px;
+	  font-size: 1.5vh;
 	  font-weight: 600;
 	  text-transform: uppercase;
 	  text-align: center;
 	  line-height: 10vh;
+	  word-wrap: wrap;
 	}
 
 

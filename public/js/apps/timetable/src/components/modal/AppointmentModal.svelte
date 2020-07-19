@@ -12,7 +12,7 @@
 	export let doctor;
 	export let appointment;
 	export let time;
-
+	
 	onDestroy(()=>appointment=null);
 
 	let showAppointmentForm = true;
@@ -29,6 +29,11 @@
 	let end = 0;
 	let cancelCode = '';
 
+	let initialDataElem = document.getElementById('userdata');
+	const queryDefaults = (event) =>{
+		let user = initialDataElem.name;
+		
+	}
 	let sameUsers = [];	
 
 	// re-eval end on user change hours

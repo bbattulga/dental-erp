@@ -40,6 +40,6 @@ class TreatmentController extends Controller
 
 	public function destroy($id){
         
-		return Treatment::destroy($id);
+		return Treatment::findOrFail($id)->delete();
 	}
 }

@@ -107,9 +107,9 @@ class AdminController extends Controller
     }
     public function user_check($id){
         $user = User::find($id);
-        $checkins = CheckIn::all()->where('state','>=',3)->where('user_id',$id);
+        $check_ins = CheckIn::where('state','>=',3)->where('user_id',$id)->get();
 
-        return view('admin.user_check',compact('user','checkins'));
+        return view('admin.user_check',compact('user','check_ins'));
 
     }
 

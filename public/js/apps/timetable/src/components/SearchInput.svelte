@@ -36,17 +36,15 @@
 	display: grid;
 	grid-template-columns: 9fr 2fr;
 	align-items: center;
-	position: absolute; 
-	bottom: 0; 
-	right: 5%;
 }
 
 .search-input{
 	width: 100%;
 	height: 100%;
 	border: none;
+	padding: 10px;
 	background: #efefef;
-	border-radius: 20px 0 0 20px;
+	border-radius: 10px;
 }
 
 .btn-search{

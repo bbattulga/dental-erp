@@ -29,12 +29,13 @@
 <style type="text/css">
 	
 	.backdrop{
-		z-index:1000000;
 		top: 0;
 		left: 0;
 		position: fixed;
 		width: 100vw;
 		height: 100vh;
+		z-index:1000000000;
+		
 		background-color: rgba(0, 0, 0, 0.5	);
 
 		 -webkit-animation: fadein 0.3s; /* Safari, Chrome and Opera > 12.1 */

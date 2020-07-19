@@ -97,7 +97,7 @@
                             </h5>
                             <table class="table table-sm table-borderless">
                                 <?php
-                                $treatments = \App\UserTreatments::all()->where('checkin_id',$check_in->id)
+                                $treatments = \App\UserTreatments::where('checkin_id',$check_in->id)->get();
                                 ?>
                                 <?php $total = 0;?>
                                 <tbody>
@@ -107,7 +107,7 @@
                                             <span class="log-indicator border-theme-2 align-middle"></span>
                                         </td>
                                         <td>
-                                            <span class="font-weight-medium">{{$treatment->treatment->name}}</span>
+                                            <span class="font-weight-medium">{{$treatment->name}}</span>
                                         </td>
                                         <td class="text-right">
                                 <span class="text-muted">

@@ -7,6 +7,7 @@ use App\CheckIn;
 use App\UserRole;
 use App\Shift;
 use App\User;
+use App\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,8 @@ class ReceptionUserController extends Controller
         $this->middleware('reception');
     }
     public function index() {
-        $users = User::all()->sortByDesc('created_at');
+       // $users = User::all()->sortByDesc('created_at');
+        $users = Patient::all()->sortByDesc('created_at');
         return view('reception.users', compact('users'));
     }
 

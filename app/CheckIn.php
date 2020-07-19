@@ -26,7 +26,7 @@ class CheckIn extends Model
     public function user_promotion() {
         return $this->hasOne('App\UserPromotions', 'checkin_id', 'id');
     }
-
+    
 
     public function delete(){
 

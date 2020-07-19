@@ -39,6 +39,7 @@ body {
 }
 
 .container{
+  position: relative;
 	width: 100%;
 	height: 100%;
   display: flex;
@@ -63,6 +64,8 @@ body {
 }
 
 .day {
+   position: sticky;
+   top: 0;
   width: 10%;
   height: 100%;
   float: left;
@@ -75,6 +78,10 @@ body {
 .day.time { width: 5vw;}
 
 .day_title {
+   /*z-index: 1030;
+   position: sticky;
+   top: 0;*/
+  border-right: 1px solid white;
   height: 10%;
   background-color: #34495e;
   font-size: 12px;

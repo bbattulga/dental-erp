@@ -21,6 +21,9 @@
             background-color: #8f8f8f;
         }
 
+        .row{
+            align-content: space-between;
+        }
     </style>
     {{--End css style gh met link file oruulna--}}
 @endsection
@@ -29,6 +32,7 @@
         document.getElementById('adminTreatments').classList.add('active');
     </script>
     <div class="row">
+        <!--
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -59,6 +63,7 @@
                 </div>
             </div>
         </div>
+    -->
         <div class="col-md-4">
             <div class="card m-1">
                 <div class="card-body">
@@ -115,6 +120,9 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <div class="col-md-4    ">
             <div class="card m-1">
                 <div class="card-body">
                     <h5>Төрлүүд</h5>

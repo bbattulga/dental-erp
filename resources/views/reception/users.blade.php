@@ -15,11 +15,15 @@
 
     <link href="{{asset('plugin/switchery/switchery.min.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <link rel="stylesheet" href="{{asset('/js/apps/timetable/public/build/bundle.css')}}">
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
     <style>
+        .hidden{
+            display: none;
+        }
         .btn-newuser{
-            z-index: 10000;
+            z-index: 1040;
             position: fixed;
             right: 10px;
             bottom: 10px;
@@ -64,7 +68,7 @@
         .tooltiptext{
             visibility: hidden;
             font-size: 10px;
-            width: 200px;
+            max-width: 200px;
             background-color: #333333;
             color: #e7e7e7e7;
         }
@@ -73,6 +77,16 @@
             visibility: visible;
         }
 
+        .fullwidth-my{
+            width: 100vw;
+            position: relative;
+            left: 0;
+            top: 0;
+        }
+
+        .raping-time{
+
+        }
     </style>
 @endsection
 @section('content')
@@ -211,25 +225,6 @@
   
 </div>
 
-
-
-  <!-- Modal -->
-  <div class="modal fade" id="checkinModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4>Цаг захиалах</h4>
-        </div>
-        <div class="modal-body">
-          modal body
-        </div>
-      </div>
-      
-    </div>
-  </div>
   
 </div>
 
@@ -259,7 +254,10 @@
                     <?php $i = 1?>
                     @foreach($users as $user)
                         @if(is_null($user->role))
-                        <tr>
+
+                        <input id="userdatajson-{{$user->id}}" type="hidden" value="{{ $user }}">
+
+                        <tr id="user-row-{{$user->id}}">
 
                             <td>{{$i}}</td>
                             <td>{{$user->last_name}}</td>
@@ -275,17 +273,23 @@
                             </td>
                             <td>{{$user->register}}</td>
                             <td>{{$user->phone_number}}</td>
-                            <td>tsag zahialsan</td>
-                            <td>2020-06-01</td>
+
+                            @if(!empty($user->check_in_today))
+                            <td>{{$user->check_in_today->shift->date}}</td>
+                            @else
+                            <td>цаг захиалаагүй</td>
+                            @endif
+
+                            <td>{{ $user->last_treatment_date}}</td>
                             <td>
                                 {{--$user->email--}}
                                 <div class="row-crud-user">
-                                    <div class="crud-ic tooltip-my">
-                                        <img src="{{ asset('/img/icon/teethcare.png') }}">
-                                        <div class="tooltiptext"
-                                            type="button"
-                                            data-toggle="modal" 
+                                    <div class="crud-ic tooltip-my" 
+                                    data-toggle="modal" 
                                             data-target="#checkinModal">
+                                        <img src="{{ asset('/img/icon/teethcare.png') }}">
+                                        <div class="tooltiptext"                                           
+                                            type="button">
                                             Эмчилгээнд оруулах
                                         </div>
                                     </div>
@@ -314,8 +318,34 @@
         </div>
     </div>
 
+<!-- Modal -->
+<div class="modal fade" id="checkinModal" role="dialog">
+    <div class="modal-dialog raping-time">
+
+      <!-- Modal content-->
+      <div id="checkinModalContent" class="modal-content fullwidth-my">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Цаг захиалах</h4>
+        </div>
+        <div class="modal-body fullwidth-my">
+          <div id="timetable"></div>
+        </div>
+      </div>
+    </div>
+</div>
 
 </div>
+
+
+<!-- delete request -->
+
+<form id="form-user-delete" action="#" method="delete" enctype="multipart/form-data" id="form">
+    @csrf
+    <input id="input-user-id" name="id" value="">
+</form>
+
+<input id="userdata" type="hidden" value="{{App\User::where('id', 2)->first()}}">
 
 
 @endsection
@@ -376,6 +406,10 @@
 
             table.buttons().container()
                 .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+
+
+            $("#checkinModal").css("width", "90%");
+            // $("#checkinModalContent").css('width', '100%');
         });
 
 
@@ -398,12 +432,27 @@
         */
     }   
 
+    let inputUserId = document.getElementById('input-user-id');
     function deleteUser(id){
+
+        let data = document.getElementById(`userdatajson-${id}`).value;
+
+        let userRow = document.getElementById(`user-row-${id}`);
+        console.log(data);
+        if (!window.confirm('a\n b')){
+            return;
+        }
+
         let url = `/api/users/delete/${id}`;
+        inputUserId.value = id;
         $.ajax({
             type: 'DELETE',
-            url: userDeleteUrl,
-            success: function(){alert('deleted')},
+            url: url,
+            data: $("#form-user-delete").serialize(),
+            success: function(result){
+                // remove from dom
+                $(`#user-row-${id}`).remove();
+            },
             fail: function(err){alert(`error ${err}`)}
         });
     }
@@ -415,12 +464,20 @@
             url: url,
             data: $("#form").serialize(),
             success: addNewUser,
-            fail: function(err){console.log('failed to create new user')}
+            fail: function(err){alert('алдаа гарлаа')}
         });
         return true;
-    })
+    });
+
+
+    function openCheckinModal(){
+        console.log('checkinmodal');
+        $("#checkinModal").modal();
+    }
 
     </script>
+
+    <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
 
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>

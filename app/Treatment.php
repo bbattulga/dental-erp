@@ -3,9 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Treatment extends Model
 {
+
+	use SoftDeletes;
+	
     //
     protected $fillable = ['name','category','price','selection_type', 'category','limit'];
 

@@ -26,14 +26,14 @@ class AppointmentController extends Controller
     public function store(Request $request) {
         
         // validate then create
-        
+        /*
         $request->validate([
         	'name' => 'required|max:60',
         	'phone' => 'required|max:50',
         	'shift_id' => 'required|integer',
         	'user_id' => 'required|integer'
         ]);
-        
+        */
 
         $appointment = Appointment::create([
                 'shift_id'=>$request['shift_id'],

@@ -14,7 +14,7 @@
 <div class="container">
 
 	<div class="day time">
-		<div class="day_title">Эмч/Цаг</div>
+		<div class="day_title">Цаг/Эмч</div>
     {#each times as time, i}
         <div class="hour  ">{time}</div>
     {/each}

@@ -54,7 +54,6 @@
     </script>
 
     <div id="timetable"></div>
-    <div id="timetable-calendar"></div>
     <!--
     <div class="row">
         {{--<div class="col-md-12">--}}

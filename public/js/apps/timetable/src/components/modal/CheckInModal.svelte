@@ -5,15 +5,13 @@
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
-	import SameUsersModal from './SameUsersModal.svelte';
-	import CheckInModal from './CheckInModal.svelte';
 
 	export let show = true;
 	export let shift;
-	export let doctor;
-	export let appointment;
 	export let time;
 	
+	export let appointment;
+
 	onDestroy(()=>appointment=null);
 
 	let showAppointmentForm = true;
@@ -22,18 +20,27 @@
 	let dispatch = createEventDispatcher();
 
 	// assign default values
-	let empty = appointment == null;
-	let name = empty? '': appointment.name;
-	let phone = empty? '': appointment.phone;
-	let hours = empty? 1: appointment.end-appointment.start;
-	let start = parseInt(time.slice(0, time.indexOf(':')));
-	let end = 0;
-	let cancelCode = '';
-	
-	let sameUsers = [];	
+	let name = null;
+	let last_name = null;
+	let phone =  null;
+	let register = null;
+	let hours =  1;
+	let start = null;
+	let end = null;
+	let cancelCode = null;
 
-	// re-eval end on user change hours
-	$: {end = start+hours;}
+	$:{
+		name = appointment.name;
+		last_name = appointment.user==null? '': appointment.user.last_name;
+		phone =   appointment.phone;
+		register = appointment.user==null? '': appointment.user.register;
+		hours =  appointment.end-appointment.start;
+		start =  parseInt(time.slice(0, time.indexOf(':')));
+		hours = hours < 1? 1: hours;
+		cancelCode = '';
+	}
+
+	$:end = start+hours;
 
 	function close(){
 		console.log('close');
@@ -41,92 +48,21 @@
 		console.log(show);
 	}	
 
-	function findSameUsers(name, phone){
-		return axios.post('/api/users/query', {name, phone});
-	}
-
 	function handleSubmit(){
-
-		// just visited or edited existing user cell
-		if (appointment!= null){
-			close();
-			return;
-		}
-
-		findSameUsers(name, phone)
-			.then(response=>{
-				let same = response.data;
-				console.log('same users', same);
-				if (same.length>0){
-					sameUsers = same;
-					return;
-				}
-				store();
-			})
-			.catch(err=>console.log(err));
-	}
-
-	function handleSubmitUser(event){
-		let detail = event.detail;
-		store(detail.user);
-	}
-
-	function store(user=null){
-		let _detail = {
-			appointment:{
-				shift_id: shift.id,
-				user_id: user==null? 0:user.id,
-				name: user==null? name: user.name,
-				phone: user==null? phone: user.phone_number,
-				hours,
-				start,
-				end
-			}
-		}
-
-		dispatch('submit', _detail);
-		// create new user
-		// if cell did not have user
-		
-		close();
-	}
-
-	function handleDelete(){
-		//console.log('form trying to del ', appointment);
-		appointment.code = '1111';
-		dispatch('delete', appointment);
-	}
-
-	function toggleForm(){
-		showAppointmentForm = !showAppointmentForm;
-		showRegisterForm = !showRegisterForm;
-	}
-
-	function handleRegister(){
-		findSameUsers(name, phone)
-			.then(response=>{
-				let same = response.data;
-				console.log('same users', same);
-				if (same.length>0){
-					sameUsers = same;
-					return;
-				}
-				close();
-		let currentData = {
+		console.log('handle submit checkin');
+		let appointment = {
+			shift_id: shift.id,
 			name,
-			phone
+			last_name,
+			phone,
+			start,
+			end
 		}
-		dispatch('openRegister', currentData);
-			})
-			.catch(err=>{
-				console.log(err);
-				alert('алдаа гарлаа')
-			});
+
+		let detail = {appointment};
+		dispatch('submit', detail);
 	}
 
-	const handleCancelSameUsers = (event) => {
-		sameUsers = [];
-	}
 
 </script>
 
@@ -141,16 +77,28 @@
   		on:click|preventDefault|stopPropagation={close}>
   		<img src="/js/apps/timetable/src/components/assets/close.png">
   	</div>
-  	{#if sameUsers.length == 0}
+
     <form class="form" id="form1">
       
-      <h1 style="color: #444444;">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
+      <h1 style="color: #444444;">Цаг захиалах</h1>
       <p class="name">
       	<label>Үйлчлүүлэгчийн нэр</label>
         <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" 
         readonly="{appointment!=null}" />
       </p>
       
+      <p class="name">
+      	<label>Овог</label>
+        <input bind:value={last_name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" 
+        readonly="{appointment!=null}" />
+      </p>
+
+      <p class="name">
+      	<label>Регистр</label>
+        <input bind:value={register} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" 
+        readonly="{appointment!=null}" />
+      </p>
+
       <p class="email">
       	<label>Утас</label>
         <input bind:value={phone} type="text" class="validate[required,custom[email]] feedback-input" id="email" placeholder="Утас" 
@@ -158,7 +106,7 @@
       </p>
       <p class="email">
       	<label>Эмчийн нэр:   </label>
-        <label>{doctor.name}</label>
+        <label>{shift.doctor.name}</label>
       </p>
 
       <p class="email">
@@ -168,37 +116,15 @@
 
       <p class="email">
       	<label>Эмчилгээний хугацаа(цагаар)</label>
-        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input" id="email" bind:value={hours} 
-        readonly="{appointment!=null}"/>
+        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input" bind:value={hours}/>
       </p>
       
       <div class="submit">
-
-      	{#if appointment == null}
         <input on:click|preventDefault|stopPropagation={handleSubmit}
-        	type="submit" value="Цаг захиалах" id="button-blue"/>
+        	type="submit" value="Баталгаажуулах" id="button-blue"/>
         <div class="ease"></div>
-        {:else}
-        <input on:click|preventDefault|stopPropagation={handleRegister}
-        	type="submit" 
-        	value="{appointment.user_id==0?'Бүртгэх&Эмчилгээнд оруулах':'Бүртгэсэн'}" 
-        	id="button-blue"
-        	disabled="{appointment.user_id!=0}" />
-
-        	<div style="position:absolute: bottom:0; left: 0; margin: 10px;">
-	        	<input type="text" placeholder="цуцлах код">
-	        	<button on:click|preventDefault|stopPropagation={handleDelete}>цуцлах</button>
-	        </div>
-        {/if}
       </div>
     </form>
-     <!-- found same users -->
-  {:else}
-  	<SameUsersModal 
-  			on:submit={handleSubmitUser} 
-  			on:cancel={handleCancelSameUsers}
-  			users={sameUsers} />
-  {/if}
   </div>
 </Modal>
 

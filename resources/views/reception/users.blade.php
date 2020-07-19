@@ -255,7 +255,7 @@
                     @foreach($users as $user)
                         @if(is_null($user->role))
 
-                        <input id="userdatajson-{{$user->id}}" type="hidden" value="{{ $user }}">
+                        <input id="userdatajson-{{$user->id}}" type="hidden" value="{{$user}}">
 
                         <tr id="user-row-{{$user->id}}">
 
@@ -279,14 +279,14 @@
                             @else
                             <td>цаг захиалаагүй</td>
                             @endif
-
                             <td>{{ $user->last_treatment_date}}</td>
                             <td>
                                 {{--$user->email--}}
                                 <div class="row-crud-user">
                                     <div class="crud-ic tooltip-my" 
                                     data-toggle="modal" 
-                                            data-target="#checkinModal">
+                                            data-target="#checkinModal"
+                                            onclick="openCheckinModal({{$user->id}})">
                                         <img src="{{ asset('/img/icon/teethcare.png') }}">
                                         <div class="tooltiptext"                                           
                                             type="button">
@@ -344,8 +344,6 @@
     @csrf
     <input id="input-user-id" name="id" value="">
 </form>
-
-<input id="userdata" type="hidden" value="{{App\User::where('id', 2)->first()}}">
 
 
 @endsection

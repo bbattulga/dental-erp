@@ -10,6 +10,7 @@
 
 	import AppointmentModal from './modal/AppointmentModal.svelte';
 	import RegisterModal from './modal/RegisterModal.svelte';
+	import CheckInModal from './modal/CheckInModal.svelte';
 	import {storeSearch} from '../stores/stores.js';
 
 
@@ -21,6 +22,16 @@
 	export let time;
 	export let rowSpan;
 	export let width;
+
+	// this will be used when submitting checkin from list of registered users
+	let registeredAppointment = {
+		shift_id: shift.id,
+		name: '',
+		phone: '',
+		start: !appointment? '':appointment.start,
+		end: !appointment? '':appointment.end,
+		time
+	}
 
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
@@ -61,16 +72,31 @@
 	// flags
 	let showAppointmentModal = false;
 	let showRegisterModal = false;
+	let showCheckInModal = false;
+
+	let initialDataElem = document.getElementById('cell-user-data');
 
 	// functions
-	function handleClick(){
-	
-
+	const  handleClick = (event) => {
 		if (disabled){
 			return;
 		}
 		console.log('cell handle click');
-		showAppointmentModal = true;
+		console.log('inital data:');
+		console.log(initialDataElem);
+		if (initialDataElem){
+			let user = JSON.parse(initialDataElem.value);
+			console.log('parsed user');
+			console.log(user);
+			registeredAppointment.name = user.name;
+			registeredAppointment.phone = user.phone_number;
+			registeredAppointment.user = user;
+			registeredAppointment.user_id = user.id;
+			registeredAppointment = registeredAppointment;
+			showCheckInModal = true;
+		}else{
+			showAppointmentModal = true;
+		}
 	}
 
 	const handleSubmit = (event) => {
@@ -80,7 +106,8 @@
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
-
+		console.log('cell handling appointment');
+		console.log(appointment);
 		axios.post('/api/appointments/create', appointment)
 			.then(response=>{
 				id = response.data;
@@ -226,6 +253,14 @@ class:disabled={disabled}
 			{...appointment}
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
+
+		<CheckInModal
+			on:submit={handleSubmit}
+			{shift}
+			appointment={registeredAppointment}
+			{time}
+			bind:show={showCheckInModal}
+			on:submit={handleSubmit} />
 </div>
 
 <style type="text/css">

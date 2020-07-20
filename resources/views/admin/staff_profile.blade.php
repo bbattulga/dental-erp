@@ -55,11 +55,11 @@
                                 <p class="mb-3">
                                     {{$user->description}}
                                 </p>
-                                @if($user->role->state == 0)
+                                @if($user->role == null)
                                     Халагдсан
                                 @else
                                 @endif
-                                <a href="{{url('/admin/add_staff/fire/'.$user->id)}}"><button type="button" class="btn btn-sm btn-outline-primary ">Ажлаас гарсан</button></a>
+                                <a href="{{url('/admin/add_staff/fire/'.$user->id)}}"><button type="button" class="btn btn-sm btn-outline-primary ">Ажлаас халах</button></a>
                             </div>
                         </div>
                     </div>
@@ -262,7 +262,7 @@
                 <div class="col-md-5 scroll" style=" height: 600px;">
                     <?php $sum=0;?>
                     <?php $users=0;?>
-                    @if($user->role->role_id == 2)
+                    @if($user->role->role_id == \App\Roles::doctor()->id)
                         @foreach($shifts as $shift)
                             @foreach($shift->checkins->where('state', '>=', 3) as $check_in)
                                 <?php $users++;?>
@@ -326,7 +326,7 @@
                             @endforeach
                         @endforeach
 
-                    @elseif($user->role->role_id == 3)
+                    @elseif($user->role->role_id == \App\Roles::nurse()->id)
 
                         @foreach($checkins->where('state', '>=', 3) as $check_in)
                             <?php $users++;?>
@@ -417,7 +417,7 @@
                         </div>
                     </div>
                     <br>
-                    @if($user->role->role_id == 3)
+                    @if($user->role->role_id == \App\Roles::doctor()->id)
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">

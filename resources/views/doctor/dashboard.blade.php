@@ -22,7 +22,7 @@
             <div class="card ">
                 <div class="card-body">
                     <div class="text-center">
-                        @if($user->photos->first() == '')
+                        @if($user->photos == null)
                             Зураггүй
                         @else
                             <img width="200px" style="border-radius: 100%"
@@ -43,19 +43,7 @@
                             </p>
                             <p class="text-muted text-small mb-2">Мэргэжил</p>
                             <p class="mb-3">
-                                @if($user->role->role_id == 5)
-                                    Админ
-                                @elseif($user->role->role_id == 2)
-                                    Ресепшн
-                                @elseif($user->role->role_id == 3)
-                                    Эмч
-                                @elseif($user->role->role_id == 1)
-                                    Сувилагч
-                                @elseif($user->role->role_id == 4)
-                                    Нягтлан
-                                @else
-                                    Бусад
-                                @endif
+                                {{$user->role->name}}
                             </p>
                             <p class="text-muted text-small mb-2">Тайлбар</p>
                             <p class="mb-3">

@@ -62,18 +62,14 @@ class AdminController extends Controller
     //---------------
     public function profile($id){
         $user = User::find($id);
-        $checkins = CheckIn::where('user_id', $user->id)
-                    ->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))
-                    ->orderBy('id', 'desc')
-                    ->get();
-
-        if($user->role->id == Roles::doctor()->id) {
-            $shifts = Shift::where('user_id', $user->id)
+        if($user->role_id == Roles::doctor()->id) {
+            $shifts = Shift::with('checkins')
+                    ->where('user_id', $user->id)
                     ->where('date','>=', date('Y-m-d', strtotime('first day of this month')))
                     ->orderBy('id', 'desc')
                     ->get();
-            return view('admin.staff_profile',compact('user', 'shifts', 'checkins'));
-        } else if($user->role->id == Roles::nurse()->id) {
+            return view('admin.staff_profile',compact('user', 'shifts'));
+        } else if($user->role_id == Roles::nurse()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins'));
         }

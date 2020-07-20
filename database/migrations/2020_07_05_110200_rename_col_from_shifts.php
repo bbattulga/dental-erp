@@ -15,10 +15,11 @@ class RenameColFromShifts extends Migration
     {
         Schema::table('shifts', function (Blueprint $table) {
             //
-            /*
-            $table->dropForeign('doctor_shifts_doctor_id_foreign');
-            $table->dropIndex('doctor_shifts_doctor_id_index');
-            */
+            $driver = env('DB_CONNECTION');
+            if (!($driver === 'sqlite')){
+                $table->dropForeign('shifts_doctor_id_foreign');
+                $table->dropIndex('shifts_doctor_id_index');
+            }
             $table->renameColumn('doctor_id', 'user_id');
             
             $table->index('user_id');

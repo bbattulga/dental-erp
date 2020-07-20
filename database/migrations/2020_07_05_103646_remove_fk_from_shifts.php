@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFksToDoctorShifts extends Migration
+class RemoveFkFromShifts extends Migration
 {
     /**
      * Run the migrations.
@@ -14,18 +14,17 @@ class AddFksToDoctorShifts extends Migration
     public function up()
     {
         Schema::table('shifts', function (Blueprint $table) {
-            //
-
+            
             $driver = env('DB_CONNECTION');
             if (!($driver === 'sqlite')){
-                $table->index('doctor_id');
-                $table->foreign('doctor_id')->references('id')->on('users');
+                $table->dropForeign('times_doctor_id_foreign');
+                $table->dropIndex('times_doctor_id_index');
 
-                $table->index('shift_type_id');
-                $table->foreign('shift_type_id')->references('id')->on('shift_types');
+                $table->dropForeign('times_shift_id_foreign');
+                $table->dropIndex('times_shift_id_index');
 
-                $table->index('created_by');
-                $table->foreign('created_by')->references('id')->on('users');
+                $table->dropForeign('times_created_by_foreign');
+                $table->dropIndex('times_created_by_index');
             }
         });
     }

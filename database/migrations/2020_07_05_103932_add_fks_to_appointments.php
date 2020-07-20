@@ -15,13 +15,15 @@ class AddFksToAppointments extends Migration
     {
         Schema::table('appointments', function (Blueprint $table) {
             //
-            /*
-            $table->index('shift_id');
-            $table->foreign('shift_id')->references('id')->on('doctor_shifts');
 
-            $table->index('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            */
+            $driver = env('DB_CONNECTION');
+            if ($driver != 'sqlite'){
+                $table->index('shift_id');
+                $table->foreign('shift_id')->references('id')->on('shifts');
+
+                $table->index('user_id');
+                $table->foreign('user_id')->references('id')->on('users');
+            }
         });
     }
 

@@ -28,9 +28,7 @@ class CreateUserTreatmentsTable extends Migration
             $table->integer('treatment_id')->unsigned();
             $table->foreign('treatment_id')->references('id')->on('treatments');
 
-           // $table->index('treatment_selection_id');
             $table->integer('treatment_selection_id')->nullable()->unsigned();
-            //$table->foreign('treatment_selection_id')->references('id')->on('treatment_selections');
 
             $table->integer('tooth_id')->nullable()->unsigned();
             $table->integer('value')->nullable();

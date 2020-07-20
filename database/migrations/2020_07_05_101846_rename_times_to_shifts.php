@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameDoctorShiftToShift extends Migration
+class RenameTimesToShifts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class RenameDoctorShiftToShift extends Migration
      */
     public function up()
     {
-        Schema::rename('doctor_shifts', 'shifts');
+        Schema::rename('times', 'shifts');
     }
 
     /**
@@ -23,7 +23,7 @@ class RenameDoctorShiftToShift extends Migration
      */
     public function down()
     {
-        Schema::table('doctor_shifts', function (Blueprint $table) {
+        Schema::table('times', function (Blueprint $table) {
             //
         });
     }

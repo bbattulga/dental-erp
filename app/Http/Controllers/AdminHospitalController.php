@@ -68,7 +68,7 @@ class AdminHospitalController extends Controller
                 }
 
                 $user_age = date_diff(date_create($user->birth_date), date_create('today'))->y;
-                if($user->sex == 1) {
+                if($user->sex == 0) {
                     $user_age >= 60 ? $age_male[15]++ : $age_male[(int)((int)($user_age)/4)]++;
                     $count_male++;
                 } else {

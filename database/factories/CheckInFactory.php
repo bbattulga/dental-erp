@@ -13,7 +13,7 @@ use App\CheckIn;
 
 $factory->define(CheckIn::class, function (Faker $faker) {
 
-	$receptions = Reception::all()->get();
+	$receptions = Reception::all();
 	$reception = count($receptions) == 0? factory(Reception::class)->create():$receptions->random();
 
     return [

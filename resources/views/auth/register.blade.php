@@ -100,13 +100,13 @@
 
 		    <div class="col-md-6">
 		      <div class="form-check">
-			<input class="form-check-input" type="radio" name="gender" id="male" value="1" checked>
+			<input class="form-check-input" type="radio" name="gender" id="male" value="0" checked>
 			<label class="form-check-label" for="male">
 			  Male
 			</label>
 		      </div>
 		      <div class="form-check">
-			<input class="form-check-input" type="radio" name="gender" id="female" value="2">
+			<input class="form-check-input" type="radio" name="gender" id="female" value="1">
 			<label class="form-check-label" for="female">
 			  Female
 			</label>

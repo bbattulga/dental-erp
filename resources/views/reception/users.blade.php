@@ -255,11 +255,13 @@
                     @foreach($users as $user)
                         @if(is_null($user->role))
 
-                        <input id="userdatajson-{{$user->id}}" type="hidden" value="{{$user}}">
-
                         <tr id="user-row-{{$user->id}}">
 
-                            <td>{{$i}}</td>
+                            <td>
+                                {{$i}}
+                                
+                                <input id="userdatajson-{{$user->id}}" type="hidden" value="{{$user}}">
+                            </td>
                             <td>{{$user->last_name}}</td>
                             <td> <a href="{{url('/admin/user_check/'.$user->id)}}">{{$user->name}}</a></td>
                                 <td>

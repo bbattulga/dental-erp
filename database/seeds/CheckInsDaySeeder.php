@@ -16,7 +16,7 @@ class CheckInsDaySeeder extends Seeder
     public function run()
     {
 
-        // set null to assign checkisn for all shifts of the day
+        // set null to assign checkins for all shifts of the day
         // set id for doctor
         $doctor_id = 3;
 
@@ -26,7 +26,7 @@ class CheckInsDaySeeder extends Seeder
         $date = Date('Y-m-d');
         
 
-
+        // create checkins for doctor with doctor_id
         if ($doctor_id){
             $shift_id = Shift::where('date', $date)
                             ->where('user_id', $doctor_id)
@@ -44,7 +44,7 @@ class CheckInsDaySeeder extends Seeder
                 ]);
             }
             return;
-        }
+        } // if (doctor_id) end
 
         $shifts = Shift::where('date', $date)->get();
         foreach($shifts as $shift){

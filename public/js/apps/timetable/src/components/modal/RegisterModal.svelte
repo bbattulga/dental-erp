@@ -4,13 +4,15 @@
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
 
+	import {getContext} from 'svelte';
+
 	export let show = false;
 
 	// 2way binded.
 	// inital values can be set with props
-	export let name = "";
+	export let name = '';
 	export let last_name ="";
-	export let phone = "";
+	export let phone = '';
 	export let gender = 1;
 	export let email = "";
 	export let register = "";
@@ -18,12 +20,18 @@
 	export let info = "";
 	export let birthDate = "";
 
+	export let initialData = null;
+	$:{
+	name = initialData? initialData.name: '';
+	phone = initialData? initialData.phone: '';
+	}
 	// dispatch events
 	let dispatch = createEventDispatcher();
 
-	function close(){
+	const close = (event) => {
 		console.log('close');
 		show = false;
+		dispatch('close');
 	}
 
 	const handleSubmit = (event) => {
@@ -46,7 +54,7 @@
 		close();
 	}
 
-	function handleDelete(){
+	const handleDelete = (event) => {
 		//console.log('form trying to del ', appointment);
 		dispatch('delete', appointment);
 	}
@@ -55,6 +63,7 @@
 <Modal bind:showModal={show}>
 <div id="form-main">
   <div id="form-div"
+  	on:click|stopPropagation
   	transition:fly="{{y: -200, duration: 500}}">
   	<div class="btn-close"
   		on:click|preventDefault|stopPropagation={close}>

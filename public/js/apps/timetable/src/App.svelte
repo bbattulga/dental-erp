@@ -108,8 +108,8 @@
 		<img src="/js/apps/timetable/src/components/assets/close-red-512.png" alt="close">
 	</div>
 	{/if}
-	-->
-	<!--
+	
+	
 	{#if !fullscreen}
 	<div class="btn-fullscreen" on:click={handleFullscreen}>
 		<img src="/js/apps/timetable/src/components/assets/fullscreen-100218.png" alt="close">
@@ -131,7 +131,6 @@
 		position: relative;
 		min-height: 100%;
 
-		box-shadow: 1px 1px 2px grey;
 		padding: 10px;
 	}
 

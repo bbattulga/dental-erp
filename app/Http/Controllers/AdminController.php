@@ -62,12 +62,19 @@ class AdminController extends Controller
     //---------------
     public function profile($id){
         $user = User::find($id);
-        $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
-        if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+        $checkins = CheckIn::where('user_id', $user->id)
+                    ->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))
+                    ->orderBy('id', 'desc')
+                    ->get();
+
+        if($user->role->id == Roles::doctor()->id) {
+            $shifts = Shift::where('user_id', $user->id)
+                    ->where('date','>=', date('Y-m-d', strtotime('first day of this month')))
+                    ->orderBy('id', 'desc')
+                    ->get();
             return view('admin.staff_profile',compact('user', 'shifts', 'checkins'));
-        } else if($user->role->role_id == Roles::nurse()->id) {
-            
+        } else if($user->role->id == Roles::nurse()->id) {
+            $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins'));
         }
         return view('admin.staff_profile', compact('user', 'checkins'));
@@ -83,7 +90,7 @@ class AdminController extends Controller
     public function dashboard() {
         $users = Patient::all()->count();
         $roles = UserRole::all()->count();
-        $users_number = $users - $roles;
+        $users_number = $users;
         $appointments = Appointment::all()->where('created_at','>',date('Y-m-d 00:00:00'))->count();
         $checkins = CheckIn::where('created_at','>=',date('Y-m-d'))->count();
 

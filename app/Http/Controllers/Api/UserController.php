@@ -36,6 +36,9 @@ class UserController extends Controller
         return $user;
 	}
 
+    public function staff_profile($id){
+        
+    }
 	public function update(Request $request){
 		return User::findOrFail($request['id'])->update($request->all());
 	}

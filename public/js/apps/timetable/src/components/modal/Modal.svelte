@@ -1,7 +1,6 @@
 <script type="text/javascript">
 	
 	import {createEventDispatcher} from 'svelte';
-
 	export let showModal = false;
 	export let title = "";
 
@@ -18,9 +17,11 @@
 
 
 {#if showModal}
-<div class="backdrop" on:click|self|stopPropagation={close}>
+<div
+	class="backdrop" on:click|self|stopPropagation={close}>
 		<h2>{title}</h2>
 		<slot></slot>	
+}
 </div>
 {/if}
 
@@ -32,9 +33,9 @@
 		top: 0;
 		left: 0;
 		position: fixed;
-		width: 100vw;
-		height: 100vh;
-		z-index:1000000000;
+		width: 100%;
+		height: 100%;
+		z-index:10000000;
 		
 		background-color: rgba(0, 0, 0, 0.5	);
 

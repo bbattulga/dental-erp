@@ -5,6 +5,7 @@
 	import {onMount, onDestroy} from 'svelte';
 	import {fade} from 'svelte/transition';
 	import {fly} from 'svelte/transition';
+	import {setContext} from 'svelte';
 	import Modal from './modal/Modal.svelte';
 	import axios from 'axios';
 
@@ -72,6 +73,7 @@
 	// flags
 	let showAppointmentModal = false;
 	let showRegisterModal = false;
+	let registerModalInitialData = null;
 	let showCheckInModal = false;
 
 	let initialDataElem = document.getElementById('cell-user-data');
@@ -159,13 +161,14 @@
 	}
 
 	const handleRegisterModal = (event) => {
-		console.log('cell show registermodal');
+		registerModalInitialData = event.detail.appointment;
+		showAppointmentModal = false;
+		showCheckInModal = false;
 		showRegisterModal = true;
 	}
 
 	const handleRegister = (event) => {
 		console.log('cell handle register');
-		
 		let user = event.detail.user;
 	/*	let dummy = {
 			last_name: 'dummylastname',
@@ -226,19 +229,27 @@ class:disabled={disabled}
 	on:click={handleClick}>
 
 	{#if appointment != null}
+
+		<!-- content -->
 		<div class="content"
 			class:notregistered={notregistered}
 			class:registered={registered}
 			class:match={match}
 			class:nomatch={nomatch}>
-			{appointment.name} <br />
-			{appointment.phone}
+			<label style="text-align: center;">{appointment.name}</label>
+			<label>{appointment.phone}</label>
 		</div>
+
+		<!-- appointment==null -->
 		{:else}
 		<div class="content empty">
-			Цаг захиалах <br />
-			<h8>{time}</h8>
-		</div>
+			{#if disabled}
+				Эмчийн цаг биш
+				{:else}
+				Цаг захиалах <br />
+				<h8>{time}</h8>
+			{/if}
+		</div> <!-- content end -->
 	{/if}
 		<AppointmentModal
 			bind:show={showAppointmentModal}
@@ -250,7 +261,7 @@ class:disabled={disabled}
 			doctor={shift.doctor}
 			bind:appointment={appointment} />
 		<RegisterModal
-			{...appointment}
+			initialData = {registerModalInitialData}
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
 
@@ -268,15 +279,19 @@ class:disabled={disabled}
 	.cell-container {
 	  width: 100%;
 	  height: 100%;
-	  border: 1px solid white;
+	  border: 1px solid #efefefef;
 	  padding: 0;
 	  color: #333333;
 	  position: relative;
 	}
+	div:hover{
+		transition: 0.4s;
+		box-shadow: 1px 1px 3px black;
+	}
 
 	div:hover .content{
 		transition: 0.4s;
-		background-color: #e7e7e7e7;
+		background-color: #efefefef;
 		color: #363636;
 		cursor: pointer;
 	}
@@ -302,37 +317,32 @@ class:disabled={disabled}
 	}
 
 	.notregistered{
-		color: #444444;
-		background-color: #fcd12a;
+		color: #e0e0e0e0;
+		background-color: #34343f;
 	}
 
 	.registered{
-		color: white;
-		background-color: green;
+		color: #efefefef;
+		background-color: #3f7d20;
 	}
 
 	.match{
-		width: 100%; 
-		height: 100%;
-		display: flex;
-		flex-flow: column wrap;
-		justify-content: center;
-		align-items: center;
-		color: #332222;
+
 	}
 
 	.nomatch{
 		background-color: rgba(0, 0, 0, 0.5);
+		color: #444444;
 	}
 
 	.disabled .content{
-		color: white;
-		background-color: white;
+		color: #efefefef;
+		background-color: #efefefef;
 	}
 
 	.disabled:hover .empty{
-		color: white;
-		background-color: white;
+		color: #aaaaaa;
+		background-color: #efefefef;
 		cursor: default;
 	}
 

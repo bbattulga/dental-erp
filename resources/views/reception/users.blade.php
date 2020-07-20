@@ -68,7 +68,7 @@
         .tooltiptext{
             visibility: hidden;
             font-size: 10px;
-            max-width: 200px;
+            min-width: 60px;
             background-color: #333333;
             color: #e7e7e7e7;
         }
@@ -344,7 +344,7 @@
 
 <form id="form-user-delete" action="#" method="delete" enctype="multipart/form-data" id="form">
     @csrf
-    <input id="input-user-id" name="id" value="">
+    <input id="input-user-id" type="hidden" name="id" value="">
 </form>
 
 

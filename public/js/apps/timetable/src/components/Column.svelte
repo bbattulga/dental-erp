@@ -125,7 +125,7 @@
 		position: sticky;
 		top: 0;
 	  height: 10%;*/
-	  background-color: #34495e;
+	  background-color: #1e2749;
 	  font-size: 1.5vh;
 	  font-weight: 600;
 	  text-transform: uppercase;

@@ -41,9 +41,8 @@ body {
 .container{
   position: relative;
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
   display: flex;
-  border: 1px solid #333333;
   padding: 0;
   color: #efefef;
   padding: 7px;
@@ -55,7 +54,7 @@ body {
 .hour {
   height: 10vh;
   color: #efefef;
-  background-color: rgba(52, 73, 94,0.9);
+  background-color: #1E2749;
   font-size: 12px;
   text-align: center;
   line-height: 10vh;
@@ -83,7 +82,7 @@ body {
    top: 0;*/
   border-right: 1px solid white;
   height: 10%;
-  background-color: #34495e;
+  background-color: #1E2749;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;

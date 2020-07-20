@@ -15,10 +15,14 @@
 	const handleCancel = (event) => {
 		dispatch('cancel');
 	}
+
+	const handleBack = (event) => {
+		users = [];
+	}
 </script>
 
 <div transition:fade>
-	<h3>Үйлчлүүлэгч бүртгэлтэй байж магадгүй байна:</h3>
+	<h3>Үйлчлүүлэгч бүртгэлтэй байж магадгүй байна<br />Төстэй хаягууд:</h3>
 	<br />
 
 	<div class="row header-row">
@@ -63,7 +67,8 @@
 	{/each}
 
 	<footer>
-		<button on:click={handleCancel}>Буцах</button>
+		<button class="btn-back" on:click|stopPropagation|preventDefault={handleBack}>Буцах</button>
+		<button class="btn-cancel" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
 	</footer>
 </div>
 
@@ -109,5 +114,9 @@
 		-webkit-transition: all 0.3s;
 		-moz-transition: all 0.3s;
 		transition: all 0.3s;
+	}
+
+	.btn-cancel{
+
 	}
 </style>

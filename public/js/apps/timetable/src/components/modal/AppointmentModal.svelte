@@ -39,6 +39,7 @@
 		console.log('close');
 		show = false;
 		console.log(show);
+		dispatch('close');
 	}	
 
 	function findSameUsers(name, phone){
@@ -126,6 +127,10 @@
 
 	const handleCancelSameUsers = (event) => {
 		sameUsers = [];
+		let currentData = {
+			appointment: {name, phone}
+		}
+		dispatch('openRegister', currentData);
 	}
 
 </script>
@@ -197,7 +202,7 @@
   	<SameUsersModal 
   			on:submit={handleSubmitUser} 
   			on:cancel={handleCancelSameUsers}
-  			users={sameUsers} />
+  			bind:users={sameUsers} />
   {/if}
   </div>
 </Modal>

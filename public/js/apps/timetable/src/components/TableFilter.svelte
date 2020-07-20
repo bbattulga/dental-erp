@@ -94,6 +94,8 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
+		width: 100%;
+		min-height: 100%;
 	}
 
 	.filter-container{

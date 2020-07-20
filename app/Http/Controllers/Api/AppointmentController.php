@@ -37,7 +37,7 @@ class AppointmentController extends Controller
 
         $appointment = Appointment::create([
                 'shift_id'=>$request['shift_id'],
-                'user_id'=>0,
+                'user_id'=> $request['user_id']? $request['user_id']:0,
                 'name'=>$request['name'], 
                 'phone'=>$request['phone'], 
                 'start'=>$request['start'], 

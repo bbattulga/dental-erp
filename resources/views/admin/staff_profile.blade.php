@@ -417,7 +417,7 @@
                         </div>
                     </div>
                     <br>
-                    @if($user->role->role_id == 2)
+                    @if($user->role->role_id == 3)
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">
@@ -436,9 +436,9 @@
                                                 <tr>
                                                     <td>{{$shift->date}}</td>
                                                     <td>
-                                                        @if($shift->shift_id == 0)
+                                                        @if($shift->shift_id == 1)
                                                             Өглөөний ээлж
-                                                        @elseif($shift->shift_id == 1)
+                                                        @elseif($shift->shift_id == 2)
                                                             Оройн ээлж
                                                         @else
                                                             Бүтэн ээлж

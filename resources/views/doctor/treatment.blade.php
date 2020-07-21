@@ -960,7 +960,7 @@
         e.preventDefault();
         e.stopPropagation();
         if (categoryId == null)
-            categoryId = document.getElementById('treatmentCategorySelect').value;
+            alert('category not selected');
         let url = `/api/treatments/category/${categoryId}`;
         $.ajax({
             type: 'GET',

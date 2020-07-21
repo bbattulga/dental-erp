@@ -783,7 +783,7 @@
         </script>
     </div><!-- Tooth images ending-->
     <div class="col-md-3">
-        <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event)">
+        <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event, this.value)">
             @foreach($treatmentCategories as $treatmentCategory)
             @if ($loop->first)
             <option value="{{ $treatmentCategory->id }}" selected> {{ $treatmentCategory->name }} </option>
@@ -957,7 +957,6 @@
 </div>
 <script>
     function handleSelectTreatmentCategory(e, categoryId = null) {
-
         e.preventDefault();
         e.stopPropagation();
         if (categoryId == null)

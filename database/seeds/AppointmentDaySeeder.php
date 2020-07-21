@@ -26,6 +26,7 @@ class AppointmentDaySeeder extends Seeder
         $min = 3;
         $max = 5;
 
+
         foreach($shifts as $shift){
 
         	// number of appointments to each shift

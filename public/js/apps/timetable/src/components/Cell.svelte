@@ -12,7 +12,7 @@
 	import AppointmentModal from './modal/AppointmentModal.svelte';
 	import RegisterModal from './modal/RegisterModal.svelte';
 	import CheckInModal from './modal/CheckInModal.svelte';
-	import {storeSearch} from '../stores/stores.js';
+	import {storeSearch, storeUserBaseData} from '../stores/stores.js';
 
 
 	// dispatch events
@@ -161,7 +161,7 @@
 	}
 
 	const handleRegisterModal = (event) => {
-		registerModalInitialData = event.detail.appointment;
+		registerModalInitialData = event.detail;
 		showAppointmentModal = false;
 		showCheckInModal = false;
 		showRegisterModal = true;
@@ -261,7 +261,7 @@ class:disabled={disabled}
 			doctor={shift.doctor}
 			bind:appointment={appointment} />
 		<RegisterModal
-			initialData = {registerModalInitialData}
+			initialData={registerModalInitialData}
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
 

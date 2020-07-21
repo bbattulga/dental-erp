@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
          	DoctorSeeder::class,
 
          	// shift doctors
-         	ShiftSeeder::class,
+         	ShiftDaySeeder::class,
 
          	// create appointments to shifts
-         	AppointmentSeeder::class
+         	AppointmentDaySeeder::class
          );
     }
 }

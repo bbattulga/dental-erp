@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use App\Roles;
 use App\CheckIn;
+use App\User;
 
-
-class Patient extends Model
+class Patient extends User
 {
     //
     use SoftDeletes;

@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Roles;
+use App\User;
 
-
-class Doctor extends Model
+class Doctor extends User
 {
     //
     protected $table = 'users';	
@@ -17,5 +17,4 @@ class Doctor extends Model
             $builder->where('role_id', '=', Roles::doctor()->id);
         });
     }
-
 }

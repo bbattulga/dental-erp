@@ -21,6 +21,9 @@ class DoctorSeeder extends Seeder
         factory(Doctor::class, $quantity)
         	->create()
         	->each(function ($doctor){
+                $doctor->update([
+                    'email' => 'doctor'.$doctor->id.'@mail.com'
+                ]);
         		factory(UserRole::class, 1)
         			->create([
         				'user_id' => $doctor->id,

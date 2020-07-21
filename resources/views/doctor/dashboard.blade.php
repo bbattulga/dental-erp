@@ -22,7 +22,7 @@
             <div class="card ">
                 <div class="card-body">
                     <div class="text-center">
-                        @if($user->photos == null)
+                        @if($user->photos->first() == '')
                             Зураггүй
                         @else
                             <img width="200px" style="border-radius: 100%"

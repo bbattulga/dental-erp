@@ -41,17 +41,17 @@ class User extends Authenticatable
     return implode('', $pieces);
 }
 
-    // basically, each account does one thing,
-    // which means no need to have multiple roles,
-    // just having 1 role is enough
-
-    public function getRoleAttribute(){
-        return $this->roles()->first();
+    public function role(){
+        return $this->hasOne('App\Roles', 'id', 'role_id');
     }
     
     public function roles(){
         return $this->belongsToMany('App\Roles' ,'user_role', 'user_id', 'role_id')
                     ->withPivot('state');
+    }
+
+    public function photos(){
+        return $this->morphMany('App\Photo', 'imageable');
     }
 
     public function checkins(){

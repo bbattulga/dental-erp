@@ -72,7 +72,7 @@
 		store(detail.user);
 	}
 
-	function store(user=null){
+	const store = (user=null) => {
 		let _detail = {
 			appointment:{
 				shift_id: shift.id,
@@ -94,7 +94,7 @@
 
 	function handleDelete(){
 		//console.log('form trying to del ', appointment);
-		appointment.code = '1111';
+		appointment.code = cancelCode;
 		dispatch('delete', appointment);
 	}
 
@@ -128,7 +128,7 @@
 	const handleCancelSameUsers = (event) => {
 		sameUsers = [];
 		let currentData = {
-			appointment: {name, phone}
+			name, phone
 		}
 		dispatch('openRegister', currentData);
 	}
@@ -152,14 +152,12 @@
       <h1 style="color: #444444;">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
       <p class="name">
       	<label>Үйлчлүүлэгчийн нэр</label>
-        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" 
-        readonly="{appointment!=null}" />
+        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name"  />
       </p>
       
       <p class="email">
       	<label>Утас</label>
-        <input bind:value={phone} type="text" class="validate[required,custom[email]] feedback-input" id="email" placeholder="Утас" 
-        readonly="{appointment!=null}"/>
+        <input bind:value={phone} type="text" class="validate[required,custom[email]] feedback-input" id="email" placeholder="Утас" />
       </p>
       <p class="email">
       	<label>Эмчийн нэр:   </label>
@@ -173,8 +171,7 @@
 
       <p class="email">
       	<label>Эмчилгээний хугацаа(цагаар)</label>
-        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input" id="email" bind:value={hours} 
-        readonly="{appointment!=null}"/>
+        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input" id="email" bind:value={hours} />
       </p>
       
       <div class="submit">
@@ -191,7 +188,7 @@
         	disabled="{appointment.user_id!=0}" />
 
         	<div style="position:absolute: bottom:0; left: 0; margin: 10px;">
-	        	<input type="text" placeholder="цуцлах код">
+	        	<input type="text" placeholder="цуцлах код" bind:value={cancelCode}>
 	        	<button on:click|preventDefault|stopPropagation={handleDelete}>цуцлах</button>
 	        </div>
         {/if}

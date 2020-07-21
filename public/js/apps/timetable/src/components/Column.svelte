@@ -93,7 +93,7 @@
 <div bind:this={container} class="day">
 
 	<div class="doctor-profile">
-		{shift.doctor.name}
+		{`doctor${shift.doctor.id}`}
 	</div>
 
 	{#each cellsData as cellData (generateId(cellData.appointment))}

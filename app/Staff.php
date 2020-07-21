@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use App\User;
 
-
-class Staff extends Model
+class Staff extends User
 {
     //
 	protected $table = 'users';	

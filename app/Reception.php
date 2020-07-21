@@ -8,7 +8,7 @@ use App\User;
 use App\Roles;
 
 
-class Reception extends Model
+class Reception extends User
 {
     //
 

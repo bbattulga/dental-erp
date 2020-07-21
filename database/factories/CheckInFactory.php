@@ -14,12 +14,12 @@ use App\CheckIn;
 $factory->define(CheckIn::class, function (Faker $faker) {
 
 	$receptions = Reception::all();
-	$reception = count($receptions) == 0? factory(Reception::class)->create():$receptions->random();
+	$reception = $receptions->count() == 0? factory(Reception::class)->create():$receptions->random();
 
     return [
         //
         'shift_id' => factory(Shift::class)->create([
-        	'shift_type_id' => ShiftType::full()
+        	'shift_type_id' => ShiftType::all()->random()->id
         ])->id,
         'user_id' => factory(Patient::class)->create()->id,
         'state' => 0,

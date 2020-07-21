@@ -10,9 +10,9 @@
 
 	// 2way binded.
 	// inital values can be set with props
-	export let name = '';
+	export let name = null;
 	export let last_name ="";
-	export let phone = '';
+	export let phone = null;
 	export let gender = 1;
 	export let email = "";
 	export let register = "";
@@ -22,8 +22,8 @@
 
 	export let initialData = null;
 	$:{
-	name = initialData? initialData.name: '';
-	phone = initialData? initialData.phone: '';
+		name = (name==null&&initialData)? initialData.name: name;
+		phone = (phone==null&&initialData)? initialData.phone: phone;
 	}
 	// dispatch events
 	let dispatch = createEventDispatcher();
@@ -79,7 +79,7 @@
 
       <p class="name">
       	<label>Нэр</label>
-        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" />
+        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name"/>
       </p>
       
       <p class="email">

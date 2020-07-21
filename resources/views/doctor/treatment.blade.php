@@ -140,6 +140,10 @@
     .zoom img::selection {
         background-color: transparent;
     }
+
+    .hidden{
+        visibility: hidden;
+    }
 </style>
 
 {{--End css style gh met link file oruulna--}}
@@ -251,6 +255,13 @@
     <input type="hidden" name="checkin_id" value="{{$checkin->id}}" id="checkin_id">
 </form>
 
+<div style="display: flex; flex-flow: row nowrap;">
+    <button onclick="showAllTooths()">Бүх шүд</button>
+    <button onclick="showMilkTooths()">Сүүн шүд</button>
+    <button onclick="showPermanentTooths()">Ясан шүд</button>
+    <button onclick="showPermanentTooths()">Байхгүй шүд</button>
+</div>
+
 <div class="row">
     <div class="col-md-9">
         <div class="card">
@@ -259,7 +270,7 @@
                     <table class="table text-center">
                         <tr>
                             @for($i = 18; $i>=11; $i--)
-                            <td style="color: grey">
+                            <td style="color: grey;">
                                 {{$i}}
                             </td>
                             @endfor
@@ -721,7 +732,7 @@
                     <h3>Тэмдэглэгээ</h3>
                     <div class="row">
                         <div class="col-lg-9"> 
-                            <select id="treatmentCategorySelect" class="form-control">
+                            <select id="toothCategory" class="form-control">
 
                                 <option value="" selected>Сүүн шүд </option>
 
@@ -956,9 +967,41 @@
     </div>
 </div>
 <script>
+
+    $(function(){
+        document.getElementById('treatmentCategorySelect').value = 1;
+        $("#second").addClass('ps--active-y');
+    });
+
+    function finishDate() {
+        $("#treatmentHistoryModal").modal();
+    }
+
+    function finishTreatment() {
+        document.getElementById('treatmentsFinish').submit();
+    }
+    var tooths = [];
+    var selectedArea = [];
+    var toothClassList = ["single", "all", "multiple"]
+
+    var single = document.getElementsByClassName(toothClassList[0]);
+    var all = document.getElementsByClassName(toothClassList[1]);
+    var mult = document.getElementsByClassName(toothClassList[2]);
+
+    for (i = 0; i < all.length; i++) {
+        all[i].style.display = "block";
+    }
+    for (i = 0; i < single.length; i++) {
+        single[i].style.display = "none";
+    }
+    for (i = 0; i < mult.length; i++) {
+        mult[i].style.display = "none";
+    }
+
     function handleSelectTreatmentCategory(e, categoryId = null) {
         e.preventDefault();
         e.stopPropagation();
+        console.log('category selected');
         if (categoryId == null)
             alert('category not selected');
         let url = `/api/treatments/category/${categoryId}`;
@@ -973,7 +1016,7 @@
             }
         });
     }
-    document.getElementById('treatmentCategorySelect').value = 1;
+    
     //handleSelectTreatmentCategory(new Event('click'), 1);
 
     function setTreatmentsHTML(treatments) {
@@ -984,7 +1027,21 @@
         for (let i = 0; i < treatments.length; i++) {
             let treatment = treatments[i];
             if (treatment.id == 1) {
-                html += `<button class="btn btn-primary btn-block single"` +
+
+                // treatment should be seen or not
+                // when fetched from db first time
+                let inlinestyle = 'style="'; // notice " (pair " will be set after these if blocks")
+                // single treatment when selected multiple tooths
+                if ((treatment.selection_type == 1) && tooths.length == 0){
+                    inlinestyle += 'display:none;';
+                }
+                // treatment for all tooths when selected signle tooth
+                else if((treatment.selection_type == 0) && tooths.length == 1){
+                    inlinestyle += 'display:none;';
+                }
+                inlinestyle += '"'; // sets terminating " for inline style
+
+                html += `<button class="btn btn-primary btn-block single" ${inlinestyle}` +
                     `data-toggle="modal"` +
                     `data-target="#exampleModal">` +
                     `<div class="row">` +
@@ -1022,7 +1079,20 @@
                 onClickStr = `onclick="singleTreatment('${treatment.id}',` +
                 `'${treatment.price}', '${treatment.limit}')"`;
 
-            outer = `<button ${onClickStr} class="btn btn-primary btn-block ${cls}">` +
+            // treatment should be seen or not
+            // when fetched from db first time
+            let inlinestyle = 'style="'; // notice " (pair " will be set after these if blocks")
+            // single treatment when selected multiple tooths
+            if ((treatment.selection_type == 1) && tooths.length == 0){
+                inlinestyle += 'display:none;';
+            }
+            // treatment for all tooths when selected signle tooth
+            else if((treatment.selection_type == 0) && tooths.length == 1){
+                inlinestyle += 'display:none;';
+            }
+            inlinestyle += '"'; // sets terminating " for inline style
+
+            outer = `<button ${onClickStr} class="btn btn-primary btn-block ${cls}" ${inlinestyle}>` +
                 `<div class="row">` +
                 `<div class="col-md-9 text-left">` +
                 `${treatment.name}<br> ${treatment.treatment_selections.length == 0? '':treatment.treatment_selections.length+' төрөлтэй'}` +
@@ -1041,31 +1111,6 @@
             html += outer;
         }
         treatmentsContainer.innerHTML = html;
-    }
-
-    function finishDate() {
-        $("#treatmentHistoryModal").modal();
-    }
-
-    function finishTreatment() {
-        document.getElementById('treatmentsFinish').submit();
-    }
-    var tooths = [];
-    var selectedArea = [];
-    var toothClassList = ["single", "all", "multiple"]
-
-    var single = document.getElementsByClassName(toothClassList[0]);
-    var all = document.getElementsByClassName(toothClassList[1]);
-    var mult = document.getElementsByClassName(toothClassList[2]);
-
-    for (i = 0; i < all.length; i++) {
-        all[i].style.display = "block";
-    }
-    for (i = 0; i < single.length; i++) {
-        single[i].style.display = "none";
-    }
-    for (i = 0; i < mult.length; i++) {
-        mult[i].style.display = "none";
     }
 
     function reset() {
@@ -1391,10 +1436,6 @@
 </script>
 @endsection
 @section('footer')
-
-<script src="https://unpkg.com/axios/dist/axios.min.js" type="text/javascript"></script>
-
-<script>
 
 </script>
 

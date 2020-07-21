@@ -13,6 +13,9 @@ class RenameTimesToShifts extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('times'))
+            return;
+
         Schema::rename('times', 'shifts');
     }
 

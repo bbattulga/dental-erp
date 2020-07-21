@@ -16,10 +16,11 @@ class RenameColInShifts extends Migration
         Schema::table('shifts', function (Blueprint $table) {
             //
             $driver = env('DB_CONNECTION');
-            if (!($driver === 'sqlite')){
              //   $table->dropForeign('times_shift_id');
-                $table->renameColumn('shift_id', 'shift_type_id');
-            }
+            if(!Schema::hasColumn('shifts', 'shift_id'))
+                return;
+
+            $table->renameColumn('shift_id', 'shift_type_id');
         });
     }
 

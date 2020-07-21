@@ -16,7 +16,7 @@ class RemoveFkFromShifts extends Migration
         Schema::table('shifts', function (Blueprint $table) {
             
             $driver = env('DB_CONNECTION');
-            if (!($driver === 'sqlite')){
+            if (!(strcmp($driver, 'sqlite'))){
                 $table->dropForeign('times_doctor_id_foreign');
                 $table->dropIndex('times_doctor_id_index');
 

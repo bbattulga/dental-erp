@@ -39,4 +39,9 @@ protected $appends = ['last_treatment_date', 'check_in_today'];
    							->where('date', Date('Y-m-d'))
    							->first();
    }
+
+   public function tooths(){
+    return $this->hasMany('App\UserTooth', 'user_id', 'tooth_id')
+                  ->withColumn('tooth_type_id');
+   }
 }

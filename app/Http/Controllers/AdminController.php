@@ -94,7 +94,7 @@ class AdminController extends Controller
         $workloads = [];
         for ($i=6; $i>=0; $i--){
             $date = date('Y-m-d', strtotime('-'.$i.' Days'));
-            $workload = UserTreatments::where('created_at', 'like',"$date%")->get()->count();
+            $workload = CheckIn::where('created_at', 'like',"$date%")->get()->count();
             array_push($workloads, $workload);
         }
         $workloads = json_encode($workloads);

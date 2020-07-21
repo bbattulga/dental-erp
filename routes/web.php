@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/test', function(){
-    return view('test');
-});
+Route::get('/test', 'ReceptionShiftsController@index');
 
 
 ////////////// WEB ROUTES START ////////

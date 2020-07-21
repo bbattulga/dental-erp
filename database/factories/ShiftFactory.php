@@ -20,7 +20,7 @@ $factory->define(Shift::class, function (Faker $faker) {
     return [
 
         // should be overriden
-    	'user_id' => factory(Doctor::class)->create()->id,
+    	'user_id' => 0,
 
     	// should be overriden
     	'date' => $date,

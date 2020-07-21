@@ -1,7 +1,6 @@
 @extends('layouts.reception')
-
 @section('header')
-{{--End css style gh met link file oruulna--}}
+    {{--End css style gh met link file oruulna--}}
     <link rel="stylesheet" href="{{asset('css/vendor/fullcalendar.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/dataTables.bootstrap4.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/datatables.responsive.bootstrap4.min.css')}}"/>
@@ -10,14 +9,8 @@
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/vendor/date.css')}}">
-    <link rel="stylesheet" href="{{asset('css/vendor/dates.css')}}">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
     <style>
-        .hidden {   
+        .hidden {
             border-radius: 10px;
             opacity: 0;
             background-color: white;
@@ -30,198 +23,129 @@
 
     </style>
 @endsection
-
 @section('content')
-
-<div class="row">
-  
-    <div id="contextMenu" class="dropdown clearfix"></div>
-
-    <div class="panel panel-default hidden-print" style="width:100%">
-      <div class="panel-heading">
-        <h3 class="panel-title">Ээлж хайх</h3>
-      </div>
-      <div class="panel-body">
-        
-        <div class="col-lg-4">
-      
-            <label for="calendar_view">Сонголтоор</label>
-            <div class="input-group">
-            <select class="filter" id="type_filter" multiple="multiple">
-                <option value="Appointment">Томилолт</option>
-                <option value="Check-in">Бүтгэсэн</option>
-            </select>
-            </div>
-      
-    </div>
-        
-        <div class="col-lg-4">
-      
-            <label for="calendar_view">Хямдралтай өдөрөөр</label>
-              <div class="input-group">
-                <select class="filter" id="calendar_filter" multiple="multiple">
-                    <option value="Sales">Хямдрал</option>
-            
-                </select>
-                </div>
-       
-    </div>
-        
-        <div class="col-lg-4">
-      
-      <label for="calendar_view">Эмч</label>
-      <div class="input-group">
-          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Caio Vitorelli" checked>Дулмаа</label>
-          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Peter Grant" checked>Сараа</label>
-          <label class="checkbox-inline"><input class='filter' type="checkbox" value="Adam Rackham" checked>Болдоо</label>
-      </div>
-    </div>
-        
-      </div>
-    </div>
-    
-            <div id="wrapper">
-                <div id="loading"></div>
-                <div class="print-visible" id="calendar"></div>
-            </div>
-        
-          
-          <!-- ADD EVENT MODAL -->
-          
-          <div class="modal fade" tabindex="-1" role="dialog" id="newEventModal">
+    <script>
+        document.getElementById('receptionShifts').classList.add('active');
+    </script>
+    <div class="modal fade" id="deleteShiftModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                   
-                  <h4 class="modal-title">Ээлж Тавих <span class="eventType"></span></h4>
-                </div>
-                <div class="modal-body">
-                  
-                  <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="title">Бүтэн</label>
-                            <input class='allDayNewEvent' type="checkbox"></label>
-                        </div>
+                <form action="{{url('/reception/shifts/cancel')}}" >
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Ээлж цуцлах
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            {{--sdfdsafsa--}}
+                        </button>
                     </div>
-              
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="title">Гарчиг</label>
-                            <input class="inputModal" type="text" name="title" id="title" />
-                        </div>
+                    <div class="modal-body">
+                        Эмч: <span id="doctorName"></span><br>
+                        Өдөр: <span id="shiftDate"></span><br>
+                        Ээлж: <span id="shiftTime"></span><br>
+                        <input type="hidden" name="shift_id" id="shiftId">
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="starts-at">Эхлэх цаг</label>
-                            <input class="inputModal" type="text" name="starts_at" id="starts-at" />
-                        </div>
+                    <div class="modal-footer">
+                        <input type="text" name="description" required class="form-control" id="shiftId" placeholder="Тайлбар">
+                        <button type="submit" class="btn btn-primary" style="border-radius: 0px">Ээлж цуцлах</button>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="ends-at">Дуусах цаг</label>
-                            <input class="inputModal" type="text" name="ends_at" id="ends-at" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="calendar-type">Хямдралтай</label>
-                            <select class="inputModal" type="text" name="calendar-type" id="calendar-type">
-                            <option value="lettings">Хямдралгүй</option>  
-                            <option value="Sales">Хямдрал</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="add-event-desc">Тайлбар</label>
-                            <textarea rows="4" cols="50" class="inputModal" name="add-event-desc" id="add-event-desc"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Гарах</button>
-                    <button type="button" class="btn btn-primary" id="save-event">Бүртгэх</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-          
-          
-          <!-- EDIT EVENT MODAL -->
-          
-          <div class="modal fade" tabindex="-1" role="dialog" id="editEventModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title">Edit <span class="eventName"></span></h4>
-                </div>
-                <div class="modal-body">
-                  
-                    
-              
-              <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="title">All Day Event ?</label>
-                            <input class='allDayEdit' type="checkbox"></label>
-                        </div>
-                    </div>
-              
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="title">Event title</label>
-                            <input class="inputModal" type="text" name="editTitle" id="editTitle" />
-                        </div>
-                    </div>
-              
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="starts-at">Starts at</label>
-                            <input class="inputModal" type="text" name="editStartDate" id="editStartDate" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="ends-at">Ends at</label>
-                            <input class="inputModal" type="text" name="editEndDate" id="editEndDate" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="edit-calendar-type">Calendar</label>
-                            <select class="inputModal" type="text" name="edit-calendar-type" id="edit-calendar-type">
-                              <option value="Sales">Sales</option>
-                              <option value="Lettings">Lettings</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label class="col-xs-4" for="edit-event-desc">Description</label>
-                            <textarea rows="4" cols="50" class="inputModal" name="edit-event-desc" id="edit-event-desc"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="deleteEvent">Delete Event</button>
-                    <button type="button" class="btn btn-primary" id="updateEvent">Save changes</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-</div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
 
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-responsive text-center">
+                        @foreach($doctors as $doctor)
+                            <tr>
+                                <td>Эмч</td>
+                                @for($i=0; $i<30; $i++)
+                                <td>{{date('Y-m-d', strtotime("+".$i." Days"))}}</td>
+                                @endfor
+                            </tr>
+                            <tr>
+                                <th rowspan="2"><br><br><br>
+                                    {{$doctor->name}}</th>
+                                @for($i = 0; $i < 30; $i++)
+                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 0)->first(); ?>
+                                    @if($time)
+                                        <td>
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 'Өдрийн ээлж', '{{$time->date}}')">Өглөөний ээлж<br><span class="text-right"
+                                                                                                                                                                                                                                    style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
+                                            </button>
+                                        </td>
+
+                                    @elseif($time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 3)->first())
+                                        <td rowspan="2">
+                                            <button class="btn btn-primary" style="height: 140px; border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 'Бүтэн ээлж', '{{$time->date}}')">Бүтэн ээлж<br><span class="text-right"
+                                                                                                                                                                                                                                               style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
+                                            </button>
+                                        </td>
+                                    @else
+                                        <td>
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/0')}}">
+                                                <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
+                                                                                                          style="font-size: 10px">ээлж тавих</span>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    @endif
+                                @endfor
+                            </tr>
+                            <tr>
+                                @for($i = 0; $i < 30; $i++)
+                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 1)->first(); ?>
+                                    @if($time)
+                                        <td>
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->name}}', 'Оройн ээлж', '{{$time->date}}')">Оройний ээлж<br><span class="text-right"
+                                                                                                                                                                                                                                  style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
+                                            </button>
+                                        </td>
+                                    @elseif( $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 2)->first())
+
+                                    @else
+                                        <td>
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/1')}}">
+                                                <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
+                                                                                                          style="font-size: 10px">ээлж тавих</span>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    @endif
+                                @endfor
+
+                            </tr>
+
+                        @endforeach
+
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        function deleteShift(id, doctor_name, shift_time, shift_date) {
+            document.getElementById('shiftId').value = id;
+            document.getElementById('doctorName').innerHTML = doctor_name;
+            document.getElementById('shiftTime').innerHTML = shift_time;
+            document.getElementById('shiftDate').innerHTML = shift_date;
+            $("#deleteShiftModal").modal();
+        }
+    </script>
 @endsection
-
 @section('footer')
-<script>
-    document.getElementById('receptionShifts').classList.add('active');
-</script>
 
-<script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
+
+    <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
-    <!-- <script src="{{asset('js/vendor/moment.min.js')}}"></script> -->
+    <script src="{{asset('js/vendor/moment.min.js')}}"></script>
     <script src="{{asset('js/vendor/fullcalendar.min.js')}}"></script>
     <script src="{{asset('js/vendor/datatables.min.js')}}"></script>
     <script src="{{asset('js/vendor/owl.carousel.min.js')}}"></script>
@@ -231,97 +155,5 @@
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
-    <script src="{{asset('js/vendor/moments.js')}}">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/locale-all.js"></script>
-    <script src="{{asset('js/vendor/date.js')}}"></script>
-    <script src="{{asset('js/vendor/date2.js')}}"></script>
-    <script>
-      newEvent = function(start, end, eventType) {
-      
-      var colorEventyType;
-      
-      if (eventType == "Appointment"){
-        colorEventyType = "colorAppointment";
-      }
-      else if (eventType == "Check-in"){
-        colorEventyType = "colorCheck-in";
-      }
-      else if (eventType == "Checkout"){
-        colorEventyType = "colorCheckout";
-      }
-      else if (eventType == "Inventory"){
-        colorEventyType = "colorInventory";
-      }
-      else if (eventType == "Valuation"){
-        colorEventyType = "colorValuation";
-      }
-      else if (eventType == "Viewing"){
-        colorEventyType = "colorViewing";
-      }
-
-      $("#contextMenu").hide();
-      $('.eventType').text(eventType);
-      $('input#title').val("");
-      $('#starts-at').val(start);
-      $('#ends-at').val(end);
-      $('#newEventModal').modal('show');
-      
-      var statusAllDay;
-      var endDay;
-    
-      $('.allDayNewEvent').on('change',function () {
-      
-        if ($(this).is(':checked')) {
-          statusAllDay = true;
-          var endDay = $('#ends-at').prop('disabled', true);
-        } else {
-          statusAllDay = false;
-          var endDay = $('#ends-at').prop('disabled', false);
-        }   
-      });
-      
-      //GENERATE RAMDON ID - JUST FOR TEST - DELETE IT
-      var eventId = 1 + Math.floor(Math.random() * 1000);
-      //GENERATE RAMDON ID - JUST FOR TEST - DELETE IT
-    
-      $('#save-event').unbind();
-      $('#save-event').on('click', function() {
-      var title = $('input#title').val();
-      var startDay = $('#starts-at').val();
-      if(!$(".allDayNewEvent").is(':checked')){
-        var endDay = $('#ends-at').val();
-      }
-      var calendar = $('#calendar-type').val();
-      var description = $('#add-event-desc').val();
-      var type = eventType;
-      if (title) {
-        var eventData = {
-            _id: eventId,
-            title: title,
-            avatar: 'https://republika.mk/wp-content/uploads/2017/07/man-852762_960_720.jpg',
-            start: startDay,
-            end: endDay,
-            description: description,
-            type: type,
-            calendar: calendar,
-            className: colorEventyType,
-            username: 'Caio Vitorelli',
-            backgroundColor: '#1756ff',
-            textColor: '#ffffff',
-            allDay: statusAllDay
-        };
-        $("#calendar").fullCalendar('renderEvent', eventData, true);
-        $('#newEventModal').find('input, textarea').val('');
-        $('#newEventModal').find('input:checkbox').prop('checked',false);
-        $('#ends-at').prop('disabled', false);
-        $('#newEventModal').modal('hide');
-        }
-      else {
-        alert("Title can't be blank. Please try again.")
-      }
-      });
-  }
-    </script>
+    {{--Scriptuudiig include hiiideg heseg--}}
 @endsection

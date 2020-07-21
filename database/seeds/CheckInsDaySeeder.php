@@ -18,7 +18,7 @@ class CheckInsDaySeeder extends Seeder
 
         // set null to assign checkins for all shifts of the day
         // set id for doctor
-        $doctor_id = 3;
+        $doctor_id = null;
 
 
         //$quantity - number of checkins for shifts of the date
@@ -48,10 +48,13 @@ class CheckInsDaySeeder extends Seeder
 
         $shifts = Shift::where('date', $date)->get();
         foreach($shifts as $shift){
-        		factory(CheckIn::class, $quantity)->create([
-	        	'shift_id' => $shift->id,
-	        	'user_id' => factory(Patient::class)->create()->id
-	        	]);
+
+                for ($i=0; $i<$quantity; $i++){
+                    factory(CheckIn::class)->create([
+                    'shift_id' => $shift->id,
+                    'user_id' => factory(Patient::class)->create()->id
+                    ]);
+                }
         	}
         
     }

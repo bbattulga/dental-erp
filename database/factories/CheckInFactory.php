@@ -17,11 +17,9 @@ $factory->define(CheckIn::class, function (Faker $faker) {
 	$reception = $receptions->count() == 0? factory(Reception::class)->create():$receptions->random();
 
     return [
-        //
-        'shift_id' => factory(Shift::class)->create([
-        	'shift_type_id' => ShiftType::all()->random()->id
-        ])->id,
-        'user_id' => factory(Patient::class)->create()->id,
+        // should be overriden
+        'shift_id' => 0,
+        'user_id' => 0,
         'state' => 0,
         'created_by' => $reception->id,
         'nurse_id' => 0

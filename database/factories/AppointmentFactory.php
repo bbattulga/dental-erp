@@ -22,8 +22,8 @@ $factory->define(Appointment::class, function (Faker $faker) {
     return [
         // should be overriden
         'user_id' => 0,
-
-        'shift_id' => factory(Shift::class)->create()->id,
+        'shift_id' => 0,
+        
         'created_by' => $reception->id,
 
         'name' => $faker->name,

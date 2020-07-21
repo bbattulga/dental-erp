@@ -15,6 +15,7 @@ class AppointmentDaySeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
     {
         // assign appointments to existing shifts
@@ -48,12 +49,12 @@ class AppointmentDaySeeder extends Seeder
         		 $register = 0;
 
         		// uncomment this line to create some registered users
-        		// $register = $faker->numberBetween(0, 1);
+        		 $register = $faker->numberBetween(0, 1);
 
         		if ($register == 1){
 
         			$patient = factory(Patient::class)->create();
-        			$appointment = factory(Appointment::class,1)
+        			$appointment = factory(Appointment::class)
         				->create([
         					'shift_id' => $shift->id,
         					'user_id' => $patient->id,
@@ -64,7 +65,7 @@ class AppointmentDaySeeder extends Seeder
         					'created_by' => 2
         				]);
         		}else{
-	        		$appointment = factory(Appointment::class, 1)
+	        		$appointment = factory(Appointment::class)
 	        			->create([
 	        				'user_id' => 0,
 	        				'shift_id' => $shift->id,

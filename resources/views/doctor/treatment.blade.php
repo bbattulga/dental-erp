@@ -17,8 +17,17 @@
         width: 100%;
     }
 
+    .invisible{
+        opacity: 0;
+    }
+
     .tooth {
         opacity: 0.5;
+    }
+
+    .tooth-type{
+        font-size: 12px;
+        color: gray;
     }
 
     polygon {
@@ -144,11 +153,13 @@
     .hidden{
         visibility: hidden;
     }
+
 </style>
 
 {{--End css style gh met link file oruulna--}}
 @endsection
 @section('content')
+
 <script>
     document.getElementById('doctorTreatment').classList.add('active');
 </script>
@@ -255,13 +266,6 @@
     <input type="hidden" name="checkin_id" value="{{$checkin->id}}" id="checkin_id">
 </form>
 
-<div style="display: flex; flex-flow: row nowrap;">
-    <button onclick="showAllTooths()">Бүх шүд</button>
-    <button onclick="showMilkTooths()">Сүүн шүд</button>
-    <button onclick="showPermanentTooths()">Ясан шүд</button>
-    <button onclick="showPermanentTooths()">Байхгүй шүд</button>
-</div>
-
 <div class="row">
     <div class="col-md-9">
         <div class="card">
@@ -338,9 +342,18 @@
                                     onclick="changeStyle({{$i}})">
                                 @break
                                 @endswitch
+
+                                @foreach($user_tooths as $ut)
+                                    @if ($ut->tooth->code == $i)
+                                        <div id="{{$i}}-toothmark" class="tooth-type">
+                                            {{ $ut->tooth_type->shortName }}
+                                        </div>
+                                    @endif
+                                @endforeach
                             </td>
                             @endfor
-                            @for($i = 21; $i<=28; $i++) <?php
+                            @for($i = 21; $i<=28; $i++) 
+                                <?php
                                         $special_treatment = 0;
                                         $tooth_special_treatments = array(3,4,5,6,7,8,9,23);
                                         $limit_date = date('Y-m-d', strtotime('2019-01-01'));
@@ -397,9 +410,15 @@
                                     onclick="changeStyle({{$i}})">
                                 @break
                                 @endswitch
-
-                                </td>
+                                    @foreach($user_tooths as $ut)
+                                        @if ($ut->tooth->code == $i)
+                                            <div id="{{$i}}-toothmark" class="tooth-type">
+                                                {{ $ut->tooth_type->shortName }}
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 @endfor
+                                </td>
                         </tr>
                         <tr>
                             @for($i = 18; $i>=11; $i--)
@@ -654,6 +673,14 @@
                                 @break
                                 @endswitch
 
+                                @foreach($user_tooths as $ut)
+                                    @if ($ut->tooth->code == $i)
+                                        <div id="{{$i}}-toothmark" class="tooth-type">
+                                            {{ $ut->tooth_type->shortName }}
+                                        </div>
+                                    @endif
+                                @endforeach
+
                             </td>
                             @endfor
                             @for($i = 31; $i<=38; $i++) <?php
@@ -714,6 +741,13 @@
                                 @break
                                 @endswitch
 
+                                @foreach($user_tooths as $ut)
+                                    @if ($ut->tooth->code == $i)
+                                        <div id="{{$i}}-toothmark" class="tooth-type">
+                                            {{ $ut->tooth_type->shortName }}
+                                        </div>
+                                    @endif
+                                @endforeach
                                 </td>
                                 @endfor
                         </tr>
@@ -723,7 +757,8 @@
                                 {{$i}}
                             </td>
                             @endfor
-                            @for($i = 31; $i<=38; $i++) <td style="color: grey">
+                            @for($i = 31; $i<=38; $i++) 
+                            <td style="color: grey">
                                 {{$i}}
                                 </td>
                                 @endfor
@@ -732,17 +767,22 @@
                     <h3>Тэмдэглэгээ</h3>
                     <div class="row">
                         <div class="col-lg-9"> 
-                            <select id="toothCategory" class="form-control">
-
-                                <option value="" selected>Сүүн шүд </option>
-
-                                <option value="">Байхгүй шүд </option>
-
-
+                            <select id="select-tooth-type" class="form-control"
+                                    onchange="handleSelectToothMark(event, this.value)">
+                                <option value="" selected></option>
+                                @foreach($tooth_types as $tooth_type)
+                                    <option value="{{ $tooth_type }}">
+                                        {{ $tooth_type->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-lg-3">
-                        <button type="button" onclick="finishDate()" class="btn btn-primary btn-block">ЦУЦЛАХ</button>
+                        <button id="btn-delete-tooth-type" 
+                                onclick="handleDeleteToothMarks()"
+                                type="button" class="btn btn-primary btn-block">
+                            Тэмдэглэгээ устгах
+                        </button>
                         </div>
                     </div>
                 </div>
@@ -785,13 +825,6 @@
             </div>
         </div>
 
-        <script>
-            $(document).ready(function () {
-                $('#ex1').zoom({
-                    magnify: 2
-                });
-            })
-        </script>
     </div><!-- Tooth images ending-->
     <div class="col-md-3">
         <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event, this.value)">
@@ -969,8 +1002,13 @@
 <script>
 
     $(function(){
+
+        $('#ex1').zoom({
+                    magnify: 2
+                });
+
         document.getElementById('treatmentCategorySelect').value = 1;
-        $("#second").addClass('ps--active-y');
+        document.getElementById('select-tooth-type').value  = 0;
     });
 
     function finishDate() {
@@ -982,7 +1020,10 @@
     }
     var tooths = [];
     var selectedArea = [];
-    var toothClassList = ["single", "all", "multiple"]
+    var toothClassList = ["single", "all", "multiple"];
+
+    var milkyteeth = [];
+    var emptyteeth = [];
 
     var single = document.getElementsByClassName(toothClassList[0]);
     var all = document.getElementsByClassName(toothClassList[1]);
@@ -996,6 +1037,87 @@
     }
     for (i = 0; i < mult.length; i++) {
         mult[i].style.display = "none";
+    }
+
+    var markingTooths = false;
+    var save = false;
+    var currentToothMark = null;
+    function handleSelectToothMark(event, value){
+        if (value == ''){
+            markingTooths = false;
+            return;
+        }
+        currentToothMark = JSON.parse(value);
+        markingTooths = true;
+    }
+
+    function toothMarkName(toothMark){
+        let name = toothMark.name;
+        name = name.substr(0, name.indexOf(' ')).toLowerCase();
+        return;
+    }
+
+     // ruby = tooth_id
+     // existing mark will be overwritten
+    function markTooth(ruby){
+        // validation
+        let userId = $('#userId').val();
+        let toothTypeId = currentToothMark.id;
+        let toothId = ruby;
+        // marked already?
+        // if marked, replace that
+        if ($(`#${ruby}-toothmark`) != null){
+            deleteToothMark(userId, ruby);
+        }
+        addToothMark(userId, toothId, currentToothMark.id);
+    }   
+
+    function deleteToothMark(userId, ruby){
+        
+        let toothId = ruby;
+        $.ajax({
+                type: 'DELETE',
+                url: `/api/user-tooth/${userId}/delete/${toothId}`,
+                data: {
+                    '_token': "{{csrf_token()}}",
+                    user_id: userId,
+                    tooth_code: toothId
+                },
+                success: function(){$(`#${toothId}-toothmark`).remove()},
+                fail: function(){alert('Өмнөх тэмдэглэгээг устгахад алдаа гарлаа')},
+            })
+    }
+    function handleDeleteToothMarks(){
+        let userId = $('#userId').val();
+        for (let i=0; i<tooths.length; i++){
+            let ruby = tooths[i];
+            deleteToothMark(userId, ruby);
+        }
+    }
+
+
+    function addToothMark(userId, ruby, toothTypeId){
+        let toothId = ruby;
+        $.ajax({
+            type: 'POST',
+            url: '/api/user-tooth/create',
+            data: {
+                '_token': "{{csrf_token()}}",
+                user_id: parseInt(userId),
+                tooth_code: parseInt(toothId),
+                tooth_type_id: parseInt(toothTypeId)
+            },
+            success: function(response){
+                console.log('response');
+                console.log(response);
+                let name = currentToothMark.name;
+                name = name.substr(0, name.indexOf(' ')).toLowerCase();
+                $(`#${ruby}`).after(`<div id="${toothId}-toothmark" class="tooth-type">${name}</div>`);
+            },
+            fail: function(err){
+                alert('Тэмдэглэгээ өгхөд алдаа гарлаа');
+            }
+        });
     }
 
     function handleSelectTreatmentCategory(e, categoryId = null) {
@@ -1127,8 +1249,14 @@
 
     }
 
-
     function changeStyle(ruby) {
+
+
+        if (markingTooths){
+            markTooth(ruby);
+            return;
+        }
+
         //----VALIDATION-----
         if (tooths.length === 0) {
             tooths.push(ruby);
@@ -1145,8 +1273,13 @@
                 tooths.splice(tooths.indexOf(ruby), 1);
             }
         }
+
         document.getElementById('buriLombo').innerText = "Шүд #" + tooths[0];
         //----VALIDATION END-----
+        if (markingTooths){
+            markTooths(null, ruby); // event=null
+        }
+
         //PAINT table using @tooths array
         console.log(tooths);
         for (var j = 1; j <= 4; j++) {

@@ -41,7 +41,7 @@ protected $appends = ['last_treatment_date', 'check_in_today'];
    }
 
    public function tooths(){
-    return $this->hasMany('App\UserTooth', 'user_id', 'tooth_id')
+    return $this->hasMany('App\UserTooth', 'user_id', 'code')
                   ->withColumn('tooth_type_id');
    }
 }

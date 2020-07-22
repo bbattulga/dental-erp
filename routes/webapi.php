@@ -67,8 +67,14 @@ Route::group([ 'middleware' => 'doctor',
     Route::post('user-treatments/create', 'UserTreatmentController@store');
     Route::put('user-treatments/update', 'UserTreatmentController@update');
     Route::delete('user-treatments/delete/{id}', 'UserTreatmentController@destroy');
-}); // END DOCTOR API
 
+    Route::post('user-tooth', 'UserToothController@index');
+    Route::get('user-tooth/{id}', 'UserToothController@show');
+    Route::post('user-tooth/create', 'UserToothController@store');
+    Route::put('user-tooth/update', 'UserToothController@update');
+    Route::delete('user-tooth/delete/{id}', 'UserToothController@destroy');
+    Route::delete('user-tooth/{user_id}/delete/{tooth_code}', 'UserToothController@destroByUserTooth'); // END DOCTOR API
+});
 
 // RECEPTION API
 Route::group(['middleware'=>'reception',

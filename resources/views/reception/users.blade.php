@@ -342,7 +342,7 @@
 
 <!-- delete request -->
 
-<form id="form-user-delete" action="#" method="delete" enctype="multipart/form-data" id="form">
+<form id="form-user-delete" action="#" method="delete" enctype="multipart/form-data">
     @csrf
     <input id="input-user-id" type="hidden" name="id" value="">
 </form>

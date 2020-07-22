@@ -22,8 +22,7 @@ class ShiftMonthSeeder extends Seeder
     	// shifts of doctors
     	foreach($doctors as $doctor){
 
-    		$day = 1;
-    		$date = Date('Y-m-d');
+    		$date = Date('Y-m-d', strtotime('+ 1 Days'));
 
     		for ($i=1; $i<=7; $i++){
     			$shift = factory(Shift::class)

@@ -27,9 +27,10 @@ $factory->define(UserTreatments::class, function (Faker $faker) {
     $price = $faker->numberBetween($rand_treatment->price, $rand_treatment->limit);
     $price -= $price%10; // make end 0
     return [
-        //should be overriden
+        //must be overwritten
         'user_id' => 0,
         'checkin_id' => 0,
+
         'treatment_id' => $rand_treatment->id,
         'treatment_selection_id' => $rand_treatment_selection == null? 0: $rand_treatment_selection->id,
         'tooth_id' => array_rand($tooth_ids),

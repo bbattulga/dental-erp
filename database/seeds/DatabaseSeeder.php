@@ -44,7 +44,10 @@ class DatabaseSeeder extends Seeder
          	ShiftDaySeeder::class,
 
          	// create appointments to shifts
-         	AppointmentDaySeeder::class
+         	AppointmentDaySeeder::class,
+
+            ToothSeeder::class,
+            ToothTypeSeeder::class
          );
     }
 }

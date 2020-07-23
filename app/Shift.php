@@ -25,8 +25,4 @@ class Shift extends Model
     public function createdby() {
         return $this->hasOne('App\User', 'id', 'created_by');
     }
-
-    public function delete(){
-
-    }
 }

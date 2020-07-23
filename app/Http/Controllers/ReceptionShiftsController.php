@@ -38,11 +38,19 @@ class ReceptionShiftsController extends Controller
     }
 
     public function cancel(Request $request){
-       $log = Log::create(['type'=>2,'type_id'=>$request['shift_type_id'],'user_id'=>Auth::user()->id,'action_id'=>0,'description'=>$request['description']]);
+       $log = Log::create([
+                'type'=>2,
+                'type_id'=>$request['shift_type_id'],
+                'user_id'=>Auth::user()->id,
+                'action_id'=>0,
+                'description'=>$request['description']
+            ]);
+
         $id = $request['shift_id'];
         //TODO(1) add validation to this (check if any user has an appointment)
         $shift = Shift::find($id);
-        $shift->appointments->each->delete();
+        if ($shift->appointments)
+            $shift->appointments->each->delete();
         $shift->delete();
         return redirect('/reception/shifts');
     }

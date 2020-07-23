@@ -181,7 +181,7 @@ Route::get('/reception/user_check/{id}/update','ReceptionUserController@user_upd
 Route::post('/reception/user_check/{id}','ReceptionUserController@user_check_edit');
 Route::get('/reception/user_check/{user_id}/{appointment_id}/check_in','ReceptionTimeController@check_in');
 Route::get('/reception/shifts', 'ReceptionShiftsController@index');
-Route::get('/reception/shifts/cancel','ReceptionShiftsController@cancel');
+Route::post('/reception/shifts/cancel','ReceptionShiftsController@cancel');
 Route::get('/reception/shifts/{i}/{doctor_staff_id}/{shift_id}','ReceptionShiftsController@store');
 Route::get('/reception/payment', 'ReceptionPaymentController@index');
 Route::post('/reception/payment/store','ReceptionPaymentController@store');

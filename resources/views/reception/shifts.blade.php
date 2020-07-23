@@ -30,7 +30,8 @@
     <div class="modal fade" id="deleteShiftModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form action="{{url('/reception/shifts/cancel')}}" >
+                <form action="{{url('/reception/shifts/cancel')}}" method="POST">
+                    @delete
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
@@ -46,9 +47,10 @@
                         Өдөр: <span id="shiftDate"></span><br>
                         Ээлж: <span id="shiftTime"></span><br>
                         <input type="hidden" name="shift_id" id="shiftId">
+                        <input type="hidden" name="shift_type_id" id="shiftTypeId">
                     </div>
                     <div class="modal-footer">
-                        <input type="text" name="description" required class="form-control" id="shiftId" placeholder="Тайлбар">
+                        <input type="text" name="description" required class="form-control" placeholder="Тайлбар">
                         <button type="submit" class="btn btn-primary" style="border-radius: 0px">Ээлж цуцлах</button>
                     </div>
                 </form>
@@ -72,23 +74,23 @@
                                 <th rowspan="2"><br><br><br>
                                     {{$doctor->name}}</th>
                                 @for($i = 0; $i < 30; $i++)
-                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 0)->first(); ?>
+                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 1)->first(); ?>
                                     @if($time)
                                         <td>
-                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 'Өдрийн ээлж', '{{$time->date}}')">Өглөөний ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 1, '{{$time->date}}')">Өглөөний ээлж<br><span class="text-right"
                                                                                                                                                                                                                                     style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
 
-                                    @elseif($time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 3)->first())
+                                    @elseif($time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 3)->first())
                                         <td rowspan="2">
-                                            <button class="btn btn-primary" style="height: 140px; border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 'Бүтэн ээлж', '{{$time->date}}')">Бүтэн ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="height: 140px; border-radius: 10px" onclick="deleteShift('{{$time->id}}', '{{$doctor->name}}', 3, '{{$time->date}}')">Бүтэн ээлж<br><span class="text-right"
                                                                                                                                                                                                                                                style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
                                     @else
                                         <td>
-                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/0')}}">
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/1')}}">
                                                 <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
                                                                                                           style="font-size: 10px">ээлж тавих</span>
                                                 </button>
@@ -99,18 +101,18 @@
                             </tr>
                             <tr>
                                 @for($i = 0; $i < 30; $i++)
-                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 1)->first(); ?>
+                                    <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 2)->first(); ?>
                                     @if($time)
                                         <td>
-                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->name}}', 'Оройн ээлж', '{{$time->date}}')">Оройний ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->name}}', 2, '{{$time->date}}')">Оройний ээлж<br><span class="text-right"
                                                                                                                                                                                                                                   style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
-                                    @elseif( $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('doctor_id', $doctor->id)->where('shift_id', 2)->first())
+                                    @elseif( $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 2)->first())
 
                                     @else
                                         <td>
-                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/1')}}">
+                                            <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/2')}}">
                                                 <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
                                                                                                           style="font-size: 10px">ээлж тавих</span>
                                                 </button>
@@ -130,11 +132,15 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
         function deleteShift(id, doctor_name, shift_time, shift_date) {
             document.getElementById('shiftId').value = id;
             document.getElementById('doctorName').innerHTML = doctor_name;
             document.getElementById('shiftTime').innerHTML = shift_time;
+            document.getElementById('shiftTypeId').value = shift_time;
             document.getElementById('shiftDate').innerHTML = shift_date;
             $("#deleteShiftModal").modal();
         }

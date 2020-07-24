@@ -20,8 +20,15 @@ class DoctorTreatmentSeeder extends Seeder
      * @return void
      */ 
 
+    public static $date;
+    
+
     public function run()
     {	
+        if (!isset(self::$date)){
+            $date = Date('Y-m-d');
+        }
+        
         $faker = Faker::create();
 
     	// set null to create records for all doctors
@@ -40,11 +47,10 @@ class DoctorTreatmentSeeder extends Seeder
             $this->forDoctor($faker, $doctor, $patients, $treatments_min, $treatments_max);
             return;
         }
-        // create records for all doctors
 
+        // create records for all doctors
         $doctors = Doctor::all();
         foreach($doctors as $doctor){
-
             $patients_size = $faker->numberBetween($patients_min, $patients_max);
             $patients = factory(Patient::class, $patients_size)->create();
             $this->forDoctor($faker, $doctor, $patients, $treatments_min, $treatments_max);
@@ -53,13 +59,15 @@ class DoctorTreatmentSeeder extends Seeder
 
     private function forDoctor($faker, $doctor, $patients, $treatments_min, $treatments_max){
 
-    	$shift = Shift::where('date', Date('Y-m-d'))
+        $date = self::$date;
+
+    	$shift = Shift::where('date', $date)
     			->where('user_id', $doctor->id)
     			->first();
     	if (!$shift){
     		$shift = factory(Shift::class)->create([
 	    		'user_id'=>$doctor->id,
-	    		'date'=>Date('Y-m-d')
+	    		'date'=>$date
 	    	]);
     	}
 
@@ -97,12 +105,8 @@ class DoctorTreatmentSeeder extends Seeder
             ]);
 
             $checkin->update([
-                'state' => 3
+                'state' => $faker->numberBetween(2, 3)
             ]);
         }
-    }
-
-    private function forAllDoctors(){
-
     }
 }

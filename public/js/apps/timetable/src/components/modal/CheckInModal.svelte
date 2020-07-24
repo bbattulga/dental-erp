@@ -35,7 +35,7 @@
 		phone =   appointment.phone;
 		register = appointment.user==null? '': appointment.user.register;
 		hours =  appointment.end-appointment.start;
-		start =  parseInt(time.slice(0, time.indexOf(':')));
+		start =  appointment.start;
 		hours = hours < 1? 1: hours;
 		cancelCode = '';
 	}

@@ -23,6 +23,7 @@ $factory->define(Transaction::class, function (Faker $faker) {
         // should be overriden
         'type_id'=>0,
 
+        'description'=>'',
         'created_by'=>$reception->id
     ];
 });

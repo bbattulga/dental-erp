@@ -88,7 +88,7 @@
 <div class="sidebar">
     <div class="main-menu">
         <div class="scroll">
-            <ul class="list-unstyled">
+            <ul class="list-unstyled" data-link="time">
                 <li id="receptionTime">
                     <a href="{{url('/reception/time')}}">
                         <i class="iconsmind-Alarm"></i> Цаг

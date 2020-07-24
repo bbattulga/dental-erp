@@ -98,58 +98,8 @@
 @endsection
 
 @section('footer')
-<script src= 
-"https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" > 
     </script> 
     {{--Scriptuudiig include hiiideg heseg--}}
     <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
     <script src="{{asset('/js/vendor/bootstrap-datepicker.js')}}"></script>
-@endsection  <div class="p-4">
-                <div class="scroll">
-                    <div class="card-body">
-                        <h5 class="mb-4">Date Picker Embeded</h5>
-                        <div class="form-group">
-                         <div class="date-inline">
-                        </div>
-                    </div>
-
-                    <p class="text-muted text-small">Status</p>
-                    <ul class="list-unstyled mb-5">
-                        <li class="active">
-                            <a href="#">
-                                <i class="simple-icon-refresh"></i>
-                                Pending Tasks
-                                <span class="float-right">12</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="simple-icon-check"></i>
-                                Completed Tasks
-                                <span class="float-right">24</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-<<<<<<< HEAD
-@endsection
-
-@section('footer')
-    {{--Scriptuudiig include hiiideg heseg--}}
-    <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
-=======
-        <!-- get selected date by adding onchange handler -->
-        <input id="input-date-selected" type="hidden">
-@endsection
-
-@section('footer')
-<script src= 
-"https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" > 
-    </script> 
-    {{--Scriptuudiig include hiiideg heseg--}}
-    <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
-    <script src="{{asset('/js/vendor/bootstrap-datepicker.js')}}"></script>
->>>>>>> temp
 @endsection

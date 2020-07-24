@@ -33,15 +33,14 @@
 	}
 
 	let date = new Date();
-	let todayStr = dateFormat(date);
-	let selectedDate = todayStr;
+	let dateInput = document.getElementById('input-date-selected');
 	const handleDateChange = (event) => {
-
 		let detail = {
-			date: [selectedDate]
+			date: [dateInput.value]
 		}
 		dispatch('selectDate', detail);
 	}
+	dateInput.onchange = handleDateChange;
 
 	// notifies to cells
 	const handleSearch = (event) => {
@@ -70,9 +69,6 @@
 		<SearchInput 
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
-		<div>
-			<input bind:value={selectedDate} on:change={handleDateChange} type="date">
-		</div>
 	</div>
 
 	<TimeTable

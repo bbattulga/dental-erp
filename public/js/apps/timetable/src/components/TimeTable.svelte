@@ -62,8 +62,8 @@
 }
 
 .hour {
-  height: 8vh;
-  line-height: 8vh;
+  height: 10vh;
+  line-height: 10vh;
   word-wrap: break-word;
   background-color: #0c2546;
   color: #e9f2fd;

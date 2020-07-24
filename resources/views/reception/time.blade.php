@@ -1,5 +1,6 @@
-@extends('layouts.reception')
+@extends('layouts.reception2')
 @section('header')
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{asset('font/iconsmind/style.css')}}" />
     <link rel="stylesheet" href="{{asset('font/simple-line-icons/css/simple-line-icons.css')}}" />
     <link rel="stylesheet" href="{{asset('css/vendor/jquery.contextMenu.min.css')}}" />
@@ -8,6 +9,16 @@
     <link rel="stylesheet" href="{{asset('css/vendor/select2.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/vendor/select2-bootstrap.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/main.css')}}" />
+=======
+    <link rel="stylesheet" href="{{asset('css/vendor/fullcalendar.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/dataTables.bootstrap4.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/datatables.responsive.bootstrap4.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/select2.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/owl.carousel.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
+>>>>>>> temp
 
      <link rel="stylesheet"
         href="{{asset('js/apps/timetable/public/build/bundle.css')}}"/>
@@ -21,6 +32,7 @@
             background-color: white;
             border: 0px;
         }
+<<<<<<< HEAD
 
         .hidden:hover, .hidden:focus {
             opacity: 0.2;
@@ -60,11 +72,61 @@
         </div>
     </div>
 @endsection
+=======
+
+        .hidden:hover, .hidden:focus {
+            opacity: 0.2;
+            background-color: #8f8f8f;
+        }
+
+        #timetable-calendar{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            color: white;
+            width: 300px;
+            height: 300px;
+        }
+        #timetable{
+            position: relative;
+            width: 100%;
+            margin: 0;
+            background-color: white;
+        }
+
+
+    </style>
+    {{--End css style gh met link file oruulna--}}
+@endsection
+
+@section('content')
+    <script>
+        document.getElementById('receptionTime').classList.add('active');
+    </script>
+
+    <div class="row app-row">
+        <div class="col-12">
+            <div id="timetable"></div>
+        </div>
+    </div>
+
+@endsection
+
+@section('subcontent')
+>>>>>>> temp
 
 @section('content-menu')
         <div class="app-menu">
             <div class="p-4">
                 <div class="scroll">
+                    <div class="card-body">
+                        <h5 class="mb-4">Date Picker Embeded</h5>
+                        <div class="form-group">
+                         <div class="date-inline">
+                        </div>
+                    </div>
+
                     <p class="text-muted text-small">Status</p>
                     <ul class="list-unstyled mb-5">
                         <li class="active">
@@ -82,61 +144,26 @@
                             </a>
                         </li>
                     </ul>
-
-                    <p class="text-muted text-small">Categories</p>
-                    <ul class="list-unstyled mb-5">
-                        <li>
-                            <div class="custom-control custom-checkbox mb-2">
-                                <input type="checkbox" class="custom-control-input" id="category1">
-                                <label class="custom-control-label" for="category1">Flexbox</label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="custom-control custom-checkbox mb-2">
-                                <input type="checkbox" class="custom-control-input" id="category2">
-                                <label class="custom-control-label" for="category2">Sass</label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="custom-control custom-checkbox ">
-                                <input type="checkbox" class="custom-control-input" id="category3">
-                                <label class="custom-control-label" for="category3">React</label>
-                            </div>
-                        </li>
-                    </ul>
-
-
-
-
-                    <p class="text-muted text-small">Labels</p>
-                    <div>
-                        <p class="d-sm-inline-block mb-1">
-                            <a href="#">
-                                <span class="badge badge-pill badge-outline-primary mb-1">NEW FRAMEWORK</span>
-                            </a>
-                        </p>
-
-                        <p class="d-sm-inline-block mb-1">
-                            <a href="#">
-                                <span class="badge badge-pill badge-outline-theme-3 mb-1">EDUCATION</span>
-                            </a>
-                        </p>
-                        <p class="d-sm-inline-block  mb-1">
-                            <a href="#">
-                                <span class="badge badge-pill badge-outline-secondary mb-1">PERSONAL</span>
-                            </a>
-                        </p>
-                    </div>
-
                 </div>
             </div>
-            <a class="app-menu-button d-inline-block d-xl-none" href="#">
-                <i class="simple-icon-refresh"></i>
-            </a>
         </div>
+<<<<<<< HEAD
 @endsection
 
 @section('footer')
     {{--Scriptuudiig include hiiideg heseg--}}
     <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
+=======
+        <!-- get selected date by adding onchange handler -->
+        <input id="input-date-selected" type="hidden">
+@endsection
+
+@section('footer')
+<script src= 
+"https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" > 
+    </script> 
+    {{--Scriptuudiig include hiiideg heseg--}}
+    <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
+    <script src="{{asset('/js/vendor/bootstrap-datepicker.js')}}"></script>
+>>>>>>> temp
 @endsection

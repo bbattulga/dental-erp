@@ -214,7 +214,7 @@
 let container = null;
 onMount(()=>{
 	// container.style.width = width;
-	container.style.height = `${rowSpan*4}vh`;
+	container.style.height = `${rowSpan*5}vh`;
 });
 
 onDestroy(()=>{
@@ -318,13 +318,13 @@ class:disabled={disabled}
 	}
 
 	.notregistered{
-		color: white;
-		background-color: #eb2a7e;
+		color: #444444;
+		background-color: #eb972a;
 	}
 
 	.registered{
-		color: #2a2a2a;
-		background-color: #7eeb2a;
+		color: white;
+		background-color: #1670e6;
 	}
 
 	.match{

@@ -595,6 +595,11 @@
 		remove: alias('destroy', 'Method `remove` is deprecated and will be removed in version 2.0. Use `destroy` instead'),
 
 		setValue: function(){
+			let selectedDate = this.dates[0].toLocaleDateString('en-CA');
+			let elem = document.getElementById('input-date-selected');
+			elem.value = selectedDate;
+			let event = new Event('change');
+			elem.dispatchEvent(event);
 			var formatted = this.getFormattedDate();
 			this.inputField.val(formatted);
 			return this;
@@ -805,7 +810,6 @@
 				this._trigger('clearDate');
 				this.element.change();
 			}
-
 			this.fill();
 			return this;
 		},
@@ -1685,7 +1689,7 @@
 		datesDisabled: [],
 		endDate: Infinity,
 		forceParse: true,
-		format: 'mm/dd/yyyy',
+		format: 'mm-dd-YYYY',
 		keepEmptyValues: false,
 		keyboardNavigation: true,
 		language: 'en',
@@ -1697,10 +1701,10 @@
 		rtl: false,
 		startDate: -Infinity,
 		startView: 0,
-		todayBtn: false,
-		todayHighlight: false,
+		todayBtn: true,
+		todayHighlight: true,
 		updateViewDate: true,
-		weekStart: 0,
+		weekStart: 1,
 		disableTouchKeyboard: false,
 		enableOnReadonly: true,
 		showOnFocus: true,
@@ -1722,11 +1726,14 @@
 	$.fn.datepicker.Constructor = Datepicker;
 	var dates = $.fn.datepicker.dates = {
 		en: {
-			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-			daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-			months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-			monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			days: ["Ням", "Даваа", "Мягмар", "Лхагва", "Пүрэв", "Баасан", "Бямба"],
+			daysShort: ["Ня", "Да", "Мя", "Лх", "Пү", "Ба", "Бя"],
+			daysMin: ["Ня", "Да", "Мя", "Лх", "Пү", "Ба", "Бя"],
+			months: ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", 
+					"9-р сар", "10-р сар", "11-р сар", "12-р сар"],
+
+			monthsShort: ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", 
+					"9-р сар", "10-р сар", "11-р сар", "12-р сар"],
 			today: "Today",
 			clear: "Clear",
 			titleFormat: "MM yyyy"
@@ -2029,6 +2036,8 @@
 		}
 	);
 	$(function(){
+		console.log('datepicker plugin');
+		console.log(datepickerPlugin);
 		datepickerPlugin.call($('[data-provide="datepicker-inline"]'));
 	});
 

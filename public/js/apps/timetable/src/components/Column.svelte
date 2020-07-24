@@ -126,6 +126,7 @@
 	  text-transform: uppercase;
 	  text-align: center;
 	  line-height: 10vh;
+	  height: 10vh;
 	  word-wrap: wrap;
 	}
 

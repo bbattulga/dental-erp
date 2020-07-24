@@ -261,11 +261,12 @@ label{
 	padding-top:35px;
 	padding-bottom:50px;
 	width: 50%;
+	top: 50%;
 	left: 50%;
 	max-height: 95%;
 	overflow: auto;
 	position: absolute;
-	transform: translateX(-50%);
+	transform: translate(-50%, -50%);
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
 }

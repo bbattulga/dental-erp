@@ -74,7 +74,7 @@
 
 
             <div class="header-icons d-inline-block align-middle">
-               
+               reception
 
 
                 <div class="position-relative d-inline-block">
@@ -107,7 +107,7 @@
                 <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
                     <i class="simple-icon-size-fullscreen"></i>
                     <i class="simple-icon-size-actual"></i>
-                </button>
+                </button>reception
 
             </div>
 
@@ -162,6 +162,7 @@
         <div class="container-fluid">
             @yield('content')
         </div>
+        @yield('content-menu')
     </main>
     {{--<script src="{{asset('js/vendor/jquery-3.3.1.min.js')}}"></script>--}}
     {{--<script src="{{asset('js/vendor/bootstrap.bundle.min.js')}}"></script>--}}

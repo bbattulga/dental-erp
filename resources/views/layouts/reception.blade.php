@@ -69,26 +69,69 @@
     </a>
 
     <div class="navbar-right">
-        <div class="header-icons d-inline-block align-middle">
-            {{--<a class="btn btn-sm btn-outline-primary mr-2 d-none d-md-inline-block mb-2" href="https://1.envato.market/5kAb">&nbsp;BUY&nbsp;</a>--}}
-        </div>
+          
 
-        <div class="user d-inline-block">
-            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
+
+            <div class="header-icons d-inline-block align-middle">
+               reception
+
+
+                <div class="position-relative d-inline-block">
+                    <button class="header-icon btn btn-empty" type="button" id="notificationButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="simple-icon-bell"></i>
+                        <span class="count">3</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right mt-3 scroll position-absolute"
+                        id="notificationDropdown">
+
+                        <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <a href="#">
+                                <img src="img/profile-pic-l-2.jpg" alt="Notification Image"
+                                    class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
+                            </a>
+                            <div class="pl-3 pr-2">
+                                <a href="#">
+                                    <p class="font-weight-small mb-1">2 цаг захиалсан байна!</p>
+                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
+                                </a>
+                            </div>
+                        </div>
+
+                      
+
+                    </div>
+                </div>
+
+                <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
+                    <i class="simple-icon-size-fullscreen"></i>
+                    <i class="simple-icon-size-actual"></i>
+                </button>
+
+            </div>
+
+            <div class="user d-inline-block">
+
+                <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                <span class="name">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
-            </button>
+                    <span class="name">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
+                    <span>
+                        <img alt="Profile Picture" src="img/profile-pic-l.jpg" />
+                    </span>
+                </button>
 
-            <div class="dropdown-menu dropdown-menu-right mt-3">
-                <a class="dropdown-item" href="{{url('/logout')}}">Гарах</a>
+                <div class="dropdown-menu dropdown-menu-right mt-3">
+                    <a class="dropdown-item" href="#">Account</a>
+                    <a class="dropdown-item" href="#">Features</a>
+                    <a class="dropdown-item" href="{{url('/logout')}}">Sign out</a>
+                </div>
             </div>
         </div>
-    </div>
 </nav>
 <div class="sidebar">
     <div class="main-menu">
         <div class="scroll">
-            <ul class="list-unstyled" data-link="time">
+            <ul class="list-unstyled">
                 <li id="receptionTime">
                     <a href="{{url('/reception/time')}}">
                         <i class="iconsmind-Alarm"></i> Цаг
@@ -130,6 +173,8 @@
     <div class="container-fluid">
         @yield('content')
     </div>
+
+    @yield('content-menu')
 </main>
 {{--<script src="{{asset('js/vendor/jquery-3.3.1.min.js')}}"></script>--}}
 {{--<script src="{{asset('js/vendor/bootstrap.bundle.min.js')}}"></script>--}}

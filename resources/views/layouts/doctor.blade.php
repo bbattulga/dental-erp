@@ -87,14 +87,11 @@
                         id="notificationDropdown">
 
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                            <a href="#">
-                                <img src="img/profile-pic-l-2.jpg" alt="Notification Image"
-                                    class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                            </a>
+                           <p class="font-weight-bold">Өвчтөний нэр </p>
                             <div class="pl-3 pr-2">
                                 <a href="#">
                                     <p class="font-weight-small mb-1">2 цаг захиалсан байна!</p>
-                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
+                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45-13:45</p>
                                 </a>
                             </div>
                         </div>
@@ -155,9 +152,8 @@
                 </ul>
             </div>
         </div>
-
-
     </div>
+    
     <main>
         <div class="container-fluid">
             @yield('content')
@@ -165,7 +161,7 @@
     </main>
     {{--<script src="{{asset('js/vendor/jquery-3.3.1.min.js')}}"></script>--}}
     {{--<script src="{{asset('js/vendor/bootstrap.bundle.min.js')}}"></script>--}}
-    {{--<script src="{{asset('https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/perfect-scrollbar.js)}}">
+    {{--<script src="{{asset('js/vendor/perfect.scrollbar.min.js)}}">
     </script>--}}
     {{--<script src="{{asset('js/vendor/mousetrap.min.js')}}"></script>--}}
     {{--<script src="{{asset('js/dore.script.js')}}"></script>--}}

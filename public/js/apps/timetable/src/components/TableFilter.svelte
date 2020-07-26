@@ -70,8 +70,8 @@
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
 		<div>
-			<div>a - Эмчилгээнд орсон</div>
-			<div>b - Эмчилгээнд ороогүй</div>
+			<div>Цэнхэр - Эмчилгээнд орсон</div>
+			<div>Бор - Эмчилгээнд ороогүй</div>
 		</div>
 	</div> 
 

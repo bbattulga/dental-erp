@@ -19,9 +19,7 @@ class Roles extends Model
 
     protected $table = 'roles';
 
-    // give alias to Roles.id
-    // Roles.id = Roles.role_id
-    protected $appends = 'role_id';
+    // for legacy code
     public function getRoleIdAttribute(){
         return $this->id;
     }

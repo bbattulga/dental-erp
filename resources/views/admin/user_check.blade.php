@@ -97,23 +97,23 @@
                             </h5>
                             <table class="table table-sm table-borderless">
                                 <?php
-                                $treatments = \App\UserTreatments::where('checkin_id',$check_in->id)->get();
+                                $user_treatments = \App\UserTreatments::where('checkin_id',$check_in->id)->get();
                                 ?>
                                 <?php $total = 0;?>
                                 <tbody>
-                                @foreach($treatments as $treatment)
+                                @foreach($user_treatments as $user_treatment)
                                     <tr>
                                         <td>
                                             <span class="log-indicator border-theme-2 align-middle"></span>
                                         </td>
                                         <td>
-                                            <span class="font-weight-medium">{{$treatment->name}}</span>
+                                            <span class="font-weight-medium">{{$user_treatment->treatment->name}}</span>
                                         </td>
                                         <td class="text-right">
                                 <span class="text-muted">
-                                        {{$treatment->price}}₮
+                                        {{$user_treatment->price}}₮
                                         <?php /** @var TYPE_NAME $total */
-                                        $total = $total + $treatment->price?>
+                                        $total = $total + $user_treatment->price?>
                                  </span>
                                         </td>
                                     </tr>

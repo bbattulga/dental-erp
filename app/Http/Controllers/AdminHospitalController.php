@@ -49,12 +49,21 @@ class AdminHospitalController extends Controller
         foreach (User::all() as $user) {
             $beginning =  strtotime(date('Y-m-d', strtotime('first day of this month')));
             $has = 0;//for check if user has checkin
+
+            $same = 0;
             foreach ($user->checkins->whereIn('state', [3,4])->where('created_at','>=', date('Y-m-d', $beginning)) as $checkin) {
                 foreach ($checkin->treatments as $treatment_user) {
                     if($treatment_user->treatment->category == 2)
                         $treatment_type_2 = 1;
                 }
                 $has = 1;
+                if ($checkin->user_id == $user->id){
+                    $same++;
+                }
+            }
+
+            if ($same > 1){
+                $count_again++;
             }
 
             if($has == 1) {
@@ -73,8 +82,6 @@ class AdminHospitalController extends Controller
 
                 if($date > $beginning) {
                     $count_first++;
-                } else {
-                    $count_again++;
                 }
 
                 $user_age = date_diff(date_create($user->birth_date), date_create('today'))->y;
@@ -90,6 +97,7 @@ class AdminHospitalController extends Controller
 
         }
         $start_date = $beginning;
+        $count_first -= $count_again;
         return view('admin.hospital', compact('count', 'count_male', 'count_female', 'count_first', 'count_again',
             'age_male', 'age_female', 'treatment_type_2_count', 'treatment_type_2_count_male', 'treatment_type_2_count_female',
             'treatment_type_2_count_first', 'treatment_type_2_count_again', 'start_date'));

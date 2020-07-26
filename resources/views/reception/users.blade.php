@@ -284,8 +284,7 @@
                                 <div class="row-crud-user">
                                     <div class="crud-ic tooltip-my" 
                                     data-toggle="modal" 
-                                            data-target="#checkinModal"
-                                            onclick="openCheckinModal({{$user->id}})">
+                                            data-target="#checkinModal">
                                         <img src="{{ asset('/img/icon/teethcare.png') }}">
                                         <div class="tooltiptext"                                           
                                             type="button">
@@ -319,16 +318,23 @@
 
 <!-- Modal -->
 <div class="modal fade" id="checkinModal" role="dialog">
-    <div class="modal-dialog raping-time">
+    <div class="modal-dialog">
 
       <!-- Modal content-->
-      <div id="checkinModalContent" class="modal-content fullwidth-my">
+      <div id="checkinModalContent" class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4>Цаг захиалах</h4>
+            <h4>Эмч сонгох</h4>
+          <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
         </div>
-        <div class="modal-body fullwidth-my">
-          <div id="timetable"></div>
+        <div class="modal-body">
+
+            @foreach(App\Doctor::all() as $doctor)
+            <div>{{$doctor->name}}</div>
+            <button onclick="submitCheckIn(event, {{$doctor->id}})"
+                class="btn btn-primary">
+                {{ $doctor->last_name.substr(0, 2).'.'.$doctor->name }}
+            </button>
+            @endforeach..
         </div>
       </div>
     </div>
@@ -341,7 +347,12 @@
 
 <form id="form-user-delete" action="#" method="delete" enctype="multipart/form-data">
     @csrf
-    <input id="input-user-id" type="hidden" name="id" value="">
+    <input id="delete-user-id" type="hidden" name="id" value="">
+</form>
+
+<form id="form-checkin">
+    <input type="hidden" name="checkin_user_id">
+    <input type="hidden" name="checkin_doctor_id">
 </form>
 
 
@@ -403,9 +414,6 @@
 
             table.buttons().container()
                 .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
-
-
-            $("#checkinModal").css("width", "90%");
             // $("#checkinModalContent").css('width', '100%');
         });
 
@@ -429,7 +437,7 @@
         */
     }   
 
-    let inputUserId = document.getElementById('input-user-id');
+    let inputUserId = document.getElementById('delete-user-id');
     function deleteUser(id){
 
         let data = document.getElementById(`userdatajson-${id}`).value;
@@ -466,15 +474,13 @@
         return true;
     });
 
-
-    function openCheckinModal(){
-        console.log('checkinmodal');
-        $("#checkinModal").modal();
+    function submitCheckIn(event, doctorId){
+        event.preventDefault();
+        let userId = document.getElementById('checkin_user_id');
+        console.log(doctorId);
+        $("#checkinModal").modal('hide');
     }
-
     </script>
-
-    <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
 
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>

@@ -330,8 +330,6 @@ const handleMouseMove = (event) => {
 		deltaY = 0;
 		prevY = y;
 
-		rowSpan -= 1;
-		height = `${rowSpan*4}vh`
 		let start = timeToFloat(appointment.start);
 		if (index>1 && nodes[index-1].appointment &&
 		 nodes[index-1].appointment.end < start){
@@ -346,9 +344,13 @@ const handleMouseMove = (event) => {
 		if (top){
 			if (start >= 9.5){
 				start -= 0.5;
+				end -= 0.5;
 			}
+		}else{
+			end -= 0.5;
+			rowSpan -= 1;
+			height = `${rowSpan*4}vh`
 		}
-		end -= 0.5;
 		
 		appointment.start = floatToTime(start);
 		appointment.end = floatToTime(end);
@@ -359,22 +361,23 @@ const handleMouseMove = (event) => {
 			return;
 		deltaY = 0;
 		prevY = y;
-		rowSpan += 1;
-		height = `${rowSpan*4}vh`
 
 		let start = timeToFloat(appointment.start);
 		let end = timeToFloat(appointment.end);
 		if (top){
-			rowSpan -= 1;
 			start += 0.5;
 			end += 0.5;
+			console.log('time end grow');
 			dispatch('forceRefresh');
 		}else{
 			end += 0.5;
+			rowSpan += 1;
+			height = `${rowSpan*4}vh`
 		}
-		
-		if (nodes[index+1].appointment && floatToTime(end) >= nodes[index+1].appointment.start){
-			return;
+		for (let i=index+1; i<nodes.length; i++){
+			if (nodes[i].appointment && floatToTime(end) >= nodes[index+1].appointment.start){
+				return;
+				}
 		}
 		appointment.start = floatToTime(start);
 		appointment.end = floatToTime(end);

@@ -30,7 +30,12 @@
 					appointment = appointments[j];
 					let start = timeToFloat(appointment.start);
 					let end = timeToFloat(appointment.end);
-					rowSpan = (end - start)/0.5;
+					let d = end - start;
+					if (d <= 0){
+						d = 0.5;
+						break;
+					}
+					rowSpan = d/0.5;
 					break;
 				}
 			}

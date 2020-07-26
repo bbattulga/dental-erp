@@ -70,7 +70,7 @@
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
 		<div>
-			<div>a - Эмчилгээнд орсон</div>
+			<div><rectangle width={10} height={10}/> - Эмчилгээнд орсон</div>
 			<div>b - Эмчилгээнд ороогүй</div>
 		</div>
 	</div> 

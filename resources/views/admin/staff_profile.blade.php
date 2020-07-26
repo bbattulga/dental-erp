@@ -23,6 +23,14 @@
                 <div class="card ">
                     <div class="card-body">
                         <div class="text-center">
+                            @if($user->profile_pic == '')
+                            Зураггүй
+                            @else
+                                <img width="200px" style="border-radius: 100%"
+                                     src="/img/staffs/{{$user->profile_pic}}">
+                            @endif
+                            <br>
+                            <br>
                             <p class="list-item-heading mb-1">
                             <h3>{{$user->name}} {{$user->last_name}}
                                 <a href="{{url('/admin/add_staff/edit/'.$user->id)}}"><i class="iconsmind-Pencil"></i></a></h3></p>
@@ -82,7 +90,8 @@
                                 </div>
                             @endif
 
-                            <form action="{{url('/admin/update_staff')}}" method="post" id="form">
+                            <form action="{{url('/admin/update_staff')}}" method="post" id="form" 
+                                    enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-row">
                                     <div class="col-md-12">
@@ -152,21 +161,24 @@
                                 <div class="form-group">
                                     <label for="inputAddress2">Үүрэг</label>
                                     <select class="form-control" name="role_id">
-                                        <option value="{{$user->role->role_id}}">
-                                            {{$update[$user->role->role_id]}}
+                                        <option value="{{$user->role_id}}" selected>
+                                            {{$user->role->name}}
                                         </option>
-                                        @for($i=0;$i<6;$i++)
-                                            @if($user->role->role_id != $i)
-                                                <option value="{{$i}}">
-                                                    {{$update[$i]}}
-                                                </option>
-                                            @endif
-                                        @endfor
+                                        @foreach(\App\Roles::all() as $role)
+                                            <option value="{{$role->id}}">
+                                                {{$role->name}}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Нууц үг</label>
                                     <input name="password" type="text" class="form-control" placeholder="Нууц үг солих">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Зураг</label>
+                                    <input type="file" name="image" accept="image/*" value="{{$user->photos->first()}}">
                                 </div>
 
                                 <label for="inputState">Тайлбар</label>

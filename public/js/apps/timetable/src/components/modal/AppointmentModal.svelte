@@ -58,6 +58,17 @@
 		if (name.length == 0 || (phone.length == 0))
 			return;
 
+		if (!isValidTime(start)){
+			validTimeStart = false;
+			return;
+		}
+		validTimeStart = true;
+
+		if (!isValidTime(end)){
+			validTimeEnd = false;
+			return
+		}
+		validTimeEnd = true;
 		// validatio end
 
 		// just visited or edited existing user cell

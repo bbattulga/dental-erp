@@ -74,9 +74,6 @@
 
 
             <div class="header-icons d-inline-block align-middle">
-               reception
-
-
                 <div class="position-relative d-inline-block">
                     <button class="header-icon btn btn-empty" type="button" id="notificationButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -95,16 +92,13 @@
                                 </a>
                             </div>
                         </div>
-
-                      
-
                     </div>
                 </div>
 
                 <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
                     <i class="simple-icon-size-fullscreen"></i>
                     <i class="simple-icon-size-actual"></i>
-                </button>reception
+                </button>
 
             </div>
 
@@ -114,7 +108,7 @@
                     aria-expanded="false">
                     <span class="name">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
                     <span>
-                        <img alt="Profile Picture" src="img/profile-pic-l.jpg" />
+                        <img alt="Profile Picture" src="/img/staffs/{{\Illuminate\Support\Facades\Auth::user()->profile_pic}}" />
                     </span>
                 </button>
 

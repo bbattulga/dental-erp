@@ -6,6 +6,7 @@ use App\CheckIn;
 use App\Shift;
 
 use App\User;
+use App\UserRole;
 use Illuminate\Http\Request;
 use App\Roles;
 
@@ -50,9 +51,16 @@ class AdminStaffController extends Controller
         $user->birth_date = $birth_date;
         $user->location = $request['location'];
         $user->description = $request['info'];
+
+        if ($image = $request->file(['image'])){
+            $image_name = ''.time().$image->getClientOriginalName();
+            $image->move('img/staffs', $image_name);
+            $user->photos()->create(['path'=>$image_name]);
+        }
         if(!empty($request['password']))
             $user->password = bcrypt($request['password']);
-        $role = $user->role;
+        $role = UserRole::where('role_id', $request['role_id'])->first();
+        $user->role_id = $request['role_id'];
         $role->role_id = $request['role_id'];
         $role->save();
         $user->save();

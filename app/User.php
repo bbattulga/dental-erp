@@ -50,6 +50,14 @@ class User extends Authenticatable
                     ->withPivot('state');
     }
 
+    public function getProfilePicAttribute(){
+        $lastpic = $this->photos()->orderBy('id', 'desc')->first();
+        if ($lastpic){
+            return $lastpic->path;
+        }
+        return '';
+    }
+
     public function photos(){
         return $this->morphMany('App\Photo', 'imageable');
     }

@@ -22,11 +22,11 @@
             <div class="card ">
                 <div class="card-body">
                     <div class="text-center">
-                        @if($user->photos->first() == '')
+                        @if($user->profile_pic == '')
                             Зураггүй
                         @else
                             <img width="200px" style="border-radius: 100%"
-                                 src="{{asset('/img/uploads/'.$user->photos->first()->path)}}">
+                                 src="/img/staffs/{{$user->profile_pic}}">
                         @endif
                         <br>
                         <br>

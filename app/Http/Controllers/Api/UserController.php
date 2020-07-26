@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Patient;
 
 
 class UserController extends Controller
@@ -47,10 +48,10 @@ class UserController extends Controller
 		return User::findOrFail($id)->delete();
 	}
 
-	public function query(Request $request){
+	public function queryPatient(Request $request){
 		$phone = $request['phone'];
         $name = $request['name'];
-        $results = User::where('phone_number', '=', $phone)
+        $results = Patient::where('phone_number', '=', $phone)
                     ->orWhere('name','=', $name)
                     ->get();
         return $results;

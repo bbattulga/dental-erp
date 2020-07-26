@@ -55,7 +55,7 @@ class AdminController extends Controller
         ]);
 
         if ($image = $request->file(['image'])){
-            $image_name = 'profile-pic-'.$user->id;
+            $image_name = ''.time().$image->getClientOriginalName();
             $image->move('img/staffs', $image_name);
             $user->photos()->create(['path'=>$image_name]);
         }
@@ -67,6 +67,7 @@ class AdminController extends Controller
     //---------------
     public function profile($id){
         $user = User::find($id);
+        $checkins = array();
         if($user->role_id == Roles::doctor()->id) {
             $shifts = Shift::with('checkins')
                     ->where('user_id', $user->id)

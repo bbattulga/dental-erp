@@ -28,8 +28,29 @@
 		dispatch('close');
 	}
 
-	const handleSubmit = (event) => {
+	const validRegister = (register) => {
+		if (register.length != 10){
+			return false;
+		}
 
+		if (register.charCodeAt(0) >= 'а' &&
+			register.charCodeAt(1) <= 'я'){
+			for (let i=2; i<register.length; i++){
+				if (
+					!(register.charAt(i) >= '0' &&
+					register.charAt(i) <= '9')){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	const handleSubmit = (event) => {
+		if (!validRegister(register)){
+			alert('Регистрийн дугаараа зөв оруулна уу')
+			return;
+		}
 		let user = {
 			name: name,
 			last_name: last_name,
@@ -83,7 +104,7 @@
 
       <p class="email">
       	<label>Цахим хаяг</label>
-        <input bind:value={email}  type="text" class="validate[required,custom[email]] feedback-input" />
+        <input bind:value={email}  type="email" class="validate[required,custom[email]] feedback-input" />
       </p>
 
       <p class="email">

@@ -87,7 +87,7 @@
 
 
 	const findSameUsers = (name, phone) => {
-		return axios.post('/api/users/query', {name, phone});
+		return axios.post('/api/patients/query', {name, phone});
 	}
 
 	// functions

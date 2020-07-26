@@ -117,7 +117,7 @@ Route::group(['middleware'=>'reception',
     Route::post('users/create', 'UserController@store');
     Route::put('users/update', 'UserController@update');
     Route::delete('users/delete/{id}', 'UserController@destroy');
-    Route::post('users/query', 'UserController@query');
+    Route::post('patients/query', 'UserController@queryPatient');
 
     Route::post('promotions', 'PromotionController@index');
     Route::get('promotions/{id}', 'PromotionController@show');

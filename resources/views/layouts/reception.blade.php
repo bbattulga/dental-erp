@@ -128,6 +128,7 @@
 
 
         </div>
+<<<<<<< HEAD
     </nav>
     <div class="sidebar">
         <div class="main-menu">
@@ -166,6 +167,46 @@
 
                 </ul>
             </div>
+=======
+    </div>
+</nav>
+<div class="sidebar">
+    <div class="main-menu">
+        <div class="scroll">
+            <ul class="list-unstyled" data-link="time">
+                <li id="receptionTime">
+                    <a href="{{url('/reception/time')}}">
+                        <i class="iconsmind-Alarm"></i> Цаг
+                    </a>
+                </li>
+                <li id="receptionPayment">
+                    <a href="{{url('/reception/payment')}}">
+                        <i class="iconsmind-Money-2"></i> Төлбөр
+                    </a>
+                </li>
+                <li id="receptionUser">
+                    <a href="{{url('/reception/user')}}">
+                        <i class="iconsmind-Administrator"></i> Үйлчлүүлэгч
+                    </a>
+                </li>
+                <li id="receptionShifts">
+                    <a href="{{url('/reception/shifts')}}">
+                        <i class="iconsmind-Calendar-3"></i> Ээлж
+                    </a>
+                </li>
+                <li id="receptionLease">
+                    <a href="{{url('/reception/lease')}}">
+                        <i class="iconsmind-Money-Bag"></i> Зээл
+                    </a>
+                </li>
+                <li id="receptionProduct">
+                    <a href="{{url('/reception/product')}}">
+                        <i class="iconsmind-Present"></i> Бараа
+                    </a>
+                </li>
+
+            </ul>
+>>>>>>> deca644e5332f29514aba1d8bf2dc1bb326b93ce
         </div>
 
 

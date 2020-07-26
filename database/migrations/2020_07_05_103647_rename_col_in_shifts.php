@@ -20,6 +20,8 @@ class RenameColInShifts extends Migration
             if(!Schema::hasColumn('shifts', 'shift_id'))
                 return;
 
+            $table->dropForeign('times_shift_id_foreign');
+            $table->dropIndex('times_shift_id_index');
             $table->renameColumn('shift_id', 'shift_type_id');
         });
     }

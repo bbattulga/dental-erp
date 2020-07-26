@@ -8,7 +8,8 @@
 	import {fly} from 'svelte/transition';
 	import {fade} from 'svelte/transition';
 
-	import {storeShifts, storeDoctors, storeTimes} from './stores/stores.js';
+	import {floatToTime} from './lib/datetime.js';
+	import {storeShifts, storeDoctors, storeTimes, currentAppointment, currentRegister} from './stores/stores.js';
 
 	const unsubscribeDoctors = storeDoctors.subscribe((old)=>null);
 	let LOADING = true;
@@ -39,9 +40,11 @@
 
 	let times = [];
 	const unsubscribeStoreTimes = storeTimes.subscribe((val)=>null);
-	for (let i=9; i<21; i++) {
-		let prefix = (i<10)? '0': '';
-		times.push(prefix+i+":00")
+	for (let i=9; i<21; i+=0.5) {
+		times.push({
+			float: i,
+			str: floatToTime(i)
+		});
 	};
 	storeTimes.update(old=>times);
 

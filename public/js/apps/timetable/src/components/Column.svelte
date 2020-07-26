@@ -2,12 +2,12 @@
 
 	import Cell from './Cell.svelte';
 	import {onMount} from 'svelte';
+	import {timeToFloat, floatToTime} from '../lib/datetime.js';
 
 	export let shift;
 	export let times = [];
 
 	export let colWidth = '10%';
-	$:console.log('column shift changed', shift);
 	let appointments = null;
 	$: appointments = shift.appointments;
 	
@@ -16,26 +16,20 @@
 	let min = 0;
 	let maxHour = 20;
 
-	const formatHour = (hour, min=0) => {
-		let hourPrefix = hour<10? '0': '';
-		let minPrefix = min<10? '0': '';
-		return `${hourPrefix}${hour}:${minPrefix}${min}`;
-	}
-
 	const calc = (times, appointments) => {
-
 		let cellsData = [];
 
 		for (let i=0; i<times.length; i++){
-
 			let time = times[i];
 			let rowSpan = 1;
 			let appointment = null;
 
 			for (let j=0; j<appointments.length; j++){
-				if (formatHour(appointments[j].start) == time){
+				if (timeToFloat(appointments[j].start) == time.float){
 					appointment = appointments[j];
-					rowSpan = appointment.end - appointment.start;
+					let start = timeToFloat(appointment.start);
+					let end = timeToFloat(appointment.end);
+					rowSpan = (end - start)/0.5;
 					break;
 				}
 			}
@@ -54,7 +48,6 @@
 	}
 
 	let cellsData = [];
-	console.log('calc appointment times');
 	$: cellsData = calc(times, appointments);
 	//console.log('calc appointment times done');
 
@@ -90,7 +83,7 @@
 
 </script>
 
-<div bind:this={container} class="day">
+<div bind:this={container} class="column-container">
 
 	<div class="doctor-profile">
 		{`doctor${shift.doctor.id}`}
@@ -111,7 +104,7 @@
 <style>
 
 
-	.day {
+	.column-container {
 		position: relative;
 	  width: 10%;
 	  height: 100%;
@@ -125,7 +118,9 @@
 		position: sticky;
 		top: 0;
 	  height: 10%;*/
-	  background-color: #1e2749;
+	  background-color: #0c2546;
+	  color: #e9f2fd;
+	  border: 1px solid #e0e0e0e0;
 	  font-size: 1.5vh;
 	  font-weight: 600;
 	  text-transform: uppercase;

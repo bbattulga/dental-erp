@@ -36,16 +36,16 @@
 
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
-	if ((shift_type == 1) && (time >= '15:00')){
+	if ((shift_type == 1) && (time >= 15)){
 		disabled = true;
-	}else if ((shift_type == 2) && (time < '15:00')){
+	}else if ((shift_type == 2) && (time < 15)){
 		disabled = true;
 	}
 
 	// conditional classes
 	let empty =  (appointment == null) && !disabled;
-	let notregistered = !empty && !disabled && (appointment.user_id == "0");
-	let registered = !empty && !disabled && (appointment.user_id != "0");
+	let notregistered = !empty && !disabled && (appointment.user_id == 0);
+	let registered = !empty && !disabled && (appointment.user_id != 0);
 
 	let match = null;
 	let nomatch = false;
@@ -214,7 +214,7 @@
 let container = null;
 onMount(()=>{
 	// container.style.width = width;
-	container.style.height = `${rowSpan*10}vh`;
+	container.style.height = `${rowSpan*4}vh`;
 });
 
 onDestroy(()=>{
@@ -232,11 +232,11 @@ class:disabled={disabled}
 
 		<!-- content -->
 		<div class="content"
-			class:notregistered={notregistered}
-			class:registered={registered}
-			class:match={match}
-			class:nomatch={nomatch}>
-			<label style="text-align: center;">{appointment.name}</label>
+			class:notregistered
+			class:registered
+			class:match
+			class:nomatch>
+			<label style="text-align: center;">{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}</label>
 			<label>{appointment.phone}</label>
 		</div>
 
@@ -247,7 +247,7 @@ class:disabled={disabled}
 				Эмчийн цаг биш
 				{:else}
 				Цаг захиалах <br />
-				<h8>{time}</h8>
+				<h8>{time.str}</h8>
 			{/if}
 		</div> <!-- content end -->
 	{/if}
@@ -279,14 +279,13 @@ class:disabled={disabled}
 	.cell-container {
 	  width: 100%;
 	  height: 100%;
-	  border: 1px solid #efefefef;
+	  border: 1px solid #e0e0e0e0;
 	  padding: 0;
 	  color: #333333;
 	  position: relative;
 	}
 	div:hover{
 		transition: 0.4s;
-		box-shadow: 1px 1px 3px black;
 	}
 
 	div:hover .content{
@@ -295,7 +294,9 @@ class:disabled={disabled}
 		color: #363636;
 		cursor: pointer;
 	}
-
+	div:hover .content *{
+		cursor: pointer;
+	}
 	.content{
 		width: 100%; 
 		height: 100%;
@@ -317,13 +318,13 @@ class:disabled={disabled}
 	}
 
 	.notregistered{
-		color: #e0e0e0e0;
-		background-color: #34343f;
+		color: white;
+		background-color: #eb2a7e;
 	}
 
 	.registered{
-		color: #efefefef;
-		background-color: #3f7d20;
+		color: #2a2a2a;
+		background-color: #7eeb2a;
 	}
 
 	.match{

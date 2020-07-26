@@ -2,21 +2,33 @@
 
 	import Cell from './Cell.svelte';
 	import Column from './Column.svelte';
+  import {cellHeightUnit} from '../stores/sizes.js';
+  import {onMount, onDestroy} from 'svelte';
+
 
 	// contains {doctor, appointments}
 	export let shifts = [];
 	export let times = [];
 
+  const unsubscribeHeightUnit = cellHeightUnit.subscribe((val)=>val);
+  onMount(()=>{
 
+  });
+
+  onDestroy(()=>{
+    unsubscribeHeightUnit();
+  })
 </script>
 
 
 <div class="container">
 
 	<div class="day time">
-		<div class="day_title">Цаг/Эмч</div>
+		<div class="corner-title height">Цаг/Эмч</div>
     {#each times as time, i}
-        <div class="hour  ">{time}</div>
+        {#if time.float-Math.floor(time.float) == 0}
+        <div class="hour  ">{time.str}</div>
+        {/if}
     {/each}
 	</div>
 
@@ -25,18 +37,11 @@
       colWidth={`${100/shifts.length}%`}
       {shift}
       {times}/>
-
 	{/each}
 </div>
 
 <style>
 	@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
-
-body {
-  font-family: 'Open Sans', sans-serif;
-  color: #efefef;
-  overflow: hidden;
-}
 
 .container{
   position: relative;
@@ -51,26 +56,34 @@ body {
 *{
   box-sizing: border-box;
 }
+
+.cell{
+
+}
+
 .hour {
-  height: 10vh;
-  color: #efefef;
-  background-color: #1E2749;
+  height: 8vh;
+  line-height: 8vh;
+  word-wrap: break-word;
+  background-color: #0c2546;
+  color: #e9f2fd;
   font-size: 12px;
   text-align: center;
-  line-height: 10vh;
   border: 1px solid white;
   width: 5vw;
 }
 
-.day {
-   position: sticky;
-   top: 0;
-  width: 10%;
-  height: 100%;
-  float: left;
-  background-color: #fff;
-  background-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);
-  background-size: 1px 20%;
+.corner-title {
+  background-color: #0c2546;
+  color: #e9f2fd;
+  margin-right: 1px;
+  margin-right: 1px;
+  font-size: 1.5vh;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 10vh;
+    word-wrap: wrap;
 }
 
 

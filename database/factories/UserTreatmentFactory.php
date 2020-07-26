@@ -9,12 +9,13 @@ use App\UserTreatments;
 use App\TreatmentSelections;
 use App\Treatment;
 use App\CheckIn;
+use App\Tooth;
 
 
 $factory->define(UserTreatments::class, function (Faker $faker) {
 
 	$treatments = Treatment::all();
-	$tooth_ids = range(11, 38);
+	$tooths = Tooth::fromCache();
 	$decay_value_ids = array();
 	$decays = $faker->numberBetween(1, 7);
 	for ($i=0; $i<$decays; $i++){
@@ -27,12 +28,13 @@ $factory->define(UserTreatments::class, function (Faker $faker) {
     $price = $faker->numberBetween($rand_treatment->price, $rand_treatment->limit);
     $price -= $price%10; // make end 0
     return [
-        //should be overriden
+        //must be overwritten
         'user_id' => 0,
         'checkin_id' => 0,
+
         'treatment_id' => $rand_treatment->id,
         'treatment_selection_id' => $rand_treatment_selection == null? 0: $rand_treatment_selection->id,
-        'tooth_id' => array_rand($tooth_ids),
+        'tooth_id' => $tooths->random()->id,
         'value' => array_rand($decay_value_ids),
         'price' => $price
     ];

@@ -8,12 +8,17 @@
 	import SameUsersModal from './SameUsersModal.svelte';
 	import CheckInModal from './CheckInModal.svelte';
 
+	import {floatToTime, timeToFloat} from '../../lib/datetime.js';
+
+
 	export let show = true;
 	export let shift;
 	export let doctor;
 	export let appointment;
 	export let time;
-	
+
+	let newUser = false;
+
 	onDestroy(()=>appointment=null);
 
 	let showAppointmentForm = true;
@@ -25,15 +30,17 @@
 	let empty = appointment == null;
 	let name = empty? '': appointment.name;
 	let phone = empty? '': appointment.phone;
-	let hours = empty? 1: appointment.end-appointment.start;
-	let start = parseInt(time.slice(0, time.indexOf(':')));
+	let hours = empty? 1: timeToFloat(appointment.end)-timeToFloat(appointment.start);
+	let start = time.str;
 	let end = 0;
 	let cancelCode = '';
 	
 	let sameUsers = [];	
 
 	// re-eval end on user change hours
-	$: {end = start+hours;}
+	$: {
+		end = floatToTime(time.float+hours);
+	}
 
 	function close(){
 		console.log('close');
@@ -130,7 +137,7 @@
 		let currentData = {
 			name, phone
 		}
-		dispatch('openRegister', currentData);
+		store();
 	}
 
 </script>
@@ -166,12 +173,16 @@
 
       <p class="email">
       	<label>Эмчилгээний цаг:   </label>
-        <label>{start}:00-{end}:00</label>
+        <label>{start}-{end}</label>
       </p>
 
       <p class="email">
       	<label>Эмчилгээний хугацаа(цагаар)</label>
-        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input" id="email" bind:value={hours} />
+        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input"
+        	step={0.5}
+        	 bind:value={hours} 
+        	 min={1}
+        	 max={12}/>
       </p>
       
       <div class="submit">

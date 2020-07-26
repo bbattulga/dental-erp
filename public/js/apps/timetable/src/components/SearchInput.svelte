@@ -7,7 +7,7 @@
 
 
 	const handleTyping = (event) => {
-		if (searchVal == ''){
+		if (searchVal.length == 0){
 			handleStopSearch(event);
 			return;
 		}
@@ -26,7 +26,6 @@
 <div class="search-container">
 	<input bind:value={searchVal} 
 			on:keyup={handleTyping}
-			on:blur={handleStopSearch}
 			class="search-input" type="text" placeholder="хайх">
 </div>
 

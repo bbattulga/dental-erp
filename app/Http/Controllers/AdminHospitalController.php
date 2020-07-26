@@ -41,6 +41,10 @@ class AdminHospitalController extends Controller
         $first_date = Date('Y-m-01');
         $last_date = Date('Y-m-t', strtotime(Date('Y-m-d')));
         
+        $shifts = Shift::with('checkins', 'checkins.user')
+                        ->whereBetween('date', [$first_date, $last_date])
+                        ->get();
+        
 
         foreach (User::all() as $user) {
             $beginning =  strtotime(date('Y-m-d', strtotime('first day of this month')));

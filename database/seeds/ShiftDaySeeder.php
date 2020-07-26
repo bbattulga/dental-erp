@@ -19,19 +19,16 @@ class ShiftDaySeeder extends Seeder
     public function run()
     {
         if (!isset(self::$date)){
-            $date = Date('Y-m-d');
+            self::$date = Date('Y-m-d');
         }
         
         $doctors = Doctor::all();
-
-    	// shifts of doctors where date=today
-    	$date = self::$date;
         
     	foreach($doctors as $doctor){
 			$shift = factory(Shift::class)
 				->create([
 					'user_id' => $doctor->id,
-					'date' => $date
+					'date' => self::$date
 				]);
     	}
     }

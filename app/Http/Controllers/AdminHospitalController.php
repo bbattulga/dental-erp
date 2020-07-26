@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Patient;
+use App\CheckIn;
 use Illuminate\Http\Request;
 
 class AdminHospitalController extends Controller
@@ -35,8 +37,11 @@ class AdminHospitalController extends Controller
         $treatment_type_2_count_first = 0;
         $treatment_type_2_count_again = 0;
 
+        $beginning =  strtotime(date('Y-m-d'  , strtotime('first day of this month')));
+        $month_last_date = Date('Y-m-t', Date('Y-m-d'));
 
-        foreach (User::all() as $user) {
+
+        foreach (Patient::with(['checkins'])->get() as $user) {
             $beginning =  strtotime(date('Y-m-d', strtotime('first day of this month')));
             $has = 0;//for check if user has checkin
             foreach ($user->checkins->whereIn('state', [3,4])->where('created_at','>=', date('Y-m-d', $beginning)) as $checkin) {
@@ -77,7 +82,6 @@ class AdminHospitalController extends Controller
                 }
                 $count++;
             }
-
         }
         $start_date = $beginning;
         return view('admin.hospital', compact('count', 'count_male', 'count_female', 'count_first', 'count_again',

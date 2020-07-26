@@ -24,10 +24,12 @@ class AppointmentDaySeeder extends Seeder
     {
         if (!isset(self::$date)){
             $date = Date('Y-m-d');
+        }else{
+            $date = self::$date;
         }
         
         // assign appointments to existing shifts
-        $shifts = Shift::where('date', '=', self::$date)->get();
+        $shifts = Shift::where('date', '=', $date)->get();
         $faker = Faker::create();
 
         // appointments interval
@@ -37,7 +39,7 @@ class AppointmentDaySeeder extends Seeder
         foreach($shifts as $shift){
 
         	// number of appointments to each shift
-        	$size = $faker->numberBetween($min, $max)  ;
+        	$size = $faker->numberBetween($min, $max);
 
         	$shift_type = $shift->shift_type_id;
 
@@ -81,10 +83,12 @@ class AppointmentDaySeeder extends Seeder
 	        			]);
         		}
 
-        		$deltatime = $faker->numberBetween(1, 4);
+        		$deltatime = $faker->numberBetween(2, 4);
                 // add random half time
                 $deltatime += $faker->numberBetween(0, 1)/2;
+                $gap = $faker->numberBetween(0, 2)/2;
         		$start = $end;
+                $start += $gap;
         		$end += $deltatime;
 
         		if ($end >= 21)

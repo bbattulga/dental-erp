@@ -1,18 +1,17 @@
 <script type="text/javascript">
 	
-	import {createEventDispatcher} from 'svelte';
+	import {createEventDispatcher, onDestroy} from 'svelte';
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
 
-	import {getContext} from 'svelte';
 
 	export let show = false;
 
 	// 2way binded.
 	// inital values can be set with props
-	export let name = null;
+	export let name = '';
 	export let last_name ="";
-	export let phone = null;
+	export let phone = '';
 	export let gender = 1;
 	export let email = "";
 	export let register = "";
@@ -20,11 +19,6 @@
 	export let info = "";
 	export let birthDate = "";
 
-	export let initialData = null;
-	$:{
-		name = (name==null&&initialData)? initialData.name: name;
-		phone = (phone==null&&initialData)? initialData.phone: phone;
-	}
 	// dispatch events
 	let dispatch = createEventDispatcher();
 

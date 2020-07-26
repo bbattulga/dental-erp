@@ -7,12 +7,7 @@ export const storeSearch = writable(null);
 
 export const storeUserBaseData = writable({});
 
-export const currentAppointment = writable({
-	show: false,
-	appointment: null
-});
-
 export const currentRegister = writable({
-	show: false,
-	appointment: null
+	name: '',
+	phone: ''
 });

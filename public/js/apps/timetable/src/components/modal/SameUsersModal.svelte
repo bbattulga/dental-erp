@@ -2,26 +2,34 @@
 		
 	import {createEventDispatcher} from 'svelte';
 	import {fade} from 'svelte/transition';
-	export let users;
-
+	import Modal from './Modal.svelte';
+	export let users = [];
+	export let show = false;
 	const dispatch = createEventDispatcher();
 
 	const handleChoose = (user) => {
 		user.phone = user.phone_number;
 		let detail = {user};
 		dispatch('submit', detail);
+		show = false;
 	}
 
 	const handleCancel = (event) => {
+		show = false;
 		dispatch('cancel');
 	}
 
 	const handleBack = (event) => {
 		users = [];
+		show = false;
 	}
 </script>
 
-<div transition:fade>
+<Modal 
+	bind:showModal={show}>
+<div class="form-div"
+	on:click|stopPropagation|preventDefault
+	transition:fade>
 	<h3>Үйлчлүүлэгч бүртгэлтэй байж магадгүй байна<br />Төстэй хаягууд:</h3>
 	<br />
 
@@ -66,13 +74,57 @@
 		</div>
 	{/each}
 
-	<footer>
-		<button class="btn-back" on:click|stopPropagation|preventDefault={handleBack}>Буцах</button>
-		<button class="btn-cancel" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
+	<footer class="footer">
+		<button class="btn-back btn btn-secondary" on:click|stopPropagation|preventDefault={handleBack}>Буцах</button>
+		<button class="btn-cancel btn" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
 	</footer>
 </div>
+</Modal>
 
 <style>
+
+
+.form-div {
+	background-color:white;
+	padding-left:35px;
+	padding-right:35px;
+	padding-top:35px;
+	padding-bottom:50px;
+	width: 50%;
+	top: 10%;
+	left: 50%;
+	max-height: 95%;
+	overflow: auto;
+	position: absolute;
+	transform: translate(-50%);
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+}
+
+@media (max-width: 700px){
+	.form-div{
+		width: 80%;
+	}
+}
+
+@media (max-width: 800px){
+	.form-div{
+		width: 80%;
+	}
+}
+
+@media (max-width: 900px){
+	.form-div{
+		width: 80%;
+	}
+}
+
+@media (max-width: 1000px){
+	.form-div{
+		width: 70%;
+	}
+}
+
 
 	*{
 		box-sizing: border-box;
@@ -116,7 +168,17 @@
 		transition: all 0.3s;
 	}
 
-	.btn-cancel{
+	.btn-back{
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		margin: 5px;
+	}
 
+	.btn-cancel{
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		margin: 5px;
 	}
 </style>

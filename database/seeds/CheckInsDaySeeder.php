@@ -27,13 +27,11 @@ class CheckInsDaySeeder extends Seeder
     public function run()
     {
         if (!isset(self::$date)){
-            $date = Date('Y-m-d');
+            self::$date = Date('Y-m-d');
         }
         
         $faker = Faker::create();
 
-        //$quantity - number of checkins for shifts of the date
-        $quantity = $faker->numberBetween(self::$min, self::$max);
         $date = self::$date;
 
         $shifts = Shift::with('appointments', 'appointments.user')
@@ -66,8 +64,8 @@ class CheckInsDaySeeder extends Seeder
                     
                     $treatment_again = $faker->numberBetween(1, 100);
                     if ($treatment_again <= self::$treatment_again_chance){
-                        $patients = Patient::all();
-                        $patient = $patients? $patients->random(): factory(Patient::class)->create();
+                        $patients = self::$patients? self::$patients:Patient::all();
+                        $patient = $patients->random();
                         factory(CheckIn::class)->create([
                             'shift_id' => $shift->id,
                             'user_id' => $patient->id

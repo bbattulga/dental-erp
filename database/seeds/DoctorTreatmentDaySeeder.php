@@ -27,6 +27,8 @@ class DoctorTreatmentDaySeeder extends Seeder
     {	
         if (!isset(self::$date)){
             $date = Date('Y-m-d');
+        }else{
+            $date = self::$date;
         }
         
     	$treatments_min = self::$treatments_min;

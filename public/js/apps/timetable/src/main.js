@@ -1,5 +1,4 @@
 import App from './App.svelte';
-import Calendar from './components/Calendar.svelte';
 
 const app = new App({
 	target: document.getElementById('timetable')

@@ -5,24 +5,32 @@
 	import {onMount, onDestroy} from 'svelte';
 	import {fade} from 'svelte/transition';
 	import {fly} from 'svelte/transition';
-	import {setContext} from 'svelte';
 	import Modal from './modal/Modal.svelte';
 	import axios from 'axios';
 
 	import AppointmentModal from './modal/AppointmentModal.svelte';
 	import RegisterModal from './modal/RegisterModal.svelte';
 	import CheckInModal from './modal/CheckInModal.svelte';
+	import SameUsersModal from './modal/SameUsersModal.svelte';
 	import {storeSearch, storeUserBaseData} from '../stores/stores.js';
+	import {floatToTime, timeToFloat} from '../lib/datetime.js';
 
+	import Resizable from './Resizable.svelte';
 
 	// dispatch events
 	let dispatch = createEventDispatcher();
 
+	export let index;
 	export let shift;
 	export let appointment;
+	export let nodes;
 	export let time;
 	export let rowSpan;
 	export let width;
+
+	let dragEnd = false;
+
+	let sameUsers = [];	
 
 	// this will be used when submitting checkin from list of registered users
 	let registeredAppointment = {
@@ -36,9 +44,9 @@
 
 	let disabled = false;
 	let shift_type = shift.shift_type_id;
-	if ((shift_type == 1) && (time >= 15)){
+	if ((shift_type == 1) && (time.float >= 15)){
 		disabled = true;
-	}else if ((shift_type == 2) && (time < 15)){
+	}else if ((shift_type == 2) && (time.float < 15)){
 		disabled = true;
 	}
 
@@ -75,30 +83,19 @@
 	let showRegisterModal = false;
 	let registerModalInitialData = null;
 	let showCheckInModal = false;
+	let showSameUsersModal = false;
 
-	let initialDataElem = document.getElementById('cell-user-data');
+
+	const findSameUsers = (name, phone) => {
+		return axios.post('/api/users/query', {name, phone});
+	}
 
 	// functions
 	const  handleClick = (event) => {
 		if (disabled){
 			return;
 		}
-		console.log('cell handle click');
-		console.log('inital data:');
-		console.log(initialDataElem);
-		if (initialDataElem){
-			let user = JSON.parse(initialDataElem.value);
-			console.log('parsed user');
-			console.log(user);
-			registeredAppointment.name = user.name;
-			registeredAppointment.phone = user.phone_number;
-			registeredAppointment.user = user;
-			registeredAppointment.user_id = user.id;
-			registeredAppointment = registeredAppointment;
-			showCheckInModal = true;
-		}else{
-			showAppointmentModal = true;
-		}
+		showAppointmentModal = true;
 	}
 
 	const handleSubmit = (event) => {
@@ -108,19 +105,20 @@
 		let appointment = event.detail.appointment;
 		appointment.time = appointment.start; // db constraint. fix later
 		let id = -1;
-		console.log('cell handling appointment');
+		console.log('cell appointment submitting');
 		console.log(appointment);
 		axios.post('/api/appointments/create', appointment)
 			.then(response=>{
 				id = response.data;
 				appointment.id = id;
 				empty = false;
-				notregistered = true;
 				console.log('cell successfully recorded');
 				dispatch('addAppointment', appointment);
 
-				if (!appointment.user_id)
+				if (!appointment.user_id){
+					notregistered = true;
 					return;
+				}
 
 				let checkin = {
 					user_id: appointment.user_id,
@@ -134,6 +132,31 @@
 				alert('Алдаа гарлаа');
 				console.log(err);
 			});
+	}
+
+	const handleSubmitUser = (event) => {
+		let detail = event.detail;
+		appointment.user = detail.user;
+		appointment.user_id = detail.user.id;
+		notregistered = false;
+		registered = true;
+		appointment = appointment;
+		let checkin = {
+					user_id: appointment.user_id,
+					shift_id: appointment.shift_id
+				};
+		axios.put('/api/appointments/update', appointment)
+			.then(response=>{
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>console.log('checkin created'))
+					.catch(err=>console.log(err));
+					})
+			.catch(err=>console.log(err));
+	}
+
+	const handleCancelSameUsers = (event) => {
+		sameUsers = [];
+		showRegisterModal = true;
 	}
 
 	const handleDelete = (event) => {
@@ -156,15 +179,44 @@
 		axios.post('/api/appointments/cancel', d).then(response=>{
 			count = response.data;
 			console.log(response);
+			if (!appointment.checkin)
+				return;
+			axios.delete(`/api/checkins/delete/${appointment.checkin.id}`)
+				.then(response=>console.log('checkin deleted'))
+				.catch(err=>console.log('could not delete checkin'));
+
 		}).catch(err=>console.log(err));
+
 		dispatch('deleteAppointment', appointment.id);
 	}
 
 	const handleRegisterModal = (event) => {
-		registerModalInitialData = event.detail;
+
 		showAppointmentModal = false;
 		showCheckInModal = false;
-		showRegisterModal = true;
+
+		let detail = event.detail;
+		let name = detail.name;
+		let phone = detail.phone;
+
+		console.log('query user');
+		console.log(name, phone);
+		findSameUsers(name, phone)
+			.then(response=>{
+				console.log('same users');
+				console.log(response.data);
+				if (response.data.length > 0){
+					sameUsers = response.data;
+					showRegisterModal = false;
+					showSameUsersModal = true;
+					return;
+				}
+				// new user
+				showRegisterModal = true;
+			})
+			.catch(err=>{
+				alert('Төстай хаягуудыг олоход алдаа гарлаа');
+			})
 	}
 
 	const handleRegister = (event) => {
@@ -190,6 +242,7 @@
 				console.log(user);
 				//user.id = response;
 				appointment.user_id = user.id;
+				appointment.user = user;
 				appointment.registered = '1';
 				registered = true;
 				axios.put('/api/appointments/update', {id: appointment.id, user_id: user.id});
@@ -201,7 +254,11 @@
 				console.log('sent checkin');
 				console.log('checkin');
 				axios.post('/api/checkins/create', checkin)
-					.then(response=>console.log('checkin created'))
+					.then(response=>{
+						appointment.checkin = response.data;
+						console.log('checkin created');
+						console.log(appointment.checkin);
+					})
 					.catch(err=>console.log(err));
 			})
 			.catch(err=>{
@@ -210,23 +267,172 @@
 			});
 	}
 
+	const handleChangeTime = (event) => {
+
+		let prevStart = appointment.start;
+		let prevEnd = appointment.end;
+
+		let start = event.detail.start;
+		let end = event.detail.end;
+
+		console.log('cell handle change time');
+		console.log(start, end);
+		// validation
+		for (let i=index+1; i<nodes.length; i++){
+			let next = nodes[i];
+			if (!next.appointment){
+				continue;
+			}
+			if(end > next.appointment.start){
+				let nextAppoitment = next.appointment;
+				alert('Өөр үйлчлүүлэгчийн цагтай давхцаж байна');
+				appointment.start = prevStart;
+				appointment.end = prevEnd;
+				return;
+			}
+		}
+
+		appointment.start = start;
+		appointment.end = end;
+		updateAppointment(appointment)
+			.then(response=>{
+				dispatch('forceRefresh');
+				let hours = timeToFloat(appointment.end)-timeToFloat(appointment.start);
+
+				height = `${hours*2*4}vh`;
+				container.style.height = height;
+			})
+			.catch(err=>{
+				alert('Алдаа гарлаа')
+				appointment.start = prevStart;
+				appointment.end = prevEnd;
+			})
+			.finally(()=>{
+				appointment=appointment;
+				console.log('finally');
+			})
+	}
+
+let deltaY = 0;
+let prevY = null;
+let y = null;
+let prevAppointment = null;
+let top = false;
+
+const handleMouseMove = (event) => {
+	if (!appointment)
+		return;
+	dragEnd = false;
+	y = event.clientY;
+	deltaY = prevY - event.clientY;
+	console.log(deltaY);
+	if (deltaY > 20){
+		deltaY = 0;
+		prevY = y;
+
+		rowSpan -= 1;
+		height = `${rowSpan*4}vh`
+		let start = timeToFloat(appointment.start);
+		if (index>1 && nodes[index-1].appointment &&
+		 nodes[index-1].appointment.end < start){
+			return;
+		}
+		let end = timeToFloat(appointment.end);
+
+		if (end - start <= 0.5){
+			handleStopResize(event);
+			return;
+		}
+		if (top){
+			if (start >= 9.5){
+				start -= 0.5;
+			}
+		}
+		end -= 0.5;
+		
+		appointment.start = floatToTime(start);
+		appointment.end = floatToTime(end);
+		container.style.height = height;
+		dispatch('forceRefresh');
+	}else if (deltaY < -24){
+		if (index+1 >= nodes.length)
+			return;
+		deltaY = 0;
+		prevY = y;
+		rowSpan += 1;
+		height = `${rowSpan*4}vh`
+
+		let start = timeToFloat(appointment.start);
+		let end = timeToFloat(appointment.end);
+		if (top){
+			rowSpan -= 1;
+			start += 0.5;
+			end += 0.5;
+			dispatch('forceRefresh');
+		}else{
+			end += 0.5;
+		}
+		
+		if (nodes[index+1].appointment && floatToTime(end) >= nodes[index+1].appointment.start){
+			return;
+		}
+		appointment.start = floatToTime(start);
+		appointment.end = floatToTime(end);
+		container.style.height = height;
+		dispatch('deleteAppointment', nodes[index+1].id);
+	}
+}
+
+const handleStopResize = (event) => {
+	dragEnd = true;
+	console.log('drag end')
+	window.removeEventListener('mousemove', handleMouseMove);
+	updateAppointment(appointment)
+		.catch(err=>{
+			appointment = prevAppointment;
+		})
+}
+
+const handleStartResize = (event) => {
+	console.log('start resize');
+	prevY = event.clientY;
+	prevAppointment = appointment;
+	window.addEventListener('mousemove', handleMouseMove);
+	window.addEventListener('mouseup', handleStopResize);
+}
+
+const handleStartResizeTop = (event) => {
+	top = true;
+	handleStartResize(event);
+}
+const handleStartResizeBottom = (event) => {
+	top = false;
+	handleStartResize(event);
+}
+const updateAppointment = (newappointment) => {
+	return axios.put('/api/appointments/update', newappointment);
+}
 
 let container = null;
+let height = null;
 onMount(()=>{
 	// container.style.width = width;
-	container.style.height = `${rowSpan*5}vh`;
+		height = `${rowSpan*4}vh`;
+		container.style.height = height;
 });
 
 onDestroy(()=>{
 	unsubscribeSearch();
 });
 
+
 </script>
 
+
 <div bind:this={container} 
-class:disabled={disabled}
+	class:disabled={disabled}
 	class="cell-container grey"
-	on:click={handleClick}>
+	on:click|stopPropagation|preventDefault={handleClick}>
 
 	{#if appointment != null}
 
@@ -236,15 +442,22 @@ class:disabled={disabled}
 			class:registered
 			class:match
 			class:nomatch>
-			<label style="text-align: center;">{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}</label>
-			<label>{appointment.phone}</label>
+
+			<div class="btn-resize-top" on:mousedown|preventDefault|stopPropagation={handleStartResizeTop}>
+			</div>
+			<div>
+				{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}
+			</div>
+			<div>{appointment.phone}</div>
+			<div class="btn-resize-btm" on:mousedown|preventDefault|stopPropagation={handleStartResizeBottom}>
+			</div>
 		</div>
 
 		<!-- appointment==null -->
 		{:else}
 		<div class="content empty">
 			{#if disabled}
-				Эмчийн цаг биш
+				Эмчийн ээлжийн цаг биш
 				{:else}
 				Цаг захиалах <br />
 				<h8>{time.str}</h8>
@@ -254,14 +467,19 @@ class:disabled={disabled}
 		<AppointmentModal
 			bind:show={showAppointmentModal}
 			on:submit={handleSubmit}
-			on:openRegister={handleRegisterModal}
+			on:register={handleRegisterModal}
 			on:delete={handleDelete}
+			on:changeTime={handleChangeTime}
+			start={appointment? appointment.start: null}
+			end={appointment? appointment.end: null}
 			{shift}
 			{time}
 			doctor={shift.doctor}
 			bind:appointment={appointment} />
+
 		<RegisterModal
-			initialData={registerModalInitialData}
+			name={appointment?appointment.name:''}
+			phone={appointment?appointment.phone:''}
 			bind:show={showRegisterModal} 
 			on:submit={handleRegister}/>
 
@@ -272,6 +490,12 @@ class:disabled={disabled}
 			{time}
 			bind:show={showCheckInModal}
 			on:submit={handleSubmit} />
+
+		<SameUsersModal 
+			bind:show={showSameUsersModal}
+  			on:submit={handleSubmitUser} 
+  			on:cancel={handleCancelSameUsers}
+  			bind:users={sameUsers} />
 </div>
 
 <style type="text/css">
@@ -284,20 +508,35 @@ class:disabled={disabled}
 	  color: #333333;
 	  position: relative;
 	}
+
+	.btn-resize-btm, .btn-resize-top{
+		position: absolute;
+		width: 100%;
+		height: 10%;
+		cursor: row-resize;
+	}
+	.btn-resize-top{
+		top: 0;
+	}
+	.btn-resize-btm{
+		bottom: 0;
+	}
+
 	div:hover{
 		transition: 0.4s;
 	}
 
 	div:hover .content{
 		transition: 0.4s;
-		background-color: #efefefef;
-		color: #363636;
+		/* background-color: #efefefef; */
+		/* color: #363636; */
+		filter: brightness(90%);
 		cursor: pointer;
 	}
-	div:hover .content *{
-		cursor: pointer;
-	}
+
 	.content{
+		position: relative;
+		font-size: 1.7vh;
 		width: 100%; 
 		height: 100%;
 		display: flex;
@@ -308,22 +547,22 @@ class:disabled={disabled}
 	}
 
 	.empty{
-		color: #bdc3c7;
-		background: #bdc3c7;
+		color: #efefefef;
+		background-color: #efefefef;
 	}
 
 	div:hover .empty{
 		color: #444444;
-		background-color: #e0e0e0e0;
+		background-color: #efefefef;
 	}
 
 	.notregistered{
-		color: #444444;
+		color: #333333;
 		background-color: #eb972a;
 	}
 
 	.registered{
-		color: white;
+		color: #e0e0e0;
 		background-color: #1670e6;
 	}
 
@@ -337,13 +576,12 @@ class:disabled={disabled}
 	}
 
 	.disabled .content{
-		color: #efefefef;
-		background-color: #efefefef;
+		color: #bdc3c7;
+		background-color: #bdc3c7;
 	}
 
 	.disabled:hover .empty{
-		color: #aaaaaa;
-		background-color: #efefefef;
+		color: #333333;
 		cursor: default;
 	}
 

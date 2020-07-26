@@ -5,11 +5,9 @@
 	import {fly} from 'svelte/transition';
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
-	import SameUsersModal from './SameUsersModal.svelte';
 	import CheckInModal from './CheckInModal.svelte';
 
-	import {floatToTime, timeToFloat} from '../../lib/datetime.js';
-
+	import {floatToTime, timeToFloat, isValidTime} from '../../lib/datetime.js';
 
 	export let show = true;
 	export let shift;
@@ -18,68 +16,60 @@
 	export let time;
 
 	let newUser = false;
+	let validTimeStart = true;
+	let validTimeEnd = true;
+
+
+	// dispatch events
+	const dispatch = createEventDispatcher();
 
 	onDestroy(()=>appointment=null);
 
 	let showAppointmentForm = true;
 	let showRegisterForm = false;
-	// dispatch events
-	let dispatch = createEventDispatcher();
 
 	// assign default values
 	let empty = appointment == null;
 	let name = empty? '': appointment.name;
 	let phone = empty? '': appointment.phone;
-	let hours = empty? 1: timeToFloat(appointment.end)-timeToFloat(appointment.start);
-	let start = time.str;
-	let end = 0;
+	let hours = 1;
+	export let start = '09:00';
+	export let end = '10:00';
+	hours = empty? 1: timeToFloat(appointment.end)-timeToFloat(appointment.start);
+ 	start = start==null? time.str: appointment.start;
+ 	end = 0;
+ 	// re-eval end on user change hours
+	end = floatToTime(time.float+hours);
+	let preStart = start;
+	let preEnd = end;
 	let cancelCode = '';
 	
-	let sameUsers = [];	
 
-	// re-eval end on user change hours
-	$: {
-		end = floatToTime(time.float+hours);
-	}
-
-	function close(){
+	const close = () => {
 		console.log('close');
 		show = false;
 		console.log(show);
 		dispatch('close');
 	}	
 
-	function findSameUsers(name, phone){
-		return axios.post('/api/users/query', {name, phone});
-	}
+	const handleSubmit = () => {
 
-	function handleSubmit(){
+		// validation
+		if (name.length == 0 || (phone.length == 0))
+			return;
+
+		// validatio end
 
 		// just visited or edited existing user cell
 		if (appointment!= null){
 			close();
 			return;
 		}
-
-		findSameUsers(name, phone)
-			.then(response=>{
-				let same = response.data;
-				console.log('same users', same);
-				if (same.length>0){
-					sameUsers = same;
-					return;
-				}
-				store();
-			})
-			.catch(err=>console.log(err));
-	}
-
-	function handleSubmitUser(event){
-		let detail = event.detail;
-		store(detail.user);
+		store();
 	}
 
 	const store = (user=null) => {
+
 		let _detail = {
 			appointment:{
 				shift_id: shift.id,
@@ -91,55 +81,50 @@
 				end
 			}
 		}
-
 		dispatch('submit', _detail);
-		// create new user
-		// if cell did not have user
-		
 		close();
 	}
 
-	function handleDelete(){
+	const handleDelete = () => {
 		//console.log('form trying to del ', appointment);
 		appointment.code = cancelCode;
 		dispatch('delete', appointment);
 	}
 
-	function toggleForm(){
+	const toggleForm = () => {
 		showAppointmentForm = !showAppointmentForm;
 		showRegisterForm = !showRegisterForm;
 	}
 
-	function handleRegister(){
-		findSameUsers(name, phone)
-			.then(response=>{
-				let same = response.data;
-				console.log('same users', same);
-				if (same.length>0){
-					sameUsers = same;
-					return;
-				}
-				close();
+	const handleRegister = () => {
 		let currentData = {
 			name,
 			phone
 		}
-		dispatch('openRegister', currentData);
-			})
-			.catch(err=>{
-				console.log(err);
-				alert('алдаа гарлаа')
-			});
+		dispatch('register', currentData);
 	}
 
-	const handleCancelSameUsers = (event) => {
-		sameUsers = [];
-		let currentData = {
-			name, phone
+	const handleChangeTime = () => {
+		let detail = {
+			start,
+			end
 		}
-		store();
+		dispatch('changeTime', detail);
 	}
 
+	const handleTimeInput = () => {
+		if (start.length < 5){
+			validTimeStart = false;
+		}else{
+			validTimeStart = true;
+		}
+
+		if (end.length < 5){
+			validTimeEnd = false;
+		}else{
+			validTimeEnd = true;
+		}
+	}
 </script>
 
 
@@ -153,18 +138,19 @@
   		on:click|preventDefault|stopPropagation={close}>
   		<img src="/js/apps/timetable/src/components/assets/close.png">
   	</div>
-  	{#if sameUsers.length == 0}
     <form class="form" id="form1">
       
       <h1 style="color: #444444;">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
       <p class="name">
       	<label>Үйлчлүүлэгчийн нэр</label>
-        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name"  />
+        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name"  
+        readonly="{appointment != null}"/>
       </p>
       
       <p class="email">
       	<label>Утас</label>
-        <input bind:value={phone} type="text" class="validate[required,custom[email]] feedback-input" id="email" placeholder="Утас" />
+        <input bind:value={phone} type="text" class="validate[required,custom[email]] feedback-input" id="email" placeholder="Утас" 
+        readonly="{appointment != null}"/>
       </p>
       <p class="email">
       	<label>Эмчийн нэр:   </label>
@@ -172,19 +158,14 @@
       </p>
 
       <p class="email">
-      	<label>Эмчилгээний цаг:   </label>
-        <label>{start}-{end}</label>
+      	<label>Эмчилгээний цаг:</label>
+      	<input class:invalidinput={!validTimeStart} on:keyup={handleTimeInput} bind:value={start}
+      			on:change={handleChangeTime}>
+      	-
+        <input class:invalidinput={!validTimeEnd} on:keyup={handleTimeInput} bind:value={end}
+        	on:change={handleChangeTime}>
       </p>
 
-      <p class="email">
-      	<label>Эмчилгээний хугацаа(цагаар)</label>
-        <input name="treatment-hours" type="number" class="validate[required,custom[email]] feedback-input"
-        	step={0.5}
-        	 bind:value={hours} 
-        	 min={1}
-        	 max={12}/>
-      </p>
-      
       <div class="submit">
 
       	{#if appointment == null}
@@ -205,13 +186,6 @@
         {/if}
       </div>
     </form>
-     <!-- found same users -->
-  {:else}
-  	<SameUsersModal 
-  			on:submit={handleSubmitUser} 
-  			on:cancel={handleCancelSameUsers}
-  			bind:users={sameUsers} />
-  {/if}
   </div>
 </Modal>
 
@@ -219,6 +193,15 @@
 
 
 <style type="text/css">
+
+.column{
+	display: flex;
+	flex-direction: column;
+}
+
+.invalidinput{
+	border: 1px solid red;
+}
 
 .btn-close{
 	width: 32px;

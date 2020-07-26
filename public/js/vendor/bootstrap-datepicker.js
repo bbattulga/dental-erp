@@ -597,9 +597,11 @@
 		setValue: function(){
 			let selectedDate = this.dates[0].toLocaleDateString('en-CA');
 			let elem = document.getElementById('input-date-selected');
-			elem.value = selectedDate;
-			let event = new Event('change');
-			elem.dispatchEvent(event);
+			if (elem){
+				elem.value = selectedDate;
+				let event = new Event('change');
+				elem.dispatchEvent(event);
+			}
 			var formatted = this.getFormattedDate();
 			this.inputField.val(formatted);
 			return this;
@@ -1184,6 +1186,11 @@
 			if (target.hasClass('today') && !target.hasClass('day')){
 				this.setViewMode(0);
 				this._setDate(UTCToday(), this.o.todayBtn === 'linked' ? null : 'view');
+				let elem = document.getElementById('input-date-selected');
+				if (elem){
+					elem.value = new Date().toLocaleDateString('en-CA');
+					elem.dispatchEvent(new Event('change'));
+				}
 			}
 
 			// Clicked on clear button
@@ -1732,8 +1739,8 @@
 			months: ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", 
 					"9-р сар", "10-р сар", "11-р сар", "12-р сар"],
 
-			monthsShort: ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", 
-					"9-р сар", "10-р сар", "11-р сар", "12-р сар"],
+			monthsShort: ["1-р", "2-р", "3-р", "4-р", "5-р", "6-р", "7-р", "8-р", 
+					"9-р", "10-р", "11-р", "12-р"],
 			today: "Today",
 			clear: "Clear",
 			titleFormat: "MM yyyy"
@@ -2036,8 +2043,6 @@
 		}
 	);
 	$(function(){
-		console.log('datepicker plugin');
-		console.log(datepickerPlugin);
 		datepickerPlugin.call($('[data-provide="datepicker-inline"]'));
 	});
 

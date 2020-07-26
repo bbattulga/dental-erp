@@ -77,7 +77,8 @@ class AdminController extends Controller
     }
     public function fire($id){
         $user=User::find($id);
-        $user->role->update(['state'=>0]);
+        UserRole::where('user_id', $user->id)
+                ->update(['state'=>0]);
         return redirect('/admin/add_staff/'.$id.'/profile');
     }
     //--------------

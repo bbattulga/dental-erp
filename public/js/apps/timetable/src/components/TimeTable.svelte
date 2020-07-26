@@ -32,6 +32,9 @@
     {/each}
 	</div>
 
+  {#if shifts.length == 0}
+    <div style="margin: 10px auto; color: black;">ээлж байхгүй байна</div>
+  {/if}
 	{#each shifts as shift (shift.id)}
 		<Column 
       colWidth={`${100/shifts.length}%`}
@@ -41,7 +44,6 @@
 </div>
 
 <style>
-	@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
 
 .container{
   position: relative;
@@ -62,12 +64,12 @@
 }
 
 .hour {
-  height: 10vh;
-  line-height: 10vh;
+  height: 8vh;
+  line-height: 8vh;
   word-wrap: break-word;
   background-color: #0c2546;
   color: #e9f2fd;
-  font-size: 12px;
+  font-size: 1.5vh;
   text-align: center;
   border: 1px solid white;
   width: 5vw;
@@ -82,7 +84,7 @@
     font-weight: 600;
     text-transform: uppercase;
     text-align: center;
-    line-height: 10vh;
+    line-height: 8vh;
     word-wrap: wrap;
 }
 

@@ -25,11 +25,8 @@ class DatabaseSeeder extends Seeder
         $date1 = Date('Y-m-d', strtotime('- 1 Days'));
 
         // patients for each doctor a day
-        $min_users = 5;
-        $max_users = 15;
-
-        // [0;2] will ba aded for min_users and max_users
-        $delta_users = 2;
+        $min_users = 4;
+        $max_users = 8;
 
         $this->call(Refresh::class);
         while ($date1 <= $date2){
@@ -48,6 +45,7 @@ class DatabaseSeeder extends Seeder
             DoctorTreatmentDaySeeder::$date = $date1;
             $this->call(DoctorTreatmentDaySeeder::class);
 
+            LeaseDaySeeder::$lease_chance = 8;
             LeaseDaySeeder::$date = $date1;
             $this->call(LeaseDaySeeder::class);
 

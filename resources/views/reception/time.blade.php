@@ -67,7 +67,6 @@
             <div class="p-4">
                 <div class="scroll">
                     <div class="card-body">
-                        <h5 class="mb-4">Date Picker Embeded</h5>
                         <div class="form-group">
                          <div class="date-inline">
                         </div>

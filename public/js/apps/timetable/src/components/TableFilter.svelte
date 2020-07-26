@@ -69,7 +69,11 @@
 		<SearchInput 
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
-	</div>
+		<div>
+			<div>a - Эмчилгээнд орсон</div>
+			<div>b - Эмчилгээнд ороогүй</div>
+		</div>
+	</div> 
 
 	<TimeTable
 		{shifts}

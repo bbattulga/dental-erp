@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
 	import Cell from './Cell.svelte';
+	import Cell2 from './Cell2.svelte';
 	import {onMount} from 'svelte';
 	import {timeToFloat, floatToTime} from '../lib/datetime.js';
 
@@ -8,7 +9,7 @@
 	export let times = [];
 
 	export let colWidth = '10%';
-	let appointments = null;
+	let appointments = [];
 	$: appointments = shift.appointments;
 	
 	let step = 15;
@@ -35,6 +36,7 @@
 			}
 			// put cell data that will be reported back
 			let cellData = {
+				id: appointment? appointment.id:{},
 				shift,
 				time,
 				rowSpan,
@@ -51,10 +53,6 @@
 	$: cellsData = calc(times, appointments);
 	//console.log('calc appointment times done');
 
-	function handleSubmit(event){
-
-	}
-
 		const handleCellClick = (event) => {
 		console.log('row handle click');
 	}
@@ -62,7 +60,8 @@
 	const addAppointment = (event) => {
 		let appointment = event.detail;
 		console.log('adding new appointment ', appointment);
-		appointments = [...appointments, appointment];
+		if (appointment)
+			appointments = [...appointments, appointment];
 		cellsData = calc(times, appointments);
 	}
 
@@ -70,16 +69,15 @@
 		appointments = appointments.filter((a)=>a.id!=event.detail);
 	}
 
+	const refresh = (event) => {
+		console.log('refresh');
+		cellsData = calc(times, appointments);
+	}
+
 	let container = null;
 	onMount(()=>{	
 		container.style.width = colWidth;
 	});
-
-	function generateId(appointment){
-		if (appointment)
-			return appointment.id;
-		return Math.random();
-	}
 
 </script>
 
@@ -89,11 +87,14 @@
 		{`doctor${shift.doctor.id}`}
 	</div>
 
-	{#each cellsData as cellData (generateId(cellData.appointment))}
+	{#each cellsData as cellData, i (cellData.id)}
 		<Cell
+			index={i}
 			on:addAppointment={addAppointment}
 			on:deleteAppointment={deleteAppointment}
+			on:forceRefresh={refresh}
 			appointment={cellData.appointment}
+			nodes={cellsData}
 			width={colWidth}
 			rowSpan={cellData.rowSpan}
 			time={cellData.time}
@@ -125,8 +126,8 @@
 	  font-weight: 600;
 	  text-transform: uppercase;
 	  text-align: center;
-	  line-height: 10vh;
-	  height: 10vh;
+	  line-height: 8vh;
+	  height: 8vh;
 	  word-wrap: wrap;
 	}
 

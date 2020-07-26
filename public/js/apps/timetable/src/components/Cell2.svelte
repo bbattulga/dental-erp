@@ -1,0 +1,591 @@
+
+<script>
+
+	import {createEventDispatcher} from 'svelte';
+	import {onMount, onDestroy} from 'svelte';
+	import {fade} from 'svelte/transition';
+	import {fly} from 'svelte/transition';
+	import Modal from './modal/Modal.svelte';
+	import axios from 'axios';
+
+	import AppointmentModal from './modal/AppointmentModal.svelte';
+	import RegisterModal from './modal/RegisterModal.svelte';
+	import CheckInModal from './modal/CheckInModal.svelte';
+	import SameUsersModal from './modal/SameUsersModal.svelte';
+	import {storeSearch, storeUserBaseData} from '../stores/stores.js';
+	import {floatToTime, timeToFloat} from '../lib/datetime.js';
+
+	import Resizable from './Resizable.svelte';
+
+	// dispatch events
+	let dispatch = createEventDispatcher();
+
+	export let index;
+	export let shift;
+	export let appointment;
+	export let nodes;
+	export let time;
+	export let rowSpan;
+	export let width;
+
+	let sameUsers = [];	
+
+	// this will be used when submitting checkin from list of registered users
+	let registeredAppointment = {
+		shift_id: shift.id,
+		name: '',
+		phone: '',
+		start: !appointment? '':appointment.start,
+		end: !appointment? '':appointment.end,
+		time
+	}
+
+	let disabled = false;
+	let shift_type = shift.shift_type_id;
+	if ((shift_type == 1) && (time.float >= 15)){
+		disabled = true;
+	}else if ((shift_type == 2) && (time.float < 15)){
+		disabled = true;
+	}
+
+	// conditional classes
+	let empty =  (appointment == null) && !disabled;
+	let notregistered = !empty && !disabled && (appointment.user_id == 0);
+	let registered = !empty && !disabled && (appointment.user_id != 0);
+
+	let match = null;
+	let nomatch = false;
+	let keyword = null;
+	const unsubscribeSearch = storeSearch.subscribe(val=>keyword=val);
+	$:{
+
+		if (keyword == null){
+			match = false;
+			nomatch = false;
+		}
+		else if (appointment){
+
+			let regex = new RegExp(keyword, 'i');
+			if (regex.exec(appointment.name) || regex.exec(appointment.phone)){
+				match = true;
+				nomatch = false;
+			}else{
+				match = false;
+				nomatch = true;
+			}
+		}
+	}
+
+	// flags
+	let showAppointmentModal = false;
+	let showRegisterModal = false;
+	let registerModalInitialData = null;
+	let showCheckInModal = false;
+	let showSameUsersModal = false;
+
+
+	const findSameUsers = (name, phone) => {
+		return axios.post('/api/users/query', {name, phone});
+	}
+
+	// functions
+	const  handleClick = (event) => {
+		return;
+		if (disabled){
+			return;
+		}
+		showAppointmentModal = true;
+	}
+
+	const handleSubmit = (event) => {
+		console.log('cell handle submit');
+		console.log(event.detail);
+
+		let appointment = event.detail.appointment;
+		appointment.time = appointment.start; // db constraint. fix later
+		let id = -1;
+		console.log('cell appointment submitting');
+		console.log(appointment);
+		axios.post('/api/appointments/create', appointment)
+			.then(response=>{
+				id = response.data;
+				appointment.id = id;
+				empty = false;
+				notregistered = true;
+				console.log('cell successfully recorded');
+				dispatch('addAppointment', appointment);
+
+				if (!appointment.user_id)
+					return;
+
+				let checkin = {
+					user_id: appointment.user_id,
+					shift_id: appointment.shift_id
+				};
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>console.log('checkin created'))
+					.catch(err=>console.log(err));
+			})
+			.catch(err=>{
+				alert('Алдаа гарлаа');
+				console.log(err);
+			});
+	}
+
+	const handleSubmitUser = (event) => {
+		let detail = event.detail;
+		store(detail.user);
+	}
+
+	const handleCancelSameUsers = (event) => {
+		sameUsers = [];
+		showRegisterModal = true;
+	}
+
+	const handleDelete = (event) => {
+		let appointment = event.detail;
+		if (appointment.code != '1111'){
+			alert('Код буруу байна');
+			return;
+		}
+
+		let count = 0;
+		console.log('cell got appointment ', appointment);
+		let d = {
+			appointment_id: appointment.id,
+			shift_id: appointment.shift_id,
+			user_id: appointment.user_id,
+			code: appointment.code,
+			description: 'test'
+		}
+		console.log('sent like ', d);
+		axios.post('/api/appointments/cancel', d).then(response=>{
+			count = response.data;
+			console.log(response);
+			axios.delete(`/api/checkins/delete/${appointment.checkin.id}`)
+				.then(response=>console.log('checkin deleted'))
+				.catch(err=>console.log('could not delete checkin'));
+
+		}).catch(err=>console.log(err));
+
+		dispatch('deleteAppointment', appointment.id);
+	}
+
+	const handleRegisterModal = (event) => {
+
+		showAppointmentModal = false;
+		showCheckInModal = false;
+
+		let detail = event.detail;
+		let name = detail.name;
+		let phone = detail.phone;
+
+		console.log('query user');
+		console.log(name, phone);
+		findSameUsers(name, phone)
+			.then(response=>{
+				console.log('same users');
+				console.log(response.data);
+				if (response.data.length > 0){
+					sameUsers = response.data;
+					showRegisterModal = false;
+					showSameUsersModal = true;
+					return;
+				}
+				// new user
+				showRegisterModal = true;
+			})
+			.catch(err=>{
+				alert('Төстай хаягуудыг олоход алдаа гарлаа');
+			})
+	}
+
+	const handleRegister = (event) => {
+		console.log('cell handle register');
+		let user = event.detail.user;
+	/*	let dummy = {
+			last_name: 'dummylastname',
+	         name: 'dummyname',
+	         sex: 1,
+	         register: 'ИР89382716',
+	         phone_number: '89382716',
+	         email: 'joonjiinaze@mail.com',
+	         birth_date: '2000-02-02',
+	         location: 'zaisan',
+	         info: 'nodescription'
+		} */
+		user.appointment_id = appointment.id;
+		console.log('sent like ', user);
+		axios.post('/api/users/create', user)
+			.then(response=>{
+				let user = response.data;
+				console.log('created user');
+				console.log(user);
+				//user.id = response;
+				appointment.user_id = user.id;
+				appointment.user = user;
+				appointment.registered = '1';
+				registered = true;
+				axios.put('/api/appointments/update', {id: appointment.id, user_id: user.id});
+
+				let checkin = {
+					user_id: user.id,
+					shift_id: appointment.shift_id
+				};
+				console.log('sent checkin');
+				console.log('checkin');
+				axios.post('/api/checkins/create', checkin)
+					.then(response=>{
+						appointment.checkin = response.data;
+						console.log('checkin created');
+						console.log(appointment.checkin);
+					})
+					.catch(err=>console.log(err));
+			})
+			.catch(err=>{
+				alert('Алдаа гарлаа');
+				console.log(err);
+			});
+	}
+
+	const handleChangeTime = (event) => {
+
+		let start = event.detail.start;
+		let end = event.detail.end;
+		console.log('cell handle change time');
+		console.log(start, end);
+		// validation
+		for (let i=index+1; i<nodes.length; i++){
+			let next = nodes[i];
+			if (!next.appointment){
+				continue;
+			}
+			if(end > next.appointment.start){
+				let nextAppoitment = next.appointment;
+				alert('exceeds next one\'s time');
+				console.log(nextAppoitment.name, nextAppoitment.start, nextAppoitment.end);
+				return;
+			}
+		}
+
+		// valid change
+		dispatch('changeTime', {start, end});
+	}
+
+let deltaY = 0;
+let prevY = null;
+let y = null;
+let prevAppointment = null;
+
+const handleMouseMove = (event) => {
+	y = event.clientY;
+	deltaY = prevY - event.clientY;
+	console.log(deltaY);
+	if (deltaY > 24){
+		if (index-1 < 0)
+			return;
+
+		deltaY = 0;
+		prevY = y;
+		rowSpan -= 1;
+		height = `${rowSpan*4}vh`
+		let end = timeToFloat(appointment.end);
+		end -= 0.5;
+		appointment.end = floatToTime(end);
+		container.style.height = height;
+		dispatch('forceRefresh');
+	}else if (deltaY < -24){
+		if (index+1 >= nodes.length)
+			return;
+		deltaY = 0;
+		prevY = y;
+		rowSpan += 1;
+		height = `${rowSpan*4}vh`
+		let end = timeToFloat(appointment.end);
+		end += 0.5;
+		if (nodes[index+1].appointment && floatToTime(end) >= nodes[index+1].appointment.start){
+			return;
+		}
+		appointment.end = floatToTime(end);
+		container.style.height = height;
+
+		dispatch('deleteAppointment', nodes[index+1].id);
+	}
+}
+
+const handleChangeStart = (event) => {
+	let detail = event.detail;
+	let deltaY = detail.deltaY;
+
+	let start = appointment.start;
+	let end = appointment.end;
+
+	let time = null;
+	if (detail.top){
+		time = appointment.start;
+	}else{
+		time = appointment.end;
+	}
+
+	if (detail.up){
+		rowSpan -= 1;
+		time -= 0.5;
+		dispatch('forceRefresh');
+	}else{
+		rowSpan += 1;
+		time += 0.5;
+		dispatch('deleteAppointment', nodes[index+1].id);
+	}
+
+	if (detail.top){
+		appointment.start = time;
+	}else{
+		appointment.end = time;
+	}
+
+	height = `${rowSpan*4}vh`
+	appointment.start = floatToTime(start);
+	appointment.end = floatToTime(end);
+	container.style.height = height;
+}
+
+const rmPx = (size) =>{
+	return size.slice(0, size.length-2);
+}
+
+let lastHeight = null;
+let deltaHeight = null;
+const handleResize = (event) => {
+	lastHeight = event.detail.height;
+	container.style.height = event.detail.height;
+}
+
+const updateAppointment = (newappointment) => {
+	return axios.put('/api/appointments/update', newappointment);
+}
+
+let container = null;
+let height = null;
+onMount(()=>{
+		height = `${rowSpan*4}vh`;
+		container.style.height = height;
+});
+
+onDestroy(()=>{
+	unsubscribeSearch();
+});
+
+
+</script>
+
+
+<div bind:this={container} 
+	class:disabled={disabled}
+	class="cell-container grey"
+	on:click={handleClick}>
+
+	{#if appointment != null}
+
+		<!-- content -->
+		<div class="content"
+			class:notregistered
+			class:registered
+			class:match
+			class:nomatch>
+
+			<Resizable
+				bind:width={width}
+				bind:height={height}
+				on:resize={handleResize}
+				threshold={24}>
+				content
+			</Resizable>
+			<!--
+			<div class="btn-resize-top" on:mousedown|stopPropagation={handleStartResize}>
+			</div>
+			<div>
+				{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}
+			</div>
+			<div>{appointment.phone}</div>
+			<div class="btn-resize-btm" on:mousedown|stopPropagation={handleStartResize}>
+			</div>-->
+		</div>
+
+		<!-- appointment==null -->
+		{:else}
+		<div class="content empty">
+			{#if disabled}
+				Эмчийн ээлжийн цаг биш
+				{:else}
+				Цаг захиалах <br />
+				<h8>{time.str}</h8>
+			{/if}
+		</div> <!-- content end -->
+	{/if}
+		<AppointmentModal
+			bind:show={showAppointmentModal}
+			on:submit={handleSubmit}
+			on:register={handleRegisterModal}
+			on:delete={handleDelete}
+			on:changeTime={handleChangeTime}
+			{shift}
+			{time}
+			doctor={shift.doctor}
+			bind:appointment={appointment} />
+
+		<RegisterModal
+			name={appointment?appointment.name:''}
+			phone={appointment?appointment.phone:''}
+			bind:show={showRegisterModal} 
+			on:submit={handleRegister}/>
+
+		<CheckInModal
+			on:submit={handleSubmit}
+			{shift}
+			appointment={registeredAppointment}
+			{time}
+			bind:show={showCheckInModal}
+			on:submit={handleSubmit} />
+
+		<SameUsersModal 
+			bind:show={showSameUsersModal}
+  			on:submit={handleSubmitUser} 
+  			on:cancel={handleCancelSameUsers}
+  			bind:users={sameUsers} />
+</div>
+
+<style type="text/css">
+
+	.cell-container {
+	  width: 100%;
+	  height: 100%;
+	  border: 1px solid #e0e0e0e0;
+	  padding: 0;
+	  color: #333333;
+	  position: relative;
+	}
+
+	.btn-resize-btm, .btn-resize-top{
+		position: absolute;
+		width: 100%;
+		height: 2vh;
+		cursor: row-resize;
+	}
+	.btn-resize-top{
+		top: 0;
+	}
+	.btn-resize-btm{
+		bottom: 0;
+	}
+
+	div:hover{
+		transition: 0.4s;
+	}
+
+	div:hover .content{
+		transition: 0.4s;
+		/* background-color: #efefefef; */
+		/* color: #363636; */
+		filter: brightness(90%);
+		cursor: pointer;
+	}
+
+	.content{
+		position: relative;
+		font-size: 1.7vh;
+		width: 100%; 
+		height: 100%;
+		display: flex;
+		flex-flow: column wrap;
+		justify-content: center;
+		align-items: center;
+		color: #332222;
+	}
+
+	.empty{
+		color: #efefefef;
+		background-color: #efefefef;
+	}
+
+	div:hover .empty{
+		color: #444444;
+		background-color: #efefefef;
+	}
+
+	.notregistered{
+		color: #333333;
+		background-color: #eb972a;
+	}
+
+	.registered{
+		color: #e0e0e0;
+		background-color: #1670e6;
+	}
+
+	.match{
+
+	}
+
+	.nomatch{
+		background-color: rgba(0, 0, 0, 0.5);
+		color: #444444;
+	}
+
+	.disabled .content{
+		color: #bdc3c7;
+		background-color: #bdc3c7;
+	}
+
+	.disabled:hover .empty{
+		color: #333333;
+		cursor: default;
+	}
+
+
+	.class.short { height: 7.5vh; line-height: 7.5vh; } /* 45min class */
+	.class.b15 { /* margin-top: 2.5vh;  */} /* after 15 min break */
+	.class.b45 { /* margin-top: 7.5vh;  */} /* after 45 min break */
+	.class.b90 { /* margin-top: 15vh;  */} /* after 2x45 min break */
+	.class.b135 { /* margin-top: 22.5vh ;*/ } /* after 3x45 min break */
+
+	.green { background-color: #2ecc71; }
+	.turquoise { background-color: #1abc9c; }
+	.navy { background-color: #34495e; }
+	.blue { background-color: #3498db; }
+	.purple { background-color: #9b59b6; }
+	.grey { background-color: #bdc3c7; color: #202020; }
+	.gray { background-color: #7f8c8d; }
+	.red { background-color: #e74c3c; }
+	.orange { background-color: #f39c12; }
+	.yellow { background-color: #f1c40f; color: #303030; }
+
+	@keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Firefox < 16 */
+	@-moz-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Safari, Chrome and Opera > 12.1 */
+	@-webkit-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Internet Explorer */
+	@-ms-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+	/* Opera < 12.1 */
+	@-o-keyframes fadein {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+
+</style>

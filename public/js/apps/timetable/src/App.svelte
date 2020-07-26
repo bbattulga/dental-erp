@@ -9,7 +9,7 @@
 	import {fade} from 'svelte/transition';
 
 	import {floatToTime} from './lib/datetime.js';
-	import {storeShifts, storeDoctors, storeTimes, currentAppointment, currentRegister} from './stores/stores.js';
+	import {storeShifts, storeDoctors, storeTimes, currentRegister} from './stores/stores.js';
 
 	const unsubscribeDoctors = storeDoctors.subscribe((old)=>null);
 	let LOADING = true;
@@ -17,7 +17,6 @@
 	// /api/shift -shifts of day
 	// /api/shifts - all shifts
 	// /api/shift_interval - shift interval like 2020-07-01-2020-07-01
-	// shift interval should specify staff with id. else things will get messy.
 
 	const unsubscribeShifts = storeShifts.subscribe(val=>[]);
 	// intial data
@@ -52,9 +51,11 @@
 		return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 	}
 
+	let selectedDate = new Date().toLocaleDateString('en-CA');
 	const handleSelectDate = (event) => {
 		let detail = event.detail;
 		let date = detail.date;
+		selectedDate = date;
 		let doctor = detail.doctor;
 
 		console.log('request detail', detail);
@@ -94,33 +95,14 @@
 	}
 </script>
 <div 
-	class="main-container"
-	class:background={fullscreen} on:click|self={()=>fullscreen=!fullscreen}>
-
+	class="main-container">
 	<div 
+		transition:fade
 		class:hidden={!LOADING}
 		class="loading-container">
 		<img src="/js/apps/timetable/src/components/assets/loading-200-200-grey.gif" alt="loading">
 	</div>
-
-	<!--
-	{#if fullscreen}
-	<div class="btn-close-fullsreen" 
-		on:hover={()=>console.log('onhover')}
-		on:click={()=>fullscreen=!fullscreen}>
-		<img src="/js/apps/timetable/src/components/assets/close-red-512.png" alt="close">
-	</div>
-	{/if}
-	
-	
-	{#if !fullscreen}
-	<div class="btn-fullscreen" on:click={handleFullscreen}>
-		<img src="/js/apps/timetable/src/components/assets/fullscreen-100218.png" alt="close">
-	</div>
-	{/if}
-	-->
-	<div
-		class:fcenter={fullscreen}>
+	<div>
 		<TableFilter
 			on:selectDate={handleSelectDate}/>
 	</div>
@@ -144,7 +126,7 @@
 	.loading-container{
 		width: 200px;
 		height: 200px;
-		position: absolute;
+		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
@@ -200,69 +182,5 @@
 	@-o-keyframes fadein {
 		from { opacity: 0; }
 		to   { opacity: 1; }
-	}
-	.fcenter{
-		position: fixed;
-		width: 95vw;
-		height: 95vh;
-		background: white;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		margin: 10px auto;
-		display: flex;
-		overflow: auto;
-	}
-
-	.btn-fullscreen{
-		z-index: 1000;	
-		display: block; 
-		width: 32px;
-		height: 32px;
-		margin: 10px;
-		position:absolute; 
-		top: 0; right: 0;
-
-		cursor: pointer;
-	}
-
-	.btn-close-fullsreen{
-		z-index:1000000;
-		width: 32px;
-		height: 32px;
-		position: fixed;
-		top: 10px;
-		right: 10px;
-		cursor: pointer;
-	}
-
-	.btn-close-fullsreen > img{
-		max-width: 100%;
-		height: auto;
-	}
-
-	.btn-fullscreen > img{
-		max-width: 100%;
-		height: auto;
-	}
-
-	.background{
-		z-index: 100000;
-		top: 0;
-		left: 0;
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5	);
-
-		-webkit-animation: fadein 0.3s; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: fadein 0.3s; /* Firefox < 16 */
-        -ms-animation: fadein 0.3s; /* Internet Explorer */
-         -o-animation: fadein 0.3s; /* Opera < 12.1 */
-            animation: fadein 0.3s;
-	}
-
-	.row{
-		display: flex;
 	}
 </style>

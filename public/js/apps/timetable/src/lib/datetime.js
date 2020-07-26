@@ -25,3 +25,26 @@ export const timeToFloat = (timeStr) => {
 	min /= 60;
 	return hour+min;
 }
+
+export const isValidTime = (timeStr) => {
+	if (timeStr.length != 5){
+		return false;
+	}
+	let colon =  -1;
+	// contains only digits or : ?
+	for (let i=0; i<timeStr.length; i++){
+		let c = timeStr.charAt(i);
+		if (c == ':'){
+			colon = i;
+		}
+		if (!(c>='0' || (c<='9')))
+			return false;
+	}
+	if (colon == -1)
+		return false;
+	if (timeStr.charAt(3) != '3')
+		return false;
+	if (timeStr.charAt(4) != '0')
+		return false;
+	return true;
+}

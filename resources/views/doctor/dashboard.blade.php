@@ -132,16 +132,17 @@
                 </div>
             </div>
 
+
             <div class="row">
-                <div class="col-md-5 scroll" style=" height: 600px;">
+                <div id="scrollDiv" class="col-md-5" style=" height: 96vh; position:relative; width:400px;overflow:auto;">
                     <?php $sum=0;?>
                     <?php $users=0;?>
                     @foreach($shifts as $shift)
                         @foreach($shift->checkins->where('state','>=', 3) as $check_in)
                             <?php $users++;?>
-                            <div class="scroll col-md-12">
+                            <div class="col-md-12">
 
-                                <div class="card">
+                                <div class="card"> 
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <a href="#">
@@ -150,7 +151,7 @@
                                                     <div class="pl-3 pr-2">
                                                         {{--<a href="#">--}}
                                                         <p class="font-weight-medium mb-0 ">{{$check_in->user->name}}</p>
-                                                        <p class="text-muted mb-0 text-small"> {{$check_in->shift->date}} өдөр хийгдсэн эмчилгээ</p>
+                                                        <p class=" text-muted mb-0 text-small"> {{$check_in->shift->date}} өдөр хийгдсэн эмчилгээ</p>
                                                         {{--</a>--}}
                                                     </div>
                                                 </div>
@@ -199,7 +200,7 @@
                         @endforeach
                     @endforeach
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-7" id="scrollDiv">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -253,6 +254,8 @@
                                                 <td>{{$shift->created_at}}</td>
                                             </tr>
                                         @endforeach
+                                        
+                                        
                                         </tbody>
 
 
@@ -276,6 +279,8 @@
 @section('footer')
 
 
+    <script src="{{asset('js/vendor/perfect-scrollbar.min.js')}}"></script>
+
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
     <script src="{{asset('js/vendor/moment.min.js')}}"></script>
@@ -288,5 +293,25 @@
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
+
+    <script>
+        const scrolldiv = document.querySelector('#scrollDiv');
+        const ps = new PerfectScrollbar(demoscrolldiv);
+
+        // Handle size change
+        document.querySelector('#resize').addEventListener('click', () => {
+
+        // Get updated values
+        width = document.querySelector('#width').value;
+        height = document.querySelector('#height').value;
+        
+        // Set demo sizes
+        demo.style.width = `${width}px`;
+        demo.style.height = `${height}px`;
+        
+        // Update Perfect Scrollbar
+        ps.update();
+        });
+    </script>
 
 @endsection

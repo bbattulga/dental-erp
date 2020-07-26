@@ -54,6 +54,11 @@ class AdminController extends Controller
             'role_id'=>$request['role']
         ]);
 
+        if ($image = $request->file(['image'])){
+            $image_name = 'profile-pic-'.$user->id;
+            $image->move('img/staffs', $image_name);
+            $user->photos()->create(['path'=>$image_name]);
+        }
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);
         return redirect('/admin/add_staff');
     }

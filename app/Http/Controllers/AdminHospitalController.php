@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use App\Patient;
+use App\Shift;
+
 
 class AdminHospitalController extends Controller
 {
@@ -35,6 +38,11 @@ class AdminHospitalController extends Controller
         $treatment_type_2_count_first = 0;
         $treatment_type_2_count_again = 0;
 
+        $first_date = Date('Y-m-01');
+        $last_date = Date('Y-m-t', strtotime(Date('Y-m-d')));
+        
+        $shifts = Shift::with('checkins')
+                        ->where('')
 
         foreach (User::all() as $user) {
             $beginning =  strtotime(date('Y-m-d', strtotime('first day of this month')));

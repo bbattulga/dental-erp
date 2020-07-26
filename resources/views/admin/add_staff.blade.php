@@ -120,6 +120,12 @@
                             <input name="password" type="text" class="form-control" required
                                    placeholder="Нууц үг оруулна уу">
                         </div>
+
+                        <div class="form-group">
+                            <label>Зураг</label>
+                            <input type="file" name="image" accept="image/*">
+                        </div>
+
                         <br>
                         <textarea class="form-control" data-val="true" data-val-length="Maximum = 1000000 characters"
                                   data-val-length-max="100000" id="info" name="info" placeholder="Тайлбар">{{old('info')}}</textarea>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.reception')
 @section('header')
     <link rel="stylesheet" href="{{asset('css/vendor/fullcalendar.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/vendor/dataTables.bootstrap4.min.css')}}"/>
@@ -84,14 +84,11 @@
             top: 0;
         }
 
-        .raping-time{
-
-        }
     </style>
 @endsection
 @section('content')
     <script>
-        document.getElementById('adminUsers').classList.add('active');
+        document.getElementById('receptionUser').classList.add('active');
     </script>
 
     <div class="container">

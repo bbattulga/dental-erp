@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
         $date1 = Date('Y-m-d', strtotime('- 14 Days'));
 
         // patients for each doctor a day
-        $min_users = 4;
-        $max_users = 8;
+        $min_users = 3;
+        $max_users = 6;
 
         $this->call(Refresh::class);
 

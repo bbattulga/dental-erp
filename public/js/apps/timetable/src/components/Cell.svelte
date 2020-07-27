@@ -15,8 +15,6 @@
 	import {storeSearch, storeUserBaseData} from '../stores/stores.js';
 	import {floatToTime, timeToFloat} from '../lib/datetime.js';
 
-	import Resizable from './Resizable.svelte';
-
 	// dispatch events
 	let dispatch = createEventDispatcher();
 
@@ -92,16 +90,10 @@
 
 	// functions
 	const  handleClick = (event) => {
-		if (!dragEnd){
-			dragEnd = true;
-			return;
-		}
+		console.log('cell handle click');
 		if (disabled){
 			return;
 		}
-		if (showRegisterModal == false &&
-			(showCheckInModal == false) && 
-			(showSameUsersModal == false))
 			showAppointmentModal = true;
 	}
 
@@ -350,8 +342,6 @@ const handleMouseMove = (event) => {
 			handleStopResize(event);
 			return;
 		}
-		console.log('index');
-		console.log(index);
 		if (top){
 			if (index>0 && nodes[index-1].appointment && 
 				(floatToTime(start) <= nodes[index-1].appointment.end)){
@@ -370,8 +360,8 @@ const handleMouseMove = (event) => {
 		
 		appointment.start = floatToTime(start);
 		appointment.end = floatToTime(end);
-		container.style.height = height;
 		dispatch('forceRefresh');
+		container.style.height = height;
 	}else if (deltaY < -24){
 		if (index+1 >= nodes.length)
 			return;
@@ -401,7 +391,8 @@ const handleMouseMove = (event) => {
 }
 
 const handleStopResize = (event) => {
-	console.log('drag end')
+	console.log('handle stop resize')
+	dragEnd = true;
 	window.removeEventListener('mousemove', handleMouseMove);
 	updateAppointment(appointment)
 		.catch(err=>{
@@ -446,33 +437,32 @@ onDestroy(()=>{
 </script>
 
 
-<div bind:this={container} 
+<div bind:this={container}
 	class:disabled={disabled}
-	class="cell-container grey"
-	on:click|stopPropagation|preventDefault={handleClick}>
+	class="cell-container grey">
 
 	{#if appointment != null}
-
+	<div class="btn-resize-top" on:mousedown|self|stopPropagation={handleStartResizeTop}>
+			</div>
 		<!-- content -->
 		<div class="content"
+		on:click|stopPropagation|preventDefault={handleClick}
 			class:notregistered
 			class:registered
 			class:match
 			class:nomatch>
-
-			<div class="btn-resize-top" on:mousedown|preventDefault|stopPropagation={handleStartResizeTop}>
-			</div>
 			<div>
 				{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}
 			</div>
 			<div>{appointment.phone}</div>
-			<div class="btn-resize-btm" on:mousedown|preventDefault|stopPropagation={handleStartResizeBottom}>
-			</div>
 		</div>
+		<div class="btn-resize-btm" on:mousedown|self|stopPropagation={handleStartResizeBottom}>
+			</div>
 
 		<!-- appointment==null -->
 		{:else}
-		<div class="content empty">
+		<div class="content empty"
+			on:click|stopPropagation|preventDefault={handleClick}>
 			{#if disabled}
 				Эмчийн ээлжийн цаг биш
 				{:else}
@@ -529,11 +519,12 @@ onDestroy(()=>{
 	.btn-resize-btm, .btn-resize-top{
 		position: absolute;
 		width: 100%;
-		height: 15%;
+		height: 12%;
 		cursor: row-resize;
 	}
 	.btn-resize-top{
 		top: 0;
+		z-index: 100;
 	}
 	.btn-resize-btm{
 		bottom: 0;

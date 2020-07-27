@@ -22,51 +22,36 @@
 	}
 
 </script>
-
 <div class="search-container">
-	<input bind:value={searchVal} 
-			on:keyup={handleTyping}
-			class="search-input" type="text" placeholder="хайх">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="input-group">
+					<input type="text" class="form-control typeahead" name="query" id="query"
+					placeholder="Хайх..." data-provide="typeahead"
+					autocomplete="off"
+					bind:value={searchVal} 
+					on:keyup={handleTyping}>
+					<div class="input-group-append ">
+						<button type="submit" class="btn btn-primary default p-1 pl-3 pr-3 pt-2">
+							<i class="simple-icon-magnifier"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 </div>
 
 <style>
 
 .search-container{
-	display: grid;
-	grid-template-columns: 9fr 2fr;
 	align-items: center;
-}
-
-.search-input{
-	width: 100%;
-	height: 100%;
-	border: none;
-	padding: 10px;
-	background: #efefef;
-	border-radius: 10px;
-
-	float: right;
-}
-
-.btn-search{
-	border-radius: 0 20px 20px 0;
-	background: #efefef;
-}
-
-.search-icon-wrapper{
-	width: 100%;
-	height: 100%;
-	max-width: 40px;
-	max-height: 40px;
-	height: auto;
-	cursor: pointer;
-}
-
-.search-icon-wrapper > img{
-	min-width: 32px;
-	border-radius: 0 20px 20px 0;
+	min-width: 100%;
 	max-width: 100%;
-	height: auto;
+}
+
+.row{
+	display: flex;
+	justify-content: flex-end;
 }
 
 </style>

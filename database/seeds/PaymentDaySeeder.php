@@ -41,7 +41,7 @@ class PaymentDaySeeder extends Seeder
 
         foreach($shifts as $shift){
         	if ($shift->date == Date('Y-m-d')){
-        		if ($faker->numberBetween(100, 50) > 50){
+        		if ($faker->numberBetween(100, 50) > 35){
         			continue;
         		}
         	}

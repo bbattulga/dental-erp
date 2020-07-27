@@ -64,13 +64,9 @@
 
 <div 
 	class="main-div">
-
-	<div class="filter-container">
 		<SearchInput 
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
-	</div> 
-
 	<TimeTable
 		{shifts}
 		{times}/>

@@ -76,16 +76,16 @@
                     <ul class="list-unstyled mb-5">
                         <li class="active">
                             <a href="#">
-                                <i class="simple-icon-refresh"></i>
-                                Pending Tasks
-                                <span class="float-right">12</span>
+                                <i class=""></i>
+                                Нийт үйлчлүүлсэн
+                                <span class="float-right">24</span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="simple-icon-check"></i>
-                                Completed Tasks
-                                <span class="float-right">24</span>
+                                <i class=""></i>
+                                    Шинэ үйлчлүүлэгчид
+                                <span class="float-right">12</span>
                             </a>
                         </li>
                     </ul>

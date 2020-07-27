@@ -92,10 +92,17 @@
 
 	// functions
 	const  handleClick = (event) => {
+		if (!dragEnd){
+			dragEnd = true;
+			return;
+		}
 		if (disabled){
 			return;
 		}
-		showAppointmentModal = true;
+		if (showRegisterModal == false &&
+			(showCheckInModal == false) && 
+			(showSameUsersModal == false))
+			showAppointmentModal = true;
 	}
 
 	const handleSubmit = (event) => {
@@ -320,8 +327,9 @@ let prevY = null;
 let y = null;
 let prevAppointment = null;
 let top = false;
-
+let dragging = false;
 const handleMouseMove = (event) => {
+	dragging = true;
 	if (!appointment)
 		return;
 	dragEnd = false;
@@ -393,7 +401,6 @@ const handleMouseMove = (event) => {
 }
 
 const handleStopResize = (event) => {
-	dragEnd = true;
 	console.log('drag end')
 	window.removeEventListener('mousemove', handleMouseMove);
 	updateAppointment(appointment)
@@ -403,7 +410,6 @@ const handleStopResize = (event) => {
 }
 
 const handleStartResize = (event) => {
-	console.log('start resize');
 	prevY = event.clientY;
 	prevAppointment = appointment;
 	window.addEventListener('mousemove', handleMouseMove);
@@ -412,10 +418,12 @@ const handleStartResize = (event) => {
 
 const handleStartResizeTop = (event) => {
 	top = true;
+	dragEnd = false;
 	handleStartResize(event);
 }
 const handleStartResizeBottom = (event) => {
 	top = false;
+	dragEnd = false;
 	handleStartResize(event);
 }
 const updateAppointment = (newappointment) => {
@@ -512,7 +520,7 @@ onDestroy(()=>{
 	.cell-container {
 	  width: 100%;
 	  height: 100%;
-	  border: 1px solid white;
+	  border: 1px solid #e0e0e0e0;
 	  padding: 0;
 	  color: #333333;
 	  position: relative;
@@ -536,11 +544,16 @@ onDestroy(()=>{
 	}
 
 	div:hover .content{
-		transition: 0.4s;
+		transition: 0.3s;
 		/* background-color: #efefefef; */
 		/* color: #363636; */
-		filter: brightness(90%);
+		filter: brightness(99%);
 		cursor: pointer;
+	}
+
+	div:hover .empty{
+		color: #444444;
+		background-color: #efefefef;
 	}
 
 	.content{
@@ -560,19 +573,14 @@ onDestroy(()=>{
 		background-color: #efefefef;
 	}
 
-	div:hover .empty{
-		color: #444444;
-		background-color: #efefefef;
-	}
-
 	.notregistered{
 		color: #333333;
 		background-color: #eb972a;
 	}
 
 	.registered{
-		color: #e0e0e0;
-		background-color: #1670e6;
+		color: #444444;
+		background-color: white;
 	}
 
 	.match{
@@ -591,7 +599,7 @@ onDestroy(()=>{
 
 	.disabled:hover .empty{
 		color: #333333;
-		cursor: default;
+		cursor: auto;
 	}
 
 

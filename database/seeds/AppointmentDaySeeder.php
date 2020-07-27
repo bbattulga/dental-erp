@@ -17,8 +17,9 @@ class AppointmentDaySeeder extends Seeder
      */
 
     public static $date;
-    public static $min = 5;
-    public static $max = 8;
+    public static $shifts;
+    public static $min = 2;
+    public static $max = 4;
 
     public function run()
     {
@@ -29,7 +30,9 @@ class AppointmentDaySeeder extends Seeder
         }
         
         // assign appointments to existing shifts
-        $shifts = Shift::where('date', '=', $date)->get();
+            self::$shifts = Shift::where('date', '=', $date)->get();
+        $shifts = self::$shifts;
+
         $faker = Faker::create();
 
         // appointments interval

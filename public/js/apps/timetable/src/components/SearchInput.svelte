@@ -44,6 +44,8 @@
 	padding: 10px;
 	background: #efefef;
 	border-radius: 10px;
+
+	float: right;
 }
 
 .btn-search{

@@ -100,7 +100,7 @@
 		transition:fade
 		class:hidden={!LOADING}
 		class="loading-container">
-		<img src="/js/apps/timetable/src/components/assets/loading-200-200-grey.gif" alt="loading">
+		<img src="/img/gifs/loading-200-200-grey.gif" alt="loading">
 	</div>
 	<div>
 		<TableFilter

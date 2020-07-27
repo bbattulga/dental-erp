@@ -66,18 +66,20 @@
 .hour {
   height: 8vh;
   line-height: 8vh;
+
   word-wrap: break-word;
-  background-color: #0c2546;
-  color: #e9f2fd;
+  background-color: #194b8d;
+  color: white;
   font-size: 1.5vh;
   text-align: center;
-  border: 1px solid white;
+  border: 1px solid #e0e0e0e0;
+  border-radius: 5px;
   width: 5vw;
 }
 
 .corner-title {
   background-color: #0c2546;
-  color: #e9f2fd;
+  color: white;
   margin-right: 1px;
   margin-right: 1px;
   font-size: 1.5vh;

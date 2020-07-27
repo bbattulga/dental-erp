@@ -18,19 +18,23 @@ class LeaseDaySeeder extends Seeder
      */
 
     public static $date;
+    public static $shifts;
     public static $lease_chance;
 
     public function run()
     {
     	if (!isset(self::$date)){
-            $date = Date('Y-m-d');
+            self::$date = Date('Y-m-d');
         }
         
         $faker = Faker::create();
 
-        $shifts = Shift::with('checkins', 'checkins.treatments')
-        			->where('date', self::$date)
-        			->get();
+        if (!isset(self::$shifts)){
+            self::$shifts = Shift::with('checkins', 'checkins.treatments')
+                    ->where('date', self::$date)
+                    ->get();
+        }
+        $shifts = self::$shifts;
 
         foreach($shifts as $shift){
         	foreach($shift->checkins as $checkin){
@@ -54,6 +58,7 @@ class LeaseDaySeeder extends Seeder
             $total += $user_treatments->price;
         }
 		$lease = $total*$faker->numberBetween(20, 60)/100;
+        $lease = (int) $lease;
 		$lease -= $lease%10;
 		factory(Lease::class)->create([
 			'total' => $total,
@@ -62,7 +67,7 @@ class LeaseDaySeeder extends Seeder
 		]);
 
 		factory(Transaction::class)->create([
-			'price'=>$total,
+			'price'=>(int)$total,
 			'type'=>4,
 			'type_id'=>$checkin->id,
 			'description'=>'Зээлийн урьдчилгаа төлбөр'

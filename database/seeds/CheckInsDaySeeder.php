@@ -16,6 +16,7 @@ class CheckInsDaySeeder extends Seeder
      */
 
     public static $date;
+    public static $shifts;
 
     public static $min = 5;
     public static $max = 12;
@@ -34,10 +35,16 @@ class CheckInsDaySeeder extends Seeder
 
         $date = self::$date;
 
-        $shifts = Shift::with('appointments', 'appointments.user')
+            self::$shifts = Shift::with('appointments', 'appointments.user')
                         ->where('date', $date)
                         ->get();
-
+        if (!self::$shifts){
+            $this->call(AppointmentDaySeeder::class);
+            self::$shifts = Shift::with('appointments', 'appointments.user')
+                        ->where('date', $date)
+                        ->get();
+        }
+        $shifts = self::$shifts;
         foreach($shifts as $shift){
 
                 $appointments = $shift->appointments;

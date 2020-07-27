@@ -57,7 +57,7 @@
 		// validation
 		if (name.length == 0 || (phone.length == 0))
 			return;
-
+		name = name.charAt(0).toUpperCase() + name.slice(1);
 		if (!isValidTime(start)){
 			validTimeStart = false;
 			return;
@@ -152,69 +152,58 @@
 			validTimeEnd = true;
 		}
 	}
+
+	const handleClickInputField = (event) => {
+
+	}
+
+	const handleChangeData = (event) => {
+		if (appointment == null)
+			return;
+		if (phone.length != 8){
+			return;
+		}
+		for (let i=0; i<phone.length; i++){
+			if (!((phone.charAt(i) >='0') || (phone.charAt(i) <='9'))){
+				alert('Утасны дугаар алдаатай байна')
+				phone = appointment.phone;
+				return;
+			}
+		}
+
+		if (name.length < 3){
+			alert('Нэрээ зөв оруулна уу');
+			name = appointment.name;
+		}
+		for (let i=0; i<name.length; i++){
+			if (name.charAt(i) == '.')
+				continue;
+			if (!(name.match("^[a-zA-Z\(\)]+$"))){
+				alert("нэрээ зөв оруулна уу")
+				return;
+			}
+		}
+		let data = {
+			id: appointment.id,
+			name,
+			phone
+		}
+
+		axios.put('/api/appointments/update', data)
+			.then(response=>{
+				appointment.name = name;
+				appointment.phone = phone;
+				appointment = appointment;
+			})
+			.catch(err=>{
+				alert('Алдаа гарлаа')
+			})
+	}
 </script>
 
 
 <Modal 
 	bind:showModal={show}>
-<!--
-<div id="form-main">
-  <div id="form-div"
-  		transition:fly="{{y: -200, duration: 500}}">
-  	<div class="btn-close"
-  		on:click|preventDefault|stopPropagation={close}>
-  		<img src="/js/apps/timetable/src/components/assets/close.png">
-  	</div>
-    <form class="form" id="form1">
-      
-      <h1 style="color: #444444;">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h1>
-      <p class="name">
-      	<label>Үйлчлүүлэгчийн нэр</label>
-        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name"  
-        readonly="{appointment != null}"/>
-      </p>
-      
-      <p class="email">
-      	<label>Утас</label>
-        <input bind:value={phone} type="text" class="validate[required,custom[email]] feedback-input" id="email" placeholder="Утас" 
-        readonly="{appointment != null}"/>
-      </p>
-      <p class="email">
-      	<label>Эмчийн нэр:   </label>
-        <label>{doctor.name}</label>
-      </p>
-
-      <p class="email">
-      	<label>Эмчилгээний цаг:</label>
-      	<input class:invalidinput={!validTimeStart} on:keyup={handleTimeInput} bind:value={start}
-      			on:change={handleChangeTime}>
-      	-
-        <input class:invalidinput={!validTimeEnd} on:keyup={handleTimeInput} bind:value={end}
-        	on:change={handleChangeTime}>
-      </p>
-
-      <div class="submit">
-
-      	{#if appointment == null}
-        <input on:click|preventDefault|stopPropagation={handleSubmit}
-        	type="submit" value="Цаг захиалах" id="button-blue"/>
-        <div class="ease"></div>
-        {:else}
-        <input on:click|preventDefault|stopPropagation={handleRegister}
-        	type="submit" 
-        	value="{appointment.user_id==0?'Бүртгэх&Эмчилгээнд оруулах':'Бүртгэсэн'}" 
-        	id="button-blue"
-        	disabled="{appointment.user_id!=0}" />
-
-        	<div style="position:absolute: bottom:0; left: 0; margin: 10px;">
-	        	<input type="text" placeholder="цуцлах код" bind:value={cancelCode}>
-	        	<button on:click|preventDefault|stopPropagation={handleDelete}>цуцлах</button>
-	        </div>
-        {/if}
-      </div>
-    </form>
-  </div>
--->
 
 <div transition:fly="{{y: -200, duration: 500}}" class="card mb-4 center" style="max-width: 500px;">
 <div class="card-body">
@@ -228,6 +217,7 @@
                                     <span class="input-group-text" id="basic-addon1">Нэр</span>
                                 </div>
                                 <input bind:value={name}
+                                on:change={handleChangeData}
                                 type="text" class="form-control" placeholder="" aria-label="Username"
                                     aria-describedby="basic-addon1">
                             </div>
@@ -237,6 +227,7 @@
                                     <span class="input-group-text" id="basic-addon1">Утас</span>
                                 </div>
                                 <input bind:value={phone}
+                                on:change={handleChangeData}
                                 type="text" class="form-control" placeholder="" aria-label="Username"
                                     aria-describedby="basic-addon1">
                             </div>

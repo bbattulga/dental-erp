@@ -20,16 +20,17 @@ class DoctorTreatmentDaySeeder extends Seeder
      */ 
 
     public static $date;
-    public static $treatments_min = 3;
-    public static $treatments_max = 10;
+    public static $shifts;
+    public static $treatments_min = 2;
+    public static $treatments_max = 5;
 
     public function run()
     {	
         if (!isset(self::$date)){
-            $date = Date('Y-m-d');
-        }else{
-            $date = self::$date;
+            self::$date = Date('Y-m-d');
         }
+            $date = self::$date;
+        
         
     	$treatments_min = self::$treatments_min;
     	$treatments_max = self::$treatments_max;
@@ -41,10 +42,11 @@ class DoctorTreatmentDaySeeder extends Seeder
     		$nurses = factory(Nurse::class, 3)->create();
     	}
 
-        $shifts = Shift::with('checkins', 'checkins.user')
+            self::$shifts = Shift::with('checkins', 'checkins.user')
                         ->where('date', self::$date)
                         ->get();
-
+        
+        $shifts = self::$shifts;
         foreach($shifts as $shift){
             foreach($shift->checkins as $checkin){
                 $user_treatments = factory(UserTreatments::class, $faker->numberBetween($treatments_min, $treatments_max))

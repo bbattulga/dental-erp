@@ -69,10 +69,6 @@
 		<SearchInput 
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
-		<div>
-			<div>Цэнхэр - Эмчилгээнд орсон</div>
-			<div>Бор - Эмчилгээнд ороогүй</div>
-		</div>
 	</div> 
 
 	<TimeTable

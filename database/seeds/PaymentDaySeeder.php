@@ -22,20 +22,29 @@ class PaymentDaySeeder extends Seeder
      */
 
     public static $date;
+    public static $shifts;
+
 
     public function run()
     {
     	if (!isset(self::$date)){
-            $date = Date('Y-m-d');
+            self::$date = Date('Y-m-d');
         }
         
     	$faker = Faker::create();
-    	$shifts = Shift::with('checkins')
+
+    		self::$shifts = Shift::with('checkins')
     					->where('date', self::$date)
     					->get();
+    	
+    	$shifts = self::$shifts;
+
         foreach($shifts as $shift){
-        	if ($shift->date == Date('Y-m-d'))
-        		continue;
+        	if ($shift->date == Date('Y-m-d')){
+        		if ($faker->numberBetween(100, 50) > 50){
+        			continue;
+        		}
+        	}
         	$checkins = $shift->checkins;
         	foreach($checkins as $checkin){
 	        	$this->checkinPayment($checkin, $faker);
@@ -68,8 +77,9 @@ class PaymentDaySeeder extends Seeder
 			return;
 		}
 		$checkin->update(['state'=>3]);
+		$payment = $total-$total*$promotion_percentage/100;
 		factory(Transaction::class)->create([
-			'price' => $total-$total*$promotion_percentage/100,
+			'price' => (int)$payment,
 			'type' => 4,
 			'type_id' => $checkin->id,
 			'description' => $promotion_percentage == 0? '':'Урамшуулал ашиглаж төлбөр төлсөн'
@@ -83,7 +93,7 @@ class PaymentDaySeeder extends Seeder
     	if ($lease->price >= 30000){
 			$paid = $lease->price*$faker->numberBetween(50, 60)/100;
 			$paid = $lease-$paid;
-			$lease->update('price', $paid);
+			$lease->update('price',(int) $paid);
 			factory(Transaction::class)->create([
 				'price'=>(int) $paid,
 				'type'=>4,

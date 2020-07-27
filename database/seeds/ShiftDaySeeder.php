@@ -15,14 +15,16 @@ class ShiftDaySeeder extends Seeder
      */
 
     public static $date;
+    private static $doctors;
 
     public function run()
     {
         if (!isset(self::$date)){
             self::$date = Date('Y-m-d');
         }
+            self::$doctors = Doctor::all();
         
-        $doctors = Doctor::all();
+        $doctors = self::$doctors;
         
     	foreach($doctors as $doctor){
 			$shift = factory(Shift::class)

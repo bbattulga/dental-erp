@@ -1,7 +1,6 @@
 <script type="text/javascript">
 
 	import Cell from './Cell.svelte';
-	import Cell2 from './Cell2.svelte';
 	import {onMount} from 'svelte';
 	import {timeToFloat, floatToTime} from '../lib/datetime.js';
 
@@ -89,7 +88,7 @@
 <div bind:this={container} class="column-container">
 
 	<div class="doctor-profile">
-		{`doctor${shift.doctor.id}`}
+		{`${shift.doctor.last_name.charAt(0)+'. '+shift.doctor.name}`}
 	</div>
 
 	{#each cellsData as cellData, i (cellData.id)}
@@ -124,12 +123,15 @@
 		position: sticky;
 		top: 0;
 	  height: 10%;*/
+	  background-color: white;
+	  color: #e0e0e0e0;
+	  border-right: 1px solid #e0e0e0e0;
+	  border-bottom: 1px solid #e0e0e0e0;
+	  border-top: 1px solid #e0e0e0e0;
 	  background-color: #0c2546;
-	  color: #e9f2fd;
-	  border: 1px solid #e0e0e0e0;
+	  color: white;
 	  font-size: 1.5vh;
 	  font-weight: 600;
-	  text-transform: uppercase;
 	  text-align: center;
 	  line-height: 8vh;
 	  height: 8vh;

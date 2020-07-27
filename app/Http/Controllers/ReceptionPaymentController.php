@@ -28,7 +28,7 @@ class ReceptionPaymentController extends Controller
     }
     
     public function index() {
-        $treatment_done_users = CheckIn::all()->where('state',2);
+        $treatment_done_users = CheckIn::where('state',2)->orderBy('id', 'desc')->get();
         return view('reception.payment',compact('treatment_done_users'));
     }
 

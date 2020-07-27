@@ -24,10 +24,16 @@ class AccountantStaffController extends Controller
     public function staff_check($id){
         $user = User::find($id);
         if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+            $shifts = Shift::where('user_id', $user->id)
+                        ->where('date','>=', date('Y-m-d', strtotime('first day of this month')))
+                        ->orderBy('id', 'desc')
+                        ->get();
             return view('accountant.staff_profile',compact('user', 'shifts'));
         } else if($user->role->role_id == Roles::nurse()->id) {
-            $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+            $checkins = CheckIn::where('nurse_id', $user->id)
+                                ->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))
+                                ->orderBy('id', 'desc')
+                                ->get();
             return view('accountant.staff_profile', compact('user', 'checkins'));
         }
     }

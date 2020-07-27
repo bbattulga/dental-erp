@@ -19,7 +19,6 @@
     </script>
     <div class="row">
         <div class="col-md-3">
-
                 <div class="card ">
                     <div class="card-body">
                         <div class="text-center">
@@ -484,6 +483,10 @@
     </div><!-- row -->
 @endsection
 @section('footer')
+    <script type="text/javascript">
+
+    </script>
+
     <script src="{{asset('js/validation.js')}}"></script>
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>

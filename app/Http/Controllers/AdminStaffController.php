@@ -69,12 +69,23 @@ class AdminStaffController extends Controller
 
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
-        $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
         if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = Shift::all()->where('doctor_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
+            $checkins = array();
+            $shifts = Shift::with('checkins')
+                            ->where('doctor_id', $user->id)
+                            ->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])
+                            ->get();
+            foreach($shifts as $shift){
+                foreach($shift->checkins as $checkin){
+                    array_push($checkins, $checkin);
+                }
+            }
             return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date', 'checkins'));
-        } else if($user->role->role_id == Roles::doctor()->id) {
-            
+        } else if($user->role->role_id == Nurse::doctor()->id) {
+            $checkins = CheckIn::where('user_id', $user->id)
+                    ->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])
+                    ->orderBy('id', 'desc')
+                    ->get();
             return view('admin.staff_profile', compact('user', 'checkins', 'start_date', 'end_date'));
         }
     }

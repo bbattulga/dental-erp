@@ -15,7 +15,7 @@ class CreateCheckinStates extends Migration
     {
         Schema::create('checkin_states', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name', 45);
             $table->timestamps();
         });
     }

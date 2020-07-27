@@ -31,7 +31,6 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="{{url('/reception/shifts/cancel')}}" method="POST">
-                    @delete
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
@@ -104,7 +103,7 @@
                                     <?php $time = $shifts->where('date', date('Y-m-d', strtotime('+' . $i . ' Days')))->where('user_id', $doctor->id)->where('shift_type_id', 2)->first(); ?>
                                     @if($time)
                                         <td>
-                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->name}}', 2, '{{$time->date}}')">Оройний ээлж<br><span class="text-right"
+                                            <button class="btn btn-primary" style="border-radius: 10px" onclick="deleteShift('{{$time->id}}' ,'{{$doctor->name}}', 2, '{{$time->date}}')">Оройны ээлж<br><span class="text-right"
                                                                                                                                                                                                                                   style="font-size: 10px">{{$time->appointments->count()}} хүн захиалсан</span>
                                             </button>
                                         </td>
@@ -139,7 +138,14 @@
         function deleteShift(id, doctor_name, shift_time, shift_date) {
             document.getElementById('shiftId').value = id;
             document.getElementById('doctorName').innerHTML = doctor_name;
-            document.getElementById('shiftTime').innerHTML = shift_time;
+            let sname = document.getElementById('shiftTime');
+            if (shift_time == 1){
+                sname.innerHTML = 'Өглөөний ээлж';
+            }else if (shift_time == 2){
+                sname.innerHTML = 'Оройны ээлж';
+            }else if (shift_time == 3){
+                sname.innerHTML = 'Бүтэн ээлж';
+            }
             document.getElementById('shiftTypeId').value = shift_time;
             document.getElementById('shiftDate').innerHTML = shift_date;
             $("#deleteShiftModal").modal();

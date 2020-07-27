@@ -26,9 +26,22 @@ class CheckIn extends Model
     public function user_promotion() {
         return $this->hasOne('App\UserPromotions', 'checkin_id', 'id');
     }
-
     public function delete(){
         $this->treatments->delete();
         return parent::delete();
+    }
+
+    // for legacy code
+    public function getPendingAttribute(){
+        return $this->state==0;
+    }
+    public function getTreatmentDoneAttribute(){
+        return $this->state==2;
+    }
+    public function getPaymentDoneAttribute(){
+        return $this->state==3;
+    }
+    public function getLeaseDoneAttribute(){
+        return $this->state==4;
     }
 }

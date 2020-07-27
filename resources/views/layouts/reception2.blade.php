@@ -74,7 +74,7 @@
     
     
                 <div class="header-icons d-inline-block align-middle">
-                   reception
+                   
     
     
                     <div class="position-relative d-inline-block">
@@ -104,26 +104,27 @@
                     <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
                         <i class="simple-icon-size-fullscreen"></i>
                         <i class="simple-icon-size-actual"></i>
-                    </button>reception
+                    </button>
     
                 </div>
     
                 <div class="user d-inline-block">
-    
-                    <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <span class="name">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
-                        <span>
-                            <img alt="Profile Picture" src="img/profile-pic-l.jpg" />
-                        </span>
-                    </button>
-    
-                    <div class="dropdown-menu dropdown-menu-right mt-3">
-                        <a class="dropdown-item" href="#">Account</a>
-                        <a class="dropdown-item" href="#">Features</a>
-                        <a class="dropdown-item" href="{{url('/logout')}}">Sign out</a>
-                    </div>
+                @php
+                    $user = \Illuminate\Support\Facades\Auth::user();
+                @endphp
+                <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="name">{{$user->name}}</span>
+                    <span>
+                        <img alt="Profile Picture" src="/img/staffs/{{$user->profile_pic}}" />
+                    </span>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right mt-3">
+                    <a class="dropdown-item" href="#">Account</a>
+                    <a class="dropdown-item" href="#">Features</a>
+                    <a class="dropdown-item" href="{{url('/logout')}}">Sign out</a>
                 </div>
+            </div>
     
     
     

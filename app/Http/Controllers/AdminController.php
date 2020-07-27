@@ -94,14 +94,23 @@ class AdminController extends Controller
         $users = Patient::all()->count();
         $roles = UserRole::all()->count();
         $users_number = $users;
-        $appointments = Appointment::all()->where('created_at','>',date('Y-m-d 00:00:00'))->count();
-        $checkins = CheckIn::where('created_at','>=',date('Y-m-d'))->count();
+        $shifts_day = Shift::where('date', Date('Y-m-d'))->get();
+        $appointments = 0;
+        $checkins = 0;
+        foreach($shifts_day as $shift){
+            $appointments += $shift->appointments->count();
+            $checkins += $shift->checkins->count(); 
+        }
 
         // find workload of the week
         $workloads = [];
         for ($i=6; $i>=0; $i--){
             $date = date('Y-m-d', strtotime('-'.$i.' Days'));
-            $workload = CheckIn::where('created_at', 'like',"$date%")->get()->count();
+            $shifts = Shift::where('date', $date)->get();
+            $workload = 0;
+            foreach($shifts as $shift){
+                $workload += $shift->checkins->count();
+            }
             array_push($workloads, $workload);
         }
         $workloads = json_encode($workloads);
@@ -117,7 +126,10 @@ class AdminController extends Controller
     }
     public function user_check($id){
         $user = User::find($id);
-        $check_ins = CheckIn::where('state','>=',3)->where('user_id',$id)->get();
+        $check_ins = CheckIn::where('state','>=',3)
+                            ->where('user_id',$id)
+                            ->orderBy('id', 'desc')
+                            ->get();
 
         return view('admin.user_check',compact('user','check_ins'));
 

@@ -54,6 +54,7 @@ class ReceptionPaymentController extends Controller
         elseif (!empty($request['promotion_code']) and empty($request['lease'])) {
             if($promotion = Promotion::where('promotion_end_date','>=',date('Y-m-d'))->where('promotion_code',$request['promotion_code'])->first()){
                 $total = $total - $total*$promotion->percentage/100;
+                $total = (int) $total;
                 $transaction = Transaction::create(['price'=>$total,'type'=>4,
                     'description' => 'Урамшуулаллын код ашиглаж төлбөр төлсөн',
                     'type_id'=>$request['checkin_id'],'created_by'=>Auth::user()->id]);
@@ -74,6 +75,7 @@ class ReceptionPaymentController extends Controller
         elseif (!empty($request['promotion_code']) and !empty($request['lease'])){
             if($promotion = Promotion::where('promotion_end_date','>',date('Y-m-d'))->where('promotion_code',$request['promotion_code'])->first()){
                 $total = $total - $total*$promotion->percentage/100;
+                $tota = (int) $total;
                 Lease::create(['total'=>$total,'checkin_id'=>$request['checkin_id'],'price'=>$total-$request['lease'],'created_by'=>Auth::user()->id]);
                 $transaction = Transaction::create(['price'=>$request['lease'],'type'=>4,'type_id'=>$request['checkin_id'],
                     'description'=>'Зээлтэй, урамшуулал ашиглаж төлбөр төлөгдсөн.',

@@ -36,15 +36,19 @@ export const isValidTime = (timeStr) => {
 		let c = timeStr.charAt(i);
 		if (c == ':'){
 			colon = i;
+			continue;
 		}
 		if (!(c>='0' || (c<='9')))
 			return false;
 	}
 	if (colon == -1)
 		return false;
-	if (timeStr.charAt(3) != '3')
+	if (!((timeStr.charAt(3) == '3') || (timeStr.charAt(3) == '0'))){
 		return false;
-	if (timeStr.charAt(4) != '0')
+	}
+	if (!((timeStr.charAt(4) == '3') || (timeStr.charAt(4) == '0'))){
 		return false;
+	}
+
 	return true;
 }

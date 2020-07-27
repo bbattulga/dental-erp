@@ -12,7 +12,7 @@
 	export let name = '';
 	export let last_name ="";
 	export let phone = '';
-	export let gender = 1;
+	export let gender = 0;
 	export let email = "";
 	export let register = "";
 	export let address = "";
@@ -51,6 +51,14 @@
 			alert('Регистрийн дугаараа зөв оруулна уу')
 			return;
 		}
+		if (birthDate.length == 0){
+			alert('Төрсөн он сараа оруулна уу');
+			return;
+		}
+		if (last_name.length == 0 || (name.length == 0)){
+			alert('Овог/Нэрээ оруулна уу');
+			return;
+		}
 		let user = {
 			name: name,
 			last_name: last_name,
@@ -76,88 +84,109 @@
 </script>
 
 <Modal bind:showModal={show}>
-<div id="form-main">
-  <div id="form-div"
-  	on:click|stopPropagation
-  	transition:fly="{{y: -200, duration: 500}}">
-  	<div class="btn-close"
+<div transition:fly="{{y: -200, duration: 500}}" class="card mb-4 center" style="max-width: 500px;"
+	on:click|preventDefault|stopPropagation>
+<div class="card-body">
+<div class="btn-close"
   		on:click|preventDefault|stopPropagation={close}>
   		<img src="/js/apps/timetable/src/components/assets/close.png">
   	</div>
+                            <h5 class="mb-4">Шинэ үйлчлүүлэгч бүртгэх</h5>
 
-    <form class="form" id="form1" on:click|stopPropagation|preventDefault>
-      <h1>Шинэ үйлчлүүлэгч бүртгэх</h1>
-      <p class="name">
-      	<label>Овог</label>
-        <input bind:value={last_name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name" />
-      </p>
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputEmail4">Овог</label>
+                                        <input bind:value={last_name}
+                                        	type="text" class="form-control" id="inputEmail4" placeholder="Овог">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Нэр</label>
+                                        <input bind:value={name}
+                                        type="text" class="form-control" id="inputPassword4" placeholder="Нэр">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputEmail4">Төрсөн он сар</label>
+                                        <input bind:value={birthDate}
+                                        	type="date" class="form-control date-inline" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Регистр</label>
+                                        <input bind:value={register}
+                                        type="text" class="form-control" id="inputPassword4" 
+                                        placeholder="АБ9039...">
+                                    </div>
+                                </div>
 
-      <p class="name">
-      	<label>Нэр</label>
-        <input bind:value={name} type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="нэр" id="name"/>
-      </p>
-      
-      <p class="email">
-      	<label>Утас</label>
-        <input bind:value={phone}  type="text" class="validate[required,custom[email]] feedback-input" placeholder="Утас" />
-      </p>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="inputState">Хүйс</label>
+                                        <select bind:value={gender}
+                                        	id="inputState" 
+                                        	class="form-control">
+                                            <option value={0} selected={true}>Эр</option>
+                                            <option value={1}>Эм</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-      <p class="email">
-      	<label>Цахим хаяг</label>
-        <input bind:value={email}  type="email" class="validate[required,custom[email]] feedback-input" />
-      </p>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputEmail4">Утас</label>
+                                        <input bind:value={phone}
+                                        	type="text" class="form-control" id="inputEmail4" placeholder="">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Цахим хаяг</label>
+                                        <input bind:value={email}
+                                        	type="email" class="form-control" id="inputPassword4" 
+                                        placeholder="...@gmail.com">
+                                    </div>
+                                </div>
 
-      <p class="email">
-      	<label>Регистрийн дугаар</label>
-        <input bind:value={register} type="text" class="validate[required,custom[email]] feedback-input"/>
-      </p>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputEmail4">Гэрийн хаяг</label>
+                                        <input bind:value={address}
+                                        	type="text" class="form-control" id="inputEmail4" placeholder="">
+                                        
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">тайлбар</label>
+                                        <input bind:value={info}
+                                        	type="text" class="form-control" id="inputPassword4" 
+                                        
+                                        placeholder="">
+                                    </div>
+                                </div>
 
-      <p class="email">
-      	<label>Төрсөн он сар</label>
-        <input bind:value={birthDate} type="date" class="validate[required,custom[email]] feedback-input" />
-      </p>
+                                <button on:click|preventDefault|stopPropagation={handleSubmit}
+					        	class="btn btn-primary" style="float: right; margin: 8px;">Бүртгэх&Эмчилгээнд оруулах</button>
+                            </form>
 
-      <p class="email">
-      	<label>Хүйс</label>
-        <select bind:value={gender}>
-        	<option value={1} selected="selected">Эр</option>
-        	<option value={0}>Эм</option>
-        </select>
-      </p>
-
-      <p class="email">
-      	<label>Гэрийн хаяг</label>
-        <input  type="text" class="validate[required,custom[email]] feedback-input"/>
-      </p>
-
-      <p class="email">
-      	<label>Тайлбар</label>
-        <input  type="text" class="validate[required,custom[email]] feedback-input"/>
-      </p>
-      
-      <div class="submit">
-        <input 
-        	on:click|preventDefault|stopPropagation={handleSubmit}
-        	type="submit" value="Бүртгэх&Эмчилгээнд оруулах" id="button-blue"/>
-        <div class="ease"></div>
-      </div>
-    </form>
-  </div>
+					        
+						        
+	</div>
+</div>
 </Modal>
 
 
 
 
-<style type="text/css">
+<style>
 
-label{
-	font-size: 1.2em;
-	color: black;
+.center{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .btn-close{
-	width: 32px;
-	height: 32px;
+	width: 16px;
+	height: 16px;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -172,129 +201,6 @@ label{
 
 .treatment-hours{
 	width: 10%;
-}
-
-#feedback-page{
-	text-align:center;
-}
-
-#form-main{
-	width:100%;
-	float:left;
-	padding-top:0px;
-	overflow: auto;
-	max-height: 80%;
-}
-
-#form-div {
-	background-color:white;
-	padding-left:35px;
-	padding-right:35px;
-	padding-top:35px;
-	padding-bottom:50px;
-	width: 50%;
-	left: 50%;
-	max-height: 95%;
-	overflow: auto;
-	position: absolute;
-	transform: translateX(-50%);
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
-}
-
-.feedback-input {
-	color:#3c3c3c;
-	font-family: Helvetica, Arial, sans-serif;
-  font-weight:500;
-	font-size: 18px;
-	border-radius: 0;
-	line-height: 22px;
-	background-color: #fbfbfb;
-	padding: 13px 13px 13px 54px;
-	margin-bottom: 10px;
-	width:100%;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	box-sizing: border-box;
-  border: 3px solid rgba(0,0,0,0);
-}
-
-.feedback-input:focus{
-	background: #fff;
-	box-shadow: 0;
-	border: 3px solid #3498db;
-	color: #3498db;
-	outline: none;
-  padding: 13px 13px 13px 54px;
-}
-
-.focused{
-	color:#30aed6;
-	border:#30aed6 solid 3px;
-}
-
-/* Icons ---------------------------------- */
-#name{
-	background-image: url(http://rexkirby.com/kirbyandson/images/name.svg);
-	background-size: 30px 30px;
-	background-position: 11px 8px;
-	background-repeat: no-repeat;
-}
-
-#name:focus{
-	background-image: url(http://rexkirby.com/kirbyandson/images/name.svg);
-	background-size: 30px 30px;
-	background-position: 8px 5px;
-  background-position: 11px 8px;
-	background-repeat: no-repeat;
-}
-
-input:hover, textarea:hover,
-input:focus, textarea:focus {
-	box-shadow: 1px 1px 2px black;
-}
-
-#button-blue{
-	font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-	float:left;
-	width: 100%;
-	border: #fbfbfb solid 4px;
-	cursor:pointer;
-	background-color: #3498db;
-	color:white;
-	font-size:24px;
-	padding-top:22px;
-	padding-bottom:22px;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	transition: all 0.3s;
-  margin-top:-4px;
-  font-weight:700;
-}
-
-#button-blue:hover{
-
-}
-	
-.submit:hover {
-
-}
-	
-.ease {
-	width: 0px;
-	height: 74px;
-	background-color: #fbfbfb;
-	-webkit-transition: .3s ease;
-	-moz-transition: .3s ease;
-	-o-transition: .3s ease;
-	-ms-transition: .3s ease;
-	transition: .3s ease;
-}
-
-.submit:hover .ease{
-  width:100%;
-  background-color:white;
 }
 
 @media (max-width: 700px){

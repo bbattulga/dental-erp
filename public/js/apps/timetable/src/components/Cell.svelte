@@ -179,15 +179,16 @@
 		axios.post('/api/appointments/cancel', d).then(response=>{
 			count = response.data;
 			console.log(response);
-			if (!appointment.checkin)
+			dispatch('deleteAppointment', appointment.id);
+			if (!appointment.checkin){
 				return;
+			}
+			console.log('deleting checkin with id', appointment.checkin.id);
 			axios.delete(`/api/checkins/delete/${appointment.checkin.id}`)
 				.then(response=>console.log('checkin deleted'))
 				.catch(err=>console.log('could not delete checkin'));
 
 		}).catch(err=>console.log(err));
-
-		dispatch('deleteAppointment', appointment.id);
 	}
 
 	const handleRegisterModal = (event) => {
@@ -278,12 +279,13 @@
 		console.log('cell handle change time');
 		console.log(start, end);
 		// validation
-		for (let i=index+1; i<nodes.length; i++){
+		for (let i=0; i<nodes.length; i++){
 			let next = nodes[i];
 			if (!next.appointment){
 				continue;
 			}
-			if(end > next.appointment.start){
+			if(end > next.appointment.start ||
+				(start < next.appointment.end)){
 				let nextAppoitment = next.appointment;
 				alert('Өөр үйлчлүүлэгчийн цагтай давхцаж байна');
 				appointment.start = prevStart;
@@ -325,7 +327,6 @@ const handleMouseMove = (event) => {
 	dragEnd = false;
 	y = event.clientY;
 	deltaY = prevY - event.clientY;
-	console.log(deltaY);
 	if (deltaY > 20){
 		deltaY = 0;
 		prevY = y;
@@ -341,7 +342,14 @@ const handleMouseMove = (event) => {
 			handleStopResize(event);
 			return;
 		}
+		console.log('index');
+		console.log(index);
 		if (top){
+			if (index>0 && nodes[index-1].appointment && 
+				(floatToTime(start) <= nodes[index-1].appointment.end)){
+				return;
+			}
+			
 			if (start >= 9.5){
 				start -= 0.5;
 				end -= 0.5;
@@ -367,17 +375,15 @@ const handleMouseMove = (event) => {
 		if (top){
 			start += 0.5;
 			end += 0.5;
-			console.log('time end grow');
 			dispatch('forceRefresh');
 		}else{
 			end += 0.5;
 			rowSpan += 1;
 			height = `${rowSpan*4}vh`
 		}
-		for (let i=index+1; i<nodes.length; i++){
-			if (nodes[i].appointment && floatToTime(end) >= nodes[index+1].appointment.start){
-				return;
-				}
+		if ((index<nodes.length) &&
+			nodes[index+1].appointment && floatToTime(end) >= nodes[index+1].appointment.start){
+			return;
 		}
 		appointment.start = floatToTime(start);
 		appointment.end = floatToTime(end);
@@ -501,12 +507,12 @@ onDestroy(()=>{
   			bind:users={sameUsers} />
 </div>
 
-<style type="text/css">
+<style>
 
 	.cell-container {
 	  width: 100%;
 	  height: 100%;
-	  border: 1px solid #e0e0e0e0;
+	  border: 1px solid white;
 	  padding: 0;
 	  color: #333333;
 	  position: relative;
@@ -515,7 +521,7 @@ onDestroy(()=>{
 	.btn-resize-btm, .btn-resize-top{
 		position: absolute;
 		width: 100%;
-		height: 10%;
+		height: 15%;
 		cursor: row-resize;
 	}
 	.btn-resize-top{

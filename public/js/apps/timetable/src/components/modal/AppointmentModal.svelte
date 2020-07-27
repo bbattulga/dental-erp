@@ -120,6 +120,22 @@
 			start,
 			end
 		}
+
+		if (name.length == 0 || (phone.length == 0))
+			return;
+
+		if (!isValidTime(start)){
+			validTimeStart = false;
+			return;
+		}
+		validTimeStart = true;
+
+		if (!isValidTime(end)){
+			validTimeEnd = false;
+			return
+		}
+		validTimeEnd = true;
+
 		dispatch('changeTime', detail);
 	}
 
@@ -141,7 +157,7 @@
 
 <Modal 
 	bind:showModal={show}>
-
+<!--
 <div id="form-main">
   <div id="form-div"
   		transition:fly="{{y: -200, duration: 500}}">
@@ -198,6 +214,80 @@
       </div>
     </form>
   </div>
+-->
+
+<div transition:fly="{{y: -200, duration: 500}}" class="card mb-4 center" style="max-width: 500px;">
+<div class="card-body">
+	<div class="btn-close"
+  		on:click|preventDefault|stopPropagation={close}>
+  		<img src="/js/apps/timetable/src/components/assets/close.png">
+  	</div>
+                            <h5 class="mb-4">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h5>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Нэр</span>
+                                </div>
+                                <input bind:value={name}
+                                type="text" class="form-control" placeholder="" aria-label="Username"
+                                    aria-describedby="basic-addon1">
+                            </div>
+
+                            <div class="input-group mb-3">
+                               <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Утас</span>
+                                </div>
+                                <input bind:value={phone}
+                                type="text" class="form-control" placeholder="" aria-label="Username"
+                                    aria-describedby="basic-addon1">
+                            </div>
+
+                            <div class="input-group mb-3">
+                               <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Эмчийн нэр</span>
+                                </div>
+                                <input value={doctor.last_name.charAt(0)+'. '+doctor.name}
+                                type="text" class="form-control"
+                                    aria-describedby="basic-addon1" readonly>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon3">Эмчилгээний цаг</span>
+                                </div>
+                                <input class:invalidinput={!validTimeStart} on:keyup={handleTimeInput} bind:value={start}
+        								on:change={handleChangeTime}
+                                	type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                
+
+                                <input class:invalidinput={!validTimeEnd} on:keyup={handleTimeInput} bind:value={end}
+        								on:change={handleChangeTime}
+                                type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                            </div>
+
+                            {#if appointment != null}
+                            <div class="input-group mb-3">
+                                <input bind:value={cancelCode}
+                                	type="text" class="form-control" placeholder="цуцлах код" aria-label="цуцлах код"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button on:click={handleDelete}
+                                    	class="btn btn-outline-secondary" type="button">Цуцлах</button>
+                                </div>
+                            </div>
+                           {/if}
+
+                            {#if appointment == null}
+						        <button on:click|preventDefault|stopPropagation={handleSubmit}
+						        	class="btn btn-primary" style="float: right; margin: 8px;">Цаг захиалах</button>
+						        {:else if appointment.user_id != 0}
+						        <button on:click|preventDefault|stopPropagation
+					        	class="btn btn-primary" style="float: right; margin: 8px;">Бүртгэсэн</button>
+						        {:else}
+						       <button on:click|preventDefault|stopPropagation={handleRegister}
+					        	class="btn btn-primary" style="float: right; margin: 8px;">Бүртгэх&Эмчилгээнд оруулах</button>
+						        {/if}
+                        </div>
+	</div>
 </Modal>
 
 
@@ -215,8 +305,8 @@
 }
 
 .btn-close{
-	width: 32px;
-	height: 32px;
+	width: 16px;
+	height: 16px;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -248,6 +338,12 @@ label{
 	padding-top:0px;
 }
 
+.center{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
 #form-div {
 	background-color:white;
 	padding-left:35px;

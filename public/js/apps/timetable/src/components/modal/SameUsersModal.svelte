@@ -30,7 +30,12 @@
 <div class="form-div"
 	on:click|stopPropagation|preventDefault
 	transition:fade>
-	<h3>Үйлчлүүлэгч бүртгэлтэй байж магадгүй байна<br />Төстэй хаягууд:</h3>
+	<div class="btn-close"
+  		on:click|preventDefault|stopPropagation={handleBack}>
+  		<img src="/js/apps/timetable/src/components/assets/close.png">
+  	</div>
+
+	<h3>Төстэй хаягууд:</h3>
 	<br />
 
 	<div class="row header-row">
@@ -70,14 +75,12 @@
 			<div class="row-item">
 				{user.register}
 			</div>
-			<div class="btn-add" on:click={()=>handleChoose(user)}>Цаг захиалах</div>
+			<div class="btn btn-primary" on:click={()=>handleChoose(user)}>Цаг захиалах</div>
 		</div>
 	{/each}
 
-	<footer class="footer">
-		<button class="btn-back btn btn-secondary" on:click|stopPropagation|preventDefault={handleBack}>Буцах</button>
-		<button class="btn-cancel btn" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
-	</footer>
+	<button class="btn-cancel btn btn-secondary" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
+	
 </div>
 </Modal>
 
@@ -90,7 +93,9 @@
 	padding-right:35px;
 	padding-top:35px;
 	padding-bottom:50px;
-	width: 50%;
+	max-width: 600px;
+	min-height: 400px;
+	max-height: 600px;
 	top: 10%;
 	left: 50%;
 	max-height: 95%;
@@ -123,6 +128,20 @@
 	.form-div{
 		width: 70%;
 	}
+}
+
+.btn-close{
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 3%;
+	cursor: pointer;
+}
+.btn-close > img{
+	max-width: 100%;
+	height: auto;
 }
 
 
@@ -166,13 +185,6 @@
 		-webkit-transition: all 0.3s;
 		-moz-transition: all 0.3s;
 		transition: all 0.3s;
-	}
-
-	.btn-back{
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		margin: 5px;
 	}
 
 	.btn-cancel{

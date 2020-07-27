@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             DoctorTreatmentDaySeeder::$date = $date1;
             $this->call(DoctorTreatmentDaySeeder::class);
 
-            LeaseDaySeeder::$lease_chance = 8;
+            LeaseDaySeeder::$lease_chance = 3;
             LeaseDaySeeder::$date = $date1;
             $this->call(LeaseDaySeeder::class);
 

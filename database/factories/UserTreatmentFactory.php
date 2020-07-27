@@ -34,7 +34,7 @@ $factory->define(UserTreatments::class, function (Faker $faker) {
 
         'treatment_id' => $rand_treatment->id,
         'treatment_selection_id' => $rand_treatment_selection == null? 0: $rand_treatment_selection->id,
-        'tooth_id' => $tooths->random()->id,
+        'tooth_id' => $tooths->random()->code,
         'value' => array_rand($decay_value_ids),
         'price' => $price
     ];

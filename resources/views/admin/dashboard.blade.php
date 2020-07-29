@@ -27,7 +27,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-5 text-center"><i class="iconsmind-Money text-primary" style="font-size: 50px;"></i></div>
+                        <div class="col-md-5 text-center"><i class="iconsmind-User text-primary" style="font-size: 50px;"></i></div>
                         <div class="col-md-7 text-right"><h4>{{$users_number}}</h4>Үйлчлүүлэгч</div>
                     </div>
                 </div>
@@ -37,7 +37,8 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-5 text-center"><i class="iconsmind-Money text-primary" style="font-size: 50px;"></i></div>
+                        <div class="col-md-5 text-center"><i class="iconsmind-Management
+                            text-primary" style="font-size: 50px;"></i></div>
                         <div class="col-md-7 text-right"><h4>{{$roles}}</h4>Ажилтан</div>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-5 text-center"><i class="iconsmind-Money text-primary" style="font-size: 50px;"></i></div>
+                        <div class="col-md-5 text-center"><i class="iconsmind-Alarm text-primary" style="font-size: 50px;"></i></div>
                         <div class="col-md-7 text-right"><h4>{{$appointments}}</h4>Цаг захиалсан</div>
                     </div>
                 </div>
@@ -57,8 +58,9 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-5 text-center"><i class="iconsmind-Money text-primary" style="font-size: 50px;"></i></div>
-                        <div class="col-md-7 text-right"><h4>{{$checkins}}</h4>Өнөөдрийн эмчилгээ</div>
+                        <div class="col-md-5 text-center"><i class="iconsmind-Hospital
+                            text-primary" style="font-size: 50px;"></i></div>
+                        <div class="col-md-7 text-right" style="font-size: 8px"><h4>{{$checkins}}</h4>Өнөөдөр хийгдсэн эмчилгээ </div>
                     </div>
                 </div>
             </div>

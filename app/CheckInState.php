@@ -10,16 +10,16 @@ class CheckInState extends Model
     protected $table = 'checkin_states';
 
     // for legacy code
-    public function getPendingAttribute(){
-        return $this->state==0;
+    public static function pending(){
+        return 0;
     }
-    public function getTreatmentDoneAttribute(){
-        return $this->state==2;
+    public static function treatment_done(){
+        return 2;
     }
-    public function getPaymentDoneAttribute(){
-        return $this->state==3;
+    public static function payment_done(){
+        return 3;
     }
-    public function getLeaseDoneAttribute(){
-        return $this->state==4;
+    public static function lease_done(){
+        return 4;
     }
 }

@@ -8,6 +8,7 @@ use App\UserTreatments;
 use App\Doctor;
 use App\Transaction;
 use App\Nurse;
+use App\CheckInState;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,42 +21,47 @@ class TreatmentAgainSeeder extends Seeder
      * @return void
      */ 
 
+    public static $treatment_again_chance = 100;
+    public static $date;
+    public static $min = 1;
+    public static $max = 5;
+
+    public static $treatments_min = 2;
+    public static $treatments_max = 5;
+
+
     public function run()
     {	
+        if (!isset(self::$date)){
+            self::$date = Date('Y-m-d');
+        }
+
         $faker = Faker::create();
 
         $doctors = Doctor::all();
-
-        $pmin = $faker->numberBetween(3, 5);
-        $pmax = $faker->numberBetween(5, 10);
 
         $patients = Patient::all();
         foreach($patients as $patient){
           	
 
-          	$chance = $faker->numberBetween(1, 10);
-          	// 60% chance
-          	if ($chance<3){
+          	$chance = $faker->numberBetween(1, 100);
+          	if ($chance>self::$treatment_again_chance){
           		continue;
           	}
-          	$patient = $patients->random();
+
           	$doctor = $doctors->random();
-            $tmin = $faker->numberBetween(3, 6);
-            $tmax = $faker->numberBetween(6, 12);
-            $this->forDoctor($faker, $doctor, $patient, $tmin, $tmax);
+            $this->forDoctor($faker, $doctor, $patient, self::$treatments_min, self::$treatments_max);
         }
     }
 
     private function forDoctor($faker, $doctor, $patient, $treatments_min, $treatments_max){
-    	$today = Date('Y-m-d');
-
-    	$shift = Shift::where('date', Date('Y-m-d'))
+    	$shift = Shift::where('date', self::$date)
     			->where('user_id', $doctor->id)
     			->first();
     	if (!$shift){
     		$shift = factory(Shift::class)->create([
 	    		'user_id'=>$doctor->id,
-	    		'date'=>$today
+	    		'date'=>self::$date
 	    	]);
     	}
 
@@ -67,11 +73,12 @@ class TreatmentAgainSeeder extends Seeder
         $checkin = factory(CheckIn::class)->create([
             'shift_id'=>$shift->id,
             'user_id'=>$patient->id,
-            'state'=>2,
+            'state'=>CheckInState::treatment_done(),
             'nurse_id'=>$nurses->random()->id
         ]);
 
-        $user_treatments = factory(UserTreatments::class, $faker->numberBetween($treatments_min, $treatments_max))
+        $user_treatments = factory(UserTreatments::class, 
+            $faker->numberBetween($treatments_min, $treatments_max))
                             ->create([
             'user_id'=>$patient->id,
             'checkin_id'=>$checkin->id
@@ -89,7 +96,7 @@ class TreatmentAgainSeeder extends Seeder
         ]);
 
         $checkin->update([
-            'state' => 3
+            'state' => CheckInState::payment_done()
         ]);
         
     }

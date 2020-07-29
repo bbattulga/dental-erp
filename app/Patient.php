@@ -34,10 +34,11 @@ protected $appends = ['last_treatment_date', 'check_in_today'];
    	return null;
    }
 
-   public function getCheckInTodayAttribute(){
+   public function getCheckinTodayAttribute(){
    		$checkin = CheckIn::where('user_id', $this->id)
-   							->where('date', Date('Y-m-d'))
+   							->where('state', 0)
    							->first();
+      return $checkin;
    }
 
    public function tooths(){

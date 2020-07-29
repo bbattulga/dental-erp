@@ -50,7 +50,7 @@ class ReceptionUserController extends Controller
 
       //  $date = explode('/', $request['birth_date']);
        // $birth_date = $date[2] . '-' . $date[0] . '-' . $date[1];
-
+        
       //  return 'before create user';
         $user = User::create([
                 'last_name'=>$request['last_name'],

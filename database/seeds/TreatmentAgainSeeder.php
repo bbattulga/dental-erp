@@ -50,7 +50,9 @@ class TreatmentAgainSeeder extends Seeder
           	}
 
           	$doctor = $doctors->random();
-            $this->forDoctor($faker, $doctor, $patient, self::$treatments_min, self::$treatments_max);
+            $again = $faker->numberBetween(self::$min, self::$max);
+            for($i=0; $i<$again; $i++)
+                $this->forDoctor($faker, $doctor, $patient, self::$treatments_min, self::$treatments_max);
         }
     }
 

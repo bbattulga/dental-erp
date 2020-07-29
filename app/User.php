@@ -20,6 +20,10 @@ class User extends Authenticatable
         'last_name', 'name', 'email', 'password','sex','location','register','birth_date','description','phone_number', 'role_id'
     ];
 
+    public function appointments(){
+        return $this->hasMany('App\Appointment', 'user_id', 'id');
+    }
+
     public function generateToken(){
         $this->api_token = $this->str_random();
         $this->save();

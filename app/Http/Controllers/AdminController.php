@@ -121,7 +121,7 @@ class AdminController extends Controller
         return view('admin.logs',compact('logs'));
     }
     public function users(){
-        $users = User::all();
+        $users = Patient::all();
         return view('admin.users',compact('users'));
     }
     public function user_check($id){

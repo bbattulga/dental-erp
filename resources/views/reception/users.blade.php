@@ -93,7 +93,8 @@
 
     <div class="container">
   <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg btn-newuser" 
+  <button id="btn-modal-register" type="button" 
+            class="btn btn-info btn-lg btn-newuser" 
             data-toggle="modal" 
             data-target="#registerModal">Шинэ үйлчлүүлэгч бүртгэх
     </button>
@@ -105,12 +106,12 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
+            <h4>Шинэ үйлчлүүлэгч нэмэх</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4>Modal Header</h4>
         </div>
         <div class="modal-body">
           
-                <div class="card-body">
+                <div class="">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -121,99 +122,97 @@
                         </div>
                     @endif
 
-                    <form action="#" method="post" enctype="multipart/form-data" id="form">
-                        @csrf
-                        <input type="hidden" name="appointment" value="@if(!empty($param)) 1 @else 0 @endif">
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="inputAddress2">Овог</label>
-                                    <input name="last_name" type="text" class="form-control" id="lname" placeholder="Овог" value="{{old('last_name')}}">
-                                    <span id="lname_msg" style="color:red"></span>
+                        <div class="">
+                            <form enctype="multipart/form-data" 
+                                id="form-register">
+                                @csrf
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">Овог</label>
+                                        <input type="text" 
+                                                class="form-control" id="last_name"
+                                                name="last_name"
+                                                placeholder="овог"
+                                                required>
+
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Нэр</label>
+                                        <input type="text" 
+                                                class="form-control" 
+                                                id="name" 
+                                                name="name"
+                                                placeholder="нэр"
+                                                required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="inputAddress2">Нэр</label>
-                                    <input name="name" type="text" class="form-control" id="fname" placeholder="Нэр"
-                                           @if(empty(old('name'))) value="@if(!empty($param)){{$param[0]}}@endif" @else value="{{old('name')}}" @endif>
-                                    <span id="fname_msg" style="color:red"></span>
+                                    <label for="inputAddress">Регистрийн дугаар</label>
+                                    <input type="text" 
+                                            class="form-control" 
+                                            id="register" 
+                                            name="register"
+                                            placeholder="АБ3948..."
+                                            required>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label>Хүйс сонгох</label>
-                                <select name="sex" id="inputState" class="form-control">
-                                    @if(!empty(old('sex')))
-                                        @if(old('sex')==0)
-                                            <option value="0">Эр</option>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">төрсөн он сар</label> <br />
+                                        <input type="date" name="birth_date">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Хүйс</label> <br />
+                                        <select name="sex">
+                                            <option value="0" selected>Эр</option>
                                             <option value="1">Эм</option>
-                                        @else
-                                            <option value="1">Эм</option>
-                                            <option value="0">Эр</option>
-                                        @endif
-                                    @else
-                                        <option value="0">Эр</option>
-                                        <option value="1">Эм</option>
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Төрсөн он сар</label>
-                                <input name="birth_date" autocomplete="off" class="form-control datepicker"
-                                       id = "birth" placeholder="Төрсөн он сар" value="{{old('birth_date')}}">
-                                <span id="date_msg" style="color:red"></span>
-                            </div>
-                        </div>
+                                        </select>
+                                    </div>
+                                </div>
 
-                        <br>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">Утас</label>
+                                        <input type="text" 
+                                                class="form-control" id="phone"
+                                                name="phone_number"
+                                                placeholder="8948..."
+                                                required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">email</label>
+                                        <input type="email" 
+                                                class="form-control" 
+                                                id="email" 
+                                                name="email"
+                                                placeholder="john.doe@gmail.com...">
+                                    </div>
+                                </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputEmail4">Цахим хаяг</label>
-                                <input name="email" type="email" class="form-control" id="email"
-                                       placeholder="Цахим хаягаа оруулна уу" value="{{old('email')}}">
-                                <span id="email_msg" style="color:red"></span>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">Регистрийн дугаар</label>
-                                <input name="register" type="text" class="form-control" id="registernum"
-                                       placeholder="Регистрийн дугаараа оруулна уу" value="{{old('register')}}">
-                                <span id="registernum_msg" style="color:red"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress">Утасны дугаар</label>
-                            <input name="phone_number" type="text" class="form-control" id="phone" placeholder="Утасны дугаараа оруулна уу"
-                                   @if(empty(old('phone_number')))value="@if(!empty($param)){{$param[1]}}@endif" @else value="{{old('phone_number')}}" @endif>
-                            <span id="phone_msg" style="color:red"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress2">Гэрийн хаяг</label>
-                            <input name="location" type="text" class="form-control" id="Address" placeholder="Гэрийн хаягаа оруулна уу" value="{{old('location')}}">
-                            <span id="address_msg" style="color:red"></span>
-                        </div>
+                                <div class="form-group">
+                                    <label for="inputAddress">Гэрийн хаяг</label>
+                                    <input type="text" 
+                                            class="form-control" 
+                                            name="location"
+                                            placeholder="СБД...">
+                                </div>
 
-                        <label for="inputState">Тайлбар</label>
+                                <div class="form-group">
+                                    <label for="inputAddress">Тайлбар</label>
+                                    <input type="text" 
+                                            class="form-control" 
+                                            name="description"
+                                            placeholder="...">
+                                </div>
 
-                        <textarea class="form-control" data-val="true" data-val-length="Maximum = 1000000 characters" data-val-length-max="100000" id="info" name="info"  placeholder="Тайлбар">{{old('info')}}</textarea>
-
-
-                        <div class="form-group row mb-0">
-                            <div class="col-sm-10">
-                                <br>
-                                <button id="btnSubmitNewUser" type="button" 
-                                    class="btn btn-primary" 
-                                    data-toggle="modal" 
-                                    data-target="#registerModal">
-                                        Үйлчлүүлэгч нэмэх
+                                <button id="btnSubmitNewUser"
+                                     class="btn btn-primary d-block mt-3"
+                                     data-dismiss="modal"
+                                        style="float:right;">
+                                    Бүртгэх
                                 </button>
-                            </div>
+                            </form>
                         </div>
-                        <input type="hidden" name="appointment_id" value="@if(!empty($param)) {{$param[2]}} @endif">
-                    </form>
         </div>
       </div>
       
@@ -247,7 +246,7 @@
                        <th></th>
                     </tr>
                     </thead>
-                    <tbody id="usersRowsContainer">
+                    <tbody id="users_rows_container">
                     <?php $i = 1?>
                     @foreach($users as $user)
                         @if(is_null($user->role))
@@ -256,7 +255,6 @@
 
                             <td>
                                 {{$i}}
-                                
                                 <input id="userdatajson-{{$user->id}}" type="hidden" value="{{$user}}">
                             </td>
                             <td>{{$user->last_name}}</td>
@@ -273,18 +271,19 @@
                             <td>{{$user->register}}</td>
                             <td>{{$user->phone_number}}</td>
 
-                            @if(!empty($user->check_in_today))
-                            <td>{{$user->check_in_today->shift->date}}</td>
+                            @if(!empty($user->checkin_today))
+                            <td id="td-checkin-{{$user->id}}">Тийм</td>
                             @else
-                            <td>цаг захиалаагүй</td>
+                            <td id="td-checkin-{{$user->id}}">---</td>
                             @endif
-                            <td>{{ $user->last_treatment_date}}</td>
+                            <td>{{ $user->last_treatment_date == null? '---': $user->last_treatment_date }}</td>
                             <td>
                                 {{--$user->email--}}
                                 <div class="row-crud-user">
                                     <div class="crud-ic tooltip-my" 
                                     data-toggle="modal" 
-                                            data-target="#checkinModal">
+                                            data-target="#checkinModal"
+                                    onclick="setCheckinUserId(event, {{$user->id}})">
                                         <img src="{{ asset('/img/icon/teethcare.png') }}">
                                         <div class="tooltiptext"                                           
                                             type="button">
@@ -329,12 +328,15 @@
         <div class="modal-body">
 
             @foreach(App\Doctor::all() as $doctor)
-            <div>{{$doctor->name}}</div>
-            <button onclick="submitCheckIn(event, {{$doctor->id}})"
-                class="btn btn-primary">
-                {{ $doctor->last_name.substr(0, 2).'.'.$doctor->name }}
-            </button>
-            @endforeach..
+            <div style="display: grid; grid-template-columns: 8fr 2fr;
+                                        box-shadow: 1px 1px 2px #444444; margin-bottom: 5px;">
+                <div>{{$doctor->last_name}}. {{$doctor->name}}</div>
+                <button onclick="submitCheckIn(event, {{$doctor->id}})" data-dismiss="modal"
+                    class="btn btn-primary" style=" margin-bottom: 10px;">
+                    сонгох
+                </button>
+            </div>
+            @endforeach
         </div>
       </div>
     </div>
@@ -344,18 +346,16 @@
 
 
 <!-- delete request -->
-
 <form id="form-user-delete" action="#" method="delete" enctype="multipart/form-data">
     @csrf
     <input id="delete-user-id" type="hidden" name="id" value="">
 </form>
 
-<form id="form-checkin">
-    <input type="hidden" name="checkin_user_id">
-    <input type="hidden" name="checkin_doctor_id">
+<form id="form-checkin" action="#" method="post" enctype="multipart/form-data" >
+    @csrf
+    <input id="checkin_user_id" type="hidden" name="user_id">
+    <input id="checkin_doctor_id" type="hidden" name="doctor_id">
 </form>
-
-
 @endsection
 @section('footer')
     
@@ -417,10 +417,58 @@
             // $("#checkinModalContent").css('width', '100%');
         });
 
+    function _calculateAge(birthday) { // birthday is a date
+        var ageDifMs = Date.now() - birthday.getTime();
+        var ageDate = new Date(ageDifMs); // miliseconds from epoch
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
 
     let userCreateUrl = '/api/users/create';
     let userDeleteUrl = '/api/users/delete';
     function addNewUser(data){
+        console.log('add new user');
+        console.log(data);
+        let user = data;
+
+        let rowCrud = `<div class="row-crud-user">`+
+                           `<div id="user-checkin-${user.id}" class="crud-ic tooltip-my" `+
+                                    `data-toggle="modal"`+
+                                   `data-target="#checkinModal"`+
+                                    ` onclick="setCheckinUserId(event, ${user.id})">`+
+                             `<img src="/img/icon/teethcare.png">`+
+                             `<div class="tooltiptext"` +                                    
+                                  `  type="button"> `+
+                                   ` Эмчилгээнд оруулах `+
+                                `</div>` +
+                           ` </div> `+
+
+                           ` <div class="crud-ic tooltip-my"> `+
+                                    `<img src="/img/icon/pen.png">`+
+                                    `<div class="tooltiptext"> `+
+                                       `Засах `+
+                                    `</div>` +
+                            `</div>`+
+                            `<div id="user-del-${user.id}" onclick="deleteUser(${user.id})"`+
+                                `class="crud-ic tooltip-my">`+
+                                `<img src="/img/icon/trashbin.png">` +
+                                `<div class="tooltiptext">`+
+                                    ` Хаяг устгах` +
+                               ` </div>`+
+                            `</div>`+
+                       `</div>`;
+
+        let row = `<td>-</td>`+
+                `<input id="userdatajson-${user.id}" type="hidden" value="${user}">`+
+                `<td>${user.last_name}</td>`+
+                `<td>${user.name}</td>`+
+                `<td>${user.sex == '0'?'Эр': 'Эм'}</td>`+
+                `<td>${_calculateAge(new Date(user.birth_date))}</td>`+
+                `<td>${user.register}</td>`+
+                `<td>${user.phone_number}</td>`+
+                `<td id="td-checkin-${user.id}">---</td>`+
+                `<td>---</td>`+
+                `<td>${rowCrud}</td>`;
+        $("#users_rows_container").prepend(row);
         /*
             user = {
                 user_id: 1,
@@ -462,24 +510,50 @@
         });
     }
 
-    $("#btnSubmitNewUser").click(function(){
+    $("#btnSubmitNewUser").click(function(event){
+        event.preventDefault();
         let url = '/api/users/create';
         $.ajax({
             type: 'POST',
             url: url,
-            data: $("#form").serialize(),
+            data: $("#form-register").serialize(),
             success: addNewUser,
             fail: function(err){alert('алдаа гарлаа')}
         });
         return true;
     });
 
+    function setCheckinUserId(event, userId){
+        event.preventDefault();
+        $("#checkin_user_id").val(userId);
+    }
+
+    function getCheckInUserId(){
+        return $("#checkin_user_id").val();
+    }
+
+    function checkinSuccess(){
+        let userId = getCheckInUserId();
+        $(`#td-checkin-${userId}`).html('Тийм');
+        alert('Ok');
+    }
+
+    function checkinFail(){
+        aleret('Алдаа гарлаа')
+    }
+
     function submitCheckIn(event, doctorId){
         event.preventDefault();
-        let userId = document.getElementById('checkin_user_id');
-        console.log(doctorId);
-        $("#checkinModal").modal('hide');
+        $("#checkin_doctor_id").val(doctorId);
+        $.ajax({
+            type: 'POST',
+            url: '/api/checkins/create',
+            data: $("#form-checkin").serialize(),
+            success: checkinSuccess,
+            fail: checkinFail
+        });
     }
+
     </script>
 
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>

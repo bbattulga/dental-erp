@@ -31,7 +31,7 @@ class UserController extends Controller
         if(empty($request['email']))
             $request['email'] = 'nomail@gmail.com';
         if(empty($request['password'])){
-            $request['password'] = 'secret';
+            $request['password'] = bcrypt('secret');
         }
         $user = User::create($request->all());
         return $user;

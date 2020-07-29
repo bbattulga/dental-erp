@@ -112,7 +112,7 @@
 
                   @else
                   <td>
-                    <!-- <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/2')}}"> -->
+                     <a href="{{url('/reception/shifts/'.$i.'/'.$doctor->id.'/2')}}">
                         <button class="btn btn-light hidden">Тавигдаагүй<br><span class="text-right"
                           style="font-size: 10px">ээлж тавих</span>
                       </button>
@@ -150,10 +150,6 @@
         document.getElementById('shiftTypeId').value = shift_time;
         document.getElementById('shiftDate').innerHTML = shift_date;
         $("#deleteShiftModal").modal();
-    }
-
-    function createShift(doctor_id, shift_date,shift_type_id){
-
     }
 </script>
 @endsection

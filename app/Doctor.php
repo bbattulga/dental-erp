@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Roles;
 use App\User;
+use App\Shift;
+
 
 class Doctor extends User
 {
@@ -16,5 +18,11 @@ class Doctor extends User
         static::addGlobalScope('is_doctor', function(Builder $builder){
             $builder->where('role_id', '=', Roles::doctor()->id);
         });
+    }
+
+    public function getShiftTodayAttribute(){
+    	return Shift::where('date', Date('Y-m-d'))
+    				->where('user_id', $this->id)
+    				->first();
     }
 }

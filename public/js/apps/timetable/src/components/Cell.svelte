@@ -14,6 +14,7 @@
 	import SameUsersModal from './modal/SameUsersModal.svelte';
 	import {storeSearch, storeUserBaseData} from '../stores/stores.js';
 	import {floatToTime, timeToFloat} from '../lib/datetime.js';
+	import CheckInState from './CheckInState.svelte';
 
 	// dispatch events
 	let dispatch = createEventDispatcher();
@@ -52,6 +53,8 @@
 	let empty =  (appointment == null) && !disabled;
 	let notregistered = !empty && !disabled && (appointment.user_id == 0);
 	let registered = !empty && !disabled && (appointment.user_id != 0);
+	let checkin = null;
+	$: checkin = appointment == null ? null:appointment.checkin;
 
 	let match = null;
 	let nomatch = false;
@@ -478,7 +481,14 @@ onDestroy(()=>{
 				{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}
 			</div>
 			<div>{appointment.phone}</div>
-			<div>paid</div>
+
+			<!-- show checkin state -->
+			{#if checkin}
+				<div class="state-row">
+					<CheckInState {checkin} />
+				</div>
+			{/if}
+			<!-- end show checkin state -->
 		</div>
 		<div class="btn-resize-btm" on:mousedown|self|stopPropagation={handleStartResizeBottom}>
 			</div>
@@ -540,11 +550,34 @@ onDestroy(()=>{
 	  position: relative;
 	}
 
+	.state-row{
+		position: absolute;
+		top: 5%;
+		right: 1%;
+
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		width:  100%;
+	}
+
+	.state-icon{
+		width: 18px;
+		height: 18px;
+		margin: 2px;
+		margin-bottom: 1vh;
+	}
+
+	.state-icon > img{
+		max-width: 100%;
+		height: auto;
+	}
+
 	.btn-resize-btm, .btn-resize-top{
 		position: absolute;
-		width: 100%;
 		height: 12%;
 		cursor: row-resize;
+		width: 100%;
 	}
 	.btn-resize-top{
 		top: 0;

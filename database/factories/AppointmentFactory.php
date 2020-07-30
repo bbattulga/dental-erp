@@ -23,10 +23,11 @@ $factory->define(Appointment::class, function (Faker $faker) {
         // should be overriden
         'user_id' => 0,
         'shift_id' => 0,
+        'checkin_id' => 0,
         
         'created_by' => $reception->id,
 
-        'name' => $faker->name,
+        'name' => $faker->firstName,
         'phone' => $faker->numberBetween(86000000, 96000000),
         'start' => $start,
         'end' => $start+$hours,

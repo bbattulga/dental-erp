@@ -77,7 +77,7 @@ class AppointmentController extends Controller
         if ($date == null){
             $date = Date('Y-m-d');
         }
-        return Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
+        return Shift::with('appointments', 'appointments.user', 'appointments.checkin' , 'appointments.checkin', 'doctor')
             ->where('shifts.date', $date)
             ->get();
     }

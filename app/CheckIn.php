@@ -31,11 +31,9 @@ class CheckIn extends Model
     public function user_promotion() {
         return $this->hasOne('App\UserPromotions', 'checkin_id', 'id');
     }
-    public function delete(){
-        $this->treatments->delete();
-        return parent::delete();
+    public function leases(){
+        return $this->hasMany('App\Lease', 'checkin_id', 'id');
     }
-
     // for legacy code
     public function getPendingAttribute(){
         return $this->state==CheckInState::pending();
@@ -48,5 +46,14 @@ class CheckIn extends Model
     }
     public function getLeaseDoneAttribute(){
         return $this->state==CheckInState::lease_done();
+    }
+
+    public function delete(){
+        $this->transactions->delete();
+        $this->user_promotion->delete();
+        $this->appointments->delete();
+        $this->treatments->delete();
+        $this->leases->delete();
+        parent::delete();
     }
 }

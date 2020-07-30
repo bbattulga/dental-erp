@@ -11,19 +11,20 @@ use App\User;
 
 class Patient extends User
 {
-    //
-    use SoftDeletes;
+    // if uncomment this, uncomment delete method too and vice versa
+    // use SoftDeletes;
 
     
     protected $table = 'users';
+    //Make it available in the json response
+    protected $appends = ['last_treatment_date', 'check_in_today'];
+  
     
     protected static function booted(){
     	static::addGlobalScope('is_patient', function(Builder $builder){
     		$builder->where('role_id', null);
     	});
     }	
-//Make it available in the json response
-protected $appends = ['last_treatment_date', 'check_in_today'];
 
    public function getLastTreatmentDateAttribute(){
    	$checkin = CheckIn::orderBy('id', 'desc')->where('user_id', $this->id)
@@ -44,5 +45,11 @@ protected $appends = ['last_treatment_date', 'check_in_today'];
    public function tooths(){
     return $this->hasMany('App\UserTooth', 'user_id', 'code')
                   ->withColumn('tooth_type_id');
+   }
+
+   public function delete(){
+      $this->appointments->delete();
+      $this->checkins->delete();
+      parent::delete();
    }
 }

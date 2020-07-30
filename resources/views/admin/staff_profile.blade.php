@@ -435,6 +435,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <table class="table">
+                                            <h6>Бүтэн - {{$count_full}}  &nbsp; &nbsp;Хагас - {{$count_half}}</h6>
                                             <thead>
                                             <tr>
                                                 <th>Өдөр</th>
@@ -448,10 +449,10 @@
                                                 <tr>
                                                     <td>{{$shift->date}}</td>
                                                     <td>
-                                                        @if($shift->shift_id == 1)
+                                                        @if($shift->shift_type_id == App\ShiftType::morning())
                                                             Өглөөний ээлж
-                                                        @elseif($shift->shift_id == 2)
-                                                            Оройн ээлж
+                                                        @elseif($shift->shift_type_id == App\ShiftType::evening())
+                                                            Оройны ээлж
                                                         @else
                                                             Бүтэн ээлж
                                                         @endif

@@ -6,8 +6,9 @@
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
 	import CheckInModal from './CheckInModal.svelte';
-
+	import CheckInState from '../CheckInState.svelte';
 	import {floatToTime, timeToFloat, isValidTime} from '../../lib/datetime.js';
+	import {checkinStateName} from '../../lib/lib.js';
 
 	export let show = true;
 	export let shift;
@@ -271,8 +272,18 @@
 						        <button on:click|preventDefault|stopPropagation={handleSubmit}
 						        	class="btn btn-primary" style="float: right; margin: 8px;">Цаг захиалах</button>
 						        {:else if appointment.user_id != 0}
-						        <button on:click|preventDefault|stopPropagation
-					        	class="btn btn-primary" style="float: right; margin: 8px;">Бүртгэсэн</button>
+
+						        <div on:click|preventDefault|stopPropagation
+					        	class="btn" style="float: right; margin: 8px;">
+					        		<!-- show state -->
+					        		<CheckInState 
+					        			iwidth={48}
+					        			iheight={48}
+					        			checkin={appointment.checkin}
+					        		/>
+					        		{checkinStateName(appointment.checkin.state)}
+					        	</div>
+					        	
 						        {:else}
 						       <button on:click|preventDefault|stopPropagation={handleRegister}
 					        	class="btn btn-primary" style="float: right; margin: 8px;">Бүртгэх&Эмчилгээнд оруулах</button>

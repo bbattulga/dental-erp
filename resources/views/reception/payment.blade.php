@@ -159,18 +159,6 @@
         <input type="hidden" class="dnone" id="total{{$loop->index}}" value="{{$total}}">
 
     @endforeach
-
-
-        <div class="col-md-4"><!--profile heseg-->
-
-
-            <div class="card "><!--row -->
-                <div class="card-body">
-                    <div>default</div>
-                </div>
-            </div>
-        </div>
-
     </div><!--end row-->
 
 @endsection

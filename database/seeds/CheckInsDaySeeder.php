@@ -17,6 +17,7 @@ class CheckInsDaySeeder extends Seeder
 
     public static $date;
     public static $shifts;
+    public static $chance = 100;
 
     public static $min = 5;
     public static $max = 12;
@@ -52,21 +53,30 @@ class CheckInsDaySeeder extends Seeder
                     continue; // or may create appointments
                 }
                 foreach($appointments as $appointment){
+
+                    $c = $faker->numberBetween(1, 100);
+                    if ($c>self::$chance){
+                        continue;
+                    }
                     if ($appointment->user_id != 0){
                         $patient = $appointment->user;
                     }
                     else{
                         // register
                         $patient = factory(Patient::class)->create([
+                            'last_name'=>$faker->lastName,
                             'name' => $appointment->name,
                             'phone_number' => $appointment->phone
                         ]);
-                        $appointment->update(['user_id'=>$patient->id]);
                     }
-                    
-                    factory(CheckIn::class)->create([
+                    $checkin = factory(CheckIn::class)->create([
                         'shift_id' => $shift->id,
                         'user_id' => $patient->id
+                    ]);
+
+                    $appointment->update([
+                        'checkin_id'=>$checkin->id,
+                        'user_id'=>$patient->id
                     ]);
                     
                     $treatment_again = $faker->numberBetween(1, 100);

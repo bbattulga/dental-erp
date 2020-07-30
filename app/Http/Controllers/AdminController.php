@@ -20,6 +20,7 @@ use App\Patient;
 use App\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\ShiftType;
 
 
 class AdminController extends Controller
@@ -62,9 +63,7 @@ class AdminController extends Controller
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);
         return redirect('/admin/add_staff');
     }
-    //---------------
-    //PRODUCT SECTION
-    //---------------
+
     public function profile($id){
         $user = User::find($id);
         $checkins = array();
@@ -74,7 +73,15 @@ class AdminController extends Controller
                     ->where('date','>=', date('Y-m-d', strtotime('first day of this month')))
                     ->orderBy('id', 'desc')
                     ->get();
-            return view('admin.staff_profile',compact('user', 'shifts'));
+            $count_full = 0;
+            $count_half = 0;
+            foreach($shifts as $shift){
+                if ($shift->shift_type_id == ShiftType::full())
+                    $count_full++;
+                else
+                    $count_half++;
+            }
+            return view('admin.staff_profile',compact('user', 'shifts', 'count_full', 'count_half'));
         } else if($user->role_id == Roles::nurse()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins'));

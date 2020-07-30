@@ -20,9 +20,14 @@ class User extends Authenticatable
         'last_name', 'name', 'email', 'password','sex','location','register','birth_date','description','phone_number', 'role_id'
     ];
 
-    public function appointments(){
-        return $this->hasMany('App\Appointment', 'user_id', 'id');
-    }
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 
     public function generateToken(){
         $this->api_token = $this->str_random();
@@ -31,18 +36,18 @@ class User extends Authenticatable
     }
 
     function str_random(
-    int $length = 64,
-    string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-): string {
-    if ($length < 1) {
-        throw new \RangeException("Length must be a positive integer");
-    }
-    $pieces = [];
-    $max = mb_strlen($keyspace, '8bit') - 1;
-    for ($i = 0; $i < $length; ++$i) {
-        $pieces []= $keyspace[random_int(0, $max)];
-    }
-    return implode('', $pieces);
+        int $length = 64,
+        string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ): string {
+        if ($length < 1) {
+            throw new \RangeException("Length must be a positive integer");
+        }
+        $pieces = [];
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $pieces []= $keyspace[random_int(0, $max)];
+        }
+        return implode('', $pieces);
 }
 
     public function role(){
@@ -65,16 +70,12 @@ class User extends Authenticatable
     public function photos(){
         return $this->morphMany('App\Photo', 'imageable');
     }
-
-    public function checkins(){
-        return $this->hasMany('App\CheckIn','user_id','id');
+    
+    public function appointments(){
+        return $this->hasMany('App\Appointment', 'user_id', 'id');
     }
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+
+  public function checkins(){
+        return $this->hasMany('App\CheckIn','user_id','id');
+  }
 }

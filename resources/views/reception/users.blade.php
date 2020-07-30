@@ -84,6 +84,10 @@
             top: 0;
         }
 
+        .modal-body{
+            background-color: #f8f8f8f8;
+        }
+
     </style>
 @endsection
 @section('content')
@@ -327,14 +331,41 @@
         </div>
         <div class="modal-body">
 
-            @foreach(App\Doctor::all() as $doctor)
-            <div style="display: grid; grid-template-columns: 8fr 2fr;
-                                        box-shadow: 1px 1px 2px #444444; margin-bottom: 5px;">
-                <div>{{$doctor->last_name}}. {{$doctor->name}}</div>
-                <button onclick="submitCheckIn(event, {{$doctor->id}})" data-dismiss="modal"
-                    class="btn btn-primary" style=" margin-bottom: 10px;">
-                    сонгох
-                </button>
+            @foreach(App\User::where('role_id', App\Roles::doctor()->id)->get() as $doctor)
+            <div>
+                <div class="card d-flex flex-row mb-4">
+                                <a class="d-flex" href="#">
+                                    <img alt="Profile" src="/img/staffs/{{$doctor->profile_pic}}" class="img-thumbnail border-0 rounded-circle m-4 list-thumbnail align-self-center small">
+                                </a>
+                                <div class=" d-flex flex-grow-1 min-width-zero">
+                                    <div class="card-body pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
+                                        <div class="min-width-zero">
+                                            <a href="#">
+                                                @php
+                                                    $fname = $doctor->name;
+                                                    $lname = $doctor->last_name;
+                                                    $display_name = substr($lname, 0, 2) .'. '. $fname;
+                                                @endphp
+                                                <p class="list-item-heading mb-1 truncate">{{$display_name}}</p>
+                                            </a>
+                                            <p class="mb-2 text-muted text-small">
+                                                @php
+                                                    $shift_today = App\Shift::where('date', Date('Y-m-d'))
+                                                                            ->where('user_id', $doctor->id)
+                                                                            ->first();
+                                                @endphp
+                                                @if ($shift_today)
+                                                    Өдөр: {{$shift_today->date}}
+                                                @else
+                                                    Өнөөдөр ээлж байхгүй
+                                                @endif
+                                            </p>
+                                        </div>
+                                        @if ($shift_today)
+                                        <button class="btn btn-primary">сонгох</button>
+                                        @endif
+                                    </div>
+                                </div>
             </div>
             @endforeach
         </div>

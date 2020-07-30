@@ -108,7 +108,9 @@
 		console.log(appointment);
 		axios.post('/api/appointments/create', appointment)
 			.then(response=>{
-				id = response.data;
+				console.log('appointment created')
+				console.log(response.data);
+				id = response.data.id;
 				appointment.id = id;
 				empty = false;
 				console.log('cell successfully recorded');
@@ -120,11 +122,18 @@
 				}
 
 				let checkin = {
+					appointment_id: appointment.id,
 					user_id: appointment.user_id,
 					shift_id: appointment.shift_id
 				};
 				axios.post('/api/checkins/create', checkin)
-					.then(response=>console.log('checkin created'))
+					.then(response=>{
+						console.log('checkin created')
+						let checkin = response.data;
+						// clone appointment
+						appointment.checkin_id = checkin.id;
+						appointment.checkin = checkin;
+					})
 					.catch(err=>console.log(err));
 			})
 			.catch(err=>{
@@ -137,18 +146,31 @@
 		let detail = event.detail;
 		appointment.user = detail.user;
 		appointment.user_id = detail.user.id;
-		notregistered = false;
-		registered = true;
-		appointment = appointment;
-		let checkin = {
+
+		axios.put('/api/appointments/update', appointment)
+			.then(response=>{
+				notregistered = false;
+				registered = true;
+				appointment = appointment;
+
+				// create checkin
+				let data = {
+					appointment_id: appointment.id,
 					user_id: appointment.user_id,
 					shift_id: appointment.shift_id
 				};
-		axios.put('/api/appointments/update', appointment)
-			.then(response=>{
-				axios.post('/api/checkins/create', checkin)
-					.then(response=>console.log('checkin created'))
-					.catch(err=>console.log(err));
+				axios.post('/api/checkins/create', data)
+					.then(response=>{
+						let checkin = response.data;
+						appointment.checkin_id = checkin.id;
+						appointment.checkin = checkin;
+					})
+					.catch(err=>{
+						alert('Алдаа гарлаа')
+						console.log(err);
+						appointment.user = null;
+						appointment.user_id = 0;
+					});
 					})
 			.catch(err=>console.log(err));
 	}
@@ -182,12 +204,10 @@
 			if (!appointment.checkin){
 				return;
 			}
-			console.log('deleting checkin with id', appointment.checkin.id);
-			axios.delete(`/api/checkins/delete/${appointment.checkin.id}`)
-				.then(response=>console.log('checkin deleted'))
-				.catch(err=>console.log('could not delete checkin'));
-
-		}).catch(err=>console.log(err));
+		}).catch(err=>{
+			console.log(err);
+			alert('Алдаа гарлаа')
+		});
 	}
 
 	const handleRegisterModal = (event) => {
@@ -248,6 +268,7 @@
 				axios.put('/api/appointments/update', {id: appointment.id, user_id: user.id});
 
 				let checkin = {
+					appointment_id: appointment.id,
 					user_id: user.id,
 					shift_id: appointment.shift_id
 				};
@@ -255,7 +276,9 @@
 				console.log('checkin');
 				axios.post('/api/checkins/create', checkin)
 					.then(response=>{
-						appointment.checkin = response.data;
+						let checkin = response.data;
+						appointment.checkin_id = checkin.id;
+						appointment.checkin = checkin;
 						console.log('checkin created');
 						console.log(appointment.checkin);
 					})
@@ -455,6 +478,7 @@ onDestroy(()=>{
 				{registered? appointment.user.last_name.charAt(0)+'. '+appointment.user.name: appointment.name}
 			</div>
 			<div>{appointment.phone}</div>
+			<div>paid</div>
 		</div>
 		<div class="btn-resize-btm" on:mousedown|self|stopPropagation={handleStartResizeBottom}>
 			</div>

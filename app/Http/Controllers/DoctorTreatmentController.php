@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Roles;
 use App\ToothType;
 use App\UserTooth;
+use App\CheckInState;
 
 
 class DoctorTreatmentController extends Controller
@@ -37,6 +38,12 @@ class DoctorTreatmentController extends Controller
             $user_tooths = UserTooth::with('tooth_type', 'tooth')
                             ->where('user_id', $checkin->user_id)
                             ->get();
+
+            // udpate checkin state
+            $checkin->update([
+                'state' => CheckInState::treatment_started()
+            ]);
+            
             return view('doctor.treatment',
                     compact('checkin', 'treatments','user_treatments', 
                             'checkin_all', 'nurses', 'category', 'treatmentCategories',

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\CheckIn;
 use App\Shift;
+use App\Appointment;
 
 
 
@@ -39,7 +40,20 @@ class CheckInController extends Controller
 			'created_by' => Auth::user()->id,
 			'nurse_id' => 0
 		]);
+
+		// update appointment
+		if (!empty($request['appointment_id'])){
+			$appointment = Appointment::findOrFail($request['appointment_id'])
+							->update([
+								'checkin_id' => $checkin->id
+							]);
+		}
+
 		return $checkin;
+	}
+
+	public function toAppointment(Request $request){
+
 	}
 
 	public function toDoctor(Request $request){

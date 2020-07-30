@@ -13,6 +13,10 @@ class CheckInState extends Model
     public static function pending(){
         return 0;
     }
+    public static function treatment_started(){
+        return 1;
+    }
+
     public static function treatment_done(){
         return 2;
     }

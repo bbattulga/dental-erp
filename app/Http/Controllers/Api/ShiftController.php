@@ -15,7 +15,7 @@ class ShiftController extends Controller
 	public function index(Request $request){
 
         // return all shifts
-        $shifts = Shift::with('appointments', 'appointments.user', 'doctor')
+        $shifts = Shift::with('appointments', 'appointments.user', 'appointments.checkin' ,'doctor')
             ->get();
         return $shifts;
 	}
@@ -32,7 +32,7 @@ class ShiftController extends Controller
 		if (!$date)
 			$date = Date('Y-m-d');
 
-		$shifts = Shift::with('appointments', 'appointments.user', 'doctor')
+		$shifts = Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date' , '=', $date)
             ->get();
 
@@ -59,14 +59,14 @@ class ShiftController extends Controller
 
 		// show doctor's shifts data between date1 and date2
 		if ($doctor_id = $request['doctor_id']){
-			$shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+			$shifts =  Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
 			->where('shifts.user_id', '=', $doctor_id)
             ->where('shifts.date','>=',$date1)
             ->where('shifts.date', '<=',$date2)
             ->get();
 		}else{
 			// show all shifts data between date1 and date2
-			$shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+			$shifts =  Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date','>=',$date1)
             ->where('shifts.date', '<=',$date2)
             ->get();
@@ -88,12 +88,12 @@ class ShiftController extends Controller
         if ($date == null){
             $date = Date('Y-m-d');
         }
-        return Shift::with('appointments', 'appointments.user', 'doctor')
+        return Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date', $date)
             ->get();
     }
     public function today(){
-        return Shift::with('appointments', 'appointments.user', 'doctor')
+        return Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date', Date('Y-m-d'))
             ->get();    
     }
@@ -109,14 +109,14 @@ class ShiftController extends Controller
         $user_id = $request['doctor_id'];
 
         if ($user_id == null){
-            $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+            $shifts =  Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date','>=',$date1)
             ->where('shifts.date', '<=',$date2)
             ->get();
             return $shifts;
         }
 
-        $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+        $shifts =  Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date','>=',$date1)
             ->where('shifts.date', '<=',$date2)
             ->where('shifts.user_id', '=', $user_id)

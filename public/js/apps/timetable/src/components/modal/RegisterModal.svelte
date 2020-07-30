@@ -86,7 +86,7 @@
 <Modal bind:showModal={show}>
 <div transition:fly="{{y: -200, duration: 500}}" class="card mb-4 center" style="max-width: 500px;"
 	on:click|preventDefault|stopPropagation>
-<div class="card-body">
+<div class="card-body" on:click|stopPropagation>
 <div class="btn-close"
   		on:click|preventDefault|stopPropagation={close}>
   		<img src="/js/apps/timetable/src/components/assets/close.png">

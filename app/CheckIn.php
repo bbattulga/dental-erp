@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\CheckInState;
+
 
 class CheckIn extends Model
 {
@@ -10,6 +12,9 @@ class CheckIn extends Model
     protected $fillable = ['shift_id', 'user_id', 'state', 'created_by', 'nurse_id'];
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');
+    }
+    public function appointments(){
+        return $this->hasMany('App\Appointment', 'checkin_id', 'id');
     }
     public function doctor() {
         return $this->hasOne('App\Roles', 'id', 'doctor_id');
@@ -33,15 +38,15 @@ class CheckIn extends Model
 
     // for legacy code
     public function getPendingAttribute(){
-        return $this->state==0;
+        return $this->state==CheckInState::pending();
     }
     public function getTreatmentDoneAttribute(){
-        return $this->state==2;
+        return $this->state==CheckInState::treatment_done();
     }
     public function getPaymentDoneAttribute(){
-        return $this->state==3;
+        return $this->state==CheckInState::payment_done();
     }
     public function getLeaseDoneAttribute(){
-        return $this->state==4;
+        return $this->state==CheckInState::lease_done();
     }
 }

@@ -20,11 +20,10 @@ class AppointmentController extends Controller
     //
     public function index(){
         // return all appointments with relations
-        return Appointment::with(['shift', 'shift.doctor'])->get();
+        return Appointment::with(['shift', 'checkin' ,'shift.doctor'])->get();
     }
 
     public function store(Request $request) {
-        
         // validate then create
         /*
         $request->validate([
@@ -37,14 +36,15 @@ class AppointmentController extends Controller
 
         $appointment = Appointment::create([
                 'shift_id'=>$request['shift_id'],
-                'user_id'=> $request['user_id']? $request['user_id']:0,
+                'user_id'=> !empty($request['user_id'])? $request['user_id']:0,
+                'checkin_id'=> 0,
                 'name'=>$request['name'], 
                 'phone'=>$request['phone'], 
                 'start'=>$request['start'], 
                 'end'=>$request['end'], 
                 'created_by'=> Auth::user()->id
             ]);
-        return $appointment->id;
+        return $appointment;
     }
 
     public function update(Request $request){
@@ -60,10 +60,13 @@ class AppointmentController extends Controller
     }
 
     public function show($id){
-        if ($id)
-            return Appointment::findOrfail($id);
+        if ($id){
+            return Appointment::with(['shift', 'checkin' ,'shift.doctor'])
+                                ->where('id', $id)
+                                ->first();
+        }
         if ($date){
-            return Shift::with('appointments', 'appointments.user', 'doctor')
+            return Shift::with('appointments', 'appointments.user', 'appointments.checkin' ,'doctor')
                 ->where('shifts.date', $date)
                 ->get();  
         }
@@ -74,12 +77,12 @@ class AppointmentController extends Controller
         if ($date == null){
             $date = Date('Y-m-d');
         }
-        return Shift::with('appointments', 'appointments.user', 'doctor')
+        return Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date', $date)
             ->get();
     }
     public function today(){
-        return Shift::with('appointments', 'appointments.user', 'doctor')
+        return Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date', Date('Y-m-d'))
             ->get();    
     }
@@ -96,14 +99,14 @@ class AppointmentController extends Controller
         $user_id = $request['doctor_id'];
 
         if ($user_id == null){
-            $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+            $shifts =  Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date','>=',$date1)
             ->where('shifts.date', '<=',$date2)
             ->get();
             return $shifts;
         }
 
-        $shifts =  Shift::with('appointments', 'appointments.user', 'doctor')
+        $shifts =  Shift::with('appointments', 'appointments.user', 'appointments.checkin', 'doctor')
             ->where('shifts.date','>=',$date1)
             ->where('shifts.date', '<=',$date2)
             ->where('shifts.user_id', '=', $user_id)
@@ -112,6 +115,10 @@ class AppointmentController extends Controller
     }
     
     public function destroy($id){
+        $appointment = Appointment::findOrFail($id);
+        if ($appointment->checkin){
+            $appointment->checkin->delete();
+        }
         return Appointment::destroy($id);
     }
 
@@ -122,16 +129,24 @@ class AppointmentController extends Controller
         }
 
         $id = $request['appointment_id'];
-        $d = Appointment::destroy($id);
-        Log::create(['type'=>2,'type_id'=>$id,'user_id'=>Auth::user()->id,'action_id'=>0,'description'=>$request['description']]);
-
-        // cancel checkin too
-        if (($user_id = $request['user_id'])
-            && $shift_id=$request['shift_id']){
-            CheckIn::where('user_id', $user_id)
-                    ->where('shift_id', $shift_id)
-                    ->delete();
+        $appointment = Appointment::findOrFail($id);
+        if (!$appointment){
+            return 0;
         }
+        $d = 0;
+        // delete checkin
+        if ($appointment->checkin){
+            $checkin_id = $appointment->checkin->id;
+            $appointment->delete();
+            CheckIn::destroy($id);
+        }
+        return 'checkin deleted';
+        Log::create(['type'=>2,
+                    'type_id'=>$id,
+                    'user_id'=>Auth::user()->id,
+                    'action_id'=>0,
+                    'description'=>$request['description']
+                ]);
         return $d;
     }
 }

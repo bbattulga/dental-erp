@@ -24,10 +24,10 @@ class TreatmentAgainSeeder extends Seeder
     public static $treatment_again_chance = 100;
     public static $date;
     public static $min = 1;
-    public static $max = 5;
+    public static $max = 2;
 
-    public static $treatments_min = 2;
-    public static $treatments_max = 5;
+    public static $treatments_min = 1;
+    public static $treatments_max = 3;
 
 
     public function run()

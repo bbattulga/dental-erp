@@ -169,13 +169,18 @@
     </div>
 
     <div class="mb-5"></div>
-    <div class="col-md-10">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="bar-chart"></canvas>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6 mb-5">
+                    <h6 class="mb-4">Char title</h6>
+                    <div class="chart-container">
+                        <canvas id="productChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
 @endsection
@@ -189,25 +194,76 @@
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
 
     <script type="text/javascript">
-        new Chart(document.getElementById("bar-chart"), {
-    type: 'bar',
-    data: {
-      labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-      datasets: [
-        {
-          label: "Population (millions)",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-          data: [2478,5267,734,784,433]
-        }
-      ]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
+       if (document.getElementById("productChart")) {
+        var productChart = document
+          .getElementById("productChart")
+          .getContext("2d");
+        var myChart = new Chart(productChart, {
+          type: "BarWithShadow",
+          options: {
+            plugins: {
+              datalabels: {
+                display: false
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  gridLines: {
+                    display: true,
+                    lineWidth: 1,
+                    color: "rgba(0,0,0,0.1)",
+                    drawBorder: false
+                  },
+                  ticks: {
+                    beginAtZero: true,
+                    stepSize: 100,
+                    min: 300,
+                    max: 800,
+                    padding: 20
+                  }
+                }
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    display: false
+                  }
+                }
+              ]
+            },
+            legend: {
+              position: "bottom",
+              labels: {
+                padding: 30,
+                usePointStyle: true,
+                fontSize: 12
+              }
+            },
+            tooltips: chartTooltip
+          },
+          data: {
+            labels: ["January", "February", "3", "April", "May", "June"],
+            datasets: [
+              {
+                label: "Cakes",
+                borderColor: themeColor1,
+                backgroundColor: themeColor1_10,
+                data: [456, 479, 324, 569, 702, 600],
+                borderWidth: 2
+              },
+              {
+                label: "Desserts",
+                borderColor: themeColor2,
+                backgroundColor: themeColor2_10,
+                data: [364, 504, 605, 400, 345, 320],
+                borderWidth: 2
+              }
+            ]
+          }
+        });
       }
-    }
-});
     </script>
 @endsection

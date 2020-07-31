@@ -9,6 +9,7 @@ use App\User;
 use App\UserRole;
 use Illuminate\Http\Request;
 use App\Roles;
+use App\ShiftType;
 
 
 class AdminStaffController extends Controller
@@ -71,8 +72,15 @@ class AdminStaffController extends Controller
         $user = User::find($id);
         if($user->role->role_id == Roles::doctor()->id) {
             $shifts = Shift::all()->where('user_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
-
-            return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date'));
+            $count_full = 0;
+            $count_half = 0;
+            foreach($shifts as $shift){
+                if ($shift->shift_type_id == ShiftType::full())
+                    $count_full++;
+                else
+                    $count_half++;
+            }
+            return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date', 'count_full', 'count_half'));
         } else if($user->role->role_id == Roles::doctor()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins', 'start_date', 'end_date'));

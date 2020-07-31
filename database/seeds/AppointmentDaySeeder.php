@@ -30,7 +30,7 @@ class AppointmentDaySeeder extends Seeder
         }
         
         // assign appointments to existing shifts
-            self::$shifts = Shift::where('date', '=', $date)->get();
+        self::$shifts = Shift::where('date', '=', $date)->get();
         $shifts = self::$shifts;
 
         $faker = Faker::create();
@@ -63,28 +63,13 @@ class AppointmentDaySeeder extends Seeder
 
         		// uncomment this line to create some registered users
         		 $register = $faker->numberBetween(0, 1);
-
-        		if ($register == 1){
-
-        			$patient = factory(Patient::class)->create();
-        			$appointment = factory(Appointment::class)
-        				->create([
-        					'shift_id' => $shift->id,
-        					'user_id' => $patient->id,
-        					'name' => $patient->name,
-        					'phone' => $patient->phone_number,
-        					'start' => $this->floatToTime($start),
-        					'end' => $this->floatToTime($end)
-        				]);
-        		}else{
-	        		$appointment = factory(Appointment::class)
-	        			->create([
-	        				'user_id' => 0,
-	        				'shift_id' => $shift->id,
-	        				'start' => $this->floatToTime($start),
-	        				'end' => $this->floatToTime($end)
-	        			]);
-        		}
+        		$appointment = factory(Appointment::class)
+        			->create([
+        				'user_id' => 0,
+        				'shift_id' => $shift->id,
+        				'start' => $this->floatToTime($start),
+        				'end' => $this->floatToTime($end)
+        			]);
 
         		$deltatime = $faker->numberBetween(2, 4);
                 // add random half time

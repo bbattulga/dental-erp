@@ -36,7 +36,7 @@ class CheckInsDaySeeder extends Seeder
 
         $date = self::$date;
 
-            self::$shifts = Shift::with('appointments', 'appointments.user')
+        self::$shifts = Shift::with('appointments', 'appointments.user')
                         ->where('date', $date)
                         ->get();
         if (!self::$shifts){
@@ -78,16 +78,6 @@ class CheckInsDaySeeder extends Seeder
                         'checkin_id'=>$checkin->id,
                         'user_id'=>$patient->id
                     ]);
-                    
-                    $treatment_again = $faker->numberBetween(1, 100);
-                    if ($treatment_again <= self::$treatment_again_chance){
-                        $patients = self::$patients? self::$patients:Patient::all();
-                        $patient = $patients->random();
-                        factory(CheckIn::class)->create([
-                            'shift_id' => $shift->id,
-                            'user_id' => $patient->id
-                        ]);
-                    }
                 }
         	}
         

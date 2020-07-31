@@ -435,7 +435,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <table class="table">
-                                            <h6>Бүтэн - {{$count_full}}  &nbsp; &nbsp;Хагас - {{$count_half}}</h6>
+                                            <h6>Бүтэн - {{$count_full ?? ''}}  &nbsp; &nbsp;Хагас - {{$count_half ?? ''}}</h6>
                                             <thead>
                                             <tr>
                                                 <th>Өдөр</th>

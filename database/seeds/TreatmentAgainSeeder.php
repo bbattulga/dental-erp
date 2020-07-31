@@ -26,7 +26,7 @@ class TreatmentAgainSeeder extends Seeder
     public static $min = 1;
     public static $max = 2;
 
-    public static $treatments_min = 1;
+    public static $treatments_min = 0;
     public static $treatments_max = 3;
 
 

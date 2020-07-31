@@ -575,7 +575,7 @@ onDestroy(()=>{
 
 	.btn-resize-btm, .btn-resize-top{
 		position: absolute;
-		height: 12%;
+		height: 15%;
 		cursor: row-resize;
 		width: 100%;
 	}

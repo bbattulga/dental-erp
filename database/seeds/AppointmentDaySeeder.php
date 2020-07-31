@@ -48,11 +48,11 @@ class AppointmentDaySeeder extends Seeder
 
         	// initial start time, end time
         	if ($shift_type != ShiftType::evening()){
-        		$start = 9;
-        		$end = 10;
+        		$start = 9 + $faker->numberBetween(0, 2);
+        		$end = $start+$faker->numberBetween(1, 2);
         	}else{
-        		$start = 15;
-        		$end = 16;
+        		$start = 15 + $faker->numberBetween(0, 1);
+        		$end = 16 + $faker->numberBetween(0, 1);
         	}
 
         	// assign appointments to shift

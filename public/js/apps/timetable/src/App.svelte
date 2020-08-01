@@ -11,6 +11,9 @@
 	import {floatToTime} from './lib/datetime.js';
 	import {storeShifts, storeDoctors, storeTimes, currentRegister} from './stores/stores.js';
 
+	import LinearProgress from '@smui/linear-progress';
+
+
 	const unsubscribeDoctors = storeDoctors.subscribe((old)=>null);
 	let LOADING = true;
 
@@ -87,21 +90,12 @@
 				});
 	}
 
-	let fullscreen = false;
-
-	const handleFullscreen = (event) => {
-		fullscreen=!fullscreen;
-		console.log('fullscreen');
-	}
 </script>
 <div 
 	class="main-container">
-	<div 
-		transition:fade
-		class:hidden={!LOADING}
-		class="loading-container">
-		<img src="/img/gifs/loading-200-200-grey.gif" alt="loading">
-	</div>
+		<LinearProgress 
+			style="position: absolute; top: 0; left: 0; width: 100%; z-index: 1000001;"
+			indeterminate closed={!LOADING}/>
 	<div>
 		<TableFilter
 			on:selectDate={handleSelectDate}/>
@@ -124,11 +118,11 @@
 	}
 
 	.loading-container{
-		width: 200px;
-		height: 200px;
 		position: fixed;
 		top: 50%;
 		left: 50%;
+		width: 100%;
+		height: 100%;
 		transform: translate(-50%, -50%);
 		z-index: 2000000000;
 	}

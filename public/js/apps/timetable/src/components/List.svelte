@@ -63,8 +63,8 @@
 						  font-size: 1.5vh;
 						  font-weight: 600;
 						  text-align: center;
-						  line-height: 6vh;
-						  height: 6vh;">
+						  line-height: 8vh;
+						  height: 8vh;">
 				<div>
 					{`${shift.doctor.last_name.charAt(0)+'. '+shift.doctor.name}`}
 				</div>
@@ -72,7 +72,7 @@
 
 		<List threeLine nonInteractive style="padding: 0;">
 			{#each shift.appointments as appointment, i (appointment.id)}
-					<Item style="padding: 0; margin-bottom: 5px;">
+					<Item style="padding: 0; border-bottom: 1px solid #e0e0e0e0;">
 						<Cell
 							on:deleteAppointment={(event)=>handleDelete(shift, event.detail)}
 							resizable={false}

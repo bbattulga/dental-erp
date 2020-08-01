@@ -39,6 +39,7 @@
 		<Column 
       colWidth={`${100/shifts.length}%`}
       on:addAppointment={(event)=>{shift.appointments.push(event.detail.appointment); shifts=shifts}}
+      on:refresh={()=>{shifts=shifts;}}
       {shift}
       {times}/>
 	{/each}

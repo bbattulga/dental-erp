@@ -78,14 +78,14 @@
                             <a href="#">
                                 <i class=""></i>
                                 Нийт үйлчлүүлсэн
-                                <span class="float-right">24</span>
+                                <span class="float-right"></span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <i class=""></i>
                                     Шинэ үйлчлүүлэгчид
-                                <span class="float-right">12</span>
+                                <span class="float-right"></span>
                             </a>
                         </li>
                     </ul>

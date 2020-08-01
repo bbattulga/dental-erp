@@ -73,6 +73,8 @@
 
 	const deleteAppointment = (event) => {
 		appointments = appointments.filter((a)=>a.id!=event.detail);
+		shift.appointments = appointments;
+		dispatch('refresh');
 	}
 
 	const refresh = (event) => {
@@ -132,7 +134,7 @@
 	  border-top: 1px solid #e0e0e0e0;
 	  background-color: #0c2546;
 	  color: white;
-	  font-size: 1.5vh;
+	  font-size: 1.6vh;
 	  font-weight: 600;
 	  text-align: center;
 	  line-height: 8vh;

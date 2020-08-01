@@ -27,6 +27,11 @@
 	export let rowSpan;
 	export let width;
 
+	export let detailsOnly = false;
+
+	export let resizable = true;
+	export let draggable = true;
+
 	let dragEnd = false;
 
 	let sameUsers = [];	
@@ -309,10 +314,13 @@
 			if (!next.appointment){
 				continue;
 			}
+			if (next.appointment.id == appointment.id){
+				continue;
+			}
 			if(end > next.appointment.start ||
 				(start < next.appointment.end)){
 				let nextAppoitment = next.appointment;
-				alert('Өөр үйлчлүүлэгчийн цагтай давхцаж байна');
+				console.log(nextAppoitment.start, nextAppoitment.end);
 				appointment.start = prevStart;
 				appointment.end = prevEnd;
 				return;
@@ -468,8 +476,10 @@ onDestroy(()=>{
 	class="cell-container grey">
 
 	{#if appointment != null}
-	<div class="btn-resize-top" on:mousedown|self|stopPropagation={handleStartResizeTop}>
-			</div>
+
+	{#if draggable}
+		<div class="btn-resize-top" on:mousedown|self|stopPropagation={handleStartResizeTop}></div>
+	{/if}
 		<!-- content -->
 		<div class="content"
 		on:click|stopPropagation|preventDefault={handleClick}
@@ -490,10 +500,12 @@ onDestroy(()=>{
 			{/if}
 			<!-- end show checkin state -->
 		</div>
-		<div class="btn-resize-btm" on:mousedown|self|stopPropagation={handleStartResizeBottom}>
-			</div>
 
-		<!-- appointment==null -->
+		{#if resizable}
+			<div class="btn-resize-btm" on:mousedown|self|stopPropagation={handleStartResizeBottom}></div>
+		{/if}
+
+		<!-- appointment=null -->
 		{:else}
 		<div class="content empty"
 			on:click|stopPropagation|preventDefault={handleClick}>

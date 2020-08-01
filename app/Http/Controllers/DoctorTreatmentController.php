@@ -110,7 +110,7 @@ class DoctorTreatmentController extends Controller
             }
             UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>$request['treatment_selection_id'],'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price]);
         }
-        return back();
+        return back()->with('last_treatment', 1);
     }
     public function finish(Request $request) {
         $checkin = CheckIn::find($request['checkin_id']);

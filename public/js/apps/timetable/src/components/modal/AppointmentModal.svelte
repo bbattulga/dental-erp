@@ -9,6 +9,8 @@
 	import CheckInState from '../CheckInState.svelte';
 	import {floatToTime, timeToFloat, isValidTime} from '../../lib/datetime.js';
 	import {checkinStateName} from '../../lib/lib.js';
+	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text/index';
 
 	export let show = true;
 	export let shift;
@@ -213,16 +215,23 @@
   		<img src="/js/apps/timetable/src/components/assets/close.png">
   	</div>
                             <h5 class="mb-4">{appointment == null ? 'Цаг захиалах':'Захиалгын мэдээлэл'}</h5>
-                            <div class="input-group mb-3">
+                           <!-- <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Нэр</span>
-                                </div>
+                                </div> 
                                 <input bind:value={name}
                                 on:change={handleChangeData}
                                 type="text" class="form-control" placeholder="" aria-label="Username"
-                                    aria-describedby="basic-addon1">
-                            </div>
+                                    aria-describedby="basic-addon1"> 
+                            </div> -->
 
+                           <div class="input-group mb-3" style="width: 100%;">
+						        <Textfield on:change={handleChangeData}
+						         variant="outlined" bind:value={name} label="Нэр" input$aria-controls="helper-text-outlined-a" input$aria-describedby="helper-text-outlined-a" 
+						        style="width: 100%; max-height: 100%; color: yellow;"/>
+						      </div>
+
+						      <!--
                             <div class="input-group mb-3">
                                <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Утас</span>
@@ -231,7 +240,13 @@
                                 on:change={handleChangeData}
                                 type="text" class="form-control" placeholder="" aria-label="Username"
                                     aria-describedby="basic-addon1">
-                            </div>
+                            </div> -->
+                            <div class="input-group mb-3" style="width: 100%;">
+						        <Textfield on:change={handleChangeData}
+						         variant="outlined" bind:value={phone} label="Утас" input$aria-controls="helper-text-outlined-a" input$aria-describedby="helper-text-outlined-a" 
+						        style="width: 100%; max-height: 100%;"/>
+						      </div>
+
 
                             <div class="input-group mb-3">
                                <div class="input-group-prepend">
@@ -296,6 +311,10 @@
 
 
 <style type="text/css">
+
+fieldset{
+	color :#e7523e;
+}
 
 .column{
 	display: flex;

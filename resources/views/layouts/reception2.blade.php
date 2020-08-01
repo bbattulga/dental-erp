@@ -59,6 +59,13 @@
                 {{--</span>--}}
                 {{--</form>--}}
                 {{--</div>--}}
+
+                <div class="search" data-search-path="Layouts.Search.html?q=">
+                <input id="dore-admin-search" placeholder="Search...">
+                <span class="search-icon">
+                    <i class="simple-icon-magnifier"></i>
+                </span>
+            </div>
     
             </div>
     

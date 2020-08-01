@@ -67,10 +67,16 @@
         @endif
 
     </div>
+    <input type="hidden" id="lastTreatment" value="{{ Session::get('last_treatment') }}">
 
 @endsection
 @section('footer')
-
+    
+    <script>
+        let el = document.getElementById('lastTreatment');
+        let lastTreatment = el.value;
+        console.log(lastTreatment);
+    </script>
 
     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>

@@ -35,9 +35,10 @@
   {#if shifts.length == 0}
     <div style="margin: 10px auto; color: black;">ээлж байхгүй байна</div>
   {/if}
-	{#each shifts as shift (shift.id)}
+	{#each shifts as shift, i (shift.id)}
 		<Column 
       colWidth={`${100/shifts.length}%`}
+      on:addAppointment={(event)=>{shift.appointments.push(event.detail.appointment); shifts=shifts}}
       {shift}
       {times}/>
 	{/each}

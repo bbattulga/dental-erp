@@ -3,11 +3,16 @@
 	import Cell from './Cell.svelte';
 	import {onMount} from 'svelte';
 	import {timeToFloat, floatToTime} from '../lib/datetime.js';
+	import {createEventDispatcher} from 'svelte';
 
 	export let shift;
 	export let times = [];
-
+	export let index;
 	export let colWidth = '10%';
+
+	const dispatch = createEventDispatcher();
+
+
 	let appointments = [];
 	$: appointments = shift.appointments;
 	
@@ -63,10 +68,7 @@
 
 	const addAppointment = (event) => {
 		let appointment = event.detail;
-		console.log('adding new appointment ', appointment);
-		if (appointment)
-			appointments = [...appointments, appointment];
-		cellsData = calc(times, appointments);
+		dispatch('addAppointment', {appointment});
 	}
 
 	const deleteAppointment = (event) => {

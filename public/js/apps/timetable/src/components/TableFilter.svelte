@@ -7,10 +7,15 @@
 	import {onDestroy} from 'svelte';
 	import {storeShifts, storeDoctors, storeTimes, storeSearch} from '../stores/stores.js';
 
+	import Tab, {Label, Icon} from '@smui/tab';
+	import TabBar from '@smui/tab-bar';
+	import List from './List.svelte';
+
+
 	const dispatch = createEventDispatcher();
 
 	let shifts = [];
-	$:{console.log('shifts changed',shifts)}
+	$:{console.log('shifts changed in Tablefilter.svelte',shifts)}
 	const unsubscribeShifts = storeShifts.subscribe(val=>shifts=val);
 
 	let doctors = [];
@@ -43,15 +48,26 @@
 	dateInput.onchange = handleDateChange;
 
 	// notifies to cells
-	const handleSearch = (event) => {
-		let value = event.detail.value;
+	const handleSearch = (value) => {
 		storeSearch.update(old=>value);
 	}
 
-	const handleStopSearch = (event) => {
+	const handleStopSearch = (value) => {
 		console.log('stop search');
 		storeSearch.update(old=>null);
 	}
+
+	let searchInput = document.getElementById('dore-admin-search');
+	const handleSearchChange = (event) => {
+		let val = searchInput.value;
+		console.log(val);
+		if (val.length == 0){
+			handleStopSearch(val);
+			return;
+		}
+		handleSearch(val);
+	}
+	searchInput.onkeyup = handleSearchChange
 
 	onDestroy(()=>{
 		unsubscribeSearch();
@@ -59,17 +75,42 @@
 		unsubscribeDoctors();
 		unsubscribeShifts();
 	});
+
+	let tabs = ['Цаг', 'Жагсаалт', 'Төлөвлөсөн'];
+	let active;
 </script>
 
 
 <div 
 	class="main-div">
-		<SearchInput 
+	<!--
+	 <SearchInput 
+			on:search={handleSearch}
+			on:stopsearch={handleStopSearch}/> -->
+	<div>
+		<TabBar {tabs} let:tab bind:active>
+	      <!-- Notice that the `tab` property is required! -->
+	      <Tab {tab}>
+	      	<Icon class="material-icons"></Icon>
+	        <Label>{tab}</Label>
+	      </Tab>
+	    </TabBar>
+	    <!--
+	    <SearchInput 
 			on:search={handleSearch}
 			on:stopsearch={handleStopSearch}/>
+		-->
+	</div>
+
+	{#if active === tabs[0]}
 	<TimeTable
 		{shifts}
 		{times}/>
+	{:else if active == tabs[1]}
+		<List
+			{shifts}
+			{times}/>
+	{/if}
 
 </div>
 

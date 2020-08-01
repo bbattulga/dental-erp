@@ -134,13 +134,14 @@ class AppointmentController extends Controller
             return 0;
         }
         $d = 0;
+
+        $appointment->delete();
         // delete checkin
         if ($appointment->checkin){
             $checkin_id = $appointment->checkin->id;
-            $appointment->delete();
             CheckIn::destroy($id);
         }
-        return 'checkin deleted';
+        $appointment->delete();
         Log::create(['type'=>2,
                     'type_id'=>$id,
                     'user_id'=>Auth::user()->id,

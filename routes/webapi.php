@@ -77,8 +77,15 @@ Route::group([ 'middleware' => 'doctor',
     Route::post('user-tooth/create', 'UserToothController@store');
     Route::put('user-tooth/update', 'UserToothController@update');
     Route::delete('user-tooth/delete/{id}', 'UserToothController@destroy');
-    Route::delete('user-tooth/{user_id}/delete/{tooth_code}', 'UserToothController@destroByUserTooth'); // END DOCTOR API
-});
+    Route::delete('user-tooth/{user_id}/delete/{tooth_code}', 'UserToothController@destroByUserTooth'); 
+
+    Route::post('symptoms', 'SymptomController@index');
+    Route::get('symptoms/{id}', 'SymptomController@show');
+    Route::post('symptoms/create', 'SymptomController@store');
+    Route::put('symptoms/update', 'SymptomController@update');
+    Route::delete('symptoms/delete/{id}', 'SymptomController@destroy');
+
+}); // END DOCTOR API
 
 // RECEPTION API
 Route::group(['middleware'=>'reception',

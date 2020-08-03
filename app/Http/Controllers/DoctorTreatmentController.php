@@ -16,6 +16,7 @@ use App\Roles;
 use App\ToothType;
 use App\UserTooth;
 use App\CheckInState;
+use App\Symptom;
 
 
 class DoctorTreatmentController extends Controller
@@ -43,12 +44,14 @@ class DoctorTreatmentController extends Controller
             $checkin->update([
                 'state' => CheckInState::treatment_started()
             ]);
-            
+
+            $symptoms = Symptom::where('user_id', $checkin->user_id)->get();
             return view('doctor.treatment',
                     compact('checkin', 'treatments','user_treatments', 
                             'checkin_all', 'nurses', 'category', 'treatmentCategories',
                             'tooth_types',
-                            'user_tooths'));
+                            'user_tooths',
+                            'symptoms'));
         } else {
             return redirect('404');
         }

@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}" />
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <style>
     .scroll {
         height: 350px;
@@ -154,6 +156,10 @@
         visibility: hidden;
     }
 
+    .symptom-text{
+        width: 100%;
+    }
+
 </style>
 
 {{--End css style gh met link file oruulna--}}
@@ -205,6 +211,56 @@
         </div>
     </div>
 </div>
+
+<!-- symptom modal -->
+<div id="symptomModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="modal" aria-hidden="true"
+    onclick="confirmSaveSymptom(event, {{ $checkin->user_id }}, $('#symptom-input'))">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Шинж тэмдэг</h5>
+                <button type="button" class="close" data-target="#symptomModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @foreach($symptoms as $symptom)
+                <div class="list">
+                    <div class="card d-flex flex-row mb-3">
+                        <div class="d-flex flex-grow-1 min-width-zero">
+                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                                {{ $symptom->description }}
+                            </div>
+                        </div>
+                        <div class="custom-control custom-checkbox pl-1 align-self-center pr-4">
+                            <label class="custom-control custom-checkbox mb-0">
+                                {{ $symptom->date }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3"></div>
+                @endforeach
+                <!-- create new symptom -->
+                <div>
+                    <div style="text-align: right;">{{ Date('Y-m-d') }}</div>
+                    <textarea id="symptom-input" class="symptom-text" placeholder="Шинж тэмдэг нэмэх"></textarea>
+                </div>
+                <div class="mb-3"></div>
+                <!-- end create new symptom -->
+            </div>
+            <div class="modal-footer">
+                <button  onclick="saveSymptom(event, {{ $checkin->user_id }}, $('#symptom-input'))" 
+                        type="button" class="btn btn-primary"
+                        data-toggle="modal" data-target="#symptomModal">
+                        Хадгалах
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade text-center" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -826,7 +882,15 @@
         </div>
 
     </div><!-- Tooth images ending-->
+
+
     <div class="col-md-3">
+            <div class="row">
+                <div class="card" style="width: 100%; display: flex; align-items: center; border-radius: 5px;">
+                        <button type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target=".bd-example-modal-lg"  style="width: 100%;">Шинж тэмдэг</button>
+                </div>
+            </div>
+        <div class="mb-3"></div>
         <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event, this.value)">
             @foreach($treatmentCategories as $treatmentCategory)
             @if ($loop->first)
@@ -838,7 +902,6 @@
 
         </select>
         <br>
-
         <br>
         <div class="card">
             <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
@@ -1571,6 +1634,8 @@
 @section('footer')
 
 </script>
+
+<script src="{{asset('js/symptoms.js')}}"></script>
 
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
 <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>

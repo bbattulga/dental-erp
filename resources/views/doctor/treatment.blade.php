@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}" />
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -182,7 +181,9 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Үнэн дүнг оруулна уу</h5><br>
+                <h5>Тайлбар</h5>
+                <textarea id="selectionTreatmentDescription" name="description" style="width: 100%;"></textarea><br>
+                <h5>Үнэн дүнг оруулна уу</h5>
                 <input type="number" class="form-control" id="treatmentWithLimitPrice">
                 <input type="hidden" id="treatmentWithLimitPriceMin">
                 <input type="hidden" id="treatmentWithLimitPriceMax">
@@ -199,7 +200,9 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Үнэн дүнг оруулна уу</h5><br>
+                <h5>Тайлбар</h5>
+                <textarea id="singleTreatmentDescription" style="width: 100%;"></textarea><br><br>
+                <h5>Үнэн дүнг оруулна уу</h5>
                 <input type="number" class="form-control" id="singleTreatmentWithLimitPrice">
                 <input type="hidden" id="singleTreatmentWithLimitPriceMin">
                 <input type="hidden" id="singleTreatmentWithLimitPriceMax">
@@ -320,6 +323,7 @@
     <input type="hidden" name="value_id" value="" id="valueId">
     <input type="hidden" name="price" value="" id="treatmentPrice">
     <input type="hidden" name="checkin_id" value="{{$checkin->id}}" id="checkin_id">
+    <input type="hidden" name="description" id="treatmentDescription">
 </form>
 
 <div class="row">
@@ -886,9 +890,7 @@
 
     <div class="col-md-3">
             <div class="row">
-                <div class="card" style="width: 100%; display: flex; align-items: center; border-radius: 5px;">
-                        <button type="button" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target=".bd-example-modal-lg"  style="width: 100%;">Шинж тэмдэг</button>
-                </div>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"  style="width: 100%;">Шинж тэмдэг</button>
             </div>
         <div class="mb-3"></div>
         <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event, this.value)">
@@ -899,9 +901,7 @@
             <option value="{{ $treatmentCategory->id }}"> {{ $treatmentCategory->name }} </option>
             @endif
             @endforeach
-
         </select>
-        <br>
         <br>
         <div class="card">
             <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
@@ -922,7 +922,7 @@
                             {{\App\Treatment::find($user_treatment->treatment_id)->name}}</b>
                         <br>
                         <div class="row">
-                            <div class="text-muted col-md-6">
+                            <div class="text-muted col-md-6" data-toggle="popover" data-placement="top" data-content="Content">
                                 @if(is_null($user_treatment->treatment_selection_id) ||
                                 $user_treatment->treatment_selection_id == 0)
 
@@ -1581,7 +1581,7 @@
 
     function singleTreatment(id, price, limit) {
         console.log('singletreatment', treatment);
-
+        $('#treatmentDescription').val($('#singleTreatmentDescription').val());
         document.getElementById('treatmentSelectionId').value = null;
         if (limit === '' || limit === null) {
             document.getElementById('toothId').value = tooths;
@@ -1600,7 +1600,7 @@
         let price = parseInt(document.getElementById('treatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('treatmentWithLimitPriceMin').value);
         let maxPrice = parseInt(document.getElementById('treatmentWithLimitPriceMax').value);
-
+        $('#treatmentDescription').val($('#selectionTreatmentDescription').val());
         console.log('price ', price);
         console.log('min;max -> ', minPrice, maxPrice);
         if ((price < minPrice) || (price > maxPrice)) {
@@ -1618,6 +1618,7 @@
         let price = parseInt(document.getElementById('singleTreatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMin').value);
         var maxPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMax').value);
+        $('#treatmentDescription').val($('#singleTreatmentDescription').val());
         if ((price < minPrice) || (price > maxPrice)) {
             alert(`Үнийн дүн буруу байна! Үнийн дүн ${minPrice}₮-${maxPrice}₮ хооронд байх ёстой`);
         } else {
@@ -1636,7 +1637,7 @@
 </script>
 
 <script src="{{asset('js/symptoms.js')}}"></script>
-
+<script src="{{asset('js/vendor/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
 <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
 <script src="{{asset('js/vendor/moment.min.js')}}"></script>

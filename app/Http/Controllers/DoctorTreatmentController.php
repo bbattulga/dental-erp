@@ -104,14 +104,16 @@ class DoctorTreatmentController extends Controller
             } else {
                 $price = $request['price'];
             }
-            UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>0,'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price]);
+            UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>0,'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price,
+                'description'=>$request['description']]);
         } else {
             if(empty($request['price'])) {
                 $price = TreatmentSelections::find($request['treatment_selection_id'])->price;
             } else {
                 $price = $request['price'];
             }
-            UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>$request['treatment_selection_id'],'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price]);
+            UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>$request['treatment_selection_id'],'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price,
+                'description'=>$request['description']]);
         }
         return back()->with('last_treatment', 1);
     }

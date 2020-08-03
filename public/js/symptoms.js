@@ -1,14 +1,15 @@
 
 function dateFormat(d){
-	return d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
-			d.getHours() + ":" + d.getMinutes();
-}
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+	let year = d.getFullYear();
+	let month = d.getMonth() + 1;
+	let day = d.getDate();
+	let hours = d.getHours();
+	let minutes = d.getMinutes();
+
+	let format = `${year}-${month<10?'0'+month:month}-${day<10?'0'+day:day} ${hours}:${minutes}`
+	return format;
+}
 
 function handleCreateSuccess(data){
 	alert('Амжилттай хадгалагдлаа');
@@ -28,6 +29,12 @@ function saveSymptom(event, user_id, inputElem){
 		description: inputElem.val(),
 		date: dateFormat(new Date())
 	}
+	$.ajaxSetup({
+	    headers: {
+	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+	});
+
 	$.ajax({
 		type: 'POST',
 		url: '/api/symptoms/create',

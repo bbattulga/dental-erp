@@ -18,6 +18,39 @@
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 @endsection
 @section('content')
+
+<div class="modal fade" id="exampleModalContent" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalContentLabel">Эмчилгээний мэдээлэл</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Эмчилгээний нэр:</label>
+                        <input type="text" class="form-control" id="treatment-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Тэмдэглэл:</label>
+                        <textarea class="form-control" id="treatment-note"></textarea>
+                    </div>
+                </form>
+            </div>
+            <!--
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        -->
+        </div>
+    </div>
+</div>
+
+
     <script>
         document.getElementById('adminUsers').classList.add('active');
     </script>
@@ -107,7 +140,10 @@
                                             <span class="log-indicator border-theme-2 align-middle"></span>
                                         </td>
                                         <td>
-                                            <span class="font-weight-medium">{{$user_treatment->treatment->name}}</span>
+                                            <span class="font-weight-medium" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#exampleModalContent"
+                                data-whatever="@mdo" style="cursor: pointer;">
+                                                {{$user_treatment->treatment->name}}
+                                            </span>
                                         </td>
                                         <td class="text-right">
                                 <span class="text-muted">
@@ -175,64 +211,16 @@
     </div>
 @endsection
 @section('footer')
-
-
-    <script src="{{asset('plugin/datatables/jquery.dataTables.min.js')}}   "></script>
-    <script src="{{asset('plugin/datatables/dataTables.bootstrap4.min.js')}}"></script>
-    <!-- Buttons examples -->
-    <script src="{{asset('plugin/datatables/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('plugin/datatables/buttons.bootstrap4.min.js')}}"></script>
-    <script src="{{asset('plugin/datatables/jszip.min.js')}}"></script>
-    <script src="{{asset('plugin/datatables/pdfmake.min.js')}}"></script>
-    <script src="{{asset('plugin/datatables/vfs_fonts.js')}}"></script>
-    <script src="{{asset('plugin/datatables/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('plugin/datatables/buttons.print.min.js')}}"></script>
-
-    <!-- Key Tables -->
-    <script src="{{asset('plugin/datatables/dataTables.keyTable.min.js')}}"></script>
-
-    <!-- Responsive examples -->
-    <script src="{{asset('plugin/datatables/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('plugin/datatables/responsive.bootstrap4.min.js')}}"></script>
-
-    <!-- Selection table -->
-    <script src="{{asset('plugin/datatables/dataTables.select.min.js')}}"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            // Default Datatable
-            $('#datatable').DataTable();
-
-            //Buttons examples
-            var table = $('#datatable-buttons').DataTable({
-                lengthChange: false,
-                buttons: ['copy', 'excel', 'pdf']
-            });
-
-            // Key Tables
-
-            $('#key-table').DataTable({
-                keys: true
-            });
-
-            // Responsive Datatable
-            $('#responsive-datatable').DataTable();
-
-            // Multi Selection Datatable
-            $('#selection-datatable').DataTable({
-                select: {
-                    style: 'multi'
-                }
-            });
-
-            table.buttons().container()
-                .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
-        });
-
-    </script>
+    <script src="{{asset('js/vendor/jquery-3.3.1.min.js')}}"></script>
 
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>
     <script src="{{asset('js/vendor/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('js/vendor/Sortable.js')}}"></script>
+
+    <script type="text/javascript">
+        function showTreatmentDetails(user, doctor, treatment){
+
+        }
+    </script>
 @endsection

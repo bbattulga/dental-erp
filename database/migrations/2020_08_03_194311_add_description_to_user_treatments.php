@@ -15,7 +15,7 @@ class AddDescriptionToUserTreatments extends Migration
     {
         Schema::table('user_treatments', function (Blueprint $table) {
             //
-            $table->string('description');
+            $table->string('description', 90)->nullable();
         });
     }
 

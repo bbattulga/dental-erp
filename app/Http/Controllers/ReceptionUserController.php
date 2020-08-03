@@ -27,9 +27,9 @@ class ReceptionUserController extends Controller
     public function fromAppointment($name, $phone, $appointment_id) {
         $param = array($name, $phone, $appointment_id);
 
-        $same_users = User::where('name', 'like', "%$name%")->get();
+        $same_users = Patient::where('name', 'like', "%$name%")->get();
 
-        $users = User::all()->sortByDesc('created_at');
+        $users = Patient::all()->sortByDesc('created_at');
         return view('reception.users', compact('param', 'users', 'same_users'));
     }
 
@@ -41,7 +41,6 @@ class ReceptionUserController extends Controller
             'name'=>'required|max:255',
             'sex'=>'required',
             'register'=>'required|unique:users|max:255',
-
             ]);
         $pass = $request['register'];
         $pass = bcrypt($pass);

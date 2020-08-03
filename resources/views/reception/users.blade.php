@@ -110,7 +110,7 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-            <h4>Шинэ үйлчлүүлэгч нэмэх</h4>
+            <h4>Шинэ үйлчлүүлэгч бүртгэх</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
@@ -362,7 +362,12 @@
                                             </p>
                                         </div>
                                         @if ($shift_today)
-                                        <button class="btn btn-primary">сонгох</button>
+                                        <button class="btn btn-primary"
+                                                data-toggle="modal" 
+                                                data-target="#checkinModal"
+                                                onclick="submitCheckIn(event, {{ $doctor->id }})">
+                                               сонгох
+                                        </button>
                                         @endif
                                     </div>
                                 </div>

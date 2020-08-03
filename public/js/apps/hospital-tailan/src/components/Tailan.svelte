@@ -62,7 +62,7 @@
         <div class="card">
             <div class="card-body">
             	<h5>{title}</h5>
-				<ChartContainer height={'600px'}>
+				<ChartContainer height={'1000px'}>
 					<div class="mb-4"></div>
 					<Chart type={"horizontalBar"}
 						datasets={chart_datasets}/>

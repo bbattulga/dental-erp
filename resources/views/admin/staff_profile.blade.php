@@ -411,7 +411,7 @@
                             <div class="card">
                                 <div class="card-body text-center">
                                     <h4>
-                                        <b>{{$sum}}₮</b>
+                                        <b>{{intval($sum)}}₮</b>
                                     </h4>
                                     <h5>орлого</h5>
                                 </div>

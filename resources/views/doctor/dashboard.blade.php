@@ -164,6 +164,7 @@
                                             ?>
                                             <?php $total = 0;
                                             ?>
+
                                             <tbody>
                                             @foreach($treatments as $treatment)
                                                 <tr>
@@ -206,7 +207,7 @@
                             <div class="card">
                                 <div class="card-body text-center">
                                     <h4>
-                                        <b>{{$sum}}₮</b>
+                                        <b>{{intval($sum)}}₮</b>
                                     </h4>
                                     <h5>орлого</h5>
                                 </div>
@@ -229,6 +230,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <table class="table">
+                                        <h6>Бүтэн - {{$count_full ?? ''}}  &nbsp; &nbsp;Хагас - {{$count_half ?? ''}}</h6>
                                         <thead>
                                         <tr>
                                             <th>Өдөр</th>

@@ -3,6 +3,11 @@
 	import {createEventDispatcher} from 'svelte';
 	import {fade} from 'svelte/transition';
 	import Modal from './Modal.svelte';
+	import List, {Item, Text, PrimaryText, SecondaryText} from '@smui/list';
+	import Button, {Label} from '@smui/list';
+	import Card from '@smui/card';
+
+
 	export let users = [];
 	export let show = false;
 	const dispatch = createEventDispatcher();
@@ -37,47 +42,32 @@
 
 	<h3>Төстэй хаягууд:</h3>
 	<br />
+	<List threeLine style="width: 100%;">
+		{#each users as user, i}
 
-	<div class="row header-row">
+			<Item>
+				<Card style="display: grid; grid-template-columns: 8fr 2fr;">
+				<Text>
+					<PrimaryText>
+						{`${user.last_name[0]}. ${user.name}`}
+					</PrimaryText>
 
-		<div class="row-item">
-			#
-		</div>
+					<SecondaryText>
+						{user.phone_number}
+					</SecondaryText>
 
-		<div class="row-item">
-			Овог нэр
-		</div>
+					<SecondaryText>
+						{user.register}
+					</SecondaryText>
+				</Text>
 
-		<div class="row-item">
-			Утас
-		</div>
-
-		<div class="row-item">
-			Регистр
-		</div>
-	</div>
-
-	{#each users as user, i}
-		<div class="row">
-
-			<div class="row-item">
-				{i+1}
-			</div>
-
-			<div class="row-item">
-				{user.last_name[0]}. {user.name}
-			</div>
-
-			<div class="row-item">
-				{user.phone_number}
-			</div>
-
-			<div class="row-item">
-				{user.register}
-			</div>
-			<div class="btn btn-primary" on:click={()=>handleChoose(user)}>Цаг захиалах</div>
-		</div>
-	{/each}
+				<Button style="color: white" class="btn btn-primary hovertb" on:click={handleChoose(user)}>
+					сонгох
+				</Button>
+			</Card>
+			</Item>
+		{/each}
+	</List>
 
 	<button class="btn-cancel btn btn-secondary" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
 	
@@ -86,7 +76,12 @@
 
 <style>
 
-
+.hovertb{
+	
+}
+div:hover .hovertb{
+	color: black;
+}
 .form-div {
 	background-color:white;
 	padding-left:35px;
@@ -94,6 +89,7 @@
 	padding-top:35px;
 	padding-bottom:50px;
 	max-width: 600px;
+	min-width: 450px;
 	min-height: 400px;
 	max-height: 600px;
 	top: 10%;

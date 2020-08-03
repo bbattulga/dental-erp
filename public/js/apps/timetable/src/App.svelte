@@ -94,7 +94,7 @@
 <div 
 	class="main-container">
 		<LinearProgress 
-			style="position: absolute; top: 0; left: 0; width: 100%; z-index: 1000001;"
+			style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000001;"
 			indeterminate closed={!LOADING}/>
 	<div>
 		<TableFilter

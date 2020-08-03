@@ -58,11 +58,11 @@ class LeaseDaySeeder extends Seeder
             $total += $user_treatments->price;
         }
 		$lease = $total*$faker->numberBetween(20, 60)/100;
-        $lease = (int) $lease;
+        $lease = intval($lease);
 		$lease -= $lease%10;
 		factory(Lease::class)->create([
 			'total' => $total,
-			'price' => (int)$lease,
+			'price' => $lease,
 			'checkin_id' => $checkin->id
 		]);
 

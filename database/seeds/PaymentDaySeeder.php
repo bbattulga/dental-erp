@@ -92,7 +92,7 @@ class PaymentDaySeeder extends Seeder
     	$lease = $checkin->lease;
     	if ($lease->price >= 30000){
 			$paid = $lease->price*$faker->numberBetween(50, 60)/100;
-			$paid = $lease-$paid;
+			$paid = intval($lease-$paid);
 			$lease->update('price',(int) $paid);
 			factory(Transaction::class)->create([
 				'price'=>(int) $paid,

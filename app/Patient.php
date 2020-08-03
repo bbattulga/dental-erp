@@ -37,7 +37,7 @@ class Patient extends User
 
    public function getCheckinTodayAttribute(){
    		$checkin = CheckIn::where('user_id', $this->id)
-   							->where('state', 0)
+   							->where('state', '<=', 2)
    							->first();
       return $checkin;
    }

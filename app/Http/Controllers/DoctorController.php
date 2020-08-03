@@ -6,6 +6,8 @@ use App\CheckIn;
 use App\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\ShiftType;
+
 
 class DoctorController extends Controller
 {
@@ -17,6 +19,7 @@ class DoctorController extends Controller
     public function index(){
         $doctor = Auth::user();
         $shifts = Shift::all()->where('date', date('Y-m-d'))->where('user_id',$doctor->id)->first();
+
         if(empty($shifts)) {
             $checkins = null;
         } else {
@@ -27,13 +30,32 @@ class DoctorController extends Controller
     public function dashboard() {
         $user = Auth::user();
         $shifts =  Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
-        return view('doctor.dashboard',compact('user', 'shifts'));
+
+        $count_full = 0;
+        $count_half = 0;
+        foreach($shifts as $shift){
+                if ($shift->shift_type_id == ShiftType::full())
+                    $count_full++;
+                else
+                    $count_half++;
+            }
+        return view('doctor.dashboard',compact('user', 'shifts', 'count_full', 'count_half'));
     }
     
     public function search($start_date, $end_date) {
         $user = Auth::user();
         $shifts =  Shift::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
-        return view('doctor.dashboard', compact('user', 'shifts','start_date', 'end_date'));
+
+        $count_full = 0;
+        $count_half = 0;
+        foreach($shifts as $shift){
+                if ($shift->shift_type_id == ShiftType::full())
+                    $count_full++;
+                else
+                    $count_half++;
+            }
+
+        return view('doctor.dashboard', compact('user', 'shifts','start_date', 'end_date', 'count_full', 'count_half'));
     }
     public function by_month(Request $request){
         $month = $request['month'];

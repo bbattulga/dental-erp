@@ -18,89 +18,9 @@ class AdminHospitalController extends Controller
     }
 
     public function index() {
-        $count = 0;
-        $count_male = 0;
-        $count_female = 0;
-        $count_first = 0;
-        $count_again = 0;
-
-        $age_male = array();
-        $age_female = array();
-        for ($i=0;$i<16;$i++) {
-            $age_male[$i] = 0;
-            $age_female[$i] = 0;
-        }
-
-        $treatment_type_2 = 0;
-        $treatment_type_2_count = 0;
-        $treatment_type_2_count_male = 0;
-        $treatment_type_2_count_female = 0;
-        $treatment_type_2_count_first = 0;
-        $treatment_type_2_count_again = 0;
-
-        $first_date = Date('Y-m-01');
-        $last_date = Date('Y-m-t', strtotime(Date('Y-m-d')));
-        
-        $shifts = Shift::with('checkins', 'checkins.user')
-                        ->whereBetween('date', [$first_date, $last_date])
-                        ->get();
-        
-
-        foreach (User::all() as $user) {
-            $beginning =  strtotime(date('Y-m-d', strtotime('first day of this month')));
-            $has = 0;//for check if user has checkin
-
-            $same = 0;
-            foreach ($user->checkins->whereIn('state', [3,4])->where('created_at','>=', date('Y-m-d', $beginning)) as $checkin) {
-                foreach ($checkin->treatments as $treatment_user) {
-                    if($treatment_user->treatment->category == 2)
-                        $treatment_type_2 = 1;
-                }
-                $has = 1;
-                if ($checkin->user_id == $user->id){
-                    $same++;
-                }
-            }
-
-            if ($same > 1){
-                $count_again++;
-            }
-
-            if($has == 1) {
-
-                $date = strtotime($user->checkins->whereIn('state', [3,4])->first()->created_at);
-
-                if($treatment_type_2 == 1) {
-                    $user->sex == 0 ? $treatment_type_2_count_female++ : $treatment_type_2_count_male++;
-                    $treatment_type_2_count++;
-                    if($date > $beginning) {
-                        $treatment_type_2_count_first++;
-                    } else {
-                        $treatment_type_2_count_again++;
-                    }
-                }
-
-                if($date > $beginning) {
-                    $count_first++;
-                }
-
-                $user_age = date_diff(date_create($user->birth_date), date_create('today'))->y;
-                if($user->sex == 0) {
-                    $user_age >= 60 ? $age_male[15]++ : $age_male[(int)((int)($user_age)/4)]++;
-                    $count_male++;
-                } else {
-                    $user_age >= 60 ? $age_female[15]++ : $age_female[(int)((int)($user_age)/4)]++;
-                    $count_female++;
-                }
-                $count++;
-            }
-
-        }
-        $start_date = $beginning;
-        $count_first -= $count_again;
-        return view('admin.hospital', compact('count', 'count_male', 'count_female', 'count_first', 'count_again',
-            'age_male', 'age_female', 'treatment_type_2_count', 'treatment_type_2_count_male', 'treatment_type_2_count_female',
-            'treatment_type_2_count_first', 'treatment_type_2_count_again', 'start_date'));
+        $start_date = Date('Y-m-01');
+        $end_date = Date('Y-m-t', strtotime('first day of this month'));
+        return view('admin.hospital2', compact('start_date', 'end_date'));
     }
     public function date($from, $to) {
 
@@ -166,7 +86,6 @@ class AdminHospitalController extends Controller
                 }
                 $count++;
             }
-
         }
         $start_date = $from;
         $end_date = $to;
@@ -193,5 +112,72 @@ class AdminHospitalController extends Controller
         $end_date = explode('/', $end_date);
         $end_date = strtotime($end_date[2] . '-' . $end_date[0] . '-' . $end_date[1]);;
         return redirect('/admin/hospital/' . $start_date.'/'.$end_date);
+    }
+
+
+    // obtain data about patients and treatment
+    // such as total number of treatments, first time or not and ages...
+    // in given date interval
+    // and returns key value pair using compact function.
+    private function getTreatmentData($category_id, $start_date, $end_date){
+
+        $count_male = 0;
+        $count_female = 0;
+
+        $count_total = 0;
+        $count_first = 0;
+        $count_again = 0;
+
+        $age_male = array();
+        $age_female = array();
+        for ($i=0;$i<16;$i++) {
+            $age_male[$i] = 0;
+            $age_female[$i] = 0;
+        }
+
+        // user.checkins for determine first or again...
+        $shifts = Shift::with('checkins', 'checkins.user', 
+                            'checkins.treatments', 'checkins.treatments.treatment',
+                            'user.checkins')
+                        ->whereBetween('date', [$start_date, $end_date])
+                        ->get();
+        foreach($shifts as $shift){
+            $checkins = $shift->checkins;
+            $total += $checkins->count();
+            foreach($checkins as $checkin){
+
+                // escape case that does not match category_id
+                if ($category_id != $checkin->treatments->treatment->category){
+                    continue;
+                }
+
+                $user = $checkin->user;
+
+                // calculates user's age at that time...
+                $age = date_diff(date_create($shift->date), date_create($user->birth_date))->y;
+
+                // count gender and age
+                if ($user->male){
+                    $count_male++;
+                    $age_male[(int)($age/4)]++;
+                }else{
+                    $count_female++;
+                    $age_female[(int)($age/4)]++;
+                }
+
+                // first time or not
+                if ($user->checkins->count() == 1){
+                    $count_first++;
+                }else{
+                    $count_again++;
+                }
+            }
+        }
+
+        return compact(
+                        'count_total', 'count_again', 'count_first',
+                        'count_male', 'count_female',
+                        'age_male', 'age_female'
+                );
     }
 }

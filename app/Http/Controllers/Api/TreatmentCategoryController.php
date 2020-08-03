@@ -11,7 +11,7 @@ class TreatmentCategoryController extends Controller
 {
     //
 
-    public function index(){
+    public function index(Request $request){
     	return TreatmentCategory::with(['treatments', 'treatments.treatment_selections'])->get();
     }
 

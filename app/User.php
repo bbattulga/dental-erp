@@ -29,6 +29,43 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function role(){
+        return $this->hasOne('App\Roles', 'id', 'role_id');
+    }
+    
+    public function roles(){
+        return $this->belongsToMany('App\Roles' ,'user_role', 'user_id', 'role_id')
+                    ->withPivot('state');
+    }
+
+    public function photos(){
+        return $this->morphMany('App\Photo', 'imageable');
+    }
+    
+    public function appointments(){
+        return $this->hasMany('App\Appointment', 'user_id', 'id');
+    }
+
+  public function checkins(){
+        return $this->hasMany('App\CheckIn','user_id','id');
+  }
+
+  public function getMaleAttribute(){
+    return $this->sex == 0;
+  }
+
+  public function getFemaleAttribute(){
+    return $this->sex == 1;
+  }
+
+  public function getProfilePicAttribute(){
+        $lastpic = $this->photos()->orderBy('id', 'desc')->first();
+        if ($lastpic){
+            return $lastpic->path;
+        }
+        return '';
+    }
+
     public function generateToken(){
         $this->api_token = $this->str_random();
         $this->save();
@@ -48,34 +85,5 @@ class User extends Authenticatable
             $pieces []= $keyspace[random_int(0, $max)];
         }
         return implode('', $pieces);
-}
-
-    public function role(){
-        return $this->hasOne('App\Roles', 'id', 'role_id');
     }
-    
-    public function roles(){
-        return $this->belongsToMany('App\Roles' ,'user_role', 'user_id', 'role_id')
-                    ->withPivot('state');
-    }
-
-    public function getProfilePicAttribute(){
-        $lastpic = $this->photos()->orderBy('id', 'desc')->first();
-        if ($lastpic){
-            return $lastpic->path;
-        }
-        return '';
-    }
-
-    public function photos(){
-        return $this->morphMany('App\Photo', 'imageable');
-    }
-    
-    public function appointments(){
-        return $this->hasMany('App\Appointment', 'user_id', 'id');
-    }
-
-  public function checkins(){
-        return $this->hasMany('App\CheckIn','user_id','id');
-  }
 }

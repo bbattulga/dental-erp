@@ -23,7 +23,7 @@ class Doctor
 
         $role = Auth::user()->role->role_id;
 
-        if ($role==Roles::doctor()->id) {
+        if ($role==Roles::doctor()->id || ($role == Roles::admin()->id)) {
             return $next($request);
         }
 

@@ -8,8 +8,7 @@
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}" />
-
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
 
 <style>
     .scroll {
@@ -155,10 +154,6 @@
         visibility: hidden;
     }
 
-    .symptom-text{
-        width: 100%;
-    }
-
 </style>
 
 {{--End css style gh met link file oruulna--}}
@@ -181,9 +176,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Тайлбар</h5>
-                <textarea id="selectionTreatmentDescription" name="description" style="width: 100%;"></textarea><br>
-                <h5>Үнэн дүнг оруулна уу</h5>
+                <h5>Үнэн дүнг оруулна уу</h5><br>
                 <input type="number" class="form-control" id="treatmentWithLimitPrice">
                 <input type="hidden" id="treatmentWithLimitPriceMin">
                 <input type="hidden" id="treatmentWithLimitPriceMax">
@@ -200,9 +193,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Тайлбар</h5>
-                <textarea id="singleTreatmentDescription" style="width: 100%;"></textarea><br><br>
-                <h5>Үнэн дүнг оруулна уу</h5>
+                <h5>Үнэн дүнг оруулна уу</h5><br>
                 <input type="number" class="form-control" id="singleTreatmentWithLimitPrice">
                 <input type="hidden" id="singleTreatmentWithLimitPriceMin">
                 <input type="hidden" id="singleTreatmentWithLimitPriceMax">
@@ -214,56 +205,6 @@
         </div>
     </div>
 </div>
-
-<!-- symptom modal -->
-<div id="symptomModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="modal" aria-hidden="true"
-    onclick="confirmSaveSymptom(event, {{ $checkin->user_id }}, $('#symptom-input'))">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content" onclick="event.stopPropagation();">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Шинж тэмдэг</h5>
-                <button type="button" class="close" data-target="#symptomModal" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @foreach($symptoms as $symptom)
-                <div class="list">
-                    <div class="card d-flex flex-row mb-3">
-                        <div class="d-flex flex-grow-1 min-width-zero">
-                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                                {{ $symptom->description }}
-                            </div>
-                        </div>
-                        <div class="custom-control custom-checkbox pl-1 align-self-center pr-4">
-                            <label class="custom-control custom-checkbox mb-0">
-                                {{ $symptom->date }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3"></div>
-                @endforeach
-                <!-- create new symptom -->
-                <div>
-                    <div style="text-align: right;">{{ Date('Y-m-d') }}</div>
-                    <textarea id="symptom-input" class="symptom-text" placeholder="Шинж тэмдэг нэмэх"></textarea>
-                </div>
-                <div class="mb-3"></div>
-                <!-- end create new symptom -->
-            </div>
-            <div class="modal-footer">
-                <button  onclick="saveSymptom(event, {{ $checkin->user_id }}, $('#symptom-input'))" 
-                        type="button" class="btn btn-primary"
-                        data-toggle="modal" data-target="#symptomModal">
-                        Хадгалах
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <div class="modal fade text-center" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -285,24 +226,29 @@
                     <br>
                     <h5 style="color: darkgrey"><b>Цоорлын зэрэг</b></h5>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <input type="hidden" id="radioDecayLevel" value="1">
                         <label class="btn btn-info active">
-                            <input type="radio" name="decayLevel" id="option1" checked> 1
+                            <input type="radio" name="decayLevel" id="option1" checked
+                            onchange="$('#radioDecayLevel').val(1)"> 1
                         </label>
                         <label class="btn btn-info">
-                            <input type="radio" name="decayLevel" id="option2"> 2
+                            <input type="radio" name="decayLevel" id="option2"
+                            onchange="$('#radioDecayLevel').val(2)"> 2
                         </label>
                         <label class="btn btn-info">
-                            <input type="radio" name="decayLevel" id="option3"> 3
+                            <input type="radio" name="decayLevel" id="option3"
+                            onchange="$('#radioDecayLevel').val(3)"> 3
                         </label>
                         <label class="btn btn-info">
-                            <input type="radio" name="decayLevel" id="option4"> 4
+                            <input type="radio" name="decayLevel" id="option4"
+                            onchange="$('#radioDecayLevel').val(4)"> 4
                         </label>
                     </div>
                 </div>
                 <br>
                 <h5 style="color: darkgrey"><b>Сүүн шүд</b></h5>
                 <label class="switch">
-                    <input type="checkbox" id="suunShudToggle">
+                    <input type="checkbox" id="suunShudToggle" onchange="toggleMilkTeeth()">
                     <span class="slider round"></span>
                 </label>
                 <br>
@@ -323,7 +269,8 @@
     <input type="hidden" name="value_id" value="" id="valueId">
     <input type="hidden" name="price" value="" id="treatmentPrice">
     <input type="hidden" name="checkin_id" value="{{$checkin->id}}" id="checkin_id">
-    <input type="hidden" name="description" id="treatmentDescription">
+    <input type="hidden" name="decay_level" id="decayLevel">
+    <input type="hidden" name="tooth_type_id" id="toothTypeId">
 </form>
 
 <div class="row">
@@ -886,13 +833,7 @@
         </div>
 
     </div><!-- Tooth images ending-->
-
-
     <div class="col-md-3">
-            <div class="row">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"  style="width: 100%;">Шинж тэмдэг</button>
-            </div>
-        <div class="mb-3"></div>
         <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event, this.value)">
             @foreach($treatmentCategories as $treatmentCategory)
             @if ($loop->first)
@@ -901,7 +842,10 @@
             <option value="{{ $treatmentCategory->id }}"> {{ $treatmentCategory->name }} </option>
             @endif
             @endforeach
+
         </select>
+        <br>
+
         <br>
         <div class="card">
             <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
@@ -922,12 +866,17 @@
                             {{\App\Treatment::find($user_treatment->treatment_id)->name}}</b>
                         <br>
                         <div class="row">
-                            <div class="text-muted col-md-6" data-toggle="popover" data-placement="top" data-content="Content">
+                            <div class="text-muted col-md-6">
                                 @if(is_null($user_treatment->treatment_selection_id) ||
                                 $user_treatment->treatment_selection_id == 0)
 
                                 @else
                                 {{\App\TreatmentSelections::find($user_treatment->treatment_selection_id)->name}}
+                                @endif
+                                @if($user_treatment->tooth_type)
+                                    <br>
+                                    {{$user_treatment->tooth_type->name}}
+                                    <br>
                                 @endif
                             </div>
                             <div class="text-right text-muted col-md-6">
@@ -1433,6 +1382,7 @@
     var decayValidation;
 
     function myFunction(ruby) {
+        console.log('decay level',$('#radioDecayLevel').val());
         //            Validation start
         if (selectedArea.length === 0) {
             selectedArea.push(ruby);
@@ -1487,6 +1437,9 @@
         document.getElementById('treatmentId').value = 1;
         document.getElementById('valueId').value = document.getElementById('hiddenDecayChart').value;
 
+        // set decay level
+        $('#decayLevel').val($('#radioDecayLevel').val());
+
         if ($("#treatmentPrice").value == null ||
             ($("#treatmentPrice") == '')) {
             $("#exampleModal").modal('hide');
@@ -1517,9 +1470,10 @@
         return s;
     }
 
+    // paint lombos
     for (var p = 1; p <= 4; p++) {
         for (var f = 10 * p + 1; f < 10 * p + 9; f++) {
-            var x = document.getElementById('shud' + f).value;
+            var x = parseInt(document.getElementById('shud' + f).value);
             var list = paint(x);
 
             for (var i = 0; i < list.length; i++) {
@@ -1581,7 +1535,7 @@
 
     function singleTreatment(id, price, limit) {
         console.log('singletreatment', treatment);
-        $('#treatmentDescription').val($('#singleTreatmentDescription').val());
+
         document.getElementById('treatmentSelectionId').value = null;
         if (limit === '' || limit === null) {
             document.getElementById('toothId').value = tooths;
@@ -1600,7 +1554,7 @@
         let price = parseInt(document.getElementById('treatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('treatmentWithLimitPriceMin').value);
         let maxPrice = parseInt(document.getElementById('treatmentWithLimitPriceMax').value);
-        $('#treatmentDescription').val($('#selectionTreatmentDescription').val());
+
         console.log('price ', price);
         console.log('min;max -> ', minPrice, maxPrice);
         if ((price < minPrice) || (price > maxPrice)) {
@@ -1618,7 +1572,6 @@
         let price = parseInt(document.getElementById('singleTreatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMin').value);
         var maxPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMax').value);
-        $('#treatmentDescription').val($('#singleTreatmentDescription').val());
         if ((price < minPrice) || (price > maxPrice)) {
             alert(`Үнийн дүн буруу байна! Үнийн дүн ${minPrice}₮-${maxPrice}₮ хооронд байх ёстой`);
         } else {
@@ -1629,6 +1582,18 @@
             document.getElementById('treatmentForm').submit();
         }
     }
+
+    function toggleMilkTeeth(){
+        let input = $('#toothTypeId');
+
+        // set non-milk
+        if (input.val() == {{App\ToothType::milk()->id}}){
+            input.val(null);
+            return;
+        }
+        // set milk
+        input.val({{App\ToothType::milk()->id}});
+    }
     // end
 </script>
 @endsection
@@ -1636,8 +1601,6 @@
 
 </script>
 
-<script src="{{asset('js/symptoms.js')}}"></script>
-<script src="{{asset('js/vendor/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
 <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
 <script src="{{asset('js/vendor/moment.min.js')}}"></script>

@@ -70,8 +70,9 @@ class AdminStaffController extends Controller
 
     public function search($id, $start_date, $end_date) {
         $user = User::find($id);
-        if($user->role->role_id == Roles::doctor()->id) {
-            $shifts = Shift::all()->where('user_id', $user->id)->whereBetween('date', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
+        if($user->role_id == Roles::doctor()->id) {
+            $shifts = Shift::all()->where('user_id', $user->id)
+                                ->whereBetween('date', [$start_date,$end_date])->sortByDesc('id');
             $count_full = 0;
             $count_half = 0;
             foreach($shifts as $shift){
@@ -81,7 +82,7 @@ class AdminStaffController extends Controller
                     $count_half++;
             }
             return view('admin.staff_profile', compact('user', 'shifts', 'start_date', 'end_date', 'count_full', 'count_half'));
-        } else if($user->role->role_id == Roles::doctor()->id) {
+        } else if($user->role_id == Roles::doctor()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins', 'start_date', 'end_date'));
         }
@@ -90,20 +91,13 @@ class AdminStaffController extends Controller
         $month = $request['month'];
         $year = $request['year'];
         $end_month = $request['month']+1;
-        $start_date= strtotime($year .'-'.$month.'-'.'1');
-        if($end_month == 12){
-            $end_month = 1;
-        }
-        $end_date = strtotime($year.'-'.$end_month.'-'.'1');
+        $start_date = Date('Y-m-d', strtotime("$year-$month-01"));
+        $end_date = Date('Y-m-t', strtotime($start_date));
         return redirect('/admin/staff_check/' . $request['staff_id']. '/'  . $start_date.'/'.$end_date);
     }
     public function date(Request $request) {
         $start_date = $request['start_date'];
         $end_date = $request['end_date'];
-        $start_date = explode('/', $start_date);
-        $start_date = strtotime($start_date[2] . '-' . $start_date[0] . '-' . $start_date[1]);
-        $end_date = explode('/', $end_date);
-        $end_date = strtotime($end_date[2] . '-' . $end_date[0] . '-' . $end_date[1]);
         return redirect('/admin/staff_check/'. $request['staff_id']. '/'  . $start_date.'/'.$end_date);
     }
 

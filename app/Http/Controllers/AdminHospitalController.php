@@ -48,7 +48,7 @@ class AdminHospitalController extends Controller
         foreach (User::all() as $user) {
             $beginning =  $from;
             $has = 0;//for check if user has checkin
-            foreach ($user->checkins->whereIn('state', [3,4])->whereBetween('created_at', [date('Y-m-d', $from), date('Y-m-d', $to)]) as $checkin) {
+            foreach ($user->checkins->whereIn('state', [3,4])->whereBetween('created_at', [$from,$to]) as $checkin) {
                 foreach ($checkin->treatments as $treatment_user) {
                     if($treatment_user->treatment->category == 2)
                         $treatment_type_2 = 1;
@@ -96,12 +96,8 @@ class AdminHospitalController extends Controller
     public function by_month(Request $request){
         $month = $request['month'];
         $year = $request['year'];
-        $end_month = $request['month']+1;
-        $start_date= strtotime($year .'-'.$month.'-'.'1');
-        if($end_month == 12){
-            $end_month = 1;
-        }
-        $end_date = strtotime($year.'-'.$end_month.'-'.'1');
+        $start_date = Date('Y-m-d', strtotime("$year-$month-01"));
+        $end_date = Date('Y-m-t', strtotime($start_date));
         return redirect('/admin/hospital/' . $start_date.'/'.$end_date);
     }
     public function by_date(Request $request) {

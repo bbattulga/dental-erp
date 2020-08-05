@@ -8,6 +8,7 @@ use App\UserTreatments;
 use App\Doctor;
 use App\Transaction;
 use App\Nurse;
+use App\TreatmentNote;
 use Faker\Factory as Faker;
 
 
@@ -52,8 +53,15 @@ class DoctorTreatmentDaySeeder extends Seeder
                 $user_treatments = factory(UserTreatments::class, $faker->numberBetween($treatments_min, $treatments_max))
                                     ->create([
                                             'user_id'=>$checkin->user->id,
-                                            'checkin_id'=>$checkin->id
+                                            'checkin_id'=>$checkin->id,
+                                            'created_at'=>self::$date . ' ' . Date('H:i')
                                         ]);
+                foreach($user_treatments as $user_treatment){
+                    $treatment_note = factory(TreatmentNote::class)->create([
+                        'checkin_id'=>$checkin->id,
+                        'user_treatment_id'=>$user_treatment->id
+                    ]);
+                }
                 $checkin->update(['state'=>2]);
 
                 

@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use App\Shift;
+
 
 class User extends Authenticatable
 {
@@ -62,6 +64,14 @@ class User extends Authenticatable
     return $this->sex == 1;
   }
 
+  public function getAgeAttribute(){
+    return date_diff(date_create($this->birth_date), date_create('now'))->y;
+  }
+  public function getShiftTodayAttribute(){
+    return Shift::where('date', Date('Y-m-d'))
+                  ->where('user_id', $this->id)
+                  ->first();
+  }
   public function getProfilePicAttribute(){
         $lastpic = $this->photos()->orderBy('id', 'desc')->first();
         if ($lastpic){

@@ -70,8 +70,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label>Төрсөн он сар</label>
-                                <input name="birth_date" class="form-control datepicker" id="birth"
-                                       placeholder="Төрсөн он сар" value="{{old('birth_date')}}">
+                                <input name="birth_date" class="form-control datepicker" data-date-format="mm/dd/yyyy" id="birth"
+                                       placeholder="Төрсөн он сар">
                                 <span id="date_msg" style="color:red"></span>
                             </div>
                         </div>

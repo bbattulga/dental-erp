@@ -27,7 +27,13 @@ class ReceptionTimeController extends Controller
 
     public function time() {
         $shifts = Shift::all()->where('date', date('Y-m-d'));
-        return view('reception.time', compact('shifts'));
+        $total_count = 0;
+        $done_count = 0;
+        foreach($shifts as $shift){
+            $total_count += $shift->appointments->count();
+            $done_count += $shift->checkins->count();
+        }
+        return view('reception.time', compact('shifts', 'total_count', 'done_count'));
     }
 
     public function time2() {

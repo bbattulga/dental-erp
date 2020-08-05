@@ -67,6 +67,9 @@ class AdminController extends Controller
     public function profile($id){
         $user = User::find($id);
         $checkins = array();
+
+        $start_date = Date('Y-m-01');
+        $end_date = Date('Y-m-t', strtotime('first day of this month'));
         if($user->role_id == Roles::doctor()->id) {
             $shifts = Shift::with('checkins')
                     ->where('user_id', $user->id)
@@ -81,7 +84,8 @@ class AdminController extends Controller
                 else
                     $count_half++;
             }
-            return view('admin.staff_profile',compact('user', 'shifts', 'count_full', 'count_half'));
+            return view('admin.staff_profile',compact('user', 'shifts', 'count_full', 
+                                        'count_half', 'start_date', 'end_date'));
         } else if($user->role_id == Roles::nurse()->id) {
             $checkins = CheckIn::where('nurse_id', $user->id)->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
             return view('admin.staff_profile', compact('user', 'checkins'));

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         // make dummies for date1 to date2
         $date2 = Date('Y-m-d');
-        $date1 = Date('Y-m-d', strtotime('- 7 Days'));
+        $date1 = Date('Y-m-d', strtotime('- 14 Days'));
 
         // patients for each doctor a day
         $min_users = 3;

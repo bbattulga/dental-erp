@@ -112,7 +112,7 @@ class DoctorTreatmentController extends Controller
                 'decay_level'=>$request['decay_level']
             ]);
 
-            if (!empty($request['symptom'] && !empty($request['diagnosis']))){
+            if (!empty($request['symptom'] || !empty($request['diagnosis']))){
                 $note = TreatmentNote::create([
                     'checkin_id'=>$checkin->id,
                     'user_treatment_id'=>$user_treatment->id,

@@ -75,16 +75,16 @@
                     <p class="text-muted text-small">Status</p>
                     <ul class="list-unstyled mb-5">
                         <li class="active">
-                            <a href="#">
+                            <a href="#" id="time-total">
                                 <i class=""></i>
-                                Нийт үйлчлүүлсэн
+                                Нийт цаг захиалсан -
                                 <span class="float-right"></span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class=""></i>
-                                    Шинэ үйлчлүүлэгчид
+                                <i class="" id="time-done"></i>
+                                Эмчилгээнд орсон - 
                                 <span class="float-right"></span>
                             </a>
                         </li>

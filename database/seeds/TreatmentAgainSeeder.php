@@ -83,7 +83,8 @@ class TreatmentAgainSeeder extends Seeder
             $faker->numberBetween($treatments_min, $treatments_max))
                             ->create([
             'user_id'=>$patient->id,
-            'checkin_id'=>$checkin->id
+            'checkin_id'=>$checkin->id,
+            'created_at'=>self::$date ' ' . Date('H:i')
         ]);
 
         $total = 0;

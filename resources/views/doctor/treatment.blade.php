@@ -305,26 +305,118 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel" id="lombo-note-title"></h5>
+                <h5 class="modal-title" id="lombo-note-title"></h5>
+                <h6 id="lombo-note-subtitle"></h6>
+
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <h6>Шинж тэмдэг:</h6>
-                <div id="lombo-note-symptom"></div>
-                <h6>Онош:</h6>
-                <div id="lombo-note-diagnosis"></div>
+            <div class="modal-body" style="padding: 1rem 0;">
+                <table class="table table-bordered">
+                    <thead style="background-color: #2a7eeb; color: white;">
+                        <tr>
+                            <td>#</td>
+                            <td>Шинж тэмдэг</td>
+                            <td>Онош</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div id="lombo-note-symptom"></div>
+                            </td>
+                            <td>
+                                <div id="lombo-note-diagnosis"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <!--
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
             </div>
+        -->
         </div>
     </div>
 </div>
-
 <!-- end lombo treatment note modal -->
+
+<!-- show summaries -->
+<div class="modal fade" id="allNotesModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Шинж тэмдэг, онош</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 1rem 0;">
+                <table class="table table-bordered">
+                    <thead style="background-color: #2a7eeb; color: white; position: sticky; top:0;">
+                        <tr>
+                            <td>#</td>
+                            <td>Шинж тэмдэг</td>
+                            <td>Онош</td>
+                            <td>Шүд</td>
+                            <td>Эмчилгээ</td>
+                            <td>Өдөр</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $i=1; @endphp
+                        @foreach($checkin_all as $_checkin)
+                            @foreach($_checkin->treatments as $_user_treatment)
+                            @if($_user_treatment->treatment_note)
+                            <tr>
+                                <td>{{ $i }}</td>
+                                <td>
+                                    <div>{{ $_user_treatment->treatment_note->symptom }}</div>
+                                </td>
+                                <td>
+                                    <div>
+                                        {{ $_user_treatment->treatment_note->diagnosis }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        @php
+                                            $tooth_id = $_user_treatment->tooth_id;
+                                            $tooth_title = $tooth_id != null? "#$tooth_id":'Бүх шүд';
+                                        @endphp
+                                        {{ $tooth_title }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        {{ $_user_treatment->treatment->name }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>{{ $_user_treatment->treatment_note->created_at }}</div>
+                                </td>
+                            </tr>
+                             @php $i++ @endphp
+                            @endif
+                            @endforeach
+                        @endforeach 
+                    </tbody>
+                </table>
+            </div>
+            <!--
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        -->
+        </div>
+    </div>
+</div>
 
 <form id="treatmentForm" method="post" action="{{url('/doctor/treatment/store')}}">
     @csrf
@@ -345,6 +437,13 @@
 <div class="row">
     <div class="col-md-9">
         <div class="card">
+            <div style="background-color: white; color: black; 
+                display: inline-block; font-size: 2.3em;
+                position: absolute; top: 0; right: 0; cursor: pointer;">
+                <div class="glyph" data-toggle="modal" data-target="#allNotesModal">
+                    <div class="glyph-icon simple-icon-notebook"></div>
+                </div>
+            </div>
             <div class="card-body mb-2">
                 <div class="table-responsive">
                     <table class="table text-center">
@@ -928,12 +1027,13 @@
                 <div class="tab-pane show active scroll" id="first" role="tabpanel" aria-labelledby="first-tab">
                     @foreach($user_treatments as $user_treatment)
                     @php
+                        $treatment_name = $user_treatment->treatment->name;
                         $history_key = 'treatment-history-'.$loop->index;
                         $treatment_note = $user_treatment->treatment_note;
-                        $title = $user_treatment->tooth_id == null? 'Бүх шүд':"Шүд #".$user_treatment->tooth_id
+                        $title = $user_treatment->tooth_id == null? 'Бүх шүд' . " - $treatment_name":"Шүд #".$user_treatment->tooth_id . " - $treatment_name";
                     @endphp
                     <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}"
-                        @if ($user_treatment->treatment->category == 1 && $treatment_note)
+                        @if ($treatment_note)
                         onclick="openLomboNoteModal('{{$title}}','{{$treatment_note->symptom}}', '{{$treatment_note->diagnosis}}')"console.log('a') @endif>
                         <b>{{$user_treatment->tooth_id == null? 'Бүх шүд':"Шүд #".$user_treatment->tooth_id}} -
                             {{\App\Treatment::find($user_treatment->treatment_id)->name}}</b>
@@ -1242,9 +1342,8 @@
                     inlinestyle += 'display:none;';
                 }
                 inlinestyle += '"'; // sets terminating " for inline style
-
                 html += `<button class="btn btn-primary btn-block single" ${inlinestyle}` +
-                    `onclick="openNotesModal(event, '#lomboModal', '{{$treatment->name}}')">` +
+                    `onclick="openNotesModal(event, '#lomboModal', '${treatment.name}')">` +
                     `<div class="row">` +
                     `<div class="col-md-12 text-left" onclick="reset()">` +
                     `${treatment.name} <br>` +
@@ -1278,7 +1377,7 @@
                 onClickStr = `onclick="treatmentButton('${treatment.id}', '${treatment.name}')"`;
             else
                 onClickStr = `onclick="singleTreatment('${treatment.id}',` +
-                `'${treatment.price}', '${treatment.limit}')"`;
+                `'${treatment.price}', '${treatment.limit}', '${treatment.name}')"`;
 
             // treatment should be seen or not
             // when fetched from db first time
@@ -1507,7 +1606,7 @@
         if ($("#treatmentPrice").value == null ||
             ($("#treatmentPrice") == '')) {
             $("#lomboModal").modal('hide');
-            treatmentButton(1);
+            treatmentButton(1, 'Ломбо');
             return;
         }
 
@@ -1563,7 +1662,11 @@
         document.getElementById('treatmentSelectionId').value = null;
         document.getElementById('toothId').value = tooths;
         document.getElementById('treatmentId').value = treatment;
-        $("#treatmentTypeModal").modal();
+        if (shouldOpenNotesModal()){
+            openNotesModal(null, '#treatmentTypeModal', treatmentName);
+        }else{
+            $('#treatmentTypeModal').modal();
+        }
         treatment = parseInt(treatment);
         var n = treatment;
         console.log(treatment);
@@ -1608,6 +1711,10 @@
             document.getElementById('singleTreatmentWithLimitPriceMin').value = price;
             document.getElementById('singleTreatmentWithLimitPriceMax').value = limit;
             $("#treatmentTypeModal").modal("hide");
+            if (shouldOpenNotesModal()){
+                openNotesModal(null, '#singleTreatmentWithLimit', treatmentName);
+                return;
+            }
             $("#singleTreatmentWithLimit").modal();
         }
     }
@@ -1633,7 +1740,6 @@
         let price = parseInt(document.getElementById('singleTreatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMin').value);
         var maxPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMax').value);
-        $('#treatmentDescription').val($('#singleTreatmentDescription').val());
         if ((price < minPrice) || (price > maxPrice)) {
             alert(`Үнийн дүн буруу байна! Үнийн дүн ${minPrice}₮-${maxPrice}₮ хооронд байх ёстой`);
         } else {
@@ -1665,6 +1771,7 @@
         $('#input-symptom').val('');
         $('#input-diagnose').val('');
     }
+    clearNotes();
 
     function saveNotes(){
         $('#formInputSymptom').val($('#input-symptom').val());
@@ -1676,13 +1783,19 @@
         let tooth = tooths[0];
         let title = `Шүд #${tooth==undefined?'бүгд':tooth} - ${treatmentName}`;
         console.log('title');
-        console.log(title);
         $('#notes-title').html(title);
         $('.notes-modal').modal();
     }
 
-    function openLomboNoteModal(title, symptom, diagnosis){
-        console.log(title, symptom, diagnosis);
+    function shouldOpenNotesModal(){
+        if (($('#input-symptom').val().length == 0) &&
+            $('#input-diagnose').val().length == 0){
+            return true;
+        }
+        return false;
+    }
+    function openLomboNoteModal(title,symptom, diagnosis, decayLevel, toothType){
+        console.log('title', title);
         $('#lombo-note-title').html(title);
         $('#lombo-note-symptom').html(symptom);
         $('#lombo-note-diagnosis').html(diagnosis);

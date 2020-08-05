@@ -72,7 +72,9 @@
         <div class="navbar-right">
           
 
-
+            @php
+                $shift_today = \Illuminate\Support\Facades\Auth::user()->shift_today;
+            @endphp
             <div class="header-icons d-inline-block align-middle">
                 <div class="position-relative d-inline-block">
                     <button class="header-icon btn btn-empty" type="button" id="notificationButton"
@@ -84,13 +86,19 @@
                         id="notificationDropdown">
 
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                           <p class="font-weight-bold">Өвчтөний нэр </p>
+                            @if ($shift_today)
+                                @foreach($shift_today->appointments as $appointment)
+                           <p class="font-weight-bold">{{$appointment->name}}</p>
                             <div class="pl-3 pr-2">
-                                <a href="#">
-                                    <p class="font-weight-small mb-1">2 цаг захиалсан байна!</p>
-                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45-13:45</p>
-                                </a>
+                                    <a href="#">
+                                        <p class="font-weight-small mb-1">цаг захиалсан байна</p>
+                                        <p class="text-muted mb-0 text-small">
+                                            {{$appointment->start}} - {{$appointment->end}}
+                                        </p>
+                                    </a>
                             </div>
+                            @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>

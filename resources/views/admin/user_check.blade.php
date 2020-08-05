@@ -19,38 +19,6 @@
 @endsection
 @section('content')
 
-<div class="modal fade" id="exampleModalContent" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalContentLabel">Эмчилгээний мэдээлэл</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Эмчилгээний нэр:</label>
-                        <input type="text" class="form-control" id="treatment-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Тэмдэглэл:</label>
-                        <textarea class="form-control" id="treatment-note"></textarea>
-                    </div>
-                </form>
-            </div>
-            <!--
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
-            </div>
-        -->
-        </div>
-    </div>
-</div>
-
-
     <script>
         document.getElementById('adminUsers').classList.add('active');
     </script>
@@ -140,8 +108,7 @@
                                             <span class="log-indicator border-theme-2 align-middle"></span>
                                         </td>
                                         <td>
-                                            <span class="font-weight-medium" class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#exampleModalContent"
-                                data-whatever="@mdo" style="cursor: pointer;">
+                                            <span class="font-weight-medium" class="btn btn-outline-primary mb-2">
                                                 {{$user_treatment->treatment->name}}
                                             </span>
                                         </td>

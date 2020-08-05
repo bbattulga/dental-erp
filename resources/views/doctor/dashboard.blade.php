@@ -17,6 +17,38 @@
     <script>
         document.getElementById('doctorDashboard').classList.add('active');
     </script>
+
+<div class="modal fade" id="exampleModalContent" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalContentLabel">Эмчилгээний мэдээлэл</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Эмчилгээний нэр:</label>
+                        <input type="text" class="form-control" id="treatment-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Тэмдэглэл:</label>
+                        <textarea class="form-control" id="treatment-note"></textarea>
+                    </div>
+                </form>
+            </div>
+            <!--
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        -->
+        </div>
+    </div>
+</div>
+
     <div class="row">
         <div class="col-md-3">
             <div class="card ">
@@ -155,7 +187,6 @@
                                                         {{--</a>--}}
                                                     </div>
                                                 </div>
-
                                             </a>
                                         </h5>
                                         <table class="table table-sm table-borderless">
@@ -172,7 +203,8 @@
                                                         <span class="log-indicator border-theme-2 align-middle"></span>
                                                     </td>
                                                     <td>
-                                                        <span class="font-weight-medium">{{$treatment->treatment->name}}</span>
+                                                        <span class="font-weight-medium" data-toggle="modal" data-target="#exampleModalContent"
+                                data-whatever="@mdo" style="cursor: pointer;">{{$treatment->treatment->name}}</span>
                                                     </td>
                                                     <td class="text-right">
                                                             <span class="text-muted"> {{$treatment->price}}₮
@@ -314,6 +346,11 @@
         // Update Perfect Scrollbar
         ps.update();
         });
+
+
+        function showTreatmentDetail(treatment_name, treatment_note){
+            
+        }
     </script>
 
 @endsection

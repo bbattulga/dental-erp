@@ -17,6 +17,7 @@ use App\ToothType;
 use App\UserTooth;
 use App\CheckInState;
 use App\Symptom;
+use App\TreatmentNote;
 
 
 class DoctorTreatmentController extends Controller
@@ -104,16 +105,40 @@ class DoctorTreatmentController extends Controller
             } else {
                 $price = $request['price'];
             }
-            UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>0,'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price,
-                'description'=>$request['description']]);
+
+            $user_treatment = UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>0,'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price,
+                'description'=>$request['description'],
+                'tooth_type_id'=>$request['tooth_type_id'],
+                'decay_level'=>$request['decay_level']
+            ]);
+
+            if (!empty($request['symptom'] && !empty($request['diagnosis']))){
+                $note = TreatmentNote::create([
+                    'checkin_id'=>$checkin->id,
+                    'user_treatment_id'=>$user_treatment->id,
+                    'symptom'=>$request['symptom'],
+                    'diagnosis'=>$request['diagnosis']
+                ]);
+            }
         } else {
             if(empty($request['price'])) {
                 $price = TreatmentSelections::find($request['treatment_selection_id'])->price;
             } else {
                 $price = $request['price'];
             }
-            UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>$request['treatment_selection_id'],'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price,
-                'description'=>$request['description']]);
+            $user_treatment = UserTreatments::create(['checkin_id'=>$request['checkin_id'],'treatment_id'=>$request['treatment_id'],'treatment_selection_id'=>$request['treatment_selection_id'],'tooth_id'=>$request['tooth_id'],'value'=>$request['value_id'], 'user_id'=>$checkin->user_id, 'price'=>$price,
+                'description'=>$request['description'],
+                'tooth_type_id'=>$request['tooth_type_id'],
+                'decay_level'=>$request['decay_level']
+            ]);
+            if (!empty($request['symptom'] && !empty($request['diagnosis']))){
+                $note = TreatmentNote::create([
+                    'checkin_id'=>$checkin->id,
+                    'user_treatment_id'=>$user_treatment->id,
+                    'symptom'=>$request['symptom'],
+                    'diagnosis'=>$request['diagnosis']
+                ]);
+            }
         }
         return back()->with('last_treatment', 1);
     }

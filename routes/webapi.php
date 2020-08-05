@@ -45,7 +45,7 @@ Route::group(['middleware' => 'admin',
     Route::put('treatments-selections/update', 'TreatmentSelectionController@update');
     Route::delete('treatments-selections/delete/{id}', 'TreatmentSelectionController@destroy');
 
-    Route::get('tailan/treatments/all', 'TreatmentTailanController@index');
+    Route::get('tailan/treatments', 'TreatmentTailanController@index');
     Route::post('tailan/treatments/month', 'TreatmentTailanController@showMonth');
     Route::post('tailan/treatments/datebetween', 'TreatmentTailanController@showDateBetween');
 

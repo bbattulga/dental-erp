@@ -20,7 +20,7 @@ class AdminHospitalController extends Controller
     public function index() {
         $start_date = Date('Y-m-01');
         $end_date = Date('Y-m-t', strtotime('first day of this month'));
-        return view('admin.hospital2', compact('start_date', 'end_date'));
+        return view('admin.hospital', compact('start_date', 'end_date'));
     }
     public function date($from, $to) {
 

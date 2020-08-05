@@ -8,7 +8,8 @@
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}" />
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>    
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     .scroll {
@@ -154,6 +155,10 @@
         visibility: hidden;
     }
 
+    .symptom-text{
+        width: 100%;
+    }
+
 </style>
 
 {{--End css style gh met link file oruulna--}}
@@ -176,7 +181,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Үнэн дүнг оруулна уу</h5><br>
+                <h5>Үнэн дүнг оруулна уу</h5>
                 <input type="number" class="form-control" id="treatmentWithLimitPrice">
                 <input type="hidden" id="treatmentWithLimitPriceMin">
                 <input type="hidden" id="treatmentWithLimitPriceMax">
@@ -193,7 +198,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Үнэн дүнг оруулна уу</h5><br>
+                <h5>Үнэн дүнг оруулна уу</h5>
                 <input type="number" class="form-control" id="singleTreatmentWithLimitPrice">
                 <input type="hidden" id="singleTreatmentWithLimitPriceMin">
                 <input type="hidden" id="singleTreatmentWithLimitPriceMax">
@@ -205,7 +210,42 @@
         </div>
     </div>
 </div>
-<div class="modal fade text-center" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="modal fade notes-modal" tabindex="-1" role="dialog" aria-hidden="true" onclick="clearNotes();">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notes-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" onclick="$('.notes-modal').modal('hide'); clearNotes();">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Шинж тэмдэг</span>
+                    </div>
+                    <textarea class="form-control" aria-label="With textarea" id="input-symptom"></textarea>
+                </div>
+                <div class="mb-3"></div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Онош</span>
+                    </div>
+                    <textarea class="form-control" aria-label="With textarea" id="input-diagnose"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('.notes-modal').modal('hide'); skipNotes()">
+                    алгасах</button>
+                <button type="button" class="btn btn-primary" onclick="$('.notes-modal').modal('hide'); saveNotes()" 
+                    data-dismiss="modal">Үргэлжлүүлэх</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-center" id="lomboModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -260,6 +300,32 @@
     </div>
 </div>
 
+<!-- lombo treatment note modal -->
+<div class="modal fade" id="lomboNoteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" id="lombo-note-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Шинж тэмдэг:</h6>
+                <div id="lombo-note-symptom"></div>
+                <h6>Онош:</h6>
+                <div id="lombo-note-diagnosis"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end lombo treatment note modal -->
+
 <form id="treatmentForm" method="post" action="{{url('/doctor/treatment/store')}}">
     @csrf
     <input type="hidden" name="treatment_id" value="" id="treatmentId">
@@ -269,8 +335,11 @@
     <input type="hidden" name="value_id" value="" id="valueId">
     <input type="hidden" name="price" value="" id="treatmentPrice">
     <input type="hidden" name="checkin_id" value="{{$checkin->id}}" id="checkin_id">
+    <input type="hidden" name="description" id="treatmentDescription">
     <input type="hidden" name="decay_level" id="decayLevel">
     <input type="hidden" name="tooth_type_id" id="toothTypeId">
+    <input type="hidden" name="symptom" id="formInputSymptom">
+    <input type="hidden" name="diagnosis" id="formInputDiagnosis">
 </form>
 
 <div class="row">
@@ -805,10 +874,8 @@
                         <form method="post" action="{{url('doctor/treatment/xray')}}" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="xray_user_id" value="{{$checkin->user_id}}">
-                            <input type="file" name="photo" accept="image/*"> <button class="btn btn-primary"
-                                type="submit">Оруулах</button>
+                            <input type="file" name="photo" accept="image/*"> <button class="btn btn-primary"type="submit">Оруулах</button>
                         </form>
-
                     </div>
                 </div>
                 <div class="row m-3">
@@ -833,6 +900,8 @@
         </div>
 
     </div><!-- Tooth images ending-->
+
+
     <div class="col-md-3">
         <select id="treatmentCategorySelect" class="form-control" onchange="handleSelectTreatmentCategory(event, this.value)">
             @foreach($treatmentCategories as $treatmentCategory)
@@ -842,10 +911,7 @@
             <option value="{{ $treatmentCategory->id }}"> {{ $treatmentCategory->name }} </option>
             @endif
             @endforeach
-
         </select>
-        <br>
-
         <br>
         <div class="card">
             <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
@@ -861,22 +927,22 @@
             <div class="tab-content">
                 <div class="tab-pane show active scroll" id="first" role="tabpanel" aria-labelledby="first-tab">
                     @foreach($user_treatments as $user_treatment)
-                    <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}">
+                    @php
+                        $history_key = 'treatment-history-'.$loop->index;
+                        $treatment_note = $user_treatment->treatment_note;
+                        $title = $user_treatment->tooth_id == null? 'Бүх шүд':"Шүд #".$user_treatment->tooth_id
+                    @endphp
+                    <div class="col-md-12 text-left line history{{$user_treatment->tooth_id}}"
+                        @if ($user_treatment->treatment->category == 1 && $treatment_note)
+                        onclick="openLomboNoteModal('{{$title}}','{{$treatment_note->symptom}}', '{{$treatment_note->diagnosis}}')"console.log('a') @endif>
                         <b>{{$user_treatment->tooth_id == null? 'Бүх шүд':"Шүд #".$user_treatment->tooth_id}} -
                             {{\App\Treatment::find($user_treatment->treatment_id)->name}}</b>
-                        <br>
                         <div class="row">
                             <div class="text-muted col-md-6">
                                 @if(is_null($user_treatment->treatment_selection_id) ||
                                 $user_treatment->treatment_selection_id == 0)
-
                                 @else
                                 {{\App\TreatmentSelections::find($user_treatment->treatment_selection_id)->name}}
-                                @endif
-                                @if($user_treatment->tooth_type)
-                                    <br>
-                                    {{$user_treatment->tooth_type->name}}
-                                    <br>
                                 @endif
                             </div>
                             <div class="text-right text-muted col-md-6">
@@ -897,8 +963,8 @@
                         <!-- remove comments to see default lombo -->
 
                         @if($treatment->id == 1)
-                        <button class="btn btn-primary btn-block single" data-toggle="modal"
-                            data-target="#exampleModal">
+                        <button class="btn btn-primary btn-block single"
+                                onclick="openNotesModal(event, '#lomboModal', '{{$treatment->name}}')">
 
                             <div class="row">
 
@@ -928,10 +994,10 @@
                         @else
                             multiple
                         @endif" @if($treatment->treatment_selections->count() != 0)
-                            onclick="treatmentButton('{{$treatment->id}}')"
+                            onclick="treatmentButton('{{$treatment->id}}', '{{$treatment->name}}')"
                             @else
                             onclick="singleTreatment('{{$treatment->id}}', '{{$treatment->price}}',
-                            '{{$treatment->limit}}')"
+                            '{{$treatment->limit}}', '{{$treatment->name}}')"
                             @endif
                             >
                             <div class="row">
@@ -990,7 +1056,6 @@
                                             <div class="text-muted col-md-6">
                                                 @if(is_null($treatment_history->treatment_selection_id) ||
                                                 $treatment_history->treatment_selection_id == 0)
-
                                                 @else
                                                 {{\App\TreatmentSelections::find($treatment_history->treatment_selection_id)->name}}
                                                 @endif
@@ -1030,6 +1095,9 @@
     function finishTreatment() {
         document.getElementById('treatmentsFinish').submit();
     }
+    var nextModal= ''; 
+    var skipNotesBoolean = false;
+
     var tooths = [];
     var selectedArea = [];
     var toothClassList = ["single", "all", "multiple"];
@@ -1176,8 +1244,7 @@
                 inlinestyle += '"'; // sets terminating " for inline style
 
                 html += `<button class="btn btn-primary btn-block single" ${inlinestyle}` +
-                    `data-toggle="modal"` +
-                    `data-target="#exampleModal">` +
+                    `onclick="openNotesModal(event, '#lomboModal', '{{$treatment->name}}')">` +
                     `<div class="row">` +
                     `<div class="col-md-12 text-left" onclick="reset()">` +
                     `${treatment.name} <br>` +
@@ -1208,7 +1275,7 @@
 
             let onClickStr = '';
             if (treatment.treatment_selections && (treatment.treatment_selections.length > 0))
-                onClickStr = `onclick="treatmentButton('${treatment.id}')"`;
+                onClickStr = `onclick="treatmentButton('${treatment.id}', '${treatment.name}')"`;
             else
                 onClickStr = `onclick="singleTreatment('${treatment.id}',` +
                 `'${treatment.price}', '${treatment.limit}')"`;
@@ -1257,8 +1324,6 @@
         // document.getElementById('suunShudToggle').setAttribute('class','')
         var x = document.getElementById('suunShudToggle');
         x.checked = false;
-
-
     }
 
     function changeStyle(ruby) {
@@ -1382,7 +1447,6 @@
     var decayValidation;
 
     function myFunction(ruby) {
-        console.log('decay level',$('#radioDecayLevel').val());
         //            Validation start
         if (selectedArea.length === 0) {
             selectedArea.push(ruby);
@@ -1442,7 +1506,7 @@
 
         if ($("#treatmentPrice").value == null ||
             ($("#treatmentPrice") == '')) {
-            $("#exampleModal").modal('hide');
+            $("#lomboModal").modal('hide');
             treatmentButton(1);
             return;
         }
@@ -1470,10 +1534,9 @@
         return s;
     }
 
-    // paint lombos
     for (var p = 1; p <= 4; p++) {
         for (var f = 10 * p + 1; f < 10 * p + 9; f++) {
-            var x = parseInt(document.getElementById('shud' + f).value);
+            var x = document.getElementById('shud' + f).value;
             var list = paint(x);
 
             for (var i = 0; i < list.length; i++) {
@@ -1495,7 +1558,7 @@
     }
 
     // start
-    function treatmentButton(treatment) {
+    function treatmentButton(treatment, treatmentName) {
         console.log('treatmentbutton', treatment);
         document.getElementById('treatmentSelectionId').value = null;
         document.getElementById('toothId').value = tooths;
@@ -1533,9 +1596,8 @@
         }
     }
 
-    function singleTreatment(id, price, limit) {
+    function singleTreatment(id, price, limit, treatmentName) {
         console.log('singletreatment', treatment);
-
         document.getElementById('treatmentSelectionId').value = null;
         if (limit === '' || limit === null) {
             document.getElementById('toothId').value = tooths;
@@ -1550,11 +1612,11 @@
         }
     }
 
-    function treatmentSelectionWithLimit() {
+    function treatmentSelectionWithLimit() {    
         let price = parseInt(document.getElementById('treatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('treatmentWithLimitPriceMin').value);
         let maxPrice = parseInt(document.getElementById('treatmentWithLimitPriceMax').value);
-
+        $('#treatmentDescription').val($('#selectionTreatmentDescription').val());
         console.log('price ', price);
         console.log('min;max -> ', minPrice, maxPrice);
         if ((price < minPrice) || (price > maxPrice)) {
@@ -1565,13 +1627,13 @@
                 'treatmentSelectionIdWithLimit').value;
             document.getElementById('treatmentForm').submit();
         }
-
     }
 
     function singleTreatmentWithLimit() {
         let price = parseInt(document.getElementById('singleTreatmentWithLimitPrice').value);
         var minPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMin').value);
         var maxPrice = parseInt(document.getElementById('singleTreatmentWithLimitPriceMax').value);
+        $('#treatmentDescription').val($('#singleTreatmentDescription').val());
         if ((price < minPrice) || (price > maxPrice)) {
             alert(`Үнийн дүн буруу байна! Үнийн дүн ${minPrice}₮-${maxPrice}₮ хооронд байх ёстой`);
         } else {
@@ -1585,7 +1647,6 @@
 
     function toggleMilkTeeth(){
         let input = $('#toothTypeId');
-
         // set non-milk
         if (input.val() == {{App\ToothType::milk()->id}}){
             input.val(null);
@@ -1594,6 +1655,43 @@
         // set milk
         input.val({{App\ToothType::milk()->id}});
     }
+
+    function skipNotes(){
+        skipNotesBoolean = true;
+        clearNotes();
+        $(nextModal).modal();
+    }
+    function clearNotes(){
+        $('#input-symptom').val('');
+        $('#input-diagnose').val('');
+    }
+
+    function saveNotes(){
+        $('#formInputSymptom').val($('#input-symptom').val());
+        $('#formInputDiagnosis').val($('#input-diagnose').val());
+        $(nextModal).modal();
+    }
+    function openNotesModal(event, nextModalSelector, treatmentName){
+        nextModal = nextModalSelector;
+        let tooth = tooths[0];
+        let title = `Шүд #${tooth==undefined?'бүгд':tooth} - ${treatmentName}`;
+        console.log('title');
+        console.log(title);
+        $('#notes-title').html(title);
+        $('.notes-modal').modal();
+    }
+
+    function openLomboNoteModal(title, symptom, diagnosis){
+        console.log(title, symptom, diagnosis);
+        $('#lombo-note-title').html(title);
+        $('#lombo-note-symptom').html(symptom);
+        $('#lombo-note-diagnosis').html(diagnosis);
+        $('#lomboNoteModal').modal();
+    }
+
+    function treatmentNoteModal(){
+
+    }
     // end
 </script>
 @endsection
@@ -1601,6 +1699,7 @@
 
 </script>
 
+<script src="{{asset('js/symptoms.js')}}"></script>
 <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
 <script src="{{asset('js/vendor/chartjs-plugin-datalabels.js')}}"></script>
 <script src="{{asset('js/vendor/moment.min.js')}}"></script>

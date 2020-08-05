@@ -120,7 +120,6 @@
                                 <span class="log-indicator border-theme-2 align-middle"></span>
                             </td>
                             <td>
-
                                 <span class="font-weight-medium">{{$treatment->treatment->name}}</span>
                             </td>
                             <td class="text-right">

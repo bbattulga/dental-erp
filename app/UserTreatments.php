@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class UserTreatments extends Model
 {
     //
-    protected $fillable = ['user_id','treatment_id','tooth_id','value','checkin_id','treatment_selection_id','price',
-                            'description'];
+    protected $fillable = ['user_id','treatment_id','tooth_id','value','checkin_id','treatment_selection_id','price', 'decay_level', 'tooth_type_id', 'note_id'];
 
-
+    protected $table = 'user_treatments';
+    
  	public function user(){
     	return $this->belongsTo('App\User', 'user_id', 'id');
     }
@@ -22,8 +22,13 @@ class UserTreatments extends Model
     public function checkIn(){
         return $this->belongsTo('App\CheckIn', 'checkin_id', 'id');
     }
-
     public function treatmentSelection(){
     	return $this->belongsTo('App\TreatmentSelections', 'treatment_selection_id', 'id');
+    }
+    public function tooth_type(){
+        return $this->hasOne('App\ToothType', 'id', 'tooth_type_id');
+    }
+    public function treatment_note(){
+        return $this->hasOne('App\TreatmentNote','user_treatment_id', 'id');
     }
 }

@@ -55,6 +55,8 @@
   padding: 0;
   color: #efefef;
   padding: 7px;
+  min-width: 650px;
+  overflow: auto;
 }
 
 *{

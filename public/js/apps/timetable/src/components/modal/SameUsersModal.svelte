@@ -3,7 +3,8 @@
 	import {createEventDispatcher} from 'svelte';
 	import {fade} from 'svelte/transition';
 	import Modal from './Modal.svelte';
-	import List, {Item, Text, PrimaryText, SecondaryText} from '@smui/list';
+	
+ 	import DataTable, {Head, Body, Row, Cell} from '@smui/data-table';
 	import Button, {Label} from '@smui/list';
 	import Card from '@smui/card';
 
@@ -41,34 +42,27 @@
   	</div>
 
 	<h3>Төстэй хаягууд:</h3>
-	<br />
-	<List threeLine style="width: 100%;">
-		{#each users as user, i}
+	<DataTable table$aria-label="People list" style="width: 100%;">
+      <Head>
+        <Row>
+          <Cell><b>#</b></Cell>
+          <Cell><b>Овог</b></Cell>
+          <Cell><b>Нэр</b></Cell>
+          <Cell><b>Регистр</b></Cell>
+        </Row>
+      </Head>
+      <Body>
 
-			<Item>
-				<Card style="display: grid; grid-template-columns: 8fr 2fr;">
-				<Text>
-					<PrimaryText>
-						{`${user.last_name[0]}. ${user.name}`}
-					</PrimaryText>
-
-					<SecondaryText>
-						{user.phone_number}
-					</SecondaryText>
-
-					<SecondaryText>
-						{user.register}
-					</SecondaryText>
-				</Text>
-
-				<Button style="color: white" class="btn btn-primary hovertb" on:click={handleChoose(user)}>
-					сонгох
-				</Button>
-			</Card>
-			</Item>
-		{/each}
-	</List>
-
+      	{#each users as user, i}
+        <Row on:click={()=>handleChoose(user)}>
+          <Cell>{i+1}</Cell>
+          <Cell>{user.last_name}</Cell>
+          <Cell>{user.name}</Cell>
+          <Cell>{user.register}</Cell>
+        </Row>
+        {/each}
+      </Body>
+    </DataTable>
 	<button class="btn-cancel btn btn-secondary" on:click|stopPropagation|preventDefault={handleCancel}>Алгасах</button>
 	
 </div>
@@ -88,7 +82,7 @@ div:hover .hovertb{
 	padding-right:35px;
 	padding-top:35px;
 	padding-bottom:50px;
-	max-width: 600px;
+	max-width: 50%;
 	min-width: 450px;
 	min-height: 400px;
 	max-height: 600px;

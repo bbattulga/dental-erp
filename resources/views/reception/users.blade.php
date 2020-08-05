@@ -233,7 +233,7 @@
     <div class="col-md-12">
         <div class="card mb-4">
             <div class="card-body">
-                <table id="datatable-buttons" class="table table-striped table-bordered" cellspacing="0"
+                <table id="datatable-buttons" class="table table-striped table-bordered table-responsive" cellspacing="0"
                        width="100%">
                     <thead>
                     <tr>

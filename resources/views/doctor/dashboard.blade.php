@@ -282,6 +282,43 @@
 
     </div>
 
+<!-- show summaries -->
+<div class="modal fade" id="treatmentNotesModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Шинж тэмдэг, онош</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 1rem 0;">
+                <table class="table table-bordered">
+                    <thead style="background-color: #2a7eeb; color: white; position: sticky; top:0;">
+                        <tr>
+                            <td>#</td>
+                            <td>Шинж тэмдэг</td>
+                            <td>Онош</td>
+                            <td>Шүд</td>
+                            <td>Эмчилгээ</td>
+                            <td>Өдөр</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <!--
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        -->
+        </div>
+    </div>
+</div>
 
     </div><!-- row -->
 @endsection
@@ -322,9 +359,12 @@
         ps.update();
         });
 
+        function tdBlock(data){
+            return `<td><div>${data}</div></td>`;
+        }
 
-        function showTreatmentDetail(treatment_name, treatment_note){
-            
+        function showTreatmentDetails(user_treatments){
+
         }
     </script>
 

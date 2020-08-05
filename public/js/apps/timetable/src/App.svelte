@@ -109,8 +109,10 @@
 		background: white;
 		position: relative;
 		min-height: 100%;
-
 		padding: 10px;
+
+		min-width: 650px;
+  		overflow: auto;
 	}
 
 	.hidden{

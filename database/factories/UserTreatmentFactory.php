@@ -16,12 +16,6 @@ $factory->define(UserTreatments::class, function (Faker $faker) {
 
 	$treatments = Treatment::all();
 	$tooths = Tooth::fromCache();
-	$decay_value_ids = array();
-	$decays = $faker->numberBetween(1, 7);
-	for ($i=0; $i<$decays; $i++){
-		array_push($decay_value_ids, pow(2, 1+($faker->numberBetween(0, 5)%32)));
-	}
-
 	$rand_treatment = $treatments->random();
 	$rand_treatment_selection = count($rand_treatment->treatment_selections) == null? 0:$rand_treatment->treatment_selections->random();
 
@@ -35,7 +29,8 @@ $factory->define(UserTreatments::class, function (Faker $faker) {
         'treatment_id' => $rand_treatment->id,
         'treatment_selection_id' => $rand_treatment_selection == null? 0: $rand_treatment_selection->id,
         'tooth_id' => $tooths->random()->code,
-        'value' => array_rand($decay_value_ids),
+        'value' =>$rand_treatment->id == 1? $faker->numberBetween(1, 31): 0,
+        'decay_level'=>$faker->numberBetween(1,4),
         'price' => $price
     ];
 });

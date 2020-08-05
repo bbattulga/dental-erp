@@ -36,7 +36,7 @@ class ShiftDaySeeder extends Seeder
 				->create([
 					'user_id' => $doctor->id,
 					'date' => self::$date,
-                    'shift_type_id' => $c
+                    'shift_type_id' => 3
 				]);
     	}
     }

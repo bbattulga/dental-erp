@@ -74,17 +74,17 @@
 
                     <p class="text-muted text-small">Status</p>
                     <ul class="list-unstyled mb-5">
-                        <li class="active">
+                        <li class="">
                             <a href="#" id="time-total">
                                 <i class=""></i>
-                                Нийт цаг захиалсан -
+                                Шар - бүртгэлгүй
                                 <span class="float-right"></span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <i class="" id="time-done"></i>
-                                Эмчилгээнд орсон - 
+                                Цагаан - бүртгэлтэй
                                 <span class="float-right"></span>
                             </a>
                         </li>

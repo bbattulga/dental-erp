@@ -1,0 +1,13 @@
+
+COMPILE THESE 2 apps:
+1.  public/js/apps/timetable   -> npm install -> npm run build
+2.  public/js/apps/hospital-tailan  -> npm install -> npm run build
+
+
+
+SEED DUMMY IF NEEDED:
+
+/database/seeds/DatabaseSeeder.php  -> set $date1, $date2 intervals (5-7 days are enough... or 14...)
+
+php artisan db:seed
+-deletes previous dummies then seeds new dummies

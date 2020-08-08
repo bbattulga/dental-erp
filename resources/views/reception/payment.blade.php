@@ -24,7 +24,7 @@
     <div class="row">
 
 @foreach($treatment_done_users as $treatment_done_user)
-        <div class="col-md-4"><!--profile heseg-->
+        <div class="col-md-4 mb-3"><!--profile heseg-->
 
 
             <div class="card "><!--row -->
@@ -143,7 +143,7 @@
                                    placeholder="Урамшуулалын код">
 
                             <button id="btn-promotion"
-                                class="btn" onclick="checkPromotion(event, {{$loop->index}})">Шалгах</button>
+                                class="btn" style="margin-bottom: 10px;" onclick="checkPromotion(event, {{$loop->index}})">Код шалгах</button>
                             <div style="margin-bottom: 5px"></div>
                             <input name="lease" type="number" class="form-control mb-2 mr-sm-2" 
                             id="inlineFormInputName2"
@@ -155,7 +155,6 @@
                 </div>
             </div>
         </div>
-
         <input type="hidden" class="dnone" id="total{{$loop->index}}" value="{{$total}}">
 
     @endforeach

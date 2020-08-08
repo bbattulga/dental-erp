@@ -81,8 +81,7 @@ class ReceptionUserController extends Controller
         $user->phone_number = $request['phone_number'];
         $user->register = $request['register'];
         $user->sex = $request['sex'];
-        $date = explode('/', $request['birth_date']);
-        $birth_date = $date[2] . '-' . $date[0] . '-' . $date[1];
+        $birth_date = $request['birth_date'];
         $user->birth_date = $birth_date;
         $user->location = $request['location'];
         $user->description = $request['info'];

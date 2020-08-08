@@ -15,8 +15,8 @@ class CheckInSeeder extends Seeder
      * @return void
      */
 
-    public static $patients_min = 2;
-    public static $patients_max = 5;
+    public static $patients_min = 5;
+    public static $patients_max = 6;
 
     public static $date;
     public function run()

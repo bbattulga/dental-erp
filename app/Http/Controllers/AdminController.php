@@ -102,31 +102,11 @@ class AdminController extends Controller
     //DASHBOARD
     //--------------
     public function dashboard() {
-        $users = Patient::all()->count();
-        $roles = UserRole::all()->count();
-        $users_number = $users;
-        $shifts_day = Shift::where('date', Date('Y-m-d'))->get();
-        $appointments = 0;
-        $checkins = 0;
-        foreach($shifts_day as $shift){
-            $appointments += $shift->appointments->count();
-            $checkins += $shift->checkins->count(); 
-        }
-
-        // find workload of the week
-        $workloads = [];
-        for ($i=6; $i>=0; $i--){
-            $date = date('Y-m-d', strtotime('-'.$i.' Days'));
-            $shifts = Shift::where('date', $date)->get();
-            $workload = 0;
-            foreach($shifts as $shift){
-                $workload += $shift->checkins->count();
-            }
-            array_push($workloads, $workload);
-        }
-        $workloads = json_encode($workloads);
-        return view('admin.dashboard',compact('users_number','roles','appointments','checkins', 'workloads'));
+        $start_date = Date('Y-m-01');
+        $end_date = Date('Y-m-d');
+        return $this->show_between($start_date, $end_date);
     }
+
     public function logs(){
         $logs=Log::all();
         return view('admin.logs',compact('logs'));
@@ -141,9 +121,7 @@ class AdminController extends Controller
                             ->where('user_id',$id)
                             ->orderBy('id', 'desc')
                             ->get();
-
         return view('admin.user_check',compact('user','check_ins'));
-
     }
 
     public function hospital(){
@@ -162,5 +140,64 @@ class AdminController extends Controller
         return view('admin.search', compact('results', 'input'));
     }
 
+    public function show_between($start_date, $end_date){
+        $users = Patient::all()->count();
+        $roles = UserRole::all()->count();
+        $users_number = $users;
+        $shifts_day = Shift::where('date', Date('Y-m-d'))->get();
+        $appointments = 0;
+        $checkins = 0;
+        foreach($shifts_day as $shift){
+            $appointments += $shift->appointments->count();
+            $checkins += $shift->checkins->count(); 
+        }
 
+        $data = $this->workload_revenue($start_date, $end_date);
+
+        $workloads = json_encode($data['workloads']);
+        $revenues = json_encode($data['revenues']);
+        $dates = json_encode($data['dates']);
+
+        $total_revenue = $data['total_revenue'];
+        $total_workload = $data['total_workload'];
+        return view('admin.dashboard',compact('users_number','roles','appointments','checkins', 
+                            'workloads', 'revenues', 'dates', 'start_date', 'end_date',
+                            'total_revenue', 'total_workload'));
+    }
+
+    private function workload_revenue($date1, $date2){
+
+        $workloads = [];
+        $revenues = [];
+        $dates = [];
+
+        $total_revenue = 0;
+        $total_workload = 0;
+
+        while ($date1 <= $date2){
+
+            $shifts = Shift::with('checkins', 'appointments')
+                            ->where('date', $date1)->get();
+
+            $workload_day = 0;
+            $revenue_day = 0;
+            foreach($shifts as $shift){
+                $checkins = $shift->checkins;
+                $workload_day += $checkins->count();
+                foreach($checkins as $checkin){
+                    $revenue = $checkin->transactions()->first()->price;
+                    $revenue_day += ($revenue? $revenue:0);
+                    $total_revenue += $revenue_day;
+                    $total_workload += $workload_day;
+                }
+            }
+            array_push($revenues, $revenue_day);
+            array_push($workloads, $workload_day);
+            array_push($dates, $date1);
+
+            // goto next day
+            $date1 = Date('Y-m-d', strtotime("$date1 + 1 Days"));
+        }
+        return compact('workloads', 'revenues', 'dates', 'total_revenue', 'total_workload');
+    }
 }

@@ -35,8 +35,8 @@ class UserTreatmentController extends Controller
             'user_id' => 'required|integer',
             'role_id' => 'required|integer',
             ]);
-		$userRole = UserRole::create($request->all());
-		return $userRole->id;
+		$user_treatment = UserTreatments::create($request->all());
+		return $user_treatment->id;
 	}
 	
 	public function update(Request $request){

@@ -54,7 +54,6 @@ class AppointmentController extends Controller
             'shift_id' => 'integer',
             'user_id' => 'integer',
         ]);
-
         $id = $request['id'];
         return Appointment::findOrFail($id)->update($request->all());
     }

@@ -204,18 +204,18 @@
                     <form method="post" action="{{url('/admin/staff/date')}}">
                         @csrf
                         <input type="hidden" name="staff_id" value="{{ $user->id }}">
-                            <div class="input-group">
+                            <div class="input-daterange input-group mb-3" id="datepicker" data-date-format="yyyy-mm-dd">
                                 <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">Хугацаа
                                     өөрчлөн харах</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input id="date-start" name="start_date" class="form-control"
-                                        type="date"
+                                <input id="date-start" name="start_date" class="form-control datepicker"
+                                    data-date-format="yyyy-mm-dd"
                                        style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                        placeholder="Эхлэл"
                                        value="{{ $start_date ?? '' }}">
                                        &nbsp;&nbsp;&nbsp;<span
                                         style="color: #8f8f8f">-&nbsp;&nbsp;&nbsp;</span>
-                                <input id="date-end" name="end_date" class="form-control"
-                                        type="date"
+                                <input id="date-end" name="end_date" class="form-control datepicker"
+                                    data-date-format="yyyy-mm-dd"
                                        style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                        placeholder="Төгсгөл"
                                        value="{{ $end_date ?? '' }}">

@@ -8,7 +8,7 @@ use App\Patient;
 
 
 $factory->define(Patient::class, function (Faker $faker) {
-    $birth_date = $faker->datetimeBetween('- 65 Years', '- 1 Years');
+    $birth_date = $faker->datetimeBetween('-50 years', '-5 years')->format('Y-m-d');
 
     // null role_id is considered as a patient.
 

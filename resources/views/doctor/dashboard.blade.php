@@ -67,18 +67,18 @@
                     <form method="post" action="{{url('/doctor/dashboard/date')}}">
                         @csrf
 
-                        <div class="input-group">
+                        <div class="input-daterange input-group mb-3" id="datepicker" data-date-format="yyyy-mm-dd">
                             <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">Хугацаа
                                 өөрчлөн харах</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input id="date-start" name="start_date" class="form-control"
-                                    type="date"
+                            <input id="date-start" name="start_date" class="form-control datepicker"
+                                    data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Эхлэл"
                                    value="{{ $start_date }}">
                                    &nbsp;&nbsp;&nbsp;<span
                                     style="color: #8f8f8f">-&nbsp;&nbsp;&nbsp;</span>
-                            <input id="date-end" name="end_date" class="form-control"
-                                    type="date"
+                            <input id="date-end" name="end_date" class="form-control datepicker"
+                                    data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Төгсгөл"
                                    value="{{ $end_date }}">
@@ -142,14 +142,14 @@
                             <?php $users++;?>
                             <div class="col-md-12">
                                 <div class="card"> 
-                                    <!-- icon
                                     <div style="background-color: white; color: black; 
                                         display: inline-block; font-size: 2.3em;
                                         position: absolute; top: 0; right: 0; cursor: pointer;">
-                                        <div class="glyph" data-toggle="modal" data-target="#allNotesModal">
+                                        <div class="glyph"  onclick="showTreatmentDetails({{$check_in}})">
                                             <div class="glyph-icon simple-icon-notebook"></div>
                                         </div>
-                                    </div> -->
+                                    </div>
+
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <a href="#">
@@ -287,8 +287,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Шинж тэмдэг, онош</h5>
-
+                <h5 class="modal-title" id="patient-title"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -297,15 +296,13 @@
                 <table class="table table-bordered">
                     <thead style="background-color: #2a7eeb; color: white; position: sticky; top:0;">
                         <tr>
-                            <td>#</td>
+                            <td>Шүд</td>
                             <td>Шинж тэмдэг</td>
                             <td>Онош</td>
-                            <td>Шүд</td>
                             <td>Эмчилгээ</td>
-                            <td>Өдөр</td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="treatment-rows-container">
 
                     </tbody>
                 </table>
@@ -342,14 +339,16 @@
 
     <script>
         const scrolldiv = document.querySelector('#scrollDiv');
-        const ps = new PerfectScrollbar(demoscrolldiv);
+        const ps = new PerfectScrollbar(scrolldiv);
 
         // Handle size change
-        document.querySelector('#resize').addEventListener('click', () => {
+        if (document.querySelector('#resize')){
+            document.querySelector('#resize').addEventListener('click', () => {
 
         // Get updated values
-        width = document.querySelector('#width').value;
-        height = document.querySelector('#height').value;
+        if (document.querySelector('#width') && document.querySelector('#height')){
+            width = document.querySelector('#width').value;
+            height = document.querySelector('#height').value;
         
         // Set demo sizes
         demo.style.width = `${width}px`;
@@ -357,14 +356,38 @@
         
         // Update Perfect Scrollbar
         ps.update();
+        }
         });
+        }   
+        
 
         function tdBlock(data){
             return `<td><div>${data}</div></td>`;
         }
 
-        function showTreatmentDetails(user_treatments){
+        var treatmentRowsContainer = document.getElementById('treatment-rows-container');
+        function showTreatmentDetails(checkin){
+            console.log('show details');
+            console.log(checkin);
+            let treatments = checkin.treatments;
+            let user = checkin.user;
+            console.log(treatments);
+            let title = `Үйлчлүүлэгч - ${user.last_name[0]}. ${user.name}`;
+            let subtitle = `Утас - ${checkin.user.phone_number}`;
+            title += `<br>${subtitle}`;
+            $('#patient-title').html(title);
 
+            let treatmentRows = '';
+            for (let i=0; i<treatments.length; i++){
+                let treatment = treatments[i];
+                let tds = `<tr><td>#${treatment.tooth_id}</td>` +
+                            `<td>${treatment.treatment_note.symptom}</td>` +
+                            `<td>${treatment.treatment_note.diagnosis}</td>` +
+                            `<td>${treatment.treatment.name}</td></tr>`;
+                treatmentRows += `${tds}`;
+            };
+            treatmentRowsContainer.innerHTML = treatmentRows;
+            $('#treatmentNotesModal').modal();
         }
     </script>
 

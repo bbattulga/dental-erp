@@ -15,7 +15,6 @@
 
     <link href="{{asset('plugin/switchery/switchery.min.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-    <link rel="stylesheet" href="{{asset('/js/apps/timetable/public/build/bundle.css')}}">
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
     <style>
@@ -163,7 +162,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="last_name">төрсөн он сар</label> <br />
-                                        <input type="date" name="birth_date">
+                                        <input name="birth_date" class="datepicker" data-date-format="yyyy-mm-dd">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="email">Хүйс</label> <br />
@@ -225,6 +224,132 @@
   
 </div>
 
+  <!-- Modal -->
+  <div class="modal fade" id="editUserModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4>Хаяг засах</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          
+                <div class="">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                        <div class="">
+                            <form enctype="multipart/form-data" 
+                                 action="{{url('/reception/user/update')}}"
+                                method="POST" 
+                                id="form-edit">
+                                @csrf
+                                <input type="hidden" name="user_id" id="edit_user_id">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">Овог</label>
+                                        <input type="text" 
+                                                class="form-control" id="edit_last_name"
+                                                name="last_name"
+                                                placeholder="овог"
+                                                required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Нэр</label>
+                                        <input type="text" 
+                                                class="form-control" 
+                                                id="edit_name" 
+                                                name="name"
+                                                placeholder="нэр"
+                                                required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputAddress">Регистрийн дугаар</label>
+                                    <input type="text" 
+                                            class="form-control" 
+                                            id="edit_register" 
+                                            name="register"
+                                            placeholder="АБ3948..."
+                                            required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">төрсөн он сар</label> <br />
+                                        <input id="edit_birth" name="birth_date" class="datepicker" data-date-format="yyyy-mm-dd">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Хүйс</label> <br />
+                                        <select id="edit_sex" name="sex">
+                                            <option value="0" selected>Эр</option>
+                                            <option value="1">Эм</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">Утас</label>
+                                        <input type="text" 
+                                                class="form-control" id="edit_phone"
+                                                name="phone_number"
+                                                placeholder="8948..."
+                                                required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">email</label>
+                                        <input type="email" 
+                                                class="form-control" 
+                                                id="edit_email" 
+                                                name="email"
+                                                placeholder="john.doe@gmail.com...">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputAddress">Гэрийн хаяг</label>
+                                    <input type="text" 
+                                            id="edit_location"
+                                            class="form-control" 
+                                            name="location"
+                                            placeholder="СБД...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputAddress">Тайлбар</label>
+                                    <input type="text" 
+                                            id="edit_desc"
+                                            class="form-control" 
+                                            name="description"
+                                            placeholder="...">
+                                </div>
+
+                                <button id="btnEditUser"
+                                     class="btn btn-primary d-block mt-3"
+                                     data-dismiss="modal"
+                                        style="float:right;"
+                                        onclick="$('#form-edit').submit();">
+                                    Болсон
+                                </button>
+                            </form>
+                        </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
   
 </div>
 
@@ -294,19 +419,22 @@
                                             Эмчилгээнд оруулах
                                         </div>
                                     </div>
-                                    <div class="crud-ic tooltip-my">
+                                    <div class="crud-ic tooltip-my"
+                                            onclick="editUserModal({{$user}})"
+                                            data-toggle="modal" data-target="#editUserModal">
                                         <img src="{{ asset('/img/icon/pen.png') }}">
                                         <div class="tooltiptext">
                                              Засах
                                         </div>
                                     </div>
-                                    <div onclick="deleteUser({{$user->id}})"
+                                    <!--
+                                    <div onclick="deleteUser({{$user}})"
                                         class="crud-ic tooltip-my">
                                         <img src="{{ asset('/img/icon/trashbin.png') }}">
                                         <div class="tooltiptext">
                                             Хаяг устгах
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </td>
                         </tr>
@@ -428,8 +556,7 @@
             //Buttons examples
             
             var table = $('#datatable-buttons').DataTable({
-                lengthChange: false,
-                buttons: ['copy', 'excel', 'pdf']
+                lengthChange: false
             }); 
         
             // Key Tables
@@ -484,13 +611,6 @@
                                        `Засах `+
                                     `</div>` +
                             `</div>`+
-                            `<div id="user-del-${user.id}" onclick="deleteUser(${user.id})"`+
-                                `class="crud-ic tooltip-my">`+
-                                `<img src="/img/icon/trashbin.png">` +
-                                `<div class="tooltiptext">`+
-                                    ` Хаяг устгах` +
-                               ` </div>`+
-                            `</div>`+
                        `</div>`;
 
         let row = `<td>-</td>`+
@@ -522,17 +642,17 @@
     }   
 
     let inputUserId = document.getElementById('delete-user-id');
-    function deleteUser(id){
+    function deleteUser(user){
 
         let data = document.getElementById(`userdatajson-${id}`).value;
-
+        let fname = `${user.last_name[0]}. ${user.name}`;
         let userRow = document.getElementById(`user-row-${id}`);
         console.log(data);
-        if (!window.confirm('a\n b')){
+        if (!window.confirm(`Хаяг устгах\nНэр - ${fname}\nРегист - ${user.register}`)){
             return;
         }
 
-        let url = `/api/users/delete/${id}`;
+        let url = `/api/users/delete/${user.id}`;
         inputUserId.value = id;
         $.ajax({
             type: 'DELETE',
@@ -575,7 +695,7 @@
     }
 
     function checkinFail(){
-        aleret('Алдаа гарлаа')
+        alert('Алдаа гарлаа')
     }
 
     function submitCheckIn(event, doctorId){
@@ -590,6 +710,18 @@
         });
     }
 
+    function editUserModal(user){
+        $('#edit_user_id').val(user.id);
+        $('#edit_last_name').val(user.last_name);
+        $('#edit_name').val(user.name);
+        $('#edit_email').val(user.email);
+        $('#edit_phone').val(user.phone_number);
+        $('#edit_register').val(user.register);
+        $('#edit_location').val(user.location);
+        $('#edit_desc').val(user.description);
+        $('#edit_birth').val(user.birth_date);
+        $('#edit_sex').val(user.sex);
+    }
     </script>
 
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>

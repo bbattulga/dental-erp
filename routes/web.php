@@ -16,9 +16,7 @@ Route::get('/test', 'ReceptionShiftsController@index');
 
 ////////////// WEB ROUTES START ////////
 Route::get('/', function () {
-	$roles = App\UserRole::all();
-    //return view('welcome', compact('roles'));
-    return view('welcome2');
+	return redirect('/login');
 });
 Route::get('emchilgeenuud', function () {
     return view('emchilgeenuud');
@@ -51,6 +49,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // for normal routings
 Route::get('/admin/dashboard', 'AdminController@dashboard')->name('dash');
+Route::get('/admin/dashboard/{date1}/{date2}', 'AdminController@show_between');
 Route::get('/admin/shifts', 'AdminTimeController@index');
 
 Route::get('/admin/add_staff/{id}/profile', 'AdminController@profile');

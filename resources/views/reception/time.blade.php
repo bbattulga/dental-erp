@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}"/>
 
      <link rel="stylesheet"
-        href="{{asset('js/apps/timetable/public/build/bundle.css')}}"/>
+        href="{{asset('js/apps/timetable/bundle.css')}}"/>
 
     <style>
         body{
@@ -99,6 +99,6 @@
 @section('footer')
     </script> 
     {{--Scriptuudiig include hiiideg heseg--}}
-    <script src="{{asset('/js/apps/timetable/public/build/bundle.js')}}"></script>
+    <script src="{{asset('js/apps/timetable/bundle.js')}}"></script>
     <script src="{{asset('/js/vendor/bootstrap-datepicker.js')}}"></script>
 @endsection

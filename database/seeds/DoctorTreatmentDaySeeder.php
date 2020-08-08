@@ -23,7 +23,7 @@ class DoctorTreatmentDaySeeder extends Seeder
     public static $date;
     public static $shifts;
     public static $treatments_min = 2;
-    public static $treatments_max = 5;
+    public static $treatments_max = 4;
 
     public function run()
     {	

@@ -32,7 +32,12 @@ class DoctorController extends Controller
         $start_date = Date('Y-m-01');
         $end_date = Date('Y-m-t', strtotime('first day of this month'));
 
-        $shifts =  Shift::where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))->orderBy('id', 'desc')->get();
+        $shifts =  Shift::with('checkins', 'checkins.treatments', 'checkins.user',
+                         'checkins.treatments.treatment_note',
+                         'checkins.treatments.treatment')
+                        ->where('user_id', $user->id)->where('date','>=', date('Y-m-d', strtotime('first day of this month')))
+                        ->orderBy('id', 'desc')
+                        ->get();
 
         $count_full = 0;
         $count_half = 0;
@@ -49,8 +54,12 @@ class DoctorController extends Controller
     public function search($start_date, $end_date) {
         $user = Auth::user();
         $shifts = null;
-        $shifts =  Shift::all()->where('user_id', Auth::user()->id)
-                ->whereBetween('date', [$start_date, $end_date])->sortByDesc('id');
+        $shifts =  Shift::with('checkins', 'checkins.treatments', 'checkins.user',
+                         'checkins.treatments.treatment_note',
+                         'checkins.treatments.treatment')
+                            ->where('user_id', Auth::user()->id)
+                            ->whereBetween('date', [$start_date, $end_date])
+                            ->get();
 
         $count_full = 0;
         $count_half = 0;

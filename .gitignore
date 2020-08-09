@@ -2,6 +2,9 @@
 /public/hot
 /public/img/uploads
 /public/storage
+tags
+tags.lock
+tags.temp
 #/storage/*.key
 /vendor
 .phpunit.result.cache

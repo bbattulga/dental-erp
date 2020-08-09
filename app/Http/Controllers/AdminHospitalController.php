@@ -116,6 +116,7 @@ class AdminHospitalController extends Controller
     // in given date interval
     // and returns key value pair using compact function.
     private function getTreatmentData($category_id, $start_date, $end_date){
+        ini_set('max_execution_time', 60*5); // 5 min timetout
 
         $count_male = 0;
         $count_female = 0;

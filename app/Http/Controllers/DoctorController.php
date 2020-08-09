@@ -52,6 +52,7 @@ class DoctorController extends Controller
     }
         
     public function search($start_date, $end_date) {
+        ini_set('max_execution_time', 60*30); // 5 min timetout
         $user = Auth::user();
         $shifts = null;
         $shifts =  Shift::with('checkins', 'checkins.treatments', 'checkins.user',
@@ -60,7 +61,7 @@ class DoctorController extends Controller
                             ->where('user_id', Auth::user()->id)
                             ->whereBetween('date', [$start_date, $end_date])
                             ->get();
-
+                            
         $count_full = 0;
         $count_half = 0;
         foreach($shifts as $shift){

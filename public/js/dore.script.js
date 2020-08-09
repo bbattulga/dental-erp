@@ -3854,9 +3854,7 @@ $.dore = function(element, options) {
       */
     }
   }
-
   init();
-  
 };
 
 $.fn.dore = function(options) {

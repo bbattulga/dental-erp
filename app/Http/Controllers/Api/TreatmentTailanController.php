@@ -29,7 +29,7 @@ class TreatmentTailanController extends Controller
     }
 
     public function showDateBetween(Request $request){
-
+        ini_set('max_execution_time', 60*5); // 5 min timetout
         $category_id = $request['category_id'];
         return $this->getTreatmentData($category_id, 
                     $request['start_date'], $request['end_date']);
@@ -43,6 +43,7 @@ class TreatmentTailanController extends Controller
     // such as total number of treatments, first time or not and ages...
     // and returns key value pair using compact function.
     private function getTreatmentData($category_id, $start_date, $end_date){
+        ini_set('max_execution_time', 60*30); // 5 min timetout
     	
         $count_male = 0;
         $count_female = 0;

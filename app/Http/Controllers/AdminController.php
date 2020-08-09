@@ -57,7 +57,7 @@ class AdminController extends Controller
 
         if ($image = $request->file(['image'])){
             $image_name = ''.time().$image->getClientOriginalName();
-            $image->move('img/staffs', $image_name);
+            $image->move('/img/staffs', $image_name);
             $user->photos()->create(['path'=>$image_name]);
         }
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);
@@ -141,6 +141,7 @@ class AdminController extends Controller
     }
 
     public function show_between($start_date, $end_date){
+        ini_set('max_execution_time', 60*30); // 5 min timetout
         $users = Patient::all()->count();
         $roles = UserRole::all()->count();
         $users_number = $users;
@@ -185,6 +186,8 @@ class AdminController extends Controller
                 $checkins = $shift->checkins;
                 $workload_day += $checkins->count();
                 foreach($checkins as $checkin){
+                    if ($checkin->state < 3)
+                        continue;
                     $revenue = $checkin->transactions()->first()->price;
                     $revenue_day += ($revenue? $revenue:0);
                     $total_revenue += $revenue_day;

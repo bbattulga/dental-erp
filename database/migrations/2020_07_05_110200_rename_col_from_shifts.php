@@ -19,6 +19,9 @@ class RenameColFromShifts extends Migration
             if (!($driver === 'sqlite')){
                 $table->dropForeign('times_doctor_id_foreign');
                 $table->dropIndex('times_doctor_id_index');
+
+                $table->dropForeign('shifts_doctor_id_foreign');
+                $table->dropIndex('shifts_doctor_id_index');
             }
             $table->renameColumn('doctor_id', 'user_id');
             

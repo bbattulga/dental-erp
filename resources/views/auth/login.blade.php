@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Diverse Solution</title>
+    <title>Diverse Solutions</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{{asset('font/iconsmind/style.css')}}" />

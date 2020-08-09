@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
         self::$faker = Faker::create();
 
         // make dummies for date1 to date2
-        $date1 = Date('Y-m-d', strtotime('-  14 Days'));
+        $date1 = Date('Y-m-d', strtotime('-  3 Months'));
         $date2 = Date('Y-m-d', strtotime('+  14 Days'));
 
         // patients for each doctor a day

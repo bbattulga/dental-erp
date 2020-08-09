@@ -57,7 +57,7 @@ class AdminController extends Controller
 
         if ($image = $request->file(['image'])){
             $image_name = ''.time().$image->getClientOriginalName();
-            $image->move('/img/staffs', $image_name);
+            $image->move('img/staffs', $image_name);
             $user->photos()->create(['path'=>$image_name]);
         }
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);

@@ -55,7 +55,7 @@ class AdminStaffController extends Controller
 
         if ($image = $request->file(['image'])){
             $image_name = ''.time().$image->getClientOriginalName();
-            $image->move('/img/staffs', $image_name);
+            $image->move('img/staffs', $image_name);
             $user->photos()->create(['path'=>$image_name]);
         }
         if(!empty($request['password']))

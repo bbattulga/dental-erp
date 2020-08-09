@@ -61,7 +61,7 @@ class PaymentDaySeeder extends Seeder
 		$promotion_percentage = 0;
 		$promotion_chance = $faker->numberBetween(1, 10);
 		if ($promotion_chance == 1){
-			$promotions = Promotion::where('end_date', '>=', Date('Y-m-d'))->get();
+			$promotions = Promotion::where('promotion_end_date', '>=', Date('Y-m-d'))->get();
 			$promotion = factory(Promotion::class)->create();
 			$promotion_percentage = $promotion->percentage;
 

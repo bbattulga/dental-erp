@@ -23,7 +23,7 @@ $factory->define(Doctor::class, function (Faker $faker) {
         'birth_date' => $birth_date,
         'location' => $faker->address,
         'description' => $faker->text(100),
-        'password' => bcrypt($phone),
+        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm',
         'remember_token' => $faker->text(100),
 
         'role_id' => $doctor_id

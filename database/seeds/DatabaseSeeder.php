@@ -21,14 +21,14 @@ class DatabaseSeeder extends Seeder
         $faker = Faker::create();
 
         // make dummies for date1 to date2
-        $date1 = Date('Y-m-d', strtotime(Date('Y-m-d') . ' + 1 Days'));
-        $date2 = Date('Y-m-d', strtotime('+ 7 Days'));
+        $date1 = Date('Y-m-d', strtotime('- 3 Days'));
+        $date2 = Date('Y-m-d');
 
         // patients for each doctor a day
         $min_users = 1;
         $max_users = 4;
 
-       // $this->call(Refresh::class);
+        $this->call(Refresh::class);
 
         $doctors = Doctor::all();
         
@@ -47,8 +47,6 @@ class DatabaseSeeder extends Seeder
                 CheckInsDaySeeder::$chance = 50;
             }
             $this->call(CheckInsDaySeeder::class);
-            $date1 = Date('Y-m-d', strtotime($date1. ' + 1 Days'));
-            continue;
             DoctorTreatmentDaySeeder::$date = $date1;
             $this->call(DoctorTreatmentDaySeeder::class);
 

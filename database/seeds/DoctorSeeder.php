@@ -22,7 +22,7 @@ class DoctorSeeder extends Seeder
         	->create()
         	->each(function ($doctor){
                 $doctor->update([
-                    'email' => 'doctor'.$doctor->id.'@mail.com'
+                    'email' => 'doctor'.$doctor->name.'@mail.com'
                 ]);
         		factory(UserRole::class, 1)
         			->create([

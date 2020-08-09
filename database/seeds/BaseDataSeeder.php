@@ -52,7 +52,7 @@ class BaseDataSeeder extends Seeder
 
         $this->call(ToothSeeder::class);
         $this->call(PromotionSeeder::class);
-        $this->class(DoctorSeeder::class);
+        $this->call(DoctorSeeder::class);
 
         $treatments = [
             ['id' => 1, 'name'=>'Ломбо', 'selection_type'=>1, 'category'=>1, 'price'=>12000, 'limit'=>500000],

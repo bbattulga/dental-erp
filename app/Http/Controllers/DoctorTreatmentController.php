@@ -157,7 +157,7 @@ class DoctorTreatmentController extends Controller
         $user = User::find($request['xray_user_id']);
         if ($photo = $request->file(['photo'])) {
             $photo_name = time() . $photo->getClientOriginalName();
-            $photo->move('img/uploads', $photo_name);
+            $photo->move('/img/uploads', $photo_name);
             $user->photos()->create(['path'=>$photo_name]);
         }
         return redirect()->back();

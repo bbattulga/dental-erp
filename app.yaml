@@ -1,0 +1,38 @@
+runtime: php72
+
+handlers:
+  - url: /admin
+    static_dir: public/admin
+
+  - url: /css
+    static_dir: public/css
+
+  - url: /font
+    static_dir: public/font
+
+  - url: /front
+    static_dir: public/front
+
+  - url: /img
+    static_dir: public/img
+
+  - url: /plugin
+    static_dir: public/plugin
+
+  - url: /header2
+    static_dir: public/header2
+
+  - url: /svg
+    static_dir: public/svg
+
+  - url: /js
+    static_dir: public/js
+
+env_variables:
+  ## Put production environment variables here.
+  TOOTH_IMG_DIR: img/toothImages/
+  DB_CONNECTION: sqlite
+  APP_KEY: base64:yYt5/uLCMet3nFcgInwX7a8JrTEG6/QZgNQrOcpw5tY=
+  APP_STORAGE: /tmp
+  VIEW_COMPILED_PATH: /tmp
+  SESSION_DRIVER: cookie

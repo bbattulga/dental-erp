@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-stars.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/nouislider.min.css')}}" />
 <link rel="stylesheet" href="{{asset('css/vendor/bootstrap-datepicker3.min.css')}}" />
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>    
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>    
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>

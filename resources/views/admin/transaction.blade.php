@@ -161,7 +161,7 @@
                     @endforeach
                     <table border="0" width="100%">
                         @foreach($types as $type)
-                            @if($type->id == 4 || $type->id == 5 || $type->id == 6)
+                            @if(($type->id == 4) || ($type->id == 5) || ($type->id == 6))
                             @else
                                 <?php $temp_sum = 0?>
                                 <?php $local_transactions = $transactions?>
@@ -204,14 +204,16 @@
                             <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">Хугацаа
                                 өөрчлөн харах</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input id="date" name="start_date" autocomplete="off" class="form-control datepicker"
+                                data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Эхлэл"
-                                   value="@if($start_date){{date('m/d/Y', $start_date)}}@else{{date('m/d/Y', strtotime('-30 Days'))}}@endif">&nbsp;&nbsp;&nbsp;<span
+                                   value="@if($start_date){{ $start_date}}@else{{date('Y-m-d', strtotime('-30 Days'))}}@endif">&nbsp;&nbsp;&nbsp;<span
                                     style="color: #8f8f8f">-&nbsp;&nbsp;&nbsp;</span>
                             <input name="end_date" autocomplete="off" class="form-control datepicker "
+                                data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Төгсгөл"
-                                   value="@if($end_date){{date('m/d/Y', $end_date)}}@else{{date('m/d/Y')}}@endif">
+                                   value="@if($end_date){{$end_date}}@else{{date('Y-m-d')}}@endif">
                             <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">үзэх</a>
                         </div>
                     </form>
@@ -221,9 +223,9 @@
                         @csrf
                         <select name="year">
                             @if($start_date)
-                                <option value="{{date('Y', $start_date)}}">{{date('Y', $start_date)}}</option>
+                                <option value="{{date('Y', strtotime($start_date))}}">{{date('Y', strtotime($start_date))}}</option>
                                 @for($m = 2019; $m<=2027; $m++)
-                                    @if($m != date('Y', $start_date))
+                                    @if($m != date('Y', strtotime($start_date)))
                                         <option value="{{$m}}">{{$m}}</option>
                                     @endif
                                 @endfor
@@ -238,9 +240,10 @@
                         </select>
                         <select name="month" onchange="document.getElementById('monthSearch').submit()">
                             @if($start_date)
-                                <option value="{{date('m', $start_date)}}">{{date('m', $start_date)}}</option>
+                                <option value="{{date('m', strtotime($start_date))}}">
+                                {{date('m', strtotime($start_date))}}</option>
                                 @for($m = 1; $m<=12; $m++)
-                                    @if($m != date('m', $start_date))
+                                    @if($m != date('m', strtotime($start_date)))
                                         <option value="{{$m}}">{{$m}}</option>
                                     @endif
                                 @endfor

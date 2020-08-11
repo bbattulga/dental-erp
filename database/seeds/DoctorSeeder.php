@@ -18,12 +18,15 @@ class DoctorSeeder extends Seeder
         //
         $quantity = 5;
 
+        Doctor::all()->delete();
+        $i = 1;
         factory(Doctor::class, $quantity)
         	->create()
-        	->each(function ($doctor){
+        	->each(function ($doctor) use ($i){
                 $doctor->update([
-                    'email' => 'doctor'.$doctor->name.'@mail.com'
+                    'email' => 'doctor'.$i.'@mail.com'
                 ]);
+                $i++;
         		factory(UserRole::class, 1)
         			->create([
         				'user_id' => $doctor->id,

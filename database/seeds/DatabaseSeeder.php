@@ -174,7 +174,8 @@ class DatabaseSeeder extends Seeder
             'price'=>(int)$total,
             'type'=>4,
             'type_id'=>$checkin->id,
-            'description'=>'Зээлийн урьдчилгаа төлбөр'
+            'description'=>'Зээлийн урьдчилгаа төлбөр',
+            'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
         ]);
 
         $checkin->update(['state'=>3]);
@@ -210,7 +211,8 @@ class DatabaseSeeder extends Seeder
             'price' => (int)$payment,
             'type' => 4,
             'type_id' => $checkin->id,
-            'description' => $promotion_percentage == 0? '':'Урамшуулал ашиглаж төлбөр төлсөн'
+            'description' => $promotion_percentage == 0? '':'Урамшуулал ашиглаж төлбөр төлсөн',
+            'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
         ]);
     }
 
@@ -226,7 +228,8 @@ class DatabaseSeeder extends Seeder
                 'price'=>(int) $paid,
                 'type'=>4,
                 'type_id'=>$checkin->id,
-                'description'=>$promotion_percentage==0? 'Зээлтэй төлбөр төлөгдсөн': 'Зээлтэй. Урамшуулал ашиглаж төлбөр төлсөн'
+                'description'=>$promotion_percentage==0? 'Зээлтэй төлбөр төлөгдсөн': 'Зээлтэй. Урамшуулал ашиглаж төлбөр төлсөн',
+                'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
             ]);
             $checkin->update(['state'=>3]);
             return;
@@ -238,7 +241,8 @@ class DatabaseSeeder extends Seeder
             'price'=>(int) $paid,
             'type'=>4,
             'type_id'=>$checkin->id,
-            'description'=>$promotion_percentage==0? 'Зээлтэй төлбөр төлөгдсөн': 'Зээлтэй. Урамшуулал ашиглаж төлбөр төлсөн'
+            'description'=>$promotion_percentage==0? 'Зээлтэй төлбөр төлөгдсөн': 'Зээлтэй. Урамшуулал ашиглаж төлбөр төлсөн',
+            'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
         ]);
         $checkin->update(['state'=>4]);
     }

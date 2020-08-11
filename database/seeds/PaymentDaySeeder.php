@@ -67,8 +67,7 @@ class PaymentDaySeeder extends Seeder
 
 			factory(UserPromotions::class)->create([
 				'checkin_id' => $checkin->id,
-				'promotion_id' => $promotion->id,
-				'created_by' =>2
+				'promotion_id' => $promotion->id
 			]);
 		}
 
@@ -82,7 +81,8 @@ class PaymentDaySeeder extends Seeder
 			'price' => (int)$payment,
 			'type' => 4,
 			'type_id' => $checkin->id,
-			'description' => $promotion_percentage == 0? '':'Урамшуулал ашиглаж төлбөр төлсөн'
+			'description' => $promotion_percentage == 0? '':'Урамшуулал ашиглаж төлбөр төлсөн',
+			'created_at' => 
 		]);
     }
 

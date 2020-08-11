@@ -1,30 +1,47 @@
 <script>
-	export let name;
+	import JQuery from 'jquery';
+
+	import ToothChart from './components/ToothChart.svelte';
+	import SideMenu from './components/SideMenu.svelte';
+	import {selectedTreatment, selectedTooth} from './components/stores/store.js';
+	import {treatmentHistories} from './components/stores/store.js';
+	import {checkin, patient} from './components/stores/store.js';
+	import TreatmentHistories from './components/TreatmentHistories.svelte';
+
+
+	$checkin = document.getElementById('checkin');
+	$patient = checkin.user;
+
+	$:{
+		if ($selectedTreatment)
+			console.log('selected treatment', $selectedTreatment);
+	}
+	$:console.log('selected tooth:', $selectedTooth);
+
+	let showTreatmentHistories = false;
+
+	const handleBook = (event) => {
+		showTreatmentHistories = true;
+		console.log('show histories');
+		console.log(showTreatmentHistories);
+	}
+
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<div class="row">
+    <ToothChart>
+		<div slot="topleft" class="glyph" data-toggle="modal" data-target="#allNotesModal">
+            <div on:click={()=>handleBook} class="glyph-icon simple-icon-notebook" ></div>
+        </div>
+    </ToothChart>
+
+    <SideMenu />
+
+    <TreatmentHistories 
+    	treatmentHistories={$treatmentHistories}
+    	bind:show={showTreatmentHistories}/>
+</div>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>

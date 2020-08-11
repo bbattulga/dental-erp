@@ -13145,7 +13145,7 @@ var app = (function () {
     	let promise = new Promise((resolve, reject)=>{
     		// ajax to store...
     		let success = () => resolve(fakeId++);
-    		setTimeout(success, 100);
+    		setTimeout(success, 0);
     	});
     	return promise;
     };
@@ -13154,7 +13154,7 @@ var app = (function () {
 
     	let promise = new Promise((resolve, reject)=>{
     		let success = () => resolve(fakeId++);
-    		setTimeout(success, 100);
+    		setTimeout(success, 0);
     	});
     	return promise;
     };
@@ -17605,7 +17605,7 @@ var app = (function () {
         return { set, update, subscribe };
     }
 
-    const selectedTreatment = writable({});
+    const selectedTreatment = writable(0);
     const selectedTooth = writable({});
     const toothStates = writable({});
     const treatmentHistories = writable([]);
@@ -17629,8 +17629,8 @@ var app = (function () {
     			if (img.src !== (img_src_value = /*imgSrc*/ ctx[1])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-1qxpb6w");
     			toggle_class(img, "active", /*active*/ ctx[0]);
-    			toggle_class(img, "disabled", !/*active*/ ctx[0]);
-    			add_location(img, file$7, 29, 0, 726);
+    			toggle_class(img, "tooth", !/*active*/ ctx[0]);
+    			add_location(img, file$7, 32, 0, 800);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17653,7 +17653,7 @@ var app = (function () {
     			}
 
     			if (dirty & /*active*/ 1) {
-    				toggle_class(img, "disabled", !/*active*/ ctx[0]);
+    				toggle_class(img, "tooth", !/*active*/ ctx[0]);
     			}
     		},
     		i: noop,
@@ -17679,16 +17679,16 @@ var app = (function () {
     function instance$9($$self, $$props, $$invalidate) {
     	let $toothStates;
     	validate_store(toothStates, "toothStates");
-    	component_subscribe($$self, toothStates, $$value => $$invalidate(5, $toothStates = $$value));
+    	component_subscribe($$self, toothStates, $$value => $$invalidate(6, $toothStates = $$value));
     	let { toothCode = 11 } = $$props;
-    	let active = true;
     	const dispatch = createEventDispatcher();
-    	let treatmentId = null;
-    	let baseSrc = getTreatmentImgSrc(toothCode, null);
-    	let imgSrc = baseSrc;
+    	let active = null;
+    	let imgSrc = null;
+    	let lastTreatmentId = null;
+    	let treatments = null;
 
     	const handleClick = event => {
-    		let detail = { treatmentId, toothCode };
+    		let detail = { toothCode };
     		dispatch("click", detail);
     	};
 
@@ -17713,11 +17713,11 @@ var app = (function () {
     		getTreatmentImgSrc,
     		selectedTooths,
     		toothCode,
-    		active,
     		dispatch,
-    		treatmentId,
-    		baseSrc,
+    		active,
     		imgSrc,
+    		lastTreatmentId,
+    		treatments,
     		handleClick,
     		$toothStates
     	});
@@ -17725,9 +17725,9 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ("toothCode" in $$props) $$invalidate(3, toothCode = $$props.toothCode);
     		if ("active" in $$props) $$invalidate(0, active = $$props.active);
-    		if ("treatmentId" in $$props) treatmentId = $$props.treatmentId;
-    		if ("baseSrc" in $$props) baseSrc = $$props.baseSrc;
     		if ("imgSrc" in $$props) $$invalidate(1, imgSrc = $$props.imgSrc);
+    		if ("lastTreatmentId" in $$props) $$invalidate(4, lastTreatmentId = $$props.lastTreatmentId);
+    		if ("treatments" in $$props) $$invalidate(5, treatments = $$props.treatments);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -17735,16 +17735,20 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$toothStates, toothCode*/ 40) {
-    			 $$invalidate(1, imgSrc = $toothStates[toothCode].imgSrc);
+    		if ($$self.$$.dirty & /*$toothStates, toothCode, treatments, lastTreatmentId*/ 120) {
+    			 {
+    				$$invalidate(5, treatments = $toothStates[toothCode].treatments);
+
+    				$$invalidate(4, lastTreatmentId = treatments[treatments.length - 1] != null
+    				? treatments[treatments.length - 1]
+    				: null);
+
+    				$$invalidate(1, imgSrc = getTreatmentImgSrc(toothCode, lastTreatmentId));
+    			}
     		}
 
-    		if ($$self.$$.dirty & /*$toothStates, toothCode*/ 40) {
+    		if ($$self.$$.dirty & /*$toothStates, toothCode*/ 72) {
     			 $$invalidate(0, active = $toothStates[toothCode].active);
-    		}
-
-    		if ($$self.$$.dirty & /*$toothStates, toothCode*/ 40) {
-    			 treatmentId = $toothStates[toothCode].treatmentId;
     		}
     	};
 
@@ -18983,73 +18987,73 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_4(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_5(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_6(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_7(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_8(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_9(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_10(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_11(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
@@ -19059,7 +19063,7 @@ var app = (function () {
     // (14:24) {#each range(11, 18) as tc}
     function create_each_block_11(ctx) {
     	let td;
-    	let t_value = /*tc*/ ctx[13] + "";
+    	let t_value = /*tc*/ ctx[18] + "";
     	let t;
 
     	const block = {
@@ -19092,7 +19096,7 @@ var app = (function () {
     // (17:24) {#each range(21, 28) as tc}
     function create_each_block_10(ctx) {
     	let td;
-    	let t_value = /*tc*/ ctx[13] + "";
+    	let t_value = /*tc*/ ctx[18] + "";
     	let t;
 
     	const block = {
@@ -19129,11 +19133,11 @@ var app = (function () {
     	let current;
 
     	tooth = new Tooth({
-    			props: { toothCode: /*tc*/ ctx[13] },
+    			props: { toothCode: /*tc*/ ctx[18] },
     			$$inline: true
     		});
 
-    	tooth.$on("click", /*handleClickTooth*/ ctx[1]);
+    	tooth.$on("click", /*handleClickTooth*/ ctx[4]);
 
     	const block = {
     		c: function create() {
@@ -19181,11 +19185,11 @@ var app = (function () {
     	let current;
 
     	tooth = new Tooth({
-    			props: { toothCode: /*tc*/ ctx[13] },
+    			props: { toothCode: /*tc*/ ctx[18] },
     			$$inline: true
     		});
 
-    	tooth.$on("click", /*handleClickTooth*/ ctx[1]);
+    	tooth.$on("click", /*handleClickTooth*/ ctx[4]);
 
     	const block = {
     		c: function create() {
@@ -19407,7 +19411,7 @@ var app = (function () {
     // (52:24) {#each range(31, 38) as tc}
     function create_each_block_3(ctx) {
     	let td;
-    	let t_value = /*tc*/ ctx[13] + "";
+    	let t_value = /*tc*/ ctx[18] + "";
     	let t;
 
     	const block = {
@@ -19440,7 +19444,7 @@ var app = (function () {
     // (55:24) {#each range(41, 48) as tc}
     function create_each_block_2(ctx) {
     	let td;
-    	let t_value = /*tc*/ ctx[13] + "";
+    	let t_value = /*tc*/ ctx[18] + "";
     	let t;
 
     	const block = {
@@ -19477,11 +19481,11 @@ var app = (function () {
     	let current;
 
     	tooth = new Tooth({
-    			props: { toothCode: /*tc*/ ctx[13] },
+    			props: { toothCode: /*tc*/ ctx[18] },
     			$$inline: true
     		});
 
-    	tooth.$on("click", /*handleClickTooth*/ ctx[1]);
+    	tooth.$on("click", /*handleClickTooth*/ ctx[4]);
 
     	const block = {
     		c: function create() {
@@ -19529,11 +19533,11 @@ var app = (function () {
     	let current;
 
     	tooth = new Tooth({
-    			props: { toothCode: /*tc*/ ctx[13] },
+    			props: { toothCode: /*tc*/ ctx[18] },
     			$$inline: true
     		});
 
-    	tooth.$on("click", /*handleClickTooth*/ ctx[1]);
+    	tooth.$on("click", /*handleClickTooth*/ ctx[4]);
 
     	const block = {
     		c: function create() {
@@ -19575,6 +19579,431 @@ var app = (function () {
     	return block;
     }
 
+    // (84:2) <Title id="event-title">
+    function create_default_slot_7$1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Эмчилгээ өмнө нь хийгдсэн байна");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_7$1.name,
+    		type: "slot",
+    		source: "(84:2) <Title id=\\\"event-title\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (85:2) <Content id="event-content">
+    function create_default_slot_6$1(ctx) {
+    	let t0;
+    	let t1;
+    	let t2;
+    	let t3_value = /*$selectedTreatment*/ ctx[3].name + "";
+    	let t3;
+
+    	const block = {
+    		c: function create() {
+    			t0 = text("Шүд #");
+    			t1 = text(/*$selectedTooth*/ ctx[2]);
+    			t2 = text(" - ");
+    			t3 = text(t3_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, t3, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*$selectedTooth*/ 4) set_data_dev(t1, /*$selectedTooth*/ ctx[2]);
+    			if (dirty[0] & /*$selectedTreatment*/ 8 && t3_value !== (t3_value = /*$selectedTreatment*/ ctx[3].name + "")) set_data_dev(t3, t3_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(t3);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_6$1.name,
+    		type: "slot",
+    		source: "(85:2) <Content id=\\\"event-content\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (90:6) <Label>
+    function create_default_slot_5$1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Эмчилгээ устгах");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_5$1.name,
+    		type: "slot",
+    		source: "(90:6) <Label>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (89:4) <Button action="none">
+    function create_default_slot_4$1(ctx) {
+    	let label;
+    	let current;
+
+    	label = new Label({
+    			props: {
+    				$$slots: { default: [create_default_slot_5$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(label.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(label, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const label_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 1024) {
+    				label_changes.$$scope = { dirty, ctx };
+    			}
+
+    			label.$set(label_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(label.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(label.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(label, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_4$1.name,
+    		type: "slot",
+    		source: "(89:4) <Button action=\\\"none\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (93:6) <Label>
+    function create_default_slot_3$1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Давтан эмчилгээ");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_3$1.name,
+    		type: "slot",
+    		source: "(93:6) <Label>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (92:4) <Button action="all" default>
+    function create_default_slot_2$1(ctx) {
+    	let label;
+    	let current;
+
+    	label = new Label({
+    			props: {
+    				$$slots: { default: [create_default_slot_3$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(label.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(label, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const label_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 1024) {
+    				label_changes.$$scope = { dirty, ctx };
+    			}
+
+    			label.$set(label_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(label.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(label.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(label, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$1.name,
+    		type: "slot",
+    		source: "(92:4) <Button action=\\\"all\\\" default>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (88:2) <Actions>
+    function create_default_slot_1$1(ctx) {
+    	let button0;
+    	let t;
+    	let button1;
+    	let current;
+
+    	button0 = new Button_1({
+    			props: {
+    				action: "none",
+    				$$slots: { default: [create_default_slot_4$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	button1 = new Button_1({
+    			props: {
+    				action: "all",
+    				default: true,
+    				$$slots: { default: [create_default_slot_2$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(button0.$$.fragment);
+    			t = space();
+    			create_component(button1.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(button0, target, anchor);
+    			insert_dev(target, t, anchor);
+    			mount_component(button1, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const button0_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 1024) {
+    				button0_changes.$$scope = { dirty, ctx };
+    			}
+
+    			button0.$set(button0_changes);
+    			const button1_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 1024) {
+    				button1_changes.$$scope = { dirty, ctx };
+    			}
+
+    			button1.$set(button1_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(button0.$$.fragment, local);
+    			transition_in(button1.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(button0.$$.fragment, local);
+    			transition_out(button1.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(button0, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_component(button1, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1$1.name,
+    		type: "slot",
+    		source: "(88:2) <Actions>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (81:0) <Dialog bind:this={confirmDialog} aria-labelledby="event-title"                 aria-describedby="event-content"      on:MDCDialog:closed={()=>console.log('close')}     style="z-index: 1050;">
+    function create_default_slot$3(ctx) {
+    	let title;
+    	let t0;
+    	let content;
+    	let t1;
+    	let actions;
+    	let current;
+
+    	title = new Title({
+    			props: {
+    				id: "event-title",
+    				$$slots: { default: [create_default_slot_7$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	content = new Content({
+    			props: {
+    				id: "event-content",
+    				$$slots: { default: [create_default_slot_6$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	actions = new Actions({
+    			props: {
+    				$$slots: { default: [create_default_slot_1$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(title.$$.fragment);
+    			t0 = space();
+    			create_component(content.$$.fragment);
+    			t1 = space();
+    			create_component(actions.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(title, target, anchor);
+    			insert_dev(target, t0, anchor);
+    			mount_component(content, target, anchor);
+    			insert_dev(target, t1, anchor);
+    			mount_component(actions, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const title_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 1024) {
+    				title_changes.$$scope = { dirty, ctx };
+    			}
+
+    			title.$set(title_changes);
+    			const content_changes = {};
+
+    			if (dirty[0] & /*$$scope, $selectedTreatment, $selectedTooth*/ 1036) {
+    				content_changes.$$scope = { dirty, ctx };
+    			}
+
+    			content.$set(content_changes);
+    			const actions_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 1024) {
+    				actions_changes.$$scope = { dirty, ctx };
+    			}
+
+    			actions.$set(actions_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(title.$$.fragment, local);
+    			transition_in(content.$$.fragment, local);
+    			transition_in(actions.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(title.$$.fragment, local);
+    			transition_out(content.$$.fragment, local);
+    			transition_out(actions.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(title, detaching);
+    			if (detaching) detach_dev(t0);
+    			destroy_component(content, detaching);
+    			if (detaching) detach_dev(t1);
+    			destroy_component(actions, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$3.name,
+    		type: "slot",
+    		source: "(81:0) <Dialog bind:this={confirmDialog} aria-labelledby=\\\"event-title\\\"                 aria-describedby=\\\"event-content\\\"      on:MDCDialog:closed={()=>console.log('close')}     style=\\\"z-index: 1050;\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$d(ctx) {
     	let div4;
     	let div3;
@@ -19603,10 +20032,12 @@ var app = (function () {
     	let t12;
     	let decaychart;
     	let updating_show;
+    	let t13;
+    	let dialog;
     	let current;
-    	const topleft_slot_template = /*$$slots*/ ctx[4].topleft;
-    	const topleft_slot = create_slot(topleft_slot_template, ctx, /*$$scope*/ ctx[3], get_topleft_slot_context);
-    	let each_value_11 = /*range*/ ctx[2](11, 18);
+    	const topleft_slot_template = /*$$slots*/ ctx[6].topleft;
+    	const topleft_slot = create_slot(topleft_slot_template, ctx, /*$$scope*/ ctx[10], get_topleft_slot_context);
+    	let each_value_11 = /*range*/ ctx[5](11, 18);
     	validate_each_argument(each_value_11);
     	let each_blocks_11 = [];
 
@@ -19614,7 +20045,7 @@ var app = (function () {
     		each_blocks_11[i] = create_each_block_11(get_each_context_11(ctx, each_value_11, i));
     	}
 
-    	let each_value_10 = /*range*/ ctx[2](21, 28);
+    	let each_value_10 = /*range*/ ctx[5](21, 28);
     	validate_each_argument(each_value_10);
     	let each_blocks_10 = [];
 
@@ -19622,7 +20053,7 @@ var app = (function () {
     		each_blocks_10[i] = create_each_block_10(get_each_context_10(ctx, each_value_10, i));
     	}
 
-    	let each_value_9 = /*range*/ ctx[2](11, 18);
+    	let each_value_9 = /*range*/ ctx[5](11, 18);
     	validate_each_argument(each_value_9);
     	let each_blocks_9 = [];
 
@@ -19634,7 +20065,7 @@ var app = (function () {
     		each_blocks_9[i] = null;
     	});
 
-    	let each_value_8 = /*range*/ ctx[2](21, 28);
+    	let each_value_8 = /*range*/ ctx[5](21, 28);
     	validate_each_argument(each_value_8);
     	let each_blocks_8 = [];
 
@@ -19646,7 +20077,7 @@ var app = (function () {
     		each_blocks_8[i] = null;
     	});
 
-    	let each_value_7 = /*range*/ ctx[2](11, 18);
+    	let each_value_7 = /*range*/ ctx[5](11, 18);
     	validate_each_argument(each_value_7);
     	let each_blocks_7 = [];
 
@@ -19654,7 +20085,7 @@ var app = (function () {
     		each_blocks_7[i] = create_each_block_7(get_each_context_7(ctx, each_value_7, i));
     	}
 
-    	let each_value_6 = /*range*/ ctx[2](21, 28);
+    	let each_value_6 = /*range*/ ctx[5](21, 28);
     	validate_each_argument(each_value_6);
     	let each_blocks_6 = [];
 
@@ -19662,7 +20093,7 @@ var app = (function () {
     		each_blocks_6[i] = create_each_block_6(get_each_context_6(ctx, each_value_6, i));
     	}
 
-    	let each_value_5 = /*range*/ ctx[2](31, 38);
+    	let each_value_5 = /*range*/ ctx[5](31, 38);
     	validate_each_argument(each_value_5);
     	let each_blocks_5 = [];
 
@@ -19670,7 +20101,7 @@ var app = (function () {
     		each_blocks_5[i] = create_each_block_5(get_each_context_5(ctx, each_value_5, i));
     	}
 
-    	let each_value_4 = /*range*/ ctx[2](41, 48);
+    	let each_value_4 = /*range*/ ctx[5](41, 48);
     	validate_each_argument(each_value_4);
     	let each_blocks_4 = [];
 
@@ -19678,7 +20109,7 @@ var app = (function () {
     		each_blocks_4[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
     	}
 
-    	let each_value_3 = /*range*/ ctx[2](31, 38);
+    	let each_value_3 = /*range*/ ctx[5](31, 38);
     	validate_each_argument(each_value_3);
     	let each_blocks_3 = [];
 
@@ -19686,7 +20117,7 @@ var app = (function () {
     		each_blocks_3[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
     	}
 
-    	let each_value_2 = /*range*/ ctx[2](41, 48);
+    	let each_value_2 = /*range*/ ctx[5](41, 48);
     	validate_each_argument(each_value_2);
     	let each_blocks_2 = [];
 
@@ -19694,7 +20125,7 @@ var app = (function () {
     		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
-    	let each_value_1 = /*range*/ ctx[2](31, 38);
+    	let each_value_1 = /*range*/ ctx[5](31, 38);
     	validate_each_argument(each_value_1);
     	let each_blocks_1 = [];
 
@@ -19706,7 +20137,7 @@ var app = (function () {
     		each_blocks_1[i] = null;
     	});
 
-    	let each_value = /*range*/ ctx[2](41, 48);
+    	let each_value = /*range*/ ctx[5](41, 48);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -19719,7 +20150,7 @@ var app = (function () {
     	});
 
     	function decaychart_show_binding(value) {
-    		/*decaychart_show_binding*/ ctx[5].call(null, value);
+    		/*decaychart_show_binding*/ ctx[7].call(null, value);
     	}
 
     	let decaychart_props = {};
@@ -19730,6 +20161,18 @@ var app = (function () {
 
     	decaychart = new DecayChart({ props: decaychart_props, $$inline: true });
     	binding_callbacks.push(() => bind(decaychart, "show", decaychart_show_binding));
+
+    	let dialog_props = {
+    		"aria-labelledby": "event-title",
+    		"aria-describedby": "event-content",
+    		style: "z-index: 1050;",
+    		$$slots: { default: [create_default_slot$3] },
+    		$$scope: { ctx }
+    	};
+
+    	dialog = new Dialog({ props: dialog_props, $$inline: true });
+    	/*dialog_binding*/ ctx[8](dialog);
+    	dialog.$on("MDCDialog:closed", /*MDCDialog_closed_handler*/ ctx[9]);
 
     	const block = {
     		c: function create() {
@@ -19820,6 +20263,8 @@ var app = (function () {
 
     			t12 = space();
     			create_component(decaychart.$$.fragment);
+    			t13 = space();
+    			create_component(dialog.$$.fragment);
     			set_style(div0, "background-color", "white");
     			set_style(div0, "color", "black");
     			set_style(div0, "display", "inline-block");
@@ -19941,17 +20386,19 @@ var app = (function () {
 
     			insert_dev(target, t12, anchor);
     			mount_component(decaychart, target, anchor);
+    			insert_dev(target, t13, anchor);
+    			mount_component(dialog, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
     			if (topleft_slot) {
-    				if (topleft_slot.p && dirty[0] & /*$$scope*/ 8) {
-    					update_slot(topleft_slot, topleft_slot_template, ctx, /*$$scope*/ ctx[3], dirty, get_topleft_slot_changes, get_topleft_slot_context);
+    				if (topleft_slot.p && dirty[0] & /*$$scope*/ 1024) {
+    					update_slot(topleft_slot, topleft_slot_template, ctx, /*$$scope*/ ctx[10], dirty, get_topleft_slot_changes, get_topleft_slot_context);
     				}
     			}
 
-    			if (dirty[0] & /*range*/ 4) {
-    				each_value_11 = /*range*/ ctx[2](11, 18);
+    			if (dirty[0] & /*range*/ 32) {
+    				each_value_11 = /*range*/ ctx[5](11, 18);
     				validate_each_argument(each_value_11);
     				let i;
 
@@ -19974,8 +20421,8 @@ var app = (function () {
     				each_blocks_11.length = each_value_11.length;
     			}
 
-    			if (dirty[0] & /*range*/ 4) {
-    				each_value_10 = /*range*/ ctx[2](21, 28);
+    			if (dirty[0] & /*range*/ 32) {
+    				each_value_10 = /*range*/ ctx[5](21, 28);
     				validate_each_argument(each_value_10);
     				let i;
 
@@ -19998,8 +20445,8 @@ var app = (function () {
     				each_blocks_10.length = each_value_10.length;
     			}
 
-    			if (dirty[0] & /*range, handleClickTooth*/ 6) {
-    				each_value_9 = /*range*/ ctx[2](11, 18);
+    			if (dirty[0] & /*range, handleClickTooth*/ 48) {
+    				each_value_9 = /*range*/ ctx[5](11, 18);
     				validate_each_argument(each_value_9);
     				let i;
 
@@ -20026,8 +20473,8 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (dirty[0] & /*range, handleClickTooth*/ 6) {
-    				each_value_8 = /*range*/ ctx[2](21, 28);
+    			if (dirty[0] & /*range, handleClickTooth*/ 48) {
+    				each_value_8 = /*range*/ ctx[5](21, 28);
     				validate_each_argument(each_value_8);
     				let i;
 
@@ -20054,8 +20501,8 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (dirty[0] & /*range*/ 4) {
-    				each_value_3 = /*range*/ ctx[2](31, 38);
+    			if (dirty[0] & /*range*/ 32) {
+    				each_value_3 = /*range*/ ctx[5](31, 38);
     				validate_each_argument(each_value_3);
     				let i;
 
@@ -20078,8 +20525,8 @@ var app = (function () {
     				each_blocks_3.length = each_value_3.length;
     			}
 
-    			if (dirty[0] & /*range*/ 4) {
-    				each_value_2 = /*range*/ ctx[2](41, 48);
+    			if (dirty[0] & /*range*/ 32) {
+    				each_value_2 = /*range*/ ctx[5](41, 48);
     				validate_each_argument(each_value_2);
     				let i;
 
@@ -20102,8 +20549,8 @@ var app = (function () {
     				each_blocks_2.length = each_value_2.length;
     			}
 
-    			if (dirty[0] & /*range, handleClickTooth*/ 6) {
-    				each_value_1 = /*range*/ ctx[2](31, 38);
+    			if (dirty[0] & /*range, handleClickTooth*/ 48) {
+    				each_value_1 = /*range*/ ctx[5](31, 38);
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -20130,8 +20577,8 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (dirty[0] & /*range, handleClickTooth*/ 6) {
-    				each_value = /*range*/ ctx[2](41, 48);
+    			if (dirty[0] & /*range, handleClickTooth*/ 48) {
+    				each_value = /*range*/ ctx[5](41, 48);
     				validate_each_argument(each_value);
     				let i;
 
@@ -20167,6 +20614,13 @@ var app = (function () {
     			}
 
     			decaychart.$set(decaychart_changes);
+    			const dialog_changes = {};
+
+    			if (dirty[0] & /*$$scope, $selectedTreatment, $selectedTooth*/ 1036) {
+    				dialog_changes.$$scope = { dirty, ctx };
+    			}
+
+    			dialog.$set(dialog_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -20205,6 +20659,7 @@ var app = (function () {
     			}
 
     			transition_in(decaychart.$$.fragment, local);
+    			transition_in(dialog.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -20258,6 +20713,7 @@ var app = (function () {
     			}
 
     			transition_out(decaychart.$$.fragment, local);
+    			transition_out(dialog.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -20277,6 +20733,9 @@ var app = (function () {
     			destroy_each(each_blocks, detaching);
     			if (detaching) detach_dev(t12);
     			destroy_component(decaychart, detaching);
+    			if (detaching) detach_dev(t13);
+    			/*dialog_binding*/ ctx[8](null);
+    			destroy_component(dialog, detaching);
     		}
     	};
 
@@ -20295,28 +20754,29 @@ var app = (function () {
     	let $toothStates;
     	let $selectedTooth;
     	let $selectedTreatment;
-    	let $checkin;
     	let $treatmentHistories;
+    	let $checkin;
     	validate_store(toothStates, "toothStates");
-    	component_subscribe($$self, toothStates, $$value => $$invalidate(6, $toothStates = $$value));
+    	component_subscribe($$self, toothStates, $$value => $$invalidate(11, $toothStates = $$value));
     	validate_store(selectedTooth, "selectedTooth");
-    	component_subscribe($$self, selectedTooth, $$value => $$invalidate(7, $selectedTooth = $$value));
+    	component_subscribe($$self, selectedTooth, $$value => $$invalidate(2, $selectedTooth = $$value));
     	validate_store(selectedTreatment, "selectedTreatment");
-    	component_subscribe($$self, selectedTreatment, $$value => $$invalidate(8, $selectedTreatment = $$value));
-    	validate_store(checkin, "checkin");
-    	component_subscribe($$self, checkin, $$value => $$invalidate(9, $checkin = $$value));
+    	component_subscribe($$self, selectedTreatment, $$value => $$invalidate(3, $selectedTreatment = $$value));
     	validate_store(treatmentHistories, "treatmentHistories");
-    	component_subscribe($$self, treatmentHistories, $$value => $$invalidate(10, $treatmentHistories = $$value));
+    	component_subscribe($$self, treatmentHistories, $$value => $$invalidate(12, $treatmentHistories = $$value));
+    	validate_store(checkin, "checkin");
+    	component_subscribe($$self, checkin, $$value => $$invalidate(13, $checkin = $$value));
     	let showDecayChart = false;
     	let toothCodes = getToothCodes();
+    	let confirmDialog;
+    	let activeCount = 0;
     	set_store_value(toothStates, $toothStates = new Array(48));
 
     	for (let i = 0; i < toothCodes.length; i++) {
     		let state = {
-    			treatmentId: null,
     			code: toothCodes[i],
     			active: true,
-    			imgSrc: getTreatmentImgSrc(toothCodes[i], null)
+    			treatments: [null]
     		};
 
     		set_store_value(toothStates, $toothStates[toothCodes[i]] = state, $toothStates);
@@ -20328,18 +20788,50 @@ var app = (function () {
     		let { treatmentId, toothCode } = event.detail;
     		set_store_value(selectedTooth, $selectedTooth = toothCode);
     		let state = $toothStates[toothCode];
+    		let lastTreatment = state.treatments[state.treatments.length - 1];
 
+    		// clicked without selecting treatment
+    		// deletes that treatment
     		if (!$selectedTreatment) {
+    			toothStates.set($toothStates);
+
+    			// may open confirmation dialog to delete...
+    			// // fresh tooth
+    			// if ($toothStates[toothCode].treatments.length == 1){
+    			//     return;
+    			// }
+    			// // delete last treatment
+    			// $toothStates[toothCode].treatments.pop();
+    			// $toothStates = $toothStates;
+    			// // delete that from history
+    			// let delIndex = 0;
+    			// for (let i=$treatmentHistories.length-1; i>-1; i--){
+    			//     // delete last recorded treatment
+    			//     if ($treatmentHistories[i].tooth_id == toothCode){
+    			//         delIndex = i;
+    			//         break;
+    			//     }
+    			// }
+    			// $treatmentHistories = $treatmentHistories.filter((e,i)=>i!=delIndex);
     			return;
     		}
 
-    		if (state.treatmentId != $selectedTreatment.id) {
+    		// clicked with treatment
+    		if (lastTreatment != $selectedTreatment.id) {
     			handleAddTreatment(event);
-    		} // same as last treatment
+    		} else {
+    			// same as last treatment
+    			state.treatments.pop();
+
+    			$treatmentHistories.pop();
+    			treatmentHistories.set($treatmentHistories);
+    			toothStates.set($toothStates);
+    		}
     	};
 
     	const handleAddTreatment = event => {
     		let code = event.detail.toothCode;
+    		console.log("add treatment to ", code);
 
     		let userTreatment = {
     			id: null,
@@ -20370,8 +20862,9 @@ var app = (function () {
     			// update tooth ui
     			let imgSrc = getTreatmentImgSrc(code, $selectedTreatment.id);
 
-    			set_store_value(toothStates, $toothStates[code].imgSrc = imgSrc, $toothStates);
-    			set_store_value(toothStates, $toothStates[code].treatmentId = $selectedTreatment.id, $toothStates);
+    			$toothStates[code].treatments.push($selectedTreatment.id);
+    			console.log("pushed treatment");
+    			console.log($toothStates[code].treatments);
     			toothStates.set($toothStates);
 
     			// update history
@@ -20382,6 +20875,10 @@ var app = (function () {
     			console.log(userTreatment);
     			set_store_value(treatmentHistories, $treatmentHistories = [userTreatment, ...$treatmentHistories]);
     		});
+    	};
+
+    	const handleDeleteTreatment = () => {
+    		
     	};
 
     	const range = (a, b) => {
@@ -20408,8 +20905,17 @@ var app = (function () {
     		$$invalidate(0, showDecayChart);
     	}
 
+    	function dialog_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			confirmDialog = $$value;
+    			$$invalidate(1, confirmDialog);
+    		});
+    	}
+
+    	const MDCDialog_closed_handler = () => console.log("close");
+
     	$$self.$$set = $$props => {
-    		if ("$$scope" in $$props) $$invalidate(3, $$scope = $$props.$$scope);
+    		if ("$$scope" in $$props) $$invalidate(10, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -20426,6 +20932,7 @@ var app = (function () {
     		Filling,
     		toothStates,
     		selectedTooth,
+    		selectedTooths,
     		selectedTreatment,
     		treatmentHistories,
     		checkin,
@@ -20434,19 +20941,24 @@ var app = (function () {
     		DecayChart,
     		showDecayChart,
     		toothCodes,
+    		confirmDialog,
+    		activeCount,
     		handleClickTooth,
     		handleAddTreatment,
+    		handleDeleteTreatment,
     		range,
     		$toothStates,
     		$selectedTooth,
     		$selectedTreatment,
-    		$checkin,
-    		$treatmentHistories
+    		$treatmentHistories,
+    		$checkin
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("showDecayChart" in $$props) $$invalidate(0, showDecayChart = $$props.showDecayChart);
     		if ("toothCodes" in $$props) toothCodes = $$props.toothCodes;
+    		if ("confirmDialog" in $$props) $$invalidate(1, confirmDialog = $$props.confirmDialog);
+    		if ("activeCount" in $$props) activeCount = $$props.activeCount;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -20455,11 +20967,16 @@ var app = (function () {
 
     	return [
     		showDecayChart,
+    		confirmDialog,
+    		$selectedTooth,
+    		$selectedTreatment,
     		handleClickTooth,
     		range,
-    		$$scope,
     		$$slots,
-    		decaychart_show_binding
+    		decaychart_show_binding,
+    		dialog_binding,
+    		MDCDialog_closed_handler,
+    		$$scope
     	];
     }
 
@@ -23110,7 +23627,9 @@ var app = (function () {
     	let div0;
     	let t8;
     	let div1;
+    	let t9_value = /*th*/ ctx[4].created_at + "";
     	let t9;
+    	let t10;
     	let mounted;
     	let dispose;
 
@@ -23135,7 +23654,8 @@ var app = (function () {
     			div0.textContent = "selection";
     			t8 = space();
     			div1 = element("div");
-    			t9 = space();
+    			t9 = text(t9_value);
+    			t10 = space();
     			add_location(button, file$f, 3, 4, 78);
     			add_location(b, file$f, 4, 4, 142);
     			attr_dev(div0, "class", "text-muted col-md-6");
@@ -23161,7 +23681,8 @@ var app = (function () {
     			append_dev(div2, div0);
     			append_dev(div2, t8);
     			append_dev(div2, div1);
-    			append_dev(div3, t9);
+    			append_dev(div1, t9);
+    			append_dev(div3, t10);
 
     			if (!mounted) {
     				dispose = listen_dev(button, "click", click_handler, false, false, false);
@@ -23172,6 +23693,7 @@ var app = (function () {
     			ctx = new_ctx;
     			if (dirty & /*$treatmentHistories*/ 1 && t3_value !== (t3_value = /*th*/ ctx[4].tooth_id + "")) set_data_dev(t3, t3_value);
     			if (dirty & /*$treatmentHistories*/ 1 && t5_value !== (t5_value = /*th*/ ctx[4].treatment.name + "")) set_data_dev(t5, t5_value);
+    			if (dirty & /*$treatmentHistories*/ 1 && t9_value !== (t9_value = /*th*/ ctx[4].created_at + "")) set_data_dev(t9, t9_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div3);
@@ -23278,7 +23800,7 @@ var app = (function () {
     			// update ui
     			set_store_value(treatmentHistories, $treatmentHistories = $treatmentHistories.filter(e => e.id != th.id));
 
-    			set_store_value(toothStates, $toothStates[th.tooth_id].imgSrc = getTreatmentImgSrc(th.tooth_id, null), $toothStates);
+    			$toothStates[th.tooth_id].treatments.pop();
     			toothStates.set($toothStates);
     		}).catch(err => {
     			console.log(err);
@@ -23329,23 +23851,23 @@ var app = (function () {
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[5] = list[i];
+    	child_ctx[6] = list[i];
     	return child_ctx;
     }
 
-    // (2:0) {#each treatments as treatment}
+    // (3:4) {#each treatments as treatment}
     function create_each_block$2(ctx) {
     	let button;
     	let div1;
     	let div0;
-    	let t0_value = /*treatment*/ ctx[5].name + "";
+    	let t0_value = /*treatment*/ ctx[6].name + "";
     	let t0;
     	let t1;
     	let mounted;
     	let dispose;
 
     	function click_handler(...args) {
-    		return /*click_handler*/ ctx[3](/*treatment*/ ctx[5], ...args);
+    		return /*click_handler*/ ctx[4](/*treatment*/ ctx[6], ...args);
     	}
 
     	const block = {
@@ -23356,12 +23878,12 @@ var app = (function () {
     			t0 = text(t0_value);
     			t1 = space();
     			attr_dev(div0, "class", "col-md-12");
-    			add_location(div0, file$g, 8, 5, 254);
+    			add_location(div0, file$g, 9, 9, 363);
     			attr_dev(div1, "class", "row");
-    			add_location(div1, file$g, 7, 4, 231);
-    			attr_dev(button, "class", "btn btn-primary svelte-wv2ss4");
-    			toggle_class(button, "active", /*$selectedTreatment*/ ctx[1] && /*treatment*/ ctx[5].id == /*$selectedTreatment*/ ctx[1].id);
-    			add_location(button, file$g, 2, 0, 33);
+    			add_location(div1, file$g, 8, 8, 336);
+    			attr_dev(button, "class", "btn btn-primary btn-block svelte-wv2ss4");
+    			toggle_class(button, "active", /*$selectedTreatment*/ ctx[1] && /*treatment*/ ctx[6].id == /*$selectedTreatment*/ ctx[1].id);
+    			add_location(button, file$g, 3, 4, 108);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -23373,7 +23895,7 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					listen_dev(button, "click", click_handler, false, false, false),
-    					listen_dev(button, "blur", /*blur_handler*/ ctx[4], false, false, false)
+    					listen_dev(button, "blur", /*blur_handler*/ ctx[5], false, false, false)
     				];
 
     				mounted = true;
@@ -23381,10 +23903,10 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*treatments*/ 1 && t0_value !== (t0_value = /*treatment*/ ctx[5].name + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*treatments*/ 1 && t0_value !== (t0_value = /*treatment*/ ctx[6].name + "")) set_data_dev(t0, t0_value);
 
     			if (dirty & /*$selectedTreatment, treatments*/ 3) {
-    				toggle_class(button, "active", /*$selectedTreatment*/ ctx[1] && /*treatment*/ ctx[5].id == /*$selectedTreatment*/ ctx[1].id);
+    				toggle_class(button, "active", /*$selectedTreatment*/ ctx[1] && /*treatment*/ ctx[6].id == /*$selectedTreatment*/ ctx[1].id);
     			}
     		},
     		d: function destroy(detaching) {
@@ -23398,7 +23920,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(2:0) {#each treatments as treatment}",
+    		source: "(3:4) {#each treatments as treatment}",
     		ctx
     	});
 
@@ -23406,7 +23928,9 @@ var app = (function () {
     }
 
     function create_fragment$j(ctx) {
-    	let each_1_anchor;
+    	let div;
+    	let mounted;
+    	let dispose;
     	let each_value = /*treatments*/ ctx[0];
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -23417,21 +23941,30 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
+    			div = element("div");
+
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			each_1_anchor = empty();
+    			attr_dev(div, "id", "treatmentsContainer");
+    			attr_dev(div, "class", "card-body");
+    			add_location(div, file$g, 1, 0, 1);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(target, anchor);
+    				each_blocks[i].m(div, null);
     			}
 
-    			insert_dev(target, each_1_anchor, anchor);
+    			if (!mounted) {
+    				dispose = listen_dev(div, "click", /*onOpen*/ ctx[3], false, false, false);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*$selectedTreatment, treatments, handleClickTreatment, console*/ 7) {
@@ -23447,7 +23980,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block$2(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    						each_blocks[i].m(div, null);
     					}
     				}
 
@@ -23461,8 +23994,10 @@ var app = (function () {
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(each_1_anchor);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -23492,12 +24027,19 @@ var app = (function () {
     	});
 
     	const handleClickTreatment = treatment => {
+    		console.log("previous treatment", $selectedTreatment);
+
     		if ($selectedTreatment == treatment) {
-    			set_store_value(selectedTreatment, $selectedTreatment = null);
+    			set_store_value(selectedTreatment, $selectedTreatment = 0);
     			return;
     		}
 
+    		console.log("selected treatment", treatment);
     		set_store_value(selectedTreatment, $selectedTreatment = treatment);
+    	};
+
+    	const onOpen = () => {
+    		
     	};
 
     	const writable_props = [];
@@ -23521,6 +24063,7 @@ var app = (function () {
     		Label,
     		treatments,
     		handleClickTreatment,
+    		onOpen,
     		$selectedTreatment
     	});
 
@@ -23536,6 +24079,7 @@ var app = (function () {
     		treatments,
     		$selectedTreatment,
     		handleClickTreatment,
+    		onOpen,
     		click_handler,
     		blur_handler
     	];
@@ -23558,8 +24102,8 @@ var app = (function () {
     /* src/components/SideMenu.svelte generated by Svelte v3.24.1 */
     const file$h = "src/components/SideMenu.svelte";
 
-    // (43:4) <Title>
-    function create_default_slot_7$1(ctx) {
+    // (39:4) <Title>
+    function create_default_slot_7$2(ctx) {
     	let t;
 
     	const block = {
@@ -23577,17 +24121,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_7$1.name,
+    		id: create_default_slot_7$2.name,
     		type: "slot",
-    		source: "(43:4) <Title>",
+    		source: "(39:4) <Title>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (44:4) <Content>
-    function create_default_slot_6$1(ctx) {
+    // (40:4) <Content>
+    function create_default_slot_6$2(ctx) {
     	let t;
 
     	const block = {
@@ -23605,17 +24149,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_6$1.name,
+    		id: create_default_slot_6$2.name,
     		type: "slot",
-    		source: "(44:4) <Content>",
+    		source: "(40:4) <Content>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (46:16) <Label>
-    function create_default_slot_5$1(ctx) {
+    // (42:16) <Label>
+    function create_default_slot_5$2(ctx) {
     	let t;
 
     	const block = {
@@ -23632,23 +24176,23 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_5$1.name,
+    		id: create_default_slot_5$2.name,
     		type: "slot",
-    		source: "(46:16) <Label>",
+    		source: "(42:16) <Label>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (46:8) <Button>
-    function create_default_slot_4$1(ctx) {
+    // (42:8) <Button>
+    function create_default_slot_4$2(ctx) {
     	let label;
     	let current;
 
     	label = new Label({
     			props: {
-    				$$slots: { default: [create_default_slot_5$1] },
+    				$$slots: { default: [create_default_slot_5$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23665,7 +24209,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const label_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				label_changes.$$scope = { dirty, ctx };
     			}
 
@@ -23687,17 +24231,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_4$1.name,
+    		id: create_default_slot_4$2.name,
     		type: "slot",
-    		source: "(46:8) <Button>",
+    		source: "(42:8) <Button>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:16) <Label>
-    function create_default_slot_3$1(ctx) {
+    // (43:16) <Label>
+    function create_default_slot_3$2(ctx) {
     	let t;
 
     	const block = {
@@ -23714,23 +24258,23 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_3$1.name,
+    		id: create_default_slot_3$2.name,
     		type: "slot",
-    		source: "(47:16) <Label>",
+    		source: "(43:16) <Label>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:8) <Button>
-    function create_default_slot_2$1(ctx) {
+    // (43:8) <Button>
+    function create_default_slot_2$2(ctx) {
     	let label;
     	let current;
 
     	label = new Label({
     			props: {
-    				$$slots: { default: [create_default_slot_3$1] },
+    				$$slots: { default: [create_default_slot_3$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23747,7 +24291,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const label_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				label_changes.$$scope = { dirty, ctx };
     			}
 
@@ -23769,17 +24313,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2$1.name,
+    		id: create_default_slot_2$2.name,
     		type: "slot",
-    		source: "(47:8) <Button>",
+    		source: "(43:8) <Button>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:4) <Actions>
-    function create_default_slot_1$1(ctx) {
+    // (41:4) <Actions>
+    function create_default_slot_1$2(ctx) {
     	let button0;
     	let t;
     	let button1;
@@ -23787,7 +24331,7 @@ var app = (function () {
 
     	button0 = new Button_1({
     			props: {
-    				$$slots: { default: [create_default_slot_4$1] },
+    				$$slots: { default: [create_default_slot_4$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23795,7 +24339,7 @@ var app = (function () {
 
     	button1 = new Button_1({
     			props: {
-    				$$slots: { default: [create_default_slot_2$1] },
+    				$$slots: { default: [create_default_slot_2$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23816,14 +24360,14 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const button0_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				button0_changes.$$scope = { dirty, ctx };
     			}
 
     			button0.$set(button0_changes);
     			const button1_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				button1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -23849,17 +24393,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1$1.name,
+    		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(45:4) <Actions>",
+    		source: "(41:4) <Actions>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (42:0) <Dialog bind:this={dialogElem} aria-labelledby="simple-title" aria-describedby="simple-content">
-    function create_default_slot$3(ctx) {
+    // (38:0) <Dialog bind:this={dialogElem} aria-labelledby="simple-title" aria-describedby="simple-content">
+    function create_default_slot$4(ctx) {
     	let title;
     	let t0;
     	let content;
@@ -23869,7 +24413,7 @@ var app = (function () {
 
     	title = new Title({
     			props: {
-    				$$slots: { default: [create_default_slot_7$1] },
+    				$$slots: { default: [create_default_slot_7$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23877,7 +24421,7 @@ var app = (function () {
 
     	content = new Content({
     			props: {
-    				$$slots: { default: [create_default_slot_6$1] },
+    				$$slots: { default: [create_default_slot_6$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23885,7 +24429,7 @@ var app = (function () {
 
     	actions = new Actions({
     			props: {
-    				$$slots: { default: [create_default_slot_1$1] },
+    				$$slots: { default: [create_default_slot_1$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -23910,21 +24454,21 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const title_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				title_changes.$$scope = { dirty, ctx };
     			}
 
     			title.$set(title_changes);
     			const content_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				content_changes.$$scope = { dirty, ctx };
     			}
 
     			content.$set(content_changes);
     			const actions_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				actions_changes.$$scope = { dirty, ctx };
     			}
 
@@ -23954,9 +24498,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$3.name,
+    		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(42:0) <Dialog bind:this={dialogElem} aria-labelledby=\\\"simple-title\\\" aria-describedby=\\\"simple-content\\\">",
+    		source: "(38:0) <Dialog bind:this={dialogElem} aria-labelledby=\\\"simple-title\\\" aria-describedby=\\\"simple-content\\\">",
     		ctx
     	});
 
@@ -23964,8 +24508,8 @@ var app = (function () {
     }
 
     function create_fragment$k(ctx) {
-    	let div5;
     	let div4;
+    	let div3;
     	let ul;
     	let li0;
     	let a0;
@@ -23973,11 +24517,10 @@ var app = (function () {
     	let li1;
     	let a1;
     	let t3;
-    	let div3;
+    	let div2;
     	let div0;
     	let treatmenthistorylist;
     	let t4;
-    	let div2;
     	let div1;
     	let treatments;
     	let t5;
@@ -23995,23 +24538,25 @@ var app = (function () {
     	let t12;
     	let dialog;
     	let current;
+    	let mounted;
+    	let dispose;
     	treatmenthistorylist = new TreatmentHistoryList({ $$inline: true });
     	treatments = new Treatments({ $$inline: true });
 
     	let dialog_props = {
     		"aria-labelledby": "simple-title",
     		"aria-describedby": "simple-content",
-    		$$slots: { default: [create_default_slot$3] },
+    		$$slots: { default: [create_default_slot$4] },
     		$$scope: { ctx }
     	};
 
     	dialog = new Dialog({ props: dialog_props, $$inline: true });
-    	/*dialog_binding*/ ctx[3](dialog);
+    	/*dialog_binding*/ ctx[4](dialog);
 
     	const block = {
     		c: function create() {
-    			div5 = element("div");
     			div4 = element("div");
+    			div3 = element("div");
     			ul = element("ul");
     			li0 = element("li");
     			a0 = element("a");
@@ -24021,11 +24566,10 @@ var app = (function () {
     			a1 = element("a");
     			a1.textContent = "Эмчилгээ";
     			t3 = space();
-    			div3 = element("div");
+    			div2 = element("div");
     			div0 = element("div");
     			create_component(treatmenthistorylist.$$.fragment);
     			t4 = space();
-    			div2 = element("div");
     			div1 = element("div");
     			create_component(treatments.$$.fragment);
     			t5 = space();
@@ -24051,7 +24595,7 @@ var app = (function () {
     			attr_dev(a0, "role", "tab");
     			attr_dev(a0, "aria-controls", "first");
     			attr_dev(a0, "aria-selected", "true");
-    			add_location(a0, file$h, 7, 16, 172);
+    			add_location(a0, file$h, 7, 16, 208);
     			attr_dev(li0, "class", "nav-item");
     			add_location(li0, file$h, 6, 12, 134);
     			attr_dev(a1, "class", "nav-link ");
@@ -24061,9 +24605,9 @@ var app = (function () {
     			attr_dev(a1, "role", "tab");
     			attr_dev(a1, "aria-controls", "second");
     			attr_dev(a1, "aria-selected", "false");
-    			add_location(a1, file$h, 11, 16, 397);
+    			add_location(a1, file$h, 11, 16, 433);
     			attr_dev(li1, "class", "nav-item");
-    			add_location(li1, file$h, 10, 12, 359);
+    			add_location(li1, file$h, 10, 12, 395);
     			attr_dev(ul, "class", "nav nav-tabs nav-justified ml-0 mb-2");
     			attr_dev(ul, "role", "tablist");
     			add_location(ul, file$h, 5, 8, 57);
@@ -24071,61 +24615,57 @@ var app = (function () {
     			attr_dev(div0, "id", "first");
     			attr_dev(div0, "role", "tabpanel");
     			attr_dev(div0, "aria-labelledby", "first-tab");
-    			add_location(div0, file$h, 16, 12, 634);
-    			attr_dev(div1, "id", "treatmentsContainer");
-    			attr_dev(div1, "class", "card-body");
-    			add_location(div1, file$h, 23, 16, 925);
-    			attr_dev(div2, "class", "tab-pane scroll");
-    			attr_dev(div2, "id", "second");
-    			attr_dev(div2, "role", "tabpane2");
-    			attr_dev(div2, "aria-labelledby", "second-tab");
-    			add_location(div2, file$h, 22, 12, 822);
-    			attr_dev(div3, "class", "tab-content");
-    			add_location(div3, file$h, 15, 8, 596);
-    			attr_dev(div4, "class", "card");
-    			add_location(div4, file$h, 4, 4, 30);
-    			add_location(br0, file$h, 30, 8, 1133);
+    			add_location(div0, file$h, 16, 12, 670);
+    			attr_dev(div1, "class", "tab-pane scroll");
+    			attr_dev(div1, "id", "second");
+    			attr_dev(div1, "role", "tabpane2");
+    			attr_dev(div1, "aria-labelledby", "second-tab");
+    			add_location(div1, file$h, 20, 12, 840);
+    			attr_dev(div2, "class", "tab-content");
+    			add_location(div2, file$h, 15, 8, 632);
+    			attr_dev(div3, "class", "card");
+    			add_location(div3, file$h, 4, 4, 30);
+    			add_location(br0, file$h, 26, 8, 1059);
     			option.__value = "0";
     			option.value = option.__value;
-    			add_location(option, file$h, 32, 12, 1204);
+    			add_location(option, file$h, 28, 12, 1130);
     			attr_dev(select, "class", "form-control");
     			attr_dev(select, "name", "nurse_id");
-    			add_location(select, file$h, 31, 8, 1146);
-    			add_location(br1, file$h, 35, 8, 1274);
+    			add_location(select, file$h, 27, 8, 1072);
+    			add_location(br1, file$h, 31, 8, 1200);
     			attr_dev(input, "type", "hidden");
     			attr_dev(input, "name", "checkin_id");
-    			add_location(input, file$h, 36, 8, 1287);
+    			add_location(input, file$h, 32, 8, 1213);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-primary btn-block");
-    			add_location(button, file$h, 37, 8, 1335);
+    			add_location(button, file$h, 33, 8, 1261);
     			attr_dev(form, "method", "post");
     			attr_dev(form, "id", "treatmentsFinish");
-    			add_location(form, file$h, 29, 4, 1081);
-    			attr_dev(div5, "class", "col-md-3");
-    			add_location(div5, file$h, 3, 0, 3);
+    			add_location(form, file$h, 25, 4, 1007);
+    			attr_dev(div4, "class", "col-md-3");
+    			add_location(div4, file$h, 3, 0, 3);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, div4);
-    			append_dev(div4, ul);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div3);
+    			append_dev(div3, ul);
     			append_dev(ul, li0);
     			append_dev(li0, a0);
     			append_dev(ul, t1);
     			append_dev(ul, li1);
     			append_dev(li1, a1);
-    			append_dev(div4, t3);
-    			append_dev(div4, div3);
-    			append_dev(div3, div0);
-    			mount_component(treatmenthistorylist, div0, null);
-    			append_dev(div3, t4);
+    			append_dev(div3, t3);
     			append_dev(div3, div2);
+    			append_dev(div2, div0);
+    			mount_component(treatmenthistorylist, div0, null);
+    			append_dev(div2, t4);
     			append_dev(div2, div1);
     			mount_component(treatments, div1, null);
-    			append_dev(div5, t5);
-    			append_dev(div5, form);
+    			append_dev(div4, t5);
+    			append_dev(div4, form);
     			append_dev(form, br0);
     			append_dev(form, t6);
     			append_dev(form, select);
@@ -24139,11 +24679,16 @@ var app = (function () {
     			insert_dev(target, t12, anchor);
     			mount_component(dialog, target, anchor);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(li0, "click", /*handleTreatmentHistories*/ ctx[3], false, false, false);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
     			const dialog_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 512) {
     				dialog_changes.$$scope = { dirty, ctx };
     			}
 
@@ -24163,12 +24708,14 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div5);
+    			if (detaching) detach_dev(div4);
     			destroy_component(treatmenthistorylist);
     			destroy_component(treatments);
     			if (detaching) detach_dev(t12);
-    			/*dialog_binding*/ ctx[3](null);
+    			/*dialog_binding*/ ctx[4](null);
     			destroy_component(dialog, detaching);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -24184,10 +24731,37 @@ var app = (function () {
     }
 
     function instance$k($$self, $$props, $$invalidate) {
+    	let $selectedTreatment;
+    	let $toothStates;
+    	let $selectedTooths;
+    	validate_store(selectedTreatment, "selectedTreatment");
+    	component_subscribe($$self, selectedTreatment, $$value => $$invalidate(5, $selectedTreatment = $$value));
+    	validate_store(toothStates, "toothStates");
+    	component_subscribe($$self, toothStates, $$value => $$invalidate(6, $toothStates = $$value));
+    	validate_store(selectedTooths, "selectedTooths");
+    	component_subscribe($$self, selectedTooths, $$value => $$invalidate(7, $selectedTooths = $$value));
     	let dialogElem;
     	let dialogTitle = "Dialog Title";
     	let dialogContent = "content";
     	let showDialog = false;
+
+    	const handleTreatmentHistories = event => {
+    		set_store_value(selectedTreatment, $selectedTreatment = 0);
+
+    		for (let i = 0; i < toothStates; i++) {
+    			let toothState = $toothStates[i];
+
+    			// not selected ?
+    			if (!$selectedTooths.includes(toothState.toothCode)) {
+    				toothState.active = false;
+    			}
+
+    			toothState.active = true;
+    		}
+
+    		toothStates.set($toothStates);
+    	};
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -24216,10 +24790,17 @@ var app = (function () {
     		Label,
     		TreatmentHistoryList,
     		Treatments,
+    		selectedTreatment,
+    		selectedTooths,
+    		toothStates,
     		dialogElem,
     		dialogTitle,
     		dialogContent,
-    		showDialog
+    		showDialog,
+    		handleTreatmentHistories,
+    		$selectedTreatment,
+    		$toothStates,
+    		$selectedTooths
     	});
 
     	$$self.$inject_state = $$props => {
@@ -24233,7 +24814,13 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [dialogElem, dialogTitle, dialogContent, dialog_binding];
+    	return [
+    		dialogElem,
+    		dialogTitle,
+    		dialogContent,
+    		handleTreatmentHistories,
+    		dialog_binding
+    	];
     }
 
     class SideMenu extends SvelteComponentDev {

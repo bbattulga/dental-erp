@@ -27,7 +27,7 @@
                             Зураггүй
                             @else
                                 <img width="200px" style="border-radius: 100%"
-                                     src="/img/staffs/{{$user->profile_pic}}">
+                                     src="{{$user->profile_pic}}">
                             @endif
                             <br>
                             <br>

@@ -6,10 +6,11 @@ use App\Doctor;
 use App\Shift;
 use App\CheckIn;
 use App\ShiftType;
+use App\Reception;
 use App\Appointment;
 use App\UserTreatments;
 use App\TreatmentNote;
-
+use Illuminate\Support\Facades\Auth;
 use App\Lease;
 use App\Transaction;
 use App\Promotion;
@@ -39,23 +40,25 @@ class DatabaseSeeder extends Seeder
     private static $ae;
 
     private static $register_chance = 50;
+    private static $treatment_again = 50;
+
 
     public function run()
     {   
         self::$faker = Faker::create();
 
         // make dummies for date1 to date2
-        $date1 = Date('Y-m-d', strtotime('-  3 Months'));
-        $date2 = Date('Y-m-d', strtotime('+  14 Days'));
+        $date1 = Date('Y-m-d', strtotime('-  6 Months'));
+        $date2 = Date('Y-m-d', strtotime('+  15 Days'));
 
         // patients for each doctor a day
         $min_users = 1;
-        $max_users = 4;
+        $max_users = 3;
 
         $this->call(Refresh::class);
+       // $this->call(BaseDataSeeder::class);
 
         $doctors = Doctor::all();
-        $ev_chance = 10;
 
         while ($date1 <= $date2){
 
@@ -72,6 +75,16 @@ class DatabaseSeeder extends Seeder
                     'shift_type_id'=>$shift_type,
                     'date'=>$date1
                 ]);
+
+                if(self::$faker->numberBetween(1, 100) <= self::$treatment_again){
+                    $patients = Patient::all();
+                    $p = $patients->count()>0? $patients->random(): factory(Patient::class)->create();
+                    factory(CheckIn::class)->create([
+                        'user_id'=>$p->id,
+                        'shift_id'=>$shift->id,
+                        'state'=>0
+                    ]);
+                }
 
                 // initial start time, end time
                 if ($shift_type != ShiftType::evening()){
@@ -108,7 +121,8 @@ class DatabaseSeeder extends Seeder
     }
 
     private function new_patient($faker, $patient, $shift , $as, $ae){
-        // make some appointments only
+
+        // make some appointments and others...
         if ($shift->date >= Date('Y-m-d')){
             if (self::$faker->numberBetween(1, 100) > self::$register_chance){
                 $appointment = factory(Appointment::class)->create([
@@ -118,6 +132,15 @@ class DatabaseSeeder extends Seeder
                     'start'=>$as,
                     'end'=>$ae
                 ]);
+                factory(Patient::class, 12)->create()
+                    ->each(function($patient) use ($shift){
+                        factory(CheckIn::class, 1)->create([
+                        'user_id'=>$patient->id,
+                        'shift_id'=>$shift->id,
+                        'state'=>0,
+                    ]);
+                    });
+                
                 return;
             }
         }

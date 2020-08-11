@@ -21,10 +21,10 @@ class TreatmentAgainSeeder extends Seeder
      * @return void
      */ 
 
-    public static $treatment_again_chance = 80;
+    public static $treatment_again_chance = 100;
     public static $date;
-    public static $min = 0;
-    public static $max = 1;
+    public static $min = 1;
+    public static $max = 2;
 
     public static $treatments_min = 1;
     public static $treatments_max = 3;
@@ -84,7 +84,7 @@ class TreatmentAgainSeeder extends Seeder
                             ->create([
             'user_id'=>$patient->id,
             'checkin_id'=>$checkin->id,
-            'created_at'=>self::$date ' ' . Date('H:i')
+            'created_at'=>self::$date . ' ' . Date('H:i')
         ]);
 
         $total = 0;
@@ -95,7 +95,8 @@ class TreatmentAgainSeeder extends Seeder
         $transaction = factory(Transaction::class)->create([
             'type'=>4,
             'type_id'=>$checkin->id,
-            'price'=>$total
+            'price'=>$total,
+            self::$date . ' ' . Date('H:i')
         ]);
 
         $checkin->update([

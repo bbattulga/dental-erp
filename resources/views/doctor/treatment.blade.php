@@ -979,10 +979,13 @@
                     </div>
                 </div>
                 <div class="row m-3">
+                    @php
+                    use Illuminate\Support\Facades\Storage;
+                    @endphp
                     @foreach($checkin->user->photos->sortByDesc('id') as $photo)
                     <div class="col-md-6">
                         <span class='zoom' id='xray{{$photo->id}}'>
-                            <img src='{{url('img/uploads/'.$photo->path)}}' width='100%' alt='Daisy on the Ohoopee' />
+                            <img src="{{Storage::url('img/xray/'.$photo->path)}}" width='100%' />
                             <p>{{$photo->created_at}}</p>
                         </span>
                         <script>

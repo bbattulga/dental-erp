@@ -77,13 +77,31 @@
 </div><!-- Tooth images ending-->
 <DecayChart bind:show={showDecayChart} />
 
+<!-- same treatment or trying to delete treatment -->
+<Dialog bind:this={confirmDialog} aria-labelledby="event-title"                 aria-describedby="event-content" 
+    on:MDCDialog:closed={()=>console.log('close')}
+    style="z-index: 1050;">
+  <Title id="event-title">Эмчилгээ өмнө нь хийгдсэн байна</Title>
+  <Content id="event-content">
+    Шүд #{$selectedTooth} - {$selectedTreatment.name}
+  </Content>
+  <Actions>
+    <Button action="none">
+      <Label>Эмчилгээ устгах</Label>
+    </Button>
+    <Button action="all" default>
+      <Label>Давтан эмчилгээ</Label>
+    </Button>
+  </Actions>
+</Dialog>
+
 <script>
     import {getToothCodes, getTreatmentImgSrc, addUserTreatment} from '../api/doctor-treatment-api.js';
     import Dialog, {Title, Content, Actions} from '@smui/dialog';
     import Button, {Label} from '@smui/button';
     import Tooth from './Tooth.svelte';
     import Filling from './Filling.svelte';
-    import {toothStates, selectedTooth, selectedTreatment} from './stores/store.js';
+    import {toothStates, selectedTooth, selectedTooths,selectedTreatment} from './stores/store.js';
     import {treatmentHistories} from './stores/store.js';
     import {checkin, patient} from './stores/store.js';
     import TreatmentNoteModal from './TreatmentNoteModal.svelte';
@@ -92,13 +110,15 @@
 
     let showDecayChart = false;
     let toothCodes = getToothCodes();
+    let confirmDialog;
+
+    let activeCount = 0;
     $toothStates = new Array(48);
     for (let i=0; i<toothCodes.length; i++){
         let state = {
-            treatmentId: null,
             code: toothCodes[i],
             active: true,
-            imgSrc: getTreatmentImgSrc(toothCodes[i], null)
+            treatments: [null]
         }
         $toothStates[toothCodes[i]] = state;
     }
@@ -107,22 +127,58 @@
         let {treatmentId, toothCode} = event.detail;
         $selectedTooth = toothCode;
         let state = $toothStates[toothCode];
+        let lastTreatment = state.treatments[state.treatments.length-1];
+
+        // clicked without selecting treatment
+        // deletes that treatment
         if (!$selectedTreatment){
+
+            
+            
+            $toothStates = $toothStates;
+
+            // may open confirmation dialog to delete...
+
+
+            // // fresh tooth
+            // if ($toothStates[toothCode].treatments.length == 1){
+            //     return;
+            // }
+
+            // // delete last treatment
+            // $toothStates[toothCode].treatments.pop();
+            // $toothStates = $toothStates;
+
+            // // delete that from history
+            // let delIndex = 0;
+            // for (let i=$treatmentHistories.length-1; i>-1; i--){
+            //     // delete last recorded treatment
+            //     if ($treatmentHistories[i].tooth_id == toothCode){
+            //         delIndex = i;
+            //         break;
+            //     }
+            // }
+            // $treatmentHistories = $treatmentHistories.filter((e,i)=>i!=delIndex);
+            
             return;
         }
 
-        if (state.treatmentId != $selectedTreatment.id){
+        // clicked with treatment
+        if (lastTreatment != $selectedTreatment.id){
             handleAddTreatment(event);
         }
         else{
             // same as last treatment
-
+            state.treatments.pop();
+            $treatmentHistories.pop();
+            $treatmentHistories = $treatmentHistories;
+            $toothStates = $toothStates;
         }
     }
 
     const handleAddTreatment = (event) => {
         let code = event.detail.toothCode;
-
+        console.log('add treatment to ', code);
         let userTreatment = {
             id: null,
             checkin_id: $checkin.id,
@@ -151,8 +207,9 @@
             .then(response=>{
                 // update tooth ui
                 let imgSrc = getTreatmentImgSrc(code, $selectedTreatment.id);
-                $toothStates[code].imgSrc = imgSrc;
-                $toothStates[code].treatmentId = $selectedTreatment.id;
+                $toothStates[code].treatments.push($selectedTreatment.id);
+                console.log('pushed treatment')
+                console.log($toothStates[code].treatments);
                 $toothStates = $toothStates;
 
                 // update history
@@ -162,6 +219,10 @@
                 console.log(userTreatment);
                 $treatmentHistories = [userTreatment, ...$treatmentHistories];
             });
+    }
+
+    const handleDeleteTreatment = () => {
+
     }
     const range = (a, b) => {
 

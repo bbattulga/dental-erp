@@ -144,7 +144,7 @@
                                 <div class="card"> 
                                     <div style="background-color: white; color: black; 
                                         display: inline-block; font-size: 2.3em;
-                                        position: absolute; top: 0; right: 0; cursor: pointer;">
+                                        position: absolute; top: 0; right: 0; cursor: pointer; margin:2px;">
                                         <div class="glyph"  onclick="showTreatmentDetails({{$check_in}})">
                                             <div class="glyph-icon simple-icon-notebook"></div>
                                         </div>

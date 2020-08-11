@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 use App\CheckIn;
 use App\Shift;
 
 use App\User;
 use App\UserRole;
-use Illuminate\Http\Request;
 use App\Roles;
 use App\ShiftType;
 
@@ -53,9 +55,10 @@ class AdminStaffController extends Controller
         $user->location = $request['location'];
         $user->description = $request['info'];
 
+        // update profile pic
         if ($image = $request->file(['image'])){
-            $image_name = ''.time().$image->getClientOriginalName();
-            $image->move('img/staffs', $image_name);
+            $image_name = time().$image->getClientOriginalName();
+            Storage::putFileAs('public/img/avatar', $image, $image_name);
             $user->photos()->create(['path'=>$image_name]);
         }
         if(!empty($request['password']))

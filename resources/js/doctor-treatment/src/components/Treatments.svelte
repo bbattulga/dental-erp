@@ -1,17 +1,19 @@
 
-{#each treatments as treatment}
-<button 
-class="btn btn-primary"
-on:click={()=>handleClickTreatment(treatment)}
-	on:blur={()=>console.log('onblur')}
-	class:active={$selectedTreatment && (treatment.id==$selectedTreatment.id)}>
-    <div class="row">
-    	<div class="col-md-12">
-            {treatment.name}
+<div id="treatmentsContainer" class="card-body" on:click={onOpen}>
+    {#each treatments as treatment}
+    <button 
+    class="btn btn-primary btn-block"
+    on:click={()=>handleClickTreatment(treatment)}
+    	on:blur={()=>console.log('onblur')}
+    	class:active={$selectedTreatment && (treatment.id==$selectedTreatment.id)}>
+        <div class="row">
+        	<div class="col-md-12">
+                {treatment.name}
+            </div>
         </div>
-    </div>
-</button>
-{/each}
+    </button>
+    {/each}
+</div>
 
 
 <script>
@@ -31,13 +33,18 @@ getTreatments().then(response=>{
 });
 
 const handleClickTreatment = (treatment) => {
+    console.log('previous treatment', $selectedTreatment);
     if ($selectedTreatment == treatment){
-        $selectedTreatment = null;
+        $selectedTreatment = 0;
         return;
     }
+    console.log('selected treatment', treatment);
     $selectedTreatment = treatment;
-}
+}   
 
+const onOpen = () => {
+
+}
 </script>
 
 

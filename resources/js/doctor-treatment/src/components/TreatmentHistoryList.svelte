@@ -8,7 +8,7 @@
             selection
         </div>
         <div class="text-right text-muted col-md-6">
-            
+            {th.created_at}
         </div>
     </div>
 </div>
@@ -27,7 +27,7 @@
 			.then(response=>{
 				// update ui
 				$treatmentHistories = $treatmentHistories.filter(e=>e.id != th.id);
-				$toothStates[th.tooth_id].imgSrc = getTreatmentImgSrc(th.tooth_id, null);
+				$toothStates[th.tooth_id].treatments.pop();
 				$toothStates = $toothStates;
 			})
 			.catch(err=>{

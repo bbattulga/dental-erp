@@ -90,8 +90,11 @@
                         <label>Хугацаа сонгох</label>
                             <div class="input-daterange input-group mb-3" id="datepicker" data-date-format="yyyy-mm-dd">
                                 <input id="input-start-date" type="text" class="input-sm form-control" name="start" placeholder="Start" value="{{ $start_date }}"/>
-                                <span class="input-group-addon">
-
+                                <span class="input-group-addon" style="display: flex; align-items: center;">
+                                    <div class="glyph">
+                                        <div class="glyph-icon simple-icon-arrow-right-circle"
+                                        style="padding: 2px; font-size: 1.2rem;"></div>
+                                    </div>
                                 </span>
                                 <input id="input-end-date" type="text" class="input-sm form-control" name="end" placeholder="End" value="{{ $end_date }}">
                                 <span class="input-group-addon" style="margin-left: 5px;">

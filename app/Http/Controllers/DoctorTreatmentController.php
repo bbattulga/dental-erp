@@ -18,6 +18,7 @@ use App\UserTooth;
 use App\CheckInState;
 use App\Symptom;
 use App\TreatmentNote;
+use Illuminate\Support\Facades\Storage;
 
 
 class DoctorTreatmentController extends Controller
@@ -155,10 +156,10 @@ class DoctorTreatmentController extends Controller
     }
     public function xray(Request $request) {
         $user = User::find($request['xray_user_id']);
-        if ($photo = $request->file(['photo'])) {
-            $photo_name = time() . $photo->getClientOriginalName();
-            $photo->move('img/uploads', $photo_name);
-            $user->photos()->create(['path'=>$photo_name]);
+        if ($image = $request->file(['photo'])) {
+            $image_name = time().$image->getClientOriginalName();
+            Storage::putFileAs('public/img/xray', $image, $image_name);
+            $user->photos()->create(['path'=>$image_name]);
         }
         return redirect()->back();
     }

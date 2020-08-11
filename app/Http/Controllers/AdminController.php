@@ -10,7 +10,7 @@ use App\ProductHistory;
 use App\Products;
 use App\UserRole;
 use Aloha\Twilio\Support\Laravel\Facade as Twilio;
-
+use Illuminate\Support\Facades\Storage;
 use App\Shift;
 use App\UserTreatments;
 
@@ -56,8 +56,8 @@ class AdminController extends Controller
         ]);
 
         if ($image = $request->file(['image'])){
-            $image_name = ''.time().$image->getClientOriginalName();
-            $image->move('img/staffs', $image_name);
+            $image_name = time().$image->getClientOriginalName();
+            Storage::putFileAs('public/img/avatar', $image, $image_name);
             $user->photos()->create(['path'=>$image_name]);
         }
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);

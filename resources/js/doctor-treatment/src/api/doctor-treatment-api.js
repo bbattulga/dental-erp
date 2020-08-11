@@ -69,7 +69,7 @@ export const addUserTreatment = (userTreatment) => {
 		// ajax to store...
 		let success = () => resolve(fakeId++);
 		let fail = () => reject('user treatment rejected');
-		setTimeout(success, 100);
+		setTimeout(success, 0);
 	});
 	return promise;
 }
@@ -79,7 +79,7 @@ export const deleteUserTreatment = (userTreatmentId) => {
 	let promise = new Promise((resolve, reject)=>{
 		let success = () => resolve(fakeId++);
 		let fail = () => alert('failed to delete usertreatment');
-		setTimeout(success, 100);
+		setTimeout(success, 0);
 	});
 	return promise;
 }

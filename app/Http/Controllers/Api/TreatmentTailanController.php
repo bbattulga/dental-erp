@@ -104,7 +104,8 @@ class TreatmentTailanController extends Controller
         return compact(
                         'count_total', 'count_again', 'count_first',
                         'count_male', 'count_female',
-                        'age_male', 'age_female'
+                        'age_male', 'age_female',
+                        'start_date', 'end_date'
                 );
     }
 

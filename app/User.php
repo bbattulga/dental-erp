@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,10 +75,13 @@ class User extends Authenticatable
   }
   public function getProfilePicAttribute(){
         $lastpic = $this->photos()->orderBy('id', 'desc')->first();
-        if ($lastpic){
-            return $lastpic->path;
+
+        // no profile pic
+        if (!$lastpic){
+            return '';
         }
-        return '';
+        $url = Storage::url('img/avatar/'.$lastpic->path);
+        return $url;
     }
 
     public function generateToken(){

@@ -4,7 +4,7 @@
 <div class="col-md-3">
     <div class="card">
         <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
-            <li class="nav-item">
+            <li class="nav-item" on:click={handleTreatmentHistories}>
                 <a class="nav-link active" id="first-tab" data-toggle="tab" href="#first" role="tab"
                     aria-controls="first" aria-selected="true">Түүх</a>
             </li>
@@ -15,15 +15,11 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane show active scroll" id="first" role="tabpanel" aria-labelledby="first-tab">
-
                 <TreatmentHistoryList />
-                
             </div>
 
             <div class="tab-pane scroll" id="second" role="tabpane2" aria-labelledby="second-tab">
-                <div id="treatmentsContainer" class="card-body">
-                    <Treatments />
-                </div>
+                <Treatments />
             </div>
         </div>
     </div>
@@ -54,11 +50,32 @@
     import Button, {Label} from '@smui/button';
     import TreatmentHistoryList from './TreatmentHistoryList.svelte';
     import Treatments from './Treatments.svelte';
+    import {selectedTreatment} from './stores/store.js';
+    import {selectedTooths, toothStates} from './stores/store.js';
+
 
     let dialogElem;
     let dialogTitle = 'Dialog Title';
     let dialogContent = 'content';
     let showDialog = false;
+
+
+    const handleTreatmentHistories = (event) => {
+        $selectedTreatment = 0;
+
+        for (let i=0; i<toothStates; i++){
+
+            let toothState = $toothStates[i];
+            // not selected ?
+            if (!$selectedTooths.includes(toothState.toothCode)){
+                toothState.active = false;
+            }
+            toothState.active = true;
+        }
+        $toothStates = $toothStates;
+    }
+
+
 </script>
 
 <style>

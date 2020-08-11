@@ -26,29 +26,29 @@
     </script>
     <div class="row">
         <div class="col-md-6">
+            <a style="color: #8f8f8f">Хугацаа
+                    өөрчлөн харах</a>
             <div class="input-daterange input-group mb-3" id="datepicker" data-date-format="yyyy-mm-dd">
-                <a style="color: #8f8f8f">Хугацаа
-                    өөрчлөн харах</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="date-start" name="start_date" class="form-control datepicker"
+                
+                <input id="date-start" name="start_date" class="input-sm form-control"
                                 data-date-format="yyyy-mm-dd"
-                       style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
+                       style="padding: 0px"
                        placeholder="Эхлэл"
                        value="{{ $start_date }}">
                        &nbsp;&nbsp;&nbsp;<span
                         style="color: #8f8f8f">-&nbsp;&nbsp;&nbsp;</span>
-                <input id="date-end" name="end_date" class="form-control datepicker"
+                <input id="date-end" name="end_date" class="input-sm form-control"
                                 data-date-format="yyyy-mm-dd"
-                       style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
+                       style="padding: 0px"
                        placeholder="Төгсгөл"
                        value="{{ $end_date }}">
                        &nbsp;&nbsp;&nbsp;
-                <a id="show-datebetween" style="color: #8f8f8f">үзэх</a>
+                <button id="show-datebetween" class="btn btn-primary" style="padding: 5px 10px;">үзэх</button>
             </div>
         </div>
         <div class="col-md-6 text-right">
             <form id="monthSearch" action="{{url('/admin/hospital/by_month')}}" method="post">
                             @csrf
-                            Хугацаа өөрчлөн үзэх:
                 <select name="year" id="select-year">
                     @if(!empty($start_date))
                         <option value="{{date('Y', strtotime($start_date))}}">{{date('Y', strtotime($start_date))}}</option>

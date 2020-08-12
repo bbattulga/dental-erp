@@ -183,11 +183,9 @@ class AdminController extends Controller
             $workload_day = 0;
             $revenue_day = 0;
             foreach($shifts as $shift){
-                $checkins = $shift->checkins;
+                $checkins = $shift->checkins()->where('state', '>', 1)->get();
                 $workload_day += $checkins->count();
                 foreach($checkins as $checkin){
-                    if ($checkin->state < 3)
-                        continue;
                     $revenue = $checkin->transactions()->first()->price;
                     $revenue_day += ($revenue? $revenue:0);
                     $total_revenue += $revenue_day;

@@ -138,27 +138,6 @@
             $toothStates = $toothStates;
 
             // may open confirmation dialog to delete...
-
-
-            // // fresh tooth
-            // if ($toothStates[toothCode].treatments.length == 1){
-            //     return;
-            // }
-
-            // // delete last treatment
-            // $toothStates[toothCode].treatments.pop();
-            // $toothStates = $toothStates;
-
-            // // delete that from history
-            // let delIndex = 0;
-            // for (let i=$treatmentHistories.length-1; i>-1; i--){
-            //     // delete last recorded treatment
-            //     if ($treatmentHistories[i].tooth_id == toothCode){
-            //         delIndex = i;
-            //         break;
-            //     }
-            // }
-            // $treatmentHistories = $treatmentHistories.filter((e,i)=>i!=delIndex);
             
             return;
         }

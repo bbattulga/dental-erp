@@ -68,6 +68,8 @@
     let dialog;
 
     export let show = false;
+    export let value = 0;
+    
     let lm;
     $:console.log('decay modal ', show);
     $:{
@@ -86,9 +88,9 @@
         show = false;
     }
 
-    let value = 0;
     const handleClickDecay = (p) => {
         console.log('fill ', p);
+        value += Math.pow(2, p);
         let pol = document.getElementById(`pol-${p}`);
         if (pol.style.fill.length > 0){
             pol.style.fill = '';

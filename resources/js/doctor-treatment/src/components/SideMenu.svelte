@@ -4,7 +4,7 @@
 <div class="col-md-3">
     <div class="card">
         <ul class="nav nav-tabs nav-justified ml-0 mb-2" role="tablist">
-            <li class="nav-item" on:click={handleTreatmentHistories}>
+            <li class="nav-item">
                 <a class="nav-link active" id="first-tab" data-toggle="tab" href="#first" role="tab"
                     aria-controls="first" aria-selected="true">Түүх</a>
             </li>
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    <form  method="post" id="treatmentsFinish">
+    <form>
         <br>
         <select class="form-control" name="nurse_id">
             <option value="0">Сувилагч сонгох</option>
@@ -58,22 +58,6 @@
     let dialogTitle = 'Dialog Title';
     let dialogContent = 'content';
     let showDialog = false;
-
-
-    const handleTreatmentHistories = (event) => {
-        $selectedTreatment = 0;
-
-        for (let i=0; i<toothStates; i++){
-
-            let toothState = $toothStates[i];
-            // not selected ?
-            if (!$selectedTooths.includes(toothState.toothCode)){
-                toothState.active = false;
-            }
-            toothState.active = true;
-        }
-        $toothStates = $toothStates;
-    }
 
 
 </script>

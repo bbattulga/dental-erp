@@ -2,13 +2,11 @@
   "version": 3,
   "file": "bundle.css",
   "sources": [
-    "../../../../resources/js/doctor-treatment/Tooth.svelte",
     "../../../../resources/js/doctor-treatment/Treatments.svelte"
   ],
   "sourcesContent": [
-    "<script>\n\timport {createEventDispatcher} from 'svelte';\n\timport {selectedTooth, selectedTreatment, toothStates} from './stores/store.js';\n\timport {getTreatmentImgSrc} from '../api/doctor-treatment-api.js';\n\timport {selectedTooths} from './stores/store.js';\n\n\texport let toothCode = 11;\n\tconst dispatch = createEventDispatcher();\n\n\tlet active = null;\n\tlet imgSrc = null;\n\tlet lastTreatmentId = null;\n\tlet treatments = null;\n\n\t$: {\n\t\ttreatments = $toothStates[toothCode].treatments;\n\t\tlastTreatmentId = treatments[treatments.length-1]!=null? treatments[treatments.length-1]:null;\n\t\timgSrc = getTreatmentImgSrc(toothCode,lastTreatmentId);\n\t}\n\t$: active = $toothStates[toothCode].active;\n\t\n\tconst handleClick = (event) => {\n\t\tlet detail = {\n\t\t\ttoothCode\n\t\t}\n\n\t\tdispatch('click', detail);\n\t}\n\n</script>\n\n\n<img on:click={handleClick} src={imgSrc}\n\tclass:active\n\tclass:tooth={!active}>\n\n\n<style>\n\t.active{\n\n\t}\n\n\t.disabled{\n\t\topacity: 0.5;\n\t}\n</style>",
     "\n<div id=\"treatmentsContainer\" class=\"card-body\" on:click={onOpen}>\n    {#each treatments as treatment}\n    <button \n    class=\"btn btn-primary btn-block\"\n    on:click={()=>handleClickTreatment(treatment)}\n    \ton:blur={()=>console.log('onblur')}\n    \tclass:active={$selectedTreatment && (treatment.id==$selectedTreatment.id)}>\n        <div class=\"row\">\n        \t<div class=\"col-md-12\">\n                {treatment.name}\n            </div>\n        </div>\n    </button>\n    {/each}\n</div>\n\n\n<script>\nimport List, {Item, Text} from '@smui/list';\nimport {getTreatments} from '../api/doctor-treatment-api.js';\nimport {selectedTreatment} from './stores/store.js';\nimport Button, {Label} from '@smui/button';\n\n\nlet treatments = [];\ngetTreatments().then(response=>{\n    treatments = response.data;\n}).catch(err=>{\n    console.log('error when fetching treatments');\n    console.log(err);\n    alert('page reload хийнэ үү');\n});\n\nconst handleClickTreatment = (treatment) => {\n    console.log('previous treatment', $selectedTreatment);\n    if ($selectedTreatment == treatment){\n        $selectedTreatment = 0;\n        return;\n    }\n    console.log('selected treatment', treatment);\n    $selectedTreatment = treatment;\n}   \n\nconst onOpen = () => {\n\n}\n</script>\n\n\n<style>\n\t.active{\n\t\tbackground-color: #efefef;\n\t}\n</style>"
   ],
   "names": [],
-  "mappings": "AAsCC,sBAAO,CAAC,AAER,CAAC;ACWD,qBAAO,CAAC,AACP,gBAAgB,CAAE,OAAO,AAC1B,CAAC"
+  "mappings": "AAmDC,qBAAO,CAAC,AACP,gBAAgB,CAAE,OAAO,AAC1B,CAAC"
 }

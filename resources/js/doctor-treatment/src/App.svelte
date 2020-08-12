@@ -1,5 +1,4 @@
 <script>
-	import JQuery from 'jquery';
 
 	import ToothChart from './components/ToothChart.svelte';
 	import SideMenu from './components/SideMenu.svelte';

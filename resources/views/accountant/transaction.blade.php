@@ -269,7 +269,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     <h5 class="card-title">Орлого</h5>
-                    <b>{{$income}}₮</b>
+                    <b>{{intval($income)}}₮</b>
                 </div>
             </div>
         </div>

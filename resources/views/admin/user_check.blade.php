@@ -128,9 +128,10 @@
                                 <?php $promotion = $check_in->user_promotion->promotion;?>
                                 <span class="badge badge-pill badge-secondary">Хямдарсан {{$promotion->percentage}}% {{$promotion->promotion_name}} </span>
                                 <br>
-                                <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{$total = $total*((100-$promotion->percentage)/100)}}₮</span>
+                                <span class="badge badge-pill badge-primary">Нийт зарцуулсан 
+                                    {{$total = intval($total*((100-$promotion->percentage)/100))}}₮</span>
                             @else
-                                <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{$total}}₮</span>
+                                <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{intval($total)}}₮</span>
                             @endif
                             <?php $sum = $sum + $total ?>
                         </div>
@@ -147,7 +148,7 @@
                 <div class="card-body text-center">
                     <i class="iconsmind-Money-2"></i>
                     <p class="card-text mb-0">Нийт зарцуулсан</p>
-                    <p class="lead text-center">{{$sum}}₮</p>
+                    <p class="lead text-center">{{intval($sum)}}₮</p>
                 </div>
             </a>
             <br>

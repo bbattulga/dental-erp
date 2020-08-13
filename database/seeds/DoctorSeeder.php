@@ -18,7 +18,6 @@ class DoctorSeeder extends Seeder
         //
         $quantity = 5;
 
-        Doctor::all()->delete();
         $i = 1;
         factory(Doctor::class, $quantity)
         	->create()

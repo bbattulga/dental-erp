@@ -22880,7 +22880,7 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			t = text("cancel");
+    			t = text("болих");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -22956,13 +22956,13 @@ var app = (function () {
     	return block;
     }
 
-    // (42:64) <Label>
+    // (42:69) <Label>
     function create_default_slot_4$4(ctx) {
     	let t;
 
     	const block = {
     		c: function create() {
-    			t = text("OK");
+    			t = text("Болсон");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -22976,7 +22976,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$4.name,
     		type: "slot",
-    		source: "(42:64) <Label>",
+    		source: "(42:69) <Label>",
     		ctx
     	});
 
@@ -23015,8 +23015,8 @@ var app = (function () {
     			t = space();
     			button1 = element("button");
     			create_component(label.$$.fragment);
-    			attr_dev(button1, "class", "btn btn-primary");
-    			add_location(button1, file$q, 41, 8, 1911);
+    			attr_dev(button1, "class", "btn btn-primary ml-3");
+    			add_location(button1, file$q, 41, 8, 1910);
     		},
     		m: function mount(target, anchor) {
     			mount_component(button0, target, anchor);
@@ -24067,7 +24067,7 @@ var app = (function () {
     			create_component(dialog.$$.fragment);
     			t13 = space();
     			create_component(finish.$$.fragment);
-    			attr_dev(a0, "class", "nav-link");
+    			attr_dev(a0, "class", "nav-link active");
     			attr_dev(a0, "id", "first-tab");
     			attr_dev(a0, "data-toggle", "tab");
     			attr_dev(a0, "href", "#first");
@@ -24077,29 +24077,29 @@ var app = (function () {
     			add_location(a0, file$r, 7, 16, 205);
     			attr_dev(li0, "class", "nav-item");
     			add_location(li0, file$r, 6, 12, 134);
-    			attr_dev(a1, "class", "nav-link active");
+    			attr_dev(a1, "class", "nav-link");
     			attr_dev(a1, "id", "second-tab");
     			attr_dev(a1, "data-toggle", "tab");
     			attr_dev(a1, "href", "#second");
     			attr_dev(a1, "role", "tab");
     			attr_dev(a1, "aria-controls", "second");
     			attr_dev(a1, "aria-selected", "false");
-    			add_location(a1, file$r, 11, 16, 423);
+    			add_location(a1, file$r, 11, 16, 430);
     			attr_dev(li1, "class", "nav-item");
-    			add_location(li1, file$r, 10, 12, 385);
+    			add_location(li1, file$r, 10, 12, 392);
     			attr_dev(ul, "class", "nav nav-tabs nav-justified ml-0 mb-2");
     			attr_dev(ul, "role", "tablist");
     			add_location(ul, file$r, 5, 8, 57);
-    			attr_dev(div0, "class", "tab-pane show scroll");
+    			attr_dev(div0, "class", "tab-pane show scroll active");
     			attr_dev(div0, "id", "first");
     			attr_dev(div0, "role", "tabpanel");
     			attr_dev(div0, "aria-labelledby", "first-tab");
     			add_location(div0, file$r, 16, 12, 666);
-    			attr_dev(div1, "class", "tab-pane scroll active");
+    			attr_dev(div1, "class", "tab-pane scroll");
     			attr_dev(div1, "id", "second");
     			attr_dev(div1, "role", "tabpane2");
     			attr_dev(div1, "aria-labelledby", "second-tab");
-    			add_location(div1, file$r, 20, 12, 829);
+    			add_location(div1, file$r, 20, 12, 836);
     			attr_dev(div2, "class", "tab-content");
     			add_location(div2, file$r, 15, 8, 628);
     			attr_dev(div3, "class", "card");

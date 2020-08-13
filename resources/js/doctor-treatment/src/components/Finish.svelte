@@ -38,8 +38,8 @@
                 </table>
     </Content>
     <Actions>
-        <Button><Label>cancel</Label></Button>
-        <button class="btn btn-primary" on:click={handleFinish}><Label>OK</Label></button>
+        <Button><Label>болих</Label></Button>
+        <button class="btn btn-primary ml-3" on:click={handleFinish}><Label>Болсон</Label></button>
     </Actions>
 </Dialog>
 <Snackbar bind:this={resultSnackbar}>

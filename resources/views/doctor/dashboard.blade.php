@@ -27,7 +27,7 @@
                             Зураггүй
                         @else
                             <img width="200px" style="border-radius: 100%"
-                                 src="/img/staffs/{{$user->profile_pic}}">
+                                 src="{{$user->profile_pic}}">
                         @endif
                         <br>
                         <br>
@@ -44,7 +44,7 @@
                             </p>
                             <p class="text-muted text-small mb-2">Мэргэжил</p>
                             <p class="mb-3">
-                                {{$user->role->name}}
+                               Эмч
                             </p>
                             <p class="text-muted text-small mb-2">Тайлбар</p>
                             <p class="mb-3">
@@ -144,7 +144,8 @@
                                 <div class="card"> 
                                     <div style="background-color: white; color: black; 
                                         display: inline-block; font-size: 2.3em;
-                                        position: absolute; top: 0; right: 0; cursor: pointer; margin:2px;">
+                                        position: absolute; top: 0; right: 0; cursor: pointer; margin:2px;
+                                        color: #33333;">
                                         <div class="glyph"  onclick="showTreatmentDetails({{$check_in}})">
                                             <div class="glyph-icon simple-icon-notebook"></div>
                                         </div>
@@ -196,9 +197,9 @@
                                             <?php $promotion = $check_in->user_promotion->promotion;?>
                                             <span class="badge badge-pill badge-secondary">Хямдарсан {{$promotion->percentage}}% {{$promotion->promotion_name}} </span>
                                             <br>
-                                            <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{$total = $total*((100-$promotion->percentage)/100)}}₮</span>
+                                            <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{$total = intval($total*((100-$promotion->percentage)/100))}}₮</span>
                                         @else
-                                            <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{$total}}₮</span>
+                                            <span class="badge badge-pill badge-primary">Нийт зарцуулсан {{intval($total)}}₮</span>
                                         @endif
                                         <?php $sum = $sum + $total ?>
                                     </div>
@@ -380,10 +381,18 @@
             let treatmentRows = '';
             for (let i=0; i<treatments.length; i++){
                 let treatment = treatments[i];
-                let tds = `<tr><td>#${treatment.tooth_id}</td>` +
+                let tds = '';
+                if (treatment.treatment_note){
+                    tds = `<tr><td>#${treatment.tooth_id}</td>` +
                             `<td>${treatment.treatment_note.symptom}</td>` +
                             `<td>${treatment.treatment_note.diagnosis}</td>` +
                             `<td>${treatment.treatment.name}</td></tr>`;
+                }else{
+                    tds = `<tr><td>#${treatment.tooth_id}</td>` +
+                            `<td></td>` +
+                            `<td></td>` +
+                            `<td>${treatment.treatment.name}</td></tr>`;
+                }
                 treatmentRows += `${tds}`;
             };
             treatmentRowsContainer.innerHTML = treatmentRows;

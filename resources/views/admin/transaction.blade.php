@@ -207,7 +207,7 @@
                                 data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Эхлэл"
-                                   value="@if($start_date){{ $start_date}}@else{{date('Y-m-d', strtotime('-30 Days'))}}@endif">&nbsp;&nbsp;&nbsp;<span
+                                   value="@if($start_date){{$start_date}}@else{{date('Y-m-d', strtotime('-30 Days'))}}@endif">&nbsp;&nbsp;&nbsp;<span
                                     style="color: #8f8f8f">-&nbsp;&nbsp;&nbsp;</span>
                             <input name="end_date" autocomplete="off" class="form-control datepicker "
                                 data-date-format="yyyy-mm-dd"
@@ -216,6 +216,7 @@
                                    value="@if($end_date){{$end_date}}@else{{date('Y-m-d')}}@endif">
                             <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">үзэх</a>
                         </div>
+                        <div class="mb-3"></div>
                     </form>
                 </div>
                 <div class="col-md-6 text-right">
@@ -288,7 +289,10 @@
                                     <tr>
                                         <td>{{$i}}</td>
                                         <td>{{$transaction->price}}</td>
-                                        <td>@if(!empty($transaction->typeOut)){{$transaction->typeOut->name}} @endif</td>
+                                        <td>
+                                            @if(!empty($transaction->typeOut)){{$transaction->typeOut->name}} @endif
+                                            Эмчилгээ
+                                        </td>
                                         <td>@if($transaction->description){{$transaction->description}} @else Тайлбар
                                             байхгүй @endif</td>
                                         <td>{{$transaction->created_at}}</td>

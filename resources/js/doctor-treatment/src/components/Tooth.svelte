@@ -15,15 +15,15 @@
 	$: {
 		treatments = $toothStates[toothCode].treatments;
 		lastTreatmentId = treatments[treatments.length-1]!=null? treatments[treatments.length-1]:null;
-		imgSrc = getTreatmentImgSrc(toothCode,lastTreatmentId);
+		imgSrc = getTreatmentImgSrc(toothCode, lastTreatmentId);
 	}
 	$: active = $toothStates[toothCode].active;
 	
 	const handleClick = (event) => {
+
 		let detail = {
 			toothCode
 		}
-
 		dispatch('click', detail);
 	}
 

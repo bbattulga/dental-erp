@@ -2,44 +2,90 @@
 
 	import ToothChart from './components/ToothChart.svelte';
 	import SideMenu from './components/SideMenu.svelte';
-	import {selectedTreatment, selectedTooth} from './components/stores/store.js';
-	import {treatmentHistories} from './components/stores/store.js';
+	import {selectedTreatment, selectedTooth,
+			toothStates} from './components/stores/store.js';
 	import {checkin, patient} from './components/stores/store.js';
-	import TreatmentHistories from './components/TreatmentHistories.svelte';
+	
+	import {getToothCodes} from './api/doctor-treatment-api.js';
+
+
+	import Tab, {Icon, Label} from '@smui/tab';
+  	import TabBar from '@smui/tab-bar';
+
+  	import Xrays from './components/Xrays.svelte';
+  	import Summary from './components/Summary.svelte';
+
 
 
 	$checkin = document.getElementById('checkin');
 	$patient = checkin.user;
 
-	$:{
-		if ($selectedTreatment)
-			console.log('selected treatment', $selectedTreatment);
-	}
-	$:console.log('selected tooth:', $selectedTooth);
+	  let iconTabs = [
+		    {
+		      icon: '',
+		      label: 'Chart'
+		    },
+		    {
+		      icon: '',
+		      label: 'Тэмдэглэл'
+		    },
+		    {
+		      icon: '',
+		      label: 'x-rays'
+		    }
+	];
 
-	let showTreatmentHistories = false;
+	let toothCodes = getToothCodes();
+    // initial states
+    for (let i=0; i<toothCodes.length; i++){
+        let state = {
+            code: toothCodes[i],
+            active: true,
+            treatments: [null],
+            value: 0,
+            decayLevel: 0,
+            toothTypeId: 0
+        }
+        $toothStates[toothCodes[i]] = state;
+    }
+    $toothStates = $toothStates;
 
-	const handleBook = (event) => {
-		showTreatmentHistories = true;
-		console.log('show histories');
-		console.log(showTreatmentHistories);
-	}
+	let activeTab = iconTabs[0];
 
+	// window.onbeforeunload = function(event)
+ //    {
+ //        return confirm("Confirm refresh");
+ //    };
 </script>
 
-<div class="row">
-    <ToothChart>
-		<div slot="topleft" class="glyph" data-toggle="modal" data-target="#allNotesModal">
-            <div on:click={()=>handleBook} class="glyph-icon simple-icon-notebook" ></div>
-        </div>
-    </ToothChart>
+<TabBar bind:active={activeTab} tabs={iconTabs} let:tab>
+  <Tab {tab}>
+    <Icon class="material-icons">{tab.icon}</Icon>
+    <Label>{tab.label}</Label>
+  </Tab>
+</TabBar>
 
-    <SideMenu />
+{#if activeTab == iconTabs[0]}
+	<div class="row">
+	    <ToothChart />
+	    <SideMenu />
+	</div>
 
-    <TreatmentHistories 
-    	treatmentHistories={$treatmentHistories}
-    	bind:show={showTreatmentHistories}/>
-</div>
+{:else if activeTab == iconTabs[1]}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<Summary />
+				</div>
+			</div>
+		</div>
+	</div>
+{:else if activeTab == iconTabs[2]}
+	<div class="row">
+		<Xrays />
+	</div>
+{/if}
 
 <style>
 

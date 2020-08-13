@@ -122,7 +122,7 @@
                 <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="name">{{$user->name}}</span>
                     <span>
-                        <img alt="Profile Picture" src="/img/staffs/{{$user->profile_pic}}" />
+                        <img alt="Profile Picture" src="{{$user->profile_pic}}" />
                     </span>
                 </button>
 

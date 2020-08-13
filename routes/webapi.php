@@ -67,11 +67,11 @@ Route::group([ 'middleware' => 'doctor',
     Route::post('treatments-selections', 'TreatmentSelectionController@index');
     Route::get('treatments-selections/{id}', 'TreatmentSelectionController@show');
     
-    Route::post('user-treatments', 'UserTreatmentController@index');
-    Route::get('user-treatments/{id}', 'UserTreatmentController@show');
-    Route::post('user-treatments/create', 'UserTreatmentController@store');
-    Route::put('user-treatments/update', 'UserTreatmentController@update');
-    Route::delete('user-treatments/delete/{id}', 'UserTreatmentController@destroy');
+    Route::post('user-treatment', 'UserTreatmentController@index');
+    Route::get('user-treatment/{id}', 'UserTreatmentController@show');
+    Route::post('user-treatment/create', 'UserTreatmentController@store');
+    Route::put('user-treatment/update', 'UserTreatmentController@update');
+    Route::delete('user-treatment/delete/{id}', 'UserTreatmentController@destroy');
 
     Route::post('user-tooth', 'UserToothController@index');
     Route::get('user-tooth/{id}', 'UserToothController@show');

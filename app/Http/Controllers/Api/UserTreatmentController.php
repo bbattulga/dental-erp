@@ -31,10 +31,6 @@ class UserTreatmentController extends Controller
 	}
 
 	public function store(Request $request){
-		$validatedData = $request->validate([
-            'user_id' => 'required|integer',
-            'role_id' => 'required|integer',
-            ]);
 		$user_treatment = UserTreatments::create($request->all());
 		return $user_treatment->id;
 	}

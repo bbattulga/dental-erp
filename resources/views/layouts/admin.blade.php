@@ -118,7 +118,7 @@
                     <span class="name">{{$user->name}}</span>
                     <span>
                         <img alt="Profile Picture" 
-                        src="/img/staffs/{{$user->profile_pic}}" />
+                        src="{{$user->profile_pic}}" />
                     </span>
                 </button>
 

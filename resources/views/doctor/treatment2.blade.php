@@ -32,6 +32,10 @@
         color: gray;
     }
 
+    .invalid{
+        border: 1px solid red;
+    }
+
     polygon {
         margin: auto;
         display: block;

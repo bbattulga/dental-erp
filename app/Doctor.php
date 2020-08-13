@@ -25,4 +25,8 @@ class Doctor extends User
     				->where('user_id', $this->id)
     				->first();
     }
+
+    public function shifts(){
+        return $this->hasMany('App\Shift', 'user_id', 'id');
+    }
 }

@@ -116,7 +116,7 @@
                     aria-expanded="false">
                     <span class="name">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
                     <span>
-                        <img alt="Profile Picture" src="/img/staffs/{{\Illuminate\Support\Facades\Auth::user()->profile_pic}}" />
+                        <img alt="Profile Picture" src="{{\Illuminate\Support\Facades\Auth::user()->profile_pic}}" />
                     </span>
                 </button>
 

@@ -20,8 +20,8 @@ class AdminTransactionController extends Controller
         $transactions = Transaction::all()->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->sortByDesc('id');
         $roles = UserRole::all();
         $types = OutcomeCategory::all();
-        $start_date = strtotime('first day of this month');
-        $end_date = strtotime('Today');
+        $start_date = Date('Y-m-01');
+        $end_date = Date('Y-m-d');
         return view('admin.transaction', compact('transactions', 'roles', 'start_date', 'end_date', 'types'));
     }
     

@@ -208,7 +208,13 @@
 
                         @elseif($user->role->role_id == 3)
 
-                            @foreach($checkins->where('state','>=', 3) as $check_in)
+                            @if ($user->shifts)
+                            @foreach($user->shifts as $shift)
+
+                            @php
+                                $checkins = $shift->checkins;
+                            @endphp
+                                @foreach($checkins as $checkin)
                                 <?php $users++;?>
                                 <div class="col-md-12">
 
@@ -251,7 +257,6 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
-
                                                 </tbody>
                                             </table>
                                             @if(!empty($check_in->user_promotion))
@@ -267,7 +272,9 @@
                                     </div>
                                 </div>
                                 <br>
+                                @endforeach
                             @endforeach
+                            @endif
                         @else
 
                     @endif

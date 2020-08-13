@@ -77,7 +77,8 @@ export const addUserTreatment = (userTreatment) => {
 export const deleteUserTreatment = (userTreatmentId) => {
 
 	let promise = new Promise((resolve, reject)=>{
-		let success = () => resolve(fakeId++);
+		//let success = () => resolve(fakeId++);
+		let success = () => resolve(null);
 		let fail = () => alert('failed to delete usertreatment');
 		setTimeout(success, 0);
 	});

@@ -30,6 +30,7 @@
 
     let flags = [];
     $:{
+        let ts = $toothStates;
         flags = toBinList($toothStates[toothCode].value);
     }
 

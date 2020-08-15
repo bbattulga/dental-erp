@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+export const finishTreatment = (data) => {
+	return axios.put('/api/user-treatment/finish', data);
+}
+
 const range = (a, b) => {
     let list = [];
     for (let i = a; i <= b; i++) {
@@ -18,7 +22,7 @@ export const getToothCodes = () => {
 	return toothCodes;
 }
 
-export const getTreatments = () => {
+export const fetchTreatments = () => {
 	return axios.post('/api/treatments');
 }
 
@@ -62,25 +66,41 @@ export const getTreatmentImgSrc = (toothCode, treatmentId) => {
 
 	note that toothId is requred in case of single treatments
 */
-let fakeId = 1;
 export const addUserTreatment = (userTreatment) => {
+	return axios.post('/api/user-treatment/create', userTreatment);
+}
 
-	let promise = new Promise((resolve, reject)=>{
-		// ajax to store...
-		let success = () => resolve(fakeId++);
-		let fail = () => reject('user treatment rejected');
-		setTimeout(success, 0);
-	});
-	return promise;
+export const fetchUserTreatments = (userId) => {
+	let data = {
+		user_id: userId
+	}
+	return axios.post('/api/user-treatment/query', data);
 }
 
 export const deleteUserTreatment = (userTreatmentId) => {
 
-	let promise = new Promise((resolve, reject)=>{
-		//let success = () => resolve(fakeId++);
-		let success = () => resolve(null);
-		let fail = () => alert('failed to delete usertreatment');
-		setTimeout(success, 0);
-	});
-	return promise;
+	if (typeof userTreatmentId !=='number'){
+		console.log('warning: ', userTreatmentId, 'is not a id for treatment history');
+		return new Promise((resolve, reject) => resolve(1)); // says just delete that
+	}
+	return axios.delete(`/api/user-treatment/delete/${userTreatmentId}`);
+}
+
+export const saveNote = (data) => {
+	return axios.put('/api/user-treatment/update', data);
+}
+
+export const fetchXrays = (userId) => {
+	let data = {
+		user_id: userId
+	}
+	return axios.post('/api/xray', data);
+}
+
+export const deleteImage = (imageId) => {
+	return axios.delete(`/api/xray/delete/${imageId}`);
+}
+
+export const uploadImage = (data) => {
+	return axios.post('/api/xray/create', data);
 }

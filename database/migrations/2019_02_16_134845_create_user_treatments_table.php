@@ -14,15 +14,14 @@ class CreateUserTreatmentsTable extends Migration
     public function up()
     {
         Schema::create('user_treatments', function (Blueprint $table) {
+
             $table->increments('id');
 
             $table->index('user_id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-
-            $table->index('checkin_id');
+            
             $table->integer('checkin_id')->unsigned();
-            $table->foreign('checkin_id')->references('id')->on('check_ins');
 
             $table->index('treatment_id');
             $table->integer('treatment_id')->unsigned();

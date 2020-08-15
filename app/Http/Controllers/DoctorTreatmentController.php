@@ -29,7 +29,7 @@ class DoctorTreatmentController extends Controller
     }
     //
     public function index($checkin_id) {
-        $checkin = CheckIn::find($checkin_id);
+        $checkin = CheckIn::with('user')->where('id', $checkin_id)->first();
         if($checkin->state <= 1) {
             $checkin_all = CheckIn::where('user_id', $checkin->user_id)->orderBy('id', 'DESC')->get();
             $category = 1;
@@ -48,12 +48,8 @@ class DoctorTreatmentController extends Controller
             ]);
 
             $symptoms = Symptom::where('user_id', $checkin->user_id)->get();
-            return view('doctor.treatment',
-                    compact('checkin', 'treatments','user_treatments', 
-                            'checkin_all', 'nurses', 'category', 'treatmentCategories',
-                            'tooth_types',
-                            'user_tooths',
-                            'symptoms'));
+            return view('doctor.treatment2',
+                    compact('checkin'));
         } else {
             return redirect('404');
         }

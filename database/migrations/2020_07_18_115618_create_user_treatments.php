@@ -20,9 +20,12 @@ class CreateUserTreatments extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->index('checkin_id');
+            // checkin_id==0 || checkin_id==null is existing treatment
             $table->integer('checkin_id')->unsigned();
-            $table->foreign('checkin_id')->references('id')->on('check_ins');
+            if (env('DB_CONNECTION') !== 'sqlite'){
+                $table->index('checkin_id');
+                $table->foreign('checkin_id')->references('id')->on('check_ins');
+            }
 
             $table->index('treatment_id');
             $table->integer('treatment_id')->unsigned();

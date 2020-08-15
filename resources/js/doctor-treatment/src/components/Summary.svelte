@@ -24,15 +24,17 @@
                 	<textarea>
                         {th.symptom}
                     </textarea>-->
-                    <Textfield textarea fullwidth bind:value={th.symptom}
-                        input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea"/>
+                   <!--  <Textfield textarea fullwidth bind:value={th.symptom}
+                        input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea"/> -->
+                    <div>{th.symptom}</div>
                 </td>
                 <td>
                 	<!--
                 	<textarea>
                         {th.diagnosis}
                     </textarea> -->
-                    <Textfield textarea fullwidth bind:value={th.diagnosis} input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea" />
+                   <!--  <Textfield textarea fullwidth bind:value={th.diagnosis} input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea" /> -->
+                   <div>{th.diagnosis}</div>
                 </td>
                 <td>
                     <div>
@@ -40,16 +42,22 @@
                     </div>
                     <div>
                         {#if th.treatment.id == 1}
-                            <b>{th.tooth_type_id == 1? 'сүүн шүд': ''}</b><br>
+                            {#if th.tooth_type_id == 1}
+                                <b>сүүн шүд</b><br>
+                            {/if}
                             <b>цоорлын зэрэг - {th.decay_level}</b>
                         {/if}
                     </div>
                 </td>
                 <td>
-                    <div>{th.price? th.price:0}₮</div>
+                    {#if th.checkin_id == 0}
+                        <div>Өөр эмнэлэгт хийлгэсэн эмчилгээ</div>
+                    {:else}
+                        <div>{th.price? th.price:0}₮</div>
+                    {/if}
                 </td>
                 <td>
-                    <div>{th.created_at}</div>
+                    <div>{new moment(th.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
                 </td>
             </tr>
         {/each}
@@ -60,6 +68,7 @@
 
     import {treatmentHistories} from './stores/store.js';
     import Textfield from '@smui/textfield';
+    import moment from 'moment';
 
     const setPointer = (id) => {
       var txtarea = document.getElementById(id);

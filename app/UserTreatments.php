@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class UserTreatments extends Model
 {
     //
-    protected $fillable = ['user_id','treatment_id','tooth_id','value','checkin_id','treatment_selection_id','price', 'decay_level', 'tooth_type_id', 'note_id'];
+    protected $fillable = ['user_id','treatment_id','tooth_id','value','checkin_id','treatment_selection_id','price', 'decay_level', 'tooth_type_id', 'note_id',
+        'created_at'];
 
     protected $table = 'user_treatments';
+    
+    protected $appends = ['symptom', 'diagnosis'];
     
  	public function user(){
     	return $this->belongsTo('App\User', 'user_id', 'id');
@@ -30,5 +33,16 @@ class UserTreatments extends Model
     }
     public function treatment_note(){
         return $this->hasOne('App\TreatmentNote','user_treatment_id', 'id');
+    }
+
+    public function getSymptomAttribute(){
+        if ($this->treatment_note)
+            return $this->treatment_note->symptom;
+        return '';
+    }
+    public function getDiagnosisAttribute(){
+        if ($this->treatment_note)
+            return $this->treatment_note->diagnosis;
+        return '';
     }
 }

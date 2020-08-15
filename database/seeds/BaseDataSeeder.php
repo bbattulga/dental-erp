@@ -61,7 +61,7 @@ class BaseDataSeeder extends Seeder
             ['id' => 5, 'name'=>'Шүд суулгах', 'selection_type'=>1, 'category'=>2, 'price'=>200000, 'limit'=>3000000],
             ['id' => 6, 'name'=>'Паалан', 'selection_type'=>1, 'category'=>1, 'price'=>200000, 'limit'=>2500000],
             ['id' => 7, 'name'=>'Post', 'selection_type'=>1, 'category'=>1, 'price'=>20000, 'limit'=>200000],
-            ['id' => 8, 'name'=>'Post cast', 'selection_type'=>0, 'category'=>2, 'price'=>200000, 'limit'=>3000000],
+            ['id' => 8, 'name'=>'Post cast', 'selection_type'=>1, 'category'=>2, 'price'=>200000, 'limit'=>3000000],
             ['id' => 9, 'name'=>'Сувгийн эмчилгээ', 'selection_type'=>1, 'category'=>1, 'price'=>50000, 'limit'=>150000],
             ['id' => 24, 'name'=>'Шүд цайруулах', 'selection_type'=>0, 'category'=>1, 'price'=>100000, 'limit'=>500000],
         ];

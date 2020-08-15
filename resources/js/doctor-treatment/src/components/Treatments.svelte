@@ -10,7 +10,7 @@
 </div>
 
 <div id="treatmentsContainer" class="card-body" on:click={onOpen}>
-    {#each treatments as treatment}
+    {#each $treatments as treatment}
 
     {#if searchVal.length == 0 || isMatch(searchVal, treatment.name)}
         <button 
@@ -50,23 +50,13 @@
 
 <script>
 import List, {Item, Text} from '@smui/list';
-import {getTreatments} from '../api/doctor-treatment-api.js';
-import {selectedTreatment} from './stores/store.js';
+import {selectedTreatment, treatments} from './stores/store.js';
 import Dialog, {Title, Content, Actions} from '@smui/dialog';
 import Button, {Label} from '@smui/button';
 import {checkin, treatmentHistories} from './stores/store.js';
 
-
 let allToothDialog;
 let clickedTreatment;
-let treatments = [];
-getTreatments().then(response=>{
-    treatments = response.data;
-}).catch(err=>{
-    console.log('error when fetching treatments');
-    console.log(err);
-    alert('page reload хийнэ үү');
-});
 
 const handleClickTreatment = (treatment) => {
     clickedTreatment = treatment;

@@ -19,6 +19,18 @@
         width: 100%;
     }
 
+    .planned{
+        border-left: thick solid brown;
+    }
+
+    .existing{
+        border-left: thick solid orange;
+    }
+
+    .now{
+        border-left: thick solid #2a7eeb;
+    }
+
     .invisible{
         opacity: 0;
     }

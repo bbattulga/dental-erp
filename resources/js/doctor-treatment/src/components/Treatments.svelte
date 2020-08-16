@@ -53,7 +53,13 @@ import List, {Item, Text} from '@smui/list';
 import {selectedTreatment, treatments} from './stores/store.js';
 import Dialog, {Title, Content, Actions} from '@smui/dialog';
 import Button, {Label} from '@smui/button';
-import {checkin, treatmentHistories} from './stores/store.js';
+import {checkin, 
+        treatmentHistories,
+        dateIntervals,
+        entryMode} from './stores/store.js';
+
+import moment from 'moment';
+
 
 let allToothDialog;
 let clickedTreatment;
@@ -78,8 +84,8 @@ const handleClickTreatment = (treatment) => {
 
 const handleAddTreatment = () => {
     let userTreatment = {
-            id: null,
-            checkin_id: $checkin.id,
+            id: {},
+            checkin_id: $entryMode.id,
             user_id: $checkin.user_id,
             treatment_id: clickedTreatment.id,
             treatment: clickedTreatment,
@@ -93,10 +99,11 @@ const handleAddTreatment = () => {
             value: 0,
             decay_level: 0,
             tooth_type_id: 0,
-            created_at: new Date().toLocaleDateString('en-CA')
+            created_at: new moment().format('YYYY-MM-DD HH:mm:ss')
         }
 
-    $treatmentHistories = [...$treatmentHistories, userTreatment];
+    $dateIntervals = [...$dateIntervals, userTreatment.created_at];
+    $treatmentHistories = [userTreatment, ...$treatmentHistories];
 }
 
 let searchVal = '';

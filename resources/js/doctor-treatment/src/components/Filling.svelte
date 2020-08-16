@@ -35,3 +35,27 @@
     }
 
 </script>
+
+<style>
+
+.lombo {
+        fill: #138496;
+        animation-duration: 0.3s;
+    }
+    
+polygon {
+    margin: auto;
+    display: block;
+    stroke-width: 1;
+    stroke: darkgrey;
+    fill: transparent;
+}
+
+circle {
+    stroke-width: 1;
+    stroke: darkgrey;
+    fill: white;
+}
+
+
+</style>

@@ -2,6 +2,9 @@
 
 	import ToothChart from './components/ToothChart.svelte';
 	import SideMenu from './components/SideMenu.svelte';
+	import Xrays from './components/Xrays.svelte';
+  	import Summary from './components/Summary.svelte';
+
 	import {selectedTreatment, 
 			selectedTooth,
 			toothStates,
@@ -19,8 +22,7 @@
 	import Tab, {Icon, Label} from '@smui/tab';
   	import TabBar from '@smui/tab-bar';
 
-  	import Xrays from './components/Xrays.svelte';
-  	import Summary from './components/Summary.svelte';
+  	import {fade} from 'svelte/transition';
 
   	import moment from 'moment';
 
@@ -117,13 +119,13 @@
 </div>
 
 {#if activeTab == iconTabs[0]}
-	<div class="row">
+	<div class="row" transition:fade>
 	    <ToothChart />
 	    <SideMenu />
 	</div>
 
 {:else if activeTab == iconTabs[1]}
-	<div class="row">
+	<div class="row" transition:fade>
 		<div class="col-md-12">
 			<div class="card">
 				<div class="card-body">
@@ -133,7 +135,7 @@
 		</div>
 	</div>
 {:else if activeTab == iconTabs[2]}
-	<div class="row">
+	<div class="row" transition:fade>
 		<Xrays />
 	</div>
 {/if}

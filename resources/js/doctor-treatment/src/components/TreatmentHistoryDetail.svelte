@@ -13,6 +13,7 @@
 
 <script>
 
+	import moment from 'moment';
 	export let treatmentHistory;
 
 </script>

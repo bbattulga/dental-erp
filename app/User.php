@@ -57,6 +57,10 @@ class User extends Authenticatable
     return $this->hasMany('App\UserTreatments', 'user_id', 'id');
   }
 
+  // public function paintings(){
+  //   return $this->hasMany('App\Painting', 'user_id', 'id');
+  // }
+
   public function getMaleAttribute(){
     return $this->sex == 0;
   }

@@ -1,10 +1,11 @@
 
+{#if show}
 <div id="decayModal"
     bind:this={lm} class="modal text-center" tabindex="-1" role="dialog"
     class:show
-    on:click|self={close}
-    transition:fade={{duration: 200}}>
-    <div class="modal-dialog" role="document">
+    on:click|self={close} style="display: block; background: rgba(0, 0, 0, 0.4);"
+    transition:fade>
+    <div class="modal-dialog" role="document" transition:fly={{y:-100, duration: 300}}>
         <div class="modal-content">
             <div class="modal-body">
         <br>
@@ -51,8 +52,8 @@
         <br>
         <h5 style="color: darkgrey"><b>Сүүн шүд</b></h5>
         <label class="switch">
-            <input type="checkbox" on:change={()=>isMilky=(isMilky+1)%2}>
-            <span class="slider round"></span>
+            <!-- <input type="checkbox" on:change={()=>isMilky=(isMilky+1)%2}> -->
+            <Switch on:change={()=>isMilky=(isMilky+1)%2} />
         </label>
         <br>
         <br>
@@ -61,9 +62,11 @@
 </div>
 </div>
 </div>
+{/if}
 
 <script>
 
+    import Switch from '@smui/switch';
     import Dialog, {Title, Content, Actions} from '@smui/dialog';
     import Button, {Label} from '@smui/button';
     import {fly,fade} from 'svelte/transition';
@@ -84,18 +87,6 @@
     $:console.log('decay modal ', show);
     $:console.log('is milky', isMilky);
     $:console.log('decay level', decayLevel);
-
-    $:{
-        if (lm){
-
-            if(show){
-                lm.style.display = 'block';
-                lm.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
-            }else{
-                lm.style.display = 'none';
-            }
-        }
-    }
 
     const close = (event) => {
         value = 0;
@@ -130,11 +121,15 @@
             value += val;
         }
        $toothStates[$selectedTooth].value = value;
+       console.log(value);
        $toothStates = $toothStates;
     }
 
     const handleSubmit  = () => {
-
+        if (value == 0){
+            alert('Ломбоо сонгоно уу');
+            return;
+        }
         let detail = {
             toothCode: $selectedTooth,
             decayLevel,
@@ -151,9 +146,23 @@
 
 <style>
 
-    .fill{
+    .lombo {
         fill: #138496;
         animation-duration: 0.3s;
+    }
+
+    polygon {
+        margin: auto;
+        display: block;
+        stroke-width: 1;
+        stroke: darkgrey;
+        fill: transparent;
+    }
+
+    circle {
+        stroke-width: 1;
+        stroke: darkgrey;
+        fill: white;
     }
 
 </style>

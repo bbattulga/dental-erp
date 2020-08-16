@@ -1,4 +1,4 @@
-<table class="table table-bordered">
+<table id="summary-table" class="table table-bordered">
     <thead style="background-color: #2a7eeb; color: white; position: sticky; top:0;">
         <tr>
             <td>#</td>
@@ -17,7 +17,7 @@
             		<div>{i+1}</div>
             	</td>
                 <td>
-                    <div>{th.tooth_id}</div>
+                    <div>{th.tooth_id == 0? 'Бүх шүд': th.tooth_id}</div>
                 </td>
                 <td>
                 	<!--
@@ -69,6 +69,13 @@
     import {treatmentHistories} from './stores/store.js';
     import Textfield from '@smui/textfield';
     import moment from 'moment';
+    import JQuery from 'jquery';
+    import dt from 'datatables.net';
+    import dtButtons from 'datatables.net-buttons';
+
+    import colVis from 'datatables.net-buttons/js/buttons.colVis';
+    import html5Btn from 'datatables.net-buttons/js/buttons.html5';
+    import printBtn from 'datatables.net-buttons/js/buttons.print';
 
     const setPointer = (id) => {
       var txtarea = document.getElementById(id);
@@ -94,5 +101,51 @@
 
         $treatmentHistories[index].diagnosis = el.value;
     }
+
+    // run script
+    JQuery.noConflict();
+
+    dt(window, JQuery);
+    dtButtons(window, JQuery);
+    colVis(window, JQuery);
+    html5Btn(window, JQuery);
+    printBtn(window, JQuery);
+
+    JQuery(document).ready(()=>{
+        let table = JQuery('#summary-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    className: 'btn btn-secondary'
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-secondary'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-secondary'
+                },
+                {
+                  extend: 'pdf',
+                  className: 'btn btn-secondary',
+                  customize: function (doc) {
+                    doc.content[1].table.widths = 
+                        Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                  }
+                }, 
+            ],
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.15/i18n/Mongolian.json'
+            }
+        });
+
+        table.buttons().container()
+                .appendTo('#summary-table_wrapper .col-md-6:eq(0)');
+       //  table.buttons().container().addClass('btn-group');
+        // JQuery('.dt-buttons').addClass('btn-group');
+        // JQuery('.dt-button').addClass('btn-secondary');
+    });
 
 </script>

@@ -1,4 +1,6 @@
 import {writable} from 'svelte/store';
+import moment from 'moment';
+
 
 export const selectedTreatment = writable(0);
 export const selectedTooth = writable(0);
@@ -14,5 +16,12 @@ export const selectedTooths = writable([]);
 
 export const decayChartValue = writable(0);
 
-export const dateInterval = writable([new Date(), new Date()]);
+export const dateInterval = writable([new moment().format('YYYY-MM-DD'), new moment().format('YYYY-MM-DD')]);
 export const dateIntervals = writable([]);
+
+export const paintHistory = writable([]);
+export const paintState = writable({
+		drawing: false,
+		color: {r:10, g:11, b:12},
+		weight: 10
+	});

@@ -9,9 +9,8 @@
 	class:existing={th.checkin_id == 0}>
 
 	{#if th.created_at <= $dateInterval[1]}
-	<div class="glyph" style="display: flex; justify-content: flex-end;"
-		on:click|stopPropagation={()=>handleDelete(th)}>
-        <div class="glyph-icon iconsmind-Remove"></div>
+	<div class="glyph" style="display: flex; justify-content: flex-end;">
+        <div class="glyph-icon iconsmind-Remove" on:click|stopPropagation={()=>handleDelete(th)}></div>
     </div>
     <b>Бүх шүд - {th.treatment.name}</b>
     <div class="row">
@@ -73,7 +72,7 @@
 						Шинж тэмдэг
 					</span>
 				</div> -->
-				<Textfield textarea fullwidth bind:value={symptom} label="" input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea"/>
+				<Textfield autofocus={false} textarea fullwidth bind:value={symptom} label="" input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea"/>
 			</div>
 			<div class="mb-3"></div>
 			<h4>Онош</h4>
@@ -84,10 +83,8 @@
 						Онош
 					</span>
 				</div> -->
-				<Textfield textarea fullwidth bind:value={diagnosis} label="" input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea" />
+				<Textfield autofocus={false} textarea fullwidth bind:value={diagnosis} label="" input$aria-controls="helper-text-textarea" input$aria-describedby="helper-text-textarea" />
 			</div>
-		{:else if treatmentHistory.checkin_id == 0}
-			<h4>Өөр эмнэлэгт хийлгэсэн эмчилгээ</h4>
 		{/if}
 	</Content>
 
@@ -236,4 +233,16 @@
 		top: 3;
 		right: 3;
 	}
+
+	.planned{
+        border-left: thick solid brown;
+    }
+
+    .existing{
+        border-left: thick solid orange;
+    }
+
+    .now{
+        border-left: thick solid #2a7eeb;
+    }
 </style>

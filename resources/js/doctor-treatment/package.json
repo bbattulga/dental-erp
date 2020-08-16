@@ -19,12 +19,18 @@
     "@smui/radio": "^1.0.0",
     "@smui/slider": "^1.0.0",
     "@smui/snackbar": "^1.0.0",
+    "@smui/switch": "^1.0.0",
     "@smui/tab": "^1.0.0",
     "@smui/tab-bar": "^1.0.0",
     "@smui/textfield": "^1.0.0",
     "axios": "^0.19.2",
+    "datatables.net": "^1.10.21",
+    "datatables.net-buttons": "^1.6.3",
+    "datatables.net-searchpanes": "^1.1.1",
     "form-data": "^3.0.0",
     "jquery": "^3.5.1",
+    "jquery-zoom": "^1.7.21",
+    "jquery.magnify": "^1.5.1",
     "moment": "^2.27.0",
     "node-sass": "^4.14.1",
     "p5": "^1.1.9",
@@ -36,7 +42,9 @@
     "rollup-plugin-terser": "^5.1.2",
     "sass": "^1.26.10",
     "svelte": "^3.0.0",
-    "svelte-dropzone": "^1.0.6"
+    "svelte-color-picker": "^1.0.7",
+    "svelte-dropzone": "^1.0.6",
+    "svelte-preprocess": "^4.0.12"
   },
   "dependencies": {
     "sirv-cli": "^1.0.0"

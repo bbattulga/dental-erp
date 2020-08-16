@@ -1,15 +1,9 @@
 <div class="col-md-9">
     <div class="card">
 
-        <!--
-            <div style="background-color: white; color: black; 
-                display: inline-block; font-size: 2.3em;
-                position: absolute; top: 3px; right: 3px; cursor: pointer;">
-                <div class="glyph">
-                    <div class="glyph-icon simple-icon-pencil"></div>
-                </div>
-            </div>
-        -->
+        <Paint />
+                    
+        
         <div class="card-body mb-2">
             <div class="table-responsive">
                 <table class="table text-center">
@@ -85,6 +79,10 @@
             <Slider bind:value={svalue}
                 min={0} max={$dateIntervals.length>0?$dateIntervals.length-1:0} step={1} discrete displayMarkers />
         </div>
+
+        <div class="card-footer">
+            <slot name="footer"></slot>
+        </div>
     </div>
 </div><!-- Tooth images ending-->
 <DecayChart on:submit={handleAddTreatment} bind:show={showDecayChart} />
@@ -112,19 +110,21 @@
     import Button, {Label} from '@smui/button';
     import Tooth from './Tooth.svelte';
     import Filling from './Filling.svelte';
+    import Paint from './Paint.svelte';
+
     import {toothStates, 
             selectedTooth, 
             selectedTooths,
             selectedTreatment,
             entryMode,
             dateInterval,
-            dateIntervals} from './stores/store.js';
+            dateIntervals,
+            paintState} from './stores/store.js';
 
     import { addUserTreatment } from '../api/doctor-treatment-api.js';
 
     import {treatmentHistories} from './stores/store.js';
     import {checkin, patient} from './stores/store.js';
-    import TreatmentNoteModal from './TreatmentNoteModal.svelte';
     import DecayChart from './DecayChart.svelte';
     import {onMount, onDestroy} from 'svelte';
 
@@ -138,6 +138,7 @@
     let allToothDialog;
 
     let svalue = -1;
+
     $:{
         let intervals = $dateIntervals;
         console.log('dateIntervals changed');
@@ -160,7 +161,7 @@
     }
     $:{
         let index = svalue;
-        $dateInterval[1] = $dateIntervals[index];
+        $dateInterval[1] = $dateIntervals[index]?$dateIntervals[index]:new moment().format('YYYY-MM-DD');
     }
 
     const datediff = (first, second) => {
@@ -170,6 +171,10 @@
     }
 
     const handleClickTooth = (event) => {
+
+        if ($paintState.drawing)
+            return;
+
         let {treatmentId, toothCode} = event.detail;
         $selectedTooth = toothCode;
         let state = $toothStates[toothCode];
@@ -277,9 +282,6 @@
         $treatmentHistories = [userTreatment, ...$treatmentHistories];
     }
 
-    const handleDeleteTreatment = () => {
-
-    }
     const range = (a, b) => {
 
         let list = [];

@@ -31,15 +31,8 @@
                 <option value={$checkin}>одоо хийх эмчилгээ</option>
                 <option value={existing}>өөр эмнэлэгт хийгдсэн эмчилгээ</option>
             </select>
-        <!-- {:else}
-            <div>   
-                {#each options as option}
-                  <FormField>
-                    <Checkbox bind:group={selected} value={option.name} disabled={option.disabled} />
-                    <span slot="label">{option.name}{option.disabled ? ' (disabled)' : ''}</span>
-                  </FormField>
-                {/each}
-              </div> -->
+        {:else}
+            <PaintTools />
         {/if}
         <br>
         <button type="button" class="btn btn-primary btn-block" on:click={()=>finishDialog.open()}>ДУУСГАХ</button>
@@ -63,11 +56,13 @@
     import Button, {Label} from '@smui/button';
     import TreatmentHistoryList from './TreatmentHistoryList.svelte';
     import Treatments from './Treatments.svelte';
+    import PaintTools from './PaintTools.svelte';
     import {selectedTooths, 
             toothStates,
             selectedTreatment,
             entryMode,
-            checkin} from './stores/store.js';
+            checkin,
+            paintState} from './stores/store.js';
     import Finish from './Finish.svelte';
 
     import FormField from '@smui/form-field';

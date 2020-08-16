@@ -9,3 +9,12 @@ $mdc-theme-background: #fff;
 $mdc-theme-surface: #fff;
 
 $mdc-theme-error: $material-color-red-900;
+
+
+
+.mdc-switch.mdc-switch--checked .mdc-switch__thumb, .mdc-switch.mdc-switch--checked .mdc-switch__track {
+    background-color: #2a7eeb;
+    background-color: var(--mdc-theme-primary,#2a7eeb);
+    border-color: #2a7eeb;
+    border-color: var(--mdc-theme-primary,#2a7eeb);
+}

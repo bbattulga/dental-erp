@@ -23,6 +23,11 @@
 		lastTreatment = null;
 		let v = 0;
 		for (let i=0; i<treatments.length; i++){
+
+			// escape lombo for now
+			if (treatments[i].treatment.id == 1)
+				continue;
+
 			if (treatments[i].created_at <= $dateInterval[1]){
 				lastTreatment = treatments[i].treatment;
 				break;
@@ -47,7 +52,7 @@
 
 <img on:click={handleClick} src={imgSrc}
 	class:active
-	class:tooth={!active}>
+	class:disabled={!active}>
 
 
 <style>

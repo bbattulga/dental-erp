@@ -10,7 +10,7 @@
 					<div class="input-group mb-3">
 						<div class="input-group-prepend">
 							<span class="input-group-text">
-								Зураг сонгох
+								Зураг оруулах
 							</span>
 						</div>
 	                    <div class="custom-file input-group-text">
@@ -26,7 +26,7 @@
 	</div>
 
       {#each xrays as xray (xray.id)}
-      <div class="card mb-3">
+      <div class="card mb-3" style="overflow: auto;">
 		<div style="position: absolute;
 			right: 3px;
 			cursor: pointer;
@@ -35,7 +35,8 @@
 		class="glyph-icon simple-icon-close"></div>
 
       	<div class="card-body">
-	          <img src="/storage/img/xray/{xray.path}">
+
+	          <img id="photo-{xray.id}" src="/storage/img/xray/{xray.path}">
 	          <div>
 		          {new moment(xray.created_at).format('YYYY-MM-DD HH:mm:ss')}
 		      </div>

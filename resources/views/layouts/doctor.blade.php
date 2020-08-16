@@ -80,26 +80,25 @@
                     <button class="header-icon btn btn-empty" type="button" id="notificationButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="simple-icon-bell"></i>
-                        <span class="count">3</span>
+                        <span class="count">{{ $shift_today->appointments? $shift_today->appointments->count(): 0 }}</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right mt-3 scroll position-absolute"
                         id="notificationDropdown">
-
-                        <div class="d-flex flex-row mb-3 pb-3 border-bottom">
-                            @if ($shift_today)
-                                @foreach($shift_today->appointments as $appointment)
-                           <p class="font-weight-bold">{{$appointment->name}}</p>
-                            <div class="pl-3 pr-2">
-                                    <a href="#">
-                                        <p class="font-weight-small mb-1">цаг захиалсан байна</p>
-                                        <p class="text-muted mb-0 text-small">
-                                            {{$appointment->start}} - {{$appointment->end}}
-                                        </p>
-                                    </a>
-                            </div>
+                        @if ($shift_today)
+                            @foreach($shift_today->appointments as $appointment)
+                                <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                                   <p class="font-weight-bold">{{$appointment->name}}</p>
+                                    <div class="pl-3 pr-2">
+                                        <a href="#">
+                                            <p class="font-weight-small mb-1">цаг захиалсан байна</p>
+                                            <p class="text-muted mb-0 text-small">
+                                                {{$appointment->start}} - {{$appointment->end}}
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
                             @endforeach
-                            @endif
-                        </div>
+                        @endif
                     </div>
                 </div>
 

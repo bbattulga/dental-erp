@@ -84,7 +84,15 @@ class User extends Authenticatable
         if (!$lastpic){
             return '';
         }
-        $url = Storage::url('img/avatar/'.$lastpic->path);
+
+        if (env('APP_ENV') == "local") {
+          $url = Storage::url('img/avatar/'.$lastpic->path);
+        }else if (env('APP_ENV') == "prod"){
+          $disk = Storage::disk('gcs');
+          $url = $disk->url('public/img/avatar/'.$lastpic->path);
+        }
+
+
         return $url;
     }
 

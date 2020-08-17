@@ -58,7 +58,13 @@ class AdminStaffController extends Controller
         // update profile pic
         if ($image = $request->file(['image'])){
             $image_name = time().$image->getClientOriginalName();
-            Storage::putFileAs('public/img/avatar', $image, $image_name);
+
+            if (env('APP_ENV') == "local") {
+              Storage::putFileAs('public/img/avatar', $image, $image_name);
+            }else if (env('APP_ENV') == "prod"){
+              Storage::disk('gcs')->putFileAs('public/img/avatar', $image, $image_name);
+            }
+
             $user->photos()->create(['path'=>$image_name]);
         }
         if(!empty($request['password']))

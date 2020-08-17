@@ -57,7 +57,12 @@ class AdminController extends Controller
 
         if ($image = $request->file(['image'])){
             $image_name = time().$image->getClientOriginalName();
-            Storage::putFileAs('public/img/avatar', $image, $image_name);
+
+            if (env('APP_ENV') == "local") {
+              Storage::putFileAs('public/img/avatar', $image, $image_name);
+            }else if (env('APP_ENV') == "prod"){
+              Storage::disk('gcs')->putFileAs('public/img/avatar', $image, $image_name);
+            }
             $user->photos()->create(['path'=>$image_name]);
         }
         $role = UserRole::create(['user_id'=>$user->id, 'role_id'=>$request['role'],'state'=>1]);

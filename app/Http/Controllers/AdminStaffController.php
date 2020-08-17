@@ -64,7 +64,6 @@ class AdminStaffController extends Controller
             }else if (env('APP_ENV') == "prod"){
               Storage::disk('gcs')->putFileAs('public/img/avatar', $image, $image_name);
             }
-
             $user->photos()->create(['path'=>$image_name]);
         }
         if(!empty($request['password']))

@@ -1,8 +1,8 @@
 runtime: php72
 
 handlers:
-  - url: /admin
-    static_dir: public/admin
+  - url: /admin2
+    static_dir: public/admin2
 
   - url: /css
     static_dir: public/css

@@ -16,11 +16,14 @@ handlers:
   - url: /img
     static_dir: public/img
 
+  - url: /storage/img/avatar
+    static_dir: storage/app/public/img/avatar
+
+  - url: /storage/img/xray
+    static_dir: storage/app/public/img/xray
+
   - url: /storage
     static_dir: public/storage
-
-  - url: /storage/img
-    static_dir: storage/app/public/img
 
   - url: /plugin
     static_dir: public/plugin

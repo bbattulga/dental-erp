@@ -1,8 +1,8 @@
 runtime: php72
 
 handlers:
-  - url: /admin
-    static_dir: public/admin
+  - url: /admin2
+    static_dir: public/admin2
 
   - url: /css
     static_dir: public/css
@@ -15,6 +15,9 @@ handlers:
 
   - url: /img
     static_dir: public/img
+
+  - url: /storage
+    static_dir: public/storage
 
   - url: /plugin
     static_dir: public/plugin
@@ -31,7 +34,11 @@ handlers:
 env_variables:
   ## Put production environment variables here.
   TOOTH_IMG_DIR: img/toothImages/
-  DB_CONNECTION: sqlite
+  DB_CONNECTION: mysql
+  DB_DATABASE: dental
+  DB_USERNAME: mnkhod
+  DB_PASSWORD: 981014
+  DB_SOCKET: "/cloudsql/dental-285608:asia-east2:dental-db"
   APP_KEY: base64:yYt5/uLCMet3nFcgInwX7a8JrTEG6/QZgNQrOcpw5tY=
   APP_STORAGE: /tmp
   VIEW_COMPILED_PATH: /tmp

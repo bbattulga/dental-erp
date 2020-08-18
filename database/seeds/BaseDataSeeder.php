@@ -9,6 +9,8 @@ use App\Treatment;
 use App\TreatmentSelections;
 use App\ToothType;
 use App\Tooth;
+use App\Promotion;
+use App\Doctor;
 
 
 class BaseDataSeeder extends Seeder
@@ -28,7 +30,7 @@ class BaseDataSeeder extends Seeder
                     ['id'=>5, 'name' => 'admin']
                 ];
         foreach($roles as $role){
-            Roles::create($role);
+            Roles::firstOrCreate($role);
         }
 
         $shift_types = [
@@ -37,7 +39,7 @@ class BaseDataSeeder extends Seeder
                 ['id'=>3, 'name' => 'Бүтэн']
         ];
         foreach($shift_types as $st){
-            ShiftType::create($st);
+            ShiftType::firstOrCreate($st);
         }   
 
         $treatment_categories = [
@@ -47,12 +49,15 @@ class BaseDataSeeder extends Seeder
             ['id' => 4, 'name' =>  'Мэс засал'],
         ];
         foreach($treatment_categories as $tc){
-            TreatmentCategory::create($tc);
+            TreatmentCategory::firstOrCreate($tc);
         }
 
-        $this->call(ToothSeeder::class);
-        $this->call(PromotionSeeder::class);
-        $this->call(DoctorSeeder::class);
+        if (Tooth::all()->count() == 0)
+            $this->call(ToothSeeder::class);
+        if (Promotion::all()->count() == 0)
+            $this->call(PromotionSeeder::class);
+        if (Doctor::all()->count() == 0)
+            $this->call(DoctorSeeder::class);
 
         $treatments = [
             ['id' => 1, 'name'=>'Ломбо', 'selection_type'=>1, 'category'=>1, 'price'=>12000, 'limit'=>500000],
@@ -66,7 +71,7 @@ class BaseDataSeeder extends Seeder
             ['id' => 24, 'name'=>'Шүд цайруулах', 'selection_type'=>0, 'category'=>1, 'price'=>100000, 'limit'=>500000],
         ];
         foreach($treatments as $t){
-            Treatment::create($t);
+            Treatment::firstOrCreate($t);
         }
 
         $treatment_selections = [
@@ -79,7 +84,7 @@ class BaseDataSeeder extends Seeder
             ['id'=>7, 'treatment_id'=>8, 'name'=>'Энгийн', 'price'=>200000, 'limit'=>1000000],
         ];
         foreach($treatment_selections as $ts){
-            TreatmentSelections::create($ts);
+            TreatmentSelections::firstOrCreate($ts);
         }
 
         $tooth_types = [
@@ -88,7 +93,7 @@ class BaseDataSeeder extends Seeder
             ['id'=>3, 'name'=>'Байхгүй шүд'],
         ];
         foreach($tooth_types as $tt){
-            ToothType::create($tt);
+            ToothType::firstOrCreate($tt);
         }
     }
 }

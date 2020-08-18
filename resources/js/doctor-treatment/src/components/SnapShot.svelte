@@ -1,10 +1,5 @@
 
 
-<div bind:this={container} class="paint-container"
-	class:front={$paintState.drawing}
-	class:penone={!$paintState.drawing}>
-</div>
-
 <script>
 
 	import p5 from 'p5';
@@ -16,7 +11,7 @@
 
 	export let points = [];
 
-	let container;
+	export let container;
 	onMount(() => {
 
 		const drawPoint = (s, point) => {
@@ -27,7 +22,7 @@
 				s.stroke(s.color(0, 0, 0));
 			}else{
 				blendMode = s.BLEND;
-				s.stroke(s.color(0, 0, 0));
+				s.stroke(s.color($paintState.color.r, $paintState.color.g, $paintState.color.b));
 			}
 			s.blendMode(blendMode);
 			s.strokeWeight(point.weight);
@@ -49,32 +44,5 @@
 				}
 			}
 		}
-
-		const sketchInstance = new p5(sketch);
 	});
 </script>
-
-
-<style>
-
-	.paint-container{
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-	}
-
-	.penone{
-		pointer-events: none;
-	}
-	/*.behind{
-		z-index: -1;
-	}
-	*/
-
-	.front{
-		z-index: 1029;
-	}
-
-</style>

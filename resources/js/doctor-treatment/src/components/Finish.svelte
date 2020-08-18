@@ -62,8 +62,15 @@
     import IconButton from '@smui/icon-button';
     import TreatmentHistoryList from './TreatmentHistoryList.svelte';
     import Button, {Label} from '@smui/button';
-    import {treatmentHistories, checkin} from './stores/store.js';
-    import {addUserTreatment, finishTreatment} from '../api/doctor-treatment-api.js';
+    import {treatmentHistories, 
+            checkin,
+            patient,
+            points,
+            paintState} from './stores/store.js';
+
+    import {addUserTreatment, 
+            finishTreatment,
+            addPainting} from '../api/doctor-treatment-api.js';
     import axios from 'axios';
 
     import {fade} from 'svelte/transition';
@@ -93,7 +100,34 @@
     }
 
     const quit = () => {
-        window.location = '/doctor';
+      //  window.location = '/doctor';
+    }
+
+    const handleSavePainting = () => {
+        return new Promise((resolve, reject) => {
+            if (points.length == 0){
+                resolve(0);
+            }
+            // convert each points to some percent
+            // for (let i=0; i<$points.length; i++){
+            //     let point = $points[i];
+            //     point.x  = point.x*100/$paintState.canvasWidth;
+            //     point.y = point.y*100/$paintState.canvasHeight;
+            // }
+            let data = {
+                user_id: $patient.id,
+                content: $points
+            }
+            addPainting(data)
+                .then(response => {
+                    console.log('store paint response: ');
+                    console.log(response.data);
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
     }
 
     const handleFinish = () => {
@@ -102,31 +136,41 @@
     		return true;
     	}
         lastTotal = total;
-    	storeTreatments().then(axios.spread((...responses)=>{
-            console.log('storeTreatments response');
-            console.log(responses);
-            $treatmentHistories = $treatmentHistories;
-            resultSnackbar.open();
-            dialog.close();
-            let data = {
-                checkin_id: $checkin.id
-            }
-            finishTreatment(data)
-                .then(response => {
-                    if (response.data == 0){
+
+        handleSavePainting().then(response => {
+            return;
+            storeTreatments().then(axios.spread((...responses)=>{
+                console.log('storeTreatments response');
+                console.log(responses);
+                $treatmentHistories = $treatmentHistories;
+                resultSnackbar.open();
+                dialog.close();
+                let data = {
+                    checkin_id: $checkin.id
+                }
+                finishTreatment(data)
+                    .then(response => {
+                        if (response.data == 0){
+                            alert('Эмчилгээг дуусгахад алдаа гарлаа\nДахиж  оролдоно уу');
+                            console.log(err);
+                            return;
+                        }
+                        setTimeout(quit, 2000);
+                    })
+                    .catch(err => {
                         alert('Эмчилгээг дуусгахад алдаа гарлаа\nДахиж  оролдоно уу');
-                        console.log(err);
-                        return;
-                    }
-                    setTimeout(() => {quit()}, 2000);
-                })
-                .catch(err => {
-                    alert('Эмчилгээг дуусгахад алдаа гарлаа\nДахиж  оролдоно уу');
-                });
-        })).catch(err=>{
-            alert('Эмчилгээнүүдийг хадгалахад алдаа гарлаа\nPage reload хийнэ үү');
-            console.log(err);
+                    });
+            })).catch(err=>{
+                alert('Эмчилгээнүүдийг хадгалахад алдаа гарлаа\nPage reload хийнэ үү');
+                console.log(err);
+            })
         })
+        .catch(err => {
+            if (confirm('failed to save painting, want to skip?')){
+                $points = [];
+                handleFinish();
+            }
+        });
     }
 
     const storeTreatments = () => {

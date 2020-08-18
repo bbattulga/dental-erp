@@ -41,10 +41,17 @@ class DateBetweenSeeder extends Seeder
 
     private static $register_chance = 50;
     private static $treatment_again_min = 1;
-    private static $treatment_again_max = 3;
+    private static $treatment_again_max = 2;
 
     public static $date1;
     public static $date2;
+
+    // current date1 in loop
+    public static $current_date;
+
+    // show some lease, appointments
+    // if 7, then start record lease, appointments from $date2-7 date.
+    public static $real_date = 7;
 
 
     public function run()
@@ -69,6 +76,15 @@ class DateBetweenSeeder extends Seeder
         $doctors = Doctor::all();
         $patients = Patient::all();
         while ($date1 <= $date2){
+
+            self::$current_date = $date1;
+
+            // escape saturday sunday
+            $w = Date('w', strtotime($date1));
+            if ($w%6 == 0){
+                $date1 = Date('Y-m-d', strtotime($date1. ' + 1 Days'));
+                continue;
+            }
         	// escape sunday
             foreach($doctors as $doctor){
 
@@ -93,7 +109,11 @@ class DateBetweenSeeder extends Seeder
                     self::$ae = 16 + self::$faker->numberBetween(0, 1);
                 }
 
-                $n_patients = self::$faker->numberBetween(self::$min_users, self::$max_users);
+                if ($this->delta_days($date1, $date2) <= self::$real_date)
+                    $n_patients = self::$faker->numberBetween(self::$min_users, self::$max_users);
+                else
+                    $n_patients = self::$faker->numberBetween(0, 1);
+
                 $patients = factory(Patient::class, $n_patients)
                     ->create()->each(function($patient) use ($shift){
 
@@ -102,6 +122,9 @@ class DateBetweenSeeder extends Seeder
 
                         $this->new_patient(self::$faker, $patient, $shift,$this->floatToTime(self::$as), 
                                                                             $this->floatToTime(self::$ae));
+
+
+
                         $deltatime = self::$faker->numberBetween(2, 4);
                         // add random half time
                         $deltatime += self::$faker->numberBetween(0, 1)/2;
@@ -120,20 +143,12 @@ class DateBetweenSeeder extends Seeder
         // treatment again
         $patients = Patient::all();
         $shifts = Shift::whereBetween('date', [self::$date1, self::$date2])->get();
-
-        // foreach($shifts as $shift){
-        //     $patient = $patients->random();
-        //     $treatments = self::$faker->numberBetween(self::$treatment_again_min, self::$treatment_again_max);
-        //     for ($i=0; $i<$treatments; $i++){
-        //         $this->treatment_again($patient, $shift);
-        //     }
-        // }
     }
 
     private function new_patient($faker, $patient, $shift , $as, $ae){
 
         // make some appointments and others...
-        if ($shift->date >= Date('Y-m-d')){
+        if ($shift->date > Date('Y-m-d')){
             if (self::$faker->numberBetween(1, 100) > self::$register_chance){
                 $appointment = factory(Appointment::class)->create([
                     'user_id'=>0,
@@ -142,69 +157,76 @@ class DateBetweenSeeder extends Seeder
                     'start'=>$as,
                     'end'=>$ae
                 ]);
-                factory(Patient::class, 10)->create()
+            }else{
+                $checkin = factory(CheckIn::class)->create([
+                            'user_id'=>$patient->id,
+                            'shift_id'=>$shift->id,
+                            'state'=>0
+                        ]);
+                $appointment = factory(Appointment::class)->create([
+                    'user_id'=>$patient->id,
+                    'shift_id'=>$shift->id,
+                    'checkin_id'=>$checkin->id,
+                    'start'=>$as,
+                    'end'=>$ae
+                ]);
+            }
+            return;
+        }
+
+        if ($shift->date >= Date('Y-m-d')){
+            factory(Patient::class, 10)->create()
                     ->each(function($patient) use ($shift){
                         factory(CheckIn::class, 1)->create([
                         'user_id'=>$patient->id,
                         'shift_id'=>$shift->id,
                         'state'=>0,
                     ]);
-                    });
-                
-                return;
-            }
+                });
         }
-        $checkin = factory(CheckIn::class)->create([
+        $treatments_count = $faker->numberBetween(self::$treatment_again_min, self::$treatment_again_max);
+        $checkins = factory(CheckIn::class, $treatments_count)->create([
                             'user_id'=>$patient->id,
                             'shift_id'=>$shift->id,
                             'state'=>2
         ]);
-        $appointment = factory(Appointment::class)->create([
-            'user_id'=>$patient->id,
-            'shift_id'=>$shift->id,
-            'checkin_id'=>$checkin->id,
-            'start'=>$as,
-            'end'=>$ae
-        ]);
-        $user_treatments = factory(UserTreatments::class, 
+
+        foreach($checkins as $checkin){
+
+            if ($this->delta_days(self::$current_date, self::$date2) <= self::$real_date){
+                $appointment = factory(Appointment::class)->create([
+                    'user_id'=>$patient->id,
+                    'shift_id'=>$shift->id,
+                    'checkin_id'=>$checkin->id,
+                    'start'=>$as,
+                    'end'=>$ae
+                ]);
+            }
+
+            $user_treatments = factory(UserTreatments::class, 
                                 $faker->numberBetween(self::$treatments_min, self::$treatments_max))
                                     ->create([
                                             'user_id'=>$checkin->user->id,
                                             'checkin_id'=>$checkin->id,
                                             'created_at'=>$shift->date . ' ' . Date('H:i')
                                         ]);
-        foreach($user_treatments as $user_treatment){
-            $treatment_note = factory(TreatmentNote::class)->create([
-                'checkin_id'=>$checkin->id,
-                'user_treatment_id'=>$user_treatment->id
-            ]);
+            foreach($user_treatments as $user_treatment){
+                $treatment_note = factory(TreatmentNote::class)->create([
+                    'checkin_id'=>$checkin->id,
+                    'user_treatment_id'=>$user_treatment->id
+                ]);
+            }
+            
+            if ($this->delta_days(self::$current_date, self::$date2)<= self::$real_date){
+                if ($faker->numberBetween(1, 100) > 50){
+                    $this->checkin_payment($checkin, self::$faker);
+                }
+                continue;
+            }
+            $this->dummy_lease($checkin, self::$lease_chance, self::$faker);
+            $this->checkin_payment($checkin, self::$faker);
         }
-        $this->dummy_lease($checkin, self::$lease_chance, self::$faker);
-        $this->checkin_payment($checkin, self::$faker);
     }
-
-    private function treatment_again($patient, $shift){
-        $checkin = factory(CheckIn::class)->create([
-                            'user_id'=>$patient->id,
-                            'shift_id'=>$shift->id,
-                            'state'=>2
-        ]);
-        $user_treatments = factory(UserTreatments::class, self::$faker->numberBetween(self::$treatments_min, self::$treatments_max))
-                        ->create([
-                                'user_id'=>$checkin->user->id,
-                                'checkin_id'=>$checkin->id,
-                                'created_at'=>$shift->date . ' ' . Date('H:i')
-                            ]);
-        foreach($user_treatments as $user_treatment){
-            $treatment_note = factory(TreatmentNote::class)->create([
-                'checkin_id'=>$checkin->id,
-                'user_treatment_id'=>$user_treatment->id
-            ]);
-        }
-        $this->dummy_lease($checkin, self::$lease_chance, self::$faker);
-        $this->checkin_payment($checkin, self::$faker);
-    }
-
 
     private function dummy_lease($checkin, $chance, $faker){
         
@@ -315,6 +337,11 @@ class DateBetweenSeeder extends Seeder
             $min = '0'.$min;
 
         return $hour.':'.$min;
+    }
+
+    private function delta_days($date1, $date2){
+        $datediff = strtotime($date2) - strtotime($date1);
+        return round($datediff / (60 * 60 * 24));
     }
 
 }

@@ -2,7 +2,6 @@
     <div class="card">
 
         <Paint />
-                    
         
         <div class="card-body mb-2">
             <div class="table-responsive">
@@ -153,11 +152,6 @@
             }
         }
         if (!$dateIntervals[svalue]) svalue--;
-    }
-    $:{
-        let th = $treatmentHistories;
-        console.log('th changed');
-        //svalue = th.length - 1;
     }
     $:{
         let index = svalue;

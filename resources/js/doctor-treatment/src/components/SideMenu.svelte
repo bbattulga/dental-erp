@@ -99,6 +99,9 @@
 
     const handleClickTreatmentTab = () => {
         tab = 1;
+        $paintState.tool = null;
+        $paintState.drawing = false;
+        $paintState = $paintState;
     }
 
 </script>

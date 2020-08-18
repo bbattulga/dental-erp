@@ -6,16 +6,16 @@
     <div class="card-body">
         <div class="icon-wrapper">
             <div class="glyph" on:click={() => handleClick('pencil')}
-            	class:active={selected === 'pencil'}
-            	class:inactive={selected !== 'pencil'}>
+            	class:active={$paintState.tool === 'pencil'}
+            	class:inactive={$paintState.tool !== 'pencil'}>
                 <div class="glyph-icon simple-icon-pencil"></div>
             </div>
         </div>
 
         <div class="icon-wrapper">
 	        <div class="glyph" on:click={() => handleClick('eraser')}
-	        	class:active={selected === 'eraser'}
-            	class:inactive={selected !== 'eraser'}>
+	        	class:active={$paintState.tool === 'eraser'}
+            	class:inactive={$paintState.tool !== 'eraser'}>
 	            <div class="glyph-icon iconsmind-Eraser"></div>
 	        </div>
 	    </div>
@@ -53,8 +53,6 @@
 
 	import {rgbToHex} from './lib.js';
 
-
-	let selected;
 	let minWeight = 3;
 	let maxWeight = 100;
 	let weight = 10;
@@ -87,15 +85,15 @@
 	}
 
 	const handleClick = (key) => {
-		if (selected === key){
-			selected = null;
+		if ($paintState.tool === key){
+			$paintState.tool = null;
 			$paintState.drawing = false;
 			$paintState = $paintState;
 			return;
 		}
 		$paintState.drawing = true;
 		$paintState = $paintState;
-		selected = key;
+		$paintState.tool = key;
 		switch(key){
 			case 'pencil':
 				draw();

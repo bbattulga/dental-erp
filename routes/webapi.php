@@ -28,8 +28,6 @@ Route::group(['middleware' => 'auth',
         // auth middleware has bug.
 });
 
-
-
 // ADMIN API
 Route::group(['middleware' => 'admin',
             'namespace' => $namespace,
@@ -87,11 +85,11 @@ Route::group([ 'middleware' => 'doctor',
     Route::delete('user-tooth/delete/{id}', 'UserToothController@destroy');
     Route::delete('user-tooth/{user_id}/delete/{tooth_code}', 'UserToothController@destroByUserTooth'); 
 
-    Route::post('symptoms', 'SymptomController@index');
-    Route::get('symptoms/{id}', 'SymptomController@show');
-    Route::post('symptoms/create', 'SymptomController@store');
-    Route::put('symptoms/update', 'SymptomController@update');
-    Route::delete('symptoms/delete/{id}', 'SymptomController@destroy');
+    Route::post('user-treatment/paint', 'PaintController@show');
+    Route::post('user-treatment/paint/recent', 'PaintController@recent');
+    Route::post('user-treatment/paint/create', 'PaintController@store');
+    Route::put('user-treatment/paint/update', 'PaintController@update');
+    Route::delete('user-treatment/paint/delete/{id}', 'PaintController@destroy');
 
 }); // END DOCTOR API
 

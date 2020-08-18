@@ -11,13 +11,15 @@
 			treatmentHistories,
 			treatments,
 			dateInterval,
-			dateIntervals} from './components/stores/store.js';
+			dateIntervals,
+			points} from './components/stores/store.js';
 
 	import {checkin, patient} from './components/stores/store.js';
 	
 	import {getToothCodes, 
 			fetchTreatments,
-			fetchUserTreatments} from './api/doctor-treatment-api.js';
+			fetchUserTreatments,
+			fetchPainting} from './api/doctor-treatment-api.js';
 
 	import Tab, {Icon, Label} from '@smui/tab';
   	import TabBar from '@smui/tab-bar';
@@ -65,6 +67,13 @@
 
 			$treatments = response.data;
 	});
+
+	fetchPainting({user_id: $patient.id}).then(response => {
+		$points = JSON.parse(response.data.content);
+	}).catch(err=>{
+		console.log(err);
+		$points = [];
+	})
 
 	fetchUserTreatments($patient.id)
 		.then(response => {

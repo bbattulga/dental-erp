@@ -13,20 +13,22 @@ class DoctorSeeder extends Seeder
      *
      * @return void
      */
+
+
+    private static $i = 1;
     public function run()
     {
         //
         $quantity = 5;
 
-        $i = 1;
         factory(Doctor::class, $quantity)
         	->create()
-        	->each(function ($doctor) use ($i){
+        	->each(function ($doctor){
                 $doctor->update([
-                    'email' => 'doctor'.$i.'@mail.com'
+                    'email' => 'doctor'.self::$i.'@mail.com'
                 ]);
-                $i++;
-        		factory(UserRole::class, 1)
+                self::$i++;
+        		factory(UserRole::class)
         			->create([
         				'user_id' => $doctor->id,
         				'role_id' => Roles::doctor()->id,

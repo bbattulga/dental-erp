@@ -104,3 +104,21 @@ export const deleteImage = (imageId) => {
 export const uploadImage = (data) => {
 	return axios.post('/api/xray/create', data);
 }
+
+// fetch last painting
+export const fetchPainting = (data) => {
+	return axios.post('/api/user-treatment/paint/recent', data);
+}
+
+// fetch all paintings
+export const fetchPaintings = (data) => {
+	return axios.post('/api/user-treatment/paint', data);
+}
+
+export const addPainting = (data) => {
+	return axios.post('/api/user-treatment/paint/create', data);
+}
+
+export const updatePainting = (data) => {
+	return axios.put('/api/user-treatment/paint/update', data);
+}

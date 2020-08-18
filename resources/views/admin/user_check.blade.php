@@ -155,7 +155,7 @@
             <a href="#" class="card">
                 <div class="card-body text-center">
                     <i class="iconsmind-Hospital"></i>
-                    <p class="card-text mb-0">Хэдэн удаа үзүүлсэн эсэх </p>
+                    <p class="card-text mb-0">Нийт үйлчлүүлсэн тоо </p>
                     <p class="lead text-center">{{$check_ins->count()}} удаа</p>
                 </div>
             </a>

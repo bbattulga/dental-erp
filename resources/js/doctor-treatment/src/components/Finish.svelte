@@ -100,7 +100,7 @@
     }
 
     const quit = () => {
-      //  window.location = '/doctor';
+        window.location = '/doctor';
     }
 
     const handleSavePainting = () => {
@@ -138,7 +138,6 @@
         lastTotal = total;
 
         handleSavePainting().then(response => {
-            return;
             storeTreatments().then(axios.spread((...responses)=>{
                 console.log('storeTreatments response');
                 console.log(responses);

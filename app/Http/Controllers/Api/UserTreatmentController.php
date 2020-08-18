@@ -90,9 +90,9 @@ class UserTreatmentController extends Controller
 		if ($image = $request->file(['image'])){
 			$user = User::find($request['user_id']);
             $image_name = time().$image->getClientOriginalName();
-            if (env('APP_ENV') == "local") {
-              Storage::putFileAs('public/img/xray', $image, $image_name);
-            }else if (env('APP_ENV') == "prod"){
+            if (env('APP_ENV') === "local") {
+              Storage::disk('local')->putFileAs('public/img/xray', $image, $image_name);
+            }else if (env('APP_ENV') === "prod"){
               Storage::disk('gcs')->putFileAs('public/img/xray', $image, $image_name);
             }
             $photo = $user->photos()->create(['path'=>$image_name]);

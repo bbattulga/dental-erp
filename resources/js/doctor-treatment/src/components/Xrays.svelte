@@ -77,6 +77,8 @@
         var formData = new FormData(imgSubmitForm);
         uploadImage(formData)
         	.then(response => {
+        		console.log('xray store response');
+        		console.log(response.data);
 	        	let xray = response.data;
 	        	xrays = [xray, ...xrays];
         	})

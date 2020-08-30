@@ -19,6 +19,6 @@ $factory->define(UserRole::class, function (Faker $faker) {
         // must be overriden...
         'user_id' => $users->random()->id,
         'role_id' => $roles->random()->id,
-        'state' => $faker->numberBetween(0, 1)
+        'state' => 1
     ];
 });

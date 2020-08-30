@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Refresh::class);
 
         DateBetweenSeeder::$date1 = Date('Y-m-d', strtotime('- 3 Months'));
-        DateBetweenSeeder::$date2 = Date('Y-m-d', strtotime('+ 14 Days'));
+        DateBetweenSeeder::$date2 = Date('Y-m-d', strtotime('+ 15 Days'));
         $this->call(DateBetweenSeeder::class);
     }
 

@@ -120,7 +120,7 @@
             dateIntervals,
             paintState} from './stores/store.js';
 
-    import { addUserTreatment } from '../api/doctor-treatment-api.js';
+    import { addUserTreatment, deleteUserTreatment } from '../api/doctor-treatment-api.js';
 
     import {treatmentHistories} from './stores/store.js';
     import {checkin, patient} from './stores/store.js';
@@ -213,27 +213,35 @@
         }
         else{
             // same as last treatment
-            console.log('delete treatment');
-
-            // if it is current date, then delete that else 
-            // may ask like that treatment again?
-            if (datediff(new Date(), new Date($selectedTreatment.created_at))>0){
-                handleAddTreatment(event);
-                return;
-            }
+            
 
             // may re-lombo
             if ($selectedTreatment.id == 1){
                 showDecayChart = true;
                 return;
             }
-            // same as last treatment
-            $dateIntervals.pop();
+            let deletedDi = $dateIntervals.pop();
             $dateIntervals = $dateIntervals;
-            state.treatments.shift();
-            $treatmentHistories.shift();
+            let deletedTreatment = state.treatments.shift();
+            let deletedHistory = $treatmentHistories.shift();
             $treatmentHistories = $treatmentHistories;
             $toothStates = $toothStates;
+
+            // if it is current date, then delete that else 
+            // may ask like that treatment again?
+            if (datediff(new Date(), new Date(lastTreatment.created_at)) == 0){
+                console.log('delete treatment', lastTreatment);
+                deleteUserTreatment(lastTreatment.id)
+                .catch(err => {
+                    alert('Эмчилгээ устгахад алдаа гарлаа');
+                    // fallback
+                    $dateIntervals = [...$dateIntervals, deletedDi];
+                    state.treatments = [deletedTreatment, ...state.treatments];
+                    $treatmentHistories = [deletedHistory, ...$treatmentHistories];
+                    $toothStates = $toothStates;
+                })
+                return;
+            }
         }
     }
 
@@ -258,7 +266,7 @@
             treatment_selection_id: 0,
             treatment_selection: null,
             tooth_id: code,
-            price: null,
+            price: 0, 
             symptom: '',
             diagnosis: '',
             value: $toothStates[code].value,
@@ -266,7 +274,10 @@
             tooth_type_id: $toothStates[code].toothTypeId,
             created_at: new moment().format('YYYY-MM-DD HH:mm:ss')
         }
-        // update tooth ui
+
+        // update tooth first
+        // if ajax fails, fallback...
+
         $toothStates[code].treatments.unshift(userTreatment);
         $dateIntervals = [...$dateIntervals, userTreatment.created_at];
         svalue = $dateIntervals.length - 1;
@@ -274,7 +285,33 @@
 
         // update history
         $treatmentHistories = [userTreatment, ...$treatmentHistories];
+
+        // ajax
+        addUserTreatment(userTreatment)
+            .then(response => {
+                $treatmentHistories[0].id = response.data.id;
+                $treatmentHistories = $treatmentHistories;
+            })
+            .catch(err => {
+                alert('Эмчилгээг хадгалахад алдаа гарлаа');
+                console.log(err);
+
+                // fallback
+                $toothStates[code].treatments.shift();
+                $toothStates = $toothStates;
+                $dateIntervals.pop();
+                $dateIntervals = $dateIntervals;
+                svalue = $dateIntervals.length-1;
+                $treatmentHistories.shift();
+                $treatmentHistories = $treatmentHistories;
+            })
     }
+
+    onDestroy(() => {
+        $paintState.drawing = false;
+        $paintState.tool = null;
+        $paintState = $paintState;
+    })
 
     const range = (a, b) => {
 

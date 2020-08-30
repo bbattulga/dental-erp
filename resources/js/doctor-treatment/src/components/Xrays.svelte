@@ -36,7 +36,7 @@
 
       	<div class="card-body">
 
-	          <img id="photo-{xray.id}" src="/storage/img/xray/{xray.path}">
+	          <img id="photo-{xray.id}" src={xray.url}>
 	          <div>
 		          {new moment(xray.created_at).format('YYYY-MM-DD HH:mm:ss')}
 		      </div>

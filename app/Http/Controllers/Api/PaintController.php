@@ -12,7 +12,7 @@ class PaintController extends Controller
 {
     //
 
-    public function index(){
+    public function index(Request $request){
 		return Paint::all();
 	}
 
@@ -29,16 +29,6 @@ class PaintController extends Controller
 		return $paint;
 	}
 
-	public function recent(Request $request){
-		$p = Paint::where('user_id', $request['user_id'])
-						->orderBy('id', 'desc')
-						->first();
-		if (!$p){
-			return array();
-		}
-		return $p;
-	}
-	
 	public function update(Request $request){
 		return Paint::findOrFail($request['id'])->update($request->all());
 	}

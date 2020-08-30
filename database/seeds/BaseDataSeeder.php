@@ -10,7 +10,10 @@ use App\TreatmentSelections;
 use App\ToothType;
 use App\Tooth;
 use App\Promotion;
+use App\Admin;
+use App\Accountant;
 use App\Doctor;
+use App\Reception;
 
 
 class BaseDataSeeder extends Seeder
@@ -52,13 +55,6 @@ class BaseDataSeeder extends Seeder
             TreatmentCategory::firstOrCreate($tc);
         }
 
-        if (Tooth::all()->count() == 0)
-            $this->call(ToothSeeder::class);
-        if (Promotion::all()->count() == 0)
-            $this->call(PromotionSeeder::class);
-        if (Doctor::all()->count() == 0)
-            $this->call(DoctorSeeder::class);
-
         $treatments = [
             ['id' => 1, 'name'=>'Ломбо', 'selection_type'=>1, 'category'=>1, 'price'=>12000, 'limit'=>500000],
             ['id' => 3, 'name'=>'Бүрээс', 'selection_type'=>1, 'category'=>1, 'price'=>12000, 'limit'=>200000],
@@ -94,6 +90,15 @@ class BaseDataSeeder extends Seeder
         ];
         foreach($tooth_types as $tt){
             ToothType::firstOrCreate($tt);
+        }
+
+        if (Tooth::all()->count() == 0)
+            $this->call(ToothSeeder::class);
+        if (Promotion::all()->count() == 0)
+            $this->call(PromotionSeeder::class);
+        
+        if (Admin::all()->count() == 0){
+            $this->call(StaffSeeder::class);
         }
     }
 }

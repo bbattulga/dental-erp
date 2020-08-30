@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
 use App\UserTreatments;
 use App\TreatmentNote;
@@ -37,7 +38,6 @@ class UserTreatmentController extends Controller
 
 	public function store(Request $request){
 		$user_treatment = UserTreatments::create($request->all());
-
 		$t = $user_treatment->treatment; // load treatment
 		if (!empty($request['symptom'] || !empty($request['diagnosis']))){
 			
@@ -62,6 +62,7 @@ class UserTreatmentController extends Controller
 	}
 
 	public function update(Request $request){
+		$notes_updated = 0;
 		 if (!empty($request['symptom']) || !empty($request['diagnosis'])){
 			$note = TreatmentNote::where('user_treatment_id', $request['id'])->get();
 			if ($note->count() == 0){
@@ -71,31 +72,58 @@ class UserTreatmentController extends Controller
 	                'symptom'=>$request['symptom'],
 	                'diagnosis'=>$request['diagnosis']
 	            ]);
+	            $notes_updated = 'created new note';
 			}else{
-				TreatmentNote::where('user_treatment_id', $request['id'])->update($request->all());
+				$notes_updated = TreatmentNote::where('user_treatment_id', $request['id'])
+					->update([
+							'symptom'=>$request['symptom'],
+							'diagnosis'=>$request['diagnosis']
+							]);
 			}
 		}
-
-		// if (!empty($request['id']))	
-		// 	return UserTreatments::where('id', $request['id'])->update($request->all());
-		return 1;
+		if (!empty($request['price']))
+			return UserTreatments::where('id', $request['id'])->update(['price'=>$request['price']]);
+		return $notes_updated;
 	}
 
 	public function xray(Request $request){
 		$user = User::find($request['user_id']);
-		return $user->photos;
+
+		$xrays = array();
+		$photos = $user->photos()->orderBy('created_at', 'desc')->get();
+		foreach($user->photos as $photo){
+
+			$url = null;
+			if (App::environment('local')) {
+	          $url = Storage::url('public/img/xray/'.$photo->path);
+	        }else if (App::environment('prod')){
+	          $disk = Storage::disk('gcs');
+	          $url = $disk->url('public/img/xray/'.$photo->path);
+	        }
+
+	        if ($url != null){
+	        	$xray = $photo;
+	        	$photo->url = $url;
+	        	array_push($xrays, $xray);
+	        }
+		}
+
+		return $xrays;
 	}
 
 	public function xrayStore(Request $request){
 		if ($image = $request->file(['image'])){
 			$user = User::find($request['user_id']);
             $image_name = time().$image->getClientOriginalName();
-            if (env('APP_ENV') === "local") {
+            if (App::environment('local')) {
               Storage::disk('local')->putFileAs('public/img/xray', $image, $image_name);
-            }else if (env('APP_ENV') === "prod"){
+              $url = Storage::url('public/img/xray/'.$image_name);
+            }else if (App::environment('prod')){
               Storage::disk('gcs')->putFileAs('public/img/xray', $image, $image_name);
+              $url = Storage::disk('gcs')->url('public/img/xray/'.$image_name);
             }
             $photo = $user->photos()->create(['path'=>$image_name]);
+            $photo->url = $url;
             return $photo;
         }
 	}

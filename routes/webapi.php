@@ -2,14 +2,14 @@
 
 //////////////// API START //////////////////
 
-// only authorized users can access the api
+// only authenticated users can access the api
 
 /*
 the reason why it is called webapi is 
 it is essentially web.php but act like an api.
 
 it is simpler than api_token e.t.c
-and fits with the legacy code
+and fits the legacy code
 */
 
 /////// NOTICE THE PREFIXES OF ROUTE GROUPS
@@ -20,7 +20,7 @@ and fits with the legacy code
 $namespace = 'Api';
 // $api_prefix = '/api/';
 
-// ACCESSIBLE TO AUTHENTCATED
+// ACCESSIBLE TO AUTHENTiCATED
 Route::group(['middleware' => 'auth',
             'namespace' => $namespace,
             'prefix'=>'/api/'],function(){
@@ -69,7 +69,7 @@ Route::group([ 'middleware' => 'doctor',
     Route::get('user-treatment/{id}', 'UserTreatmentController@show');
     Route::post('user-treatment/query', 'UserTreatmentController@query');
     Route::post('user-treatment/create', 'UserTreatmentController@store');
-    Route::put('user-treatment/update', 'UserTreatmentController@update');
+    Route::post('user-treatment/update', 'UserTreatmentController@update');
     Route::delete('user-treatment/delete/{id}', 'UserTreatmentController@destroy');
 
     Route::put('user-treatment/finish', 'UserTreatmentController@finish');
@@ -85,11 +85,11 @@ Route::group([ 'middleware' => 'doctor',
     Route::delete('user-tooth/delete/{id}', 'UserToothController@destroy');
     Route::delete('user-tooth/{user_id}/delete/{tooth_code}', 'UserToothController@destroByUserTooth'); 
 
-    Route::post('user-treatment/paint', 'PaintController@show');
-    Route::post('user-treatment/paint/recent', 'PaintController@recent');
-    Route::post('user-treatment/paint/create', 'PaintController@store');
-    Route::put('user-treatment/paint/update', 'PaintController@update');
-    Route::delete('user-treatment/paint/delete/{id}', 'PaintController@destroy');
+    Route::get('paint', 'PaintController@index');
+    Route::post('paint/user', 'PaintController@show');
+    Route::post('paint/create', 'PaintController@store');
+    Route::put('paint/update', 'PaintController@update');
+    Route::delete('paint/delete/{id}', 'PaintController@destroy');
 
 }); // END DOCTOR API
 

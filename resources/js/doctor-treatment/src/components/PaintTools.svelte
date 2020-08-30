@@ -25,7 +25,8 @@
 	    	min={minWeight} max={maxWeight}/>
 	    	
 	    <div class="row">
-			    <div bind:this={colorIndicator} style="width: 30px; height: 30px;"></div>
+			    <div bind:this={colorIndicator} style="width: 30px; height: 30px;"
+			    	on:click|preventDefault={() => showColorPicker=true}></div>
 			    <div class="mr-2"></div>
 			    <button on:click|preventDefault={() => showColorPicker=true}>өнгө сонгох</button>
 		</div>
@@ -37,7 +38,7 @@
 			        <div class="glyph-icon simple-icon-close"></div>
 			    </div>
 			    <HsvPicker on:colorChange={handleChangeColor} 
-			    	startColor={rgbToHex($paintState.color.r, $paintState.color.g, $paintState.color.b)}/>
+			    	startColor={'#007bff'}/>
 			</div>
 		 {/if}
     </div>
@@ -48,10 +49,13 @@
 
 	import {paintState} from './stores/store.js';
 	import {HsvPicker} from 'svelte-color-picker';
+	import {createEventDispatcher} from 'svelte';
 	import Slider from '@smui/slider';
 	import p5 from 'p5';
 
 	import {rgbToHex} from './lib.js';
+
+	const dispatch = createEventDispatcher();
 
 	let minWeight = 3;
 	let maxWeight = 100;
@@ -67,30 +71,33 @@
 
 	$:{
 		let currentColor = $paintState.color;
-		let hex = currentColor === 'eraser'? '#fff':rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+		let hex = currentColor === 'eraser'? '#fff': currentColor;
 		if (colorIndicator)
 			colorIndicator.style.backgroundColor = hex;
 	}
 	const draw = () => {
 		if ($paintState.color === 'eraser'){
-			$paintState.color = {r: 10, g: 11, b: 12}
 			$paintState = $paintState
 		}
 	}
 
 	const handleChangeColor = (event) => {
 		let rgb = event.detail;
-		$paintState.color = rgb;
+		$paintState.color = rgbToHex(rgb.r, rgb.g, rgb.b);
 		$paintState = $paintState;
 	}
 
 	const handleClick = (key) => {
+
+		// stopped drawing stuffs?
 		if ($paintState.tool === key){
 			$paintState.tool = null;
 			$paintState.drawing = false;
 			$paintState = $paintState;
+			dispatch('stop');
 			return;
 		}
+		dispatch('start');
 		$paintState.drawing = true;
 		$paintState = $paintState;
 		$paintState.tool = key;

@@ -12,8 +12,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                    	{#each $treatmentHistories as th, i}
-                    	{#if typeof $treatmentHistories[i].id !== 'number'}
+                    	{#each $treatmentHistories as th, i (th.id)}
+
+                    	{#if !$treatmentHistories[i].price}
                             <tr transition:fade>
                             	<td>{i+1}</td>
                             	<td>{th.tooth_id == 0? 'Бүх шүд': th.tooth_id}</td>
@@ -23,10 +24,11 @@
                                 		<div class="input-group">
     	                            		<input class="form-control"
                                                 placeholder="{th.treatment.price.toLocaleString()}-{th.treatment.limit.toLocaleString()}₮" 
-    	                            			class:invalid={$treatmentHistories[i].price >0 && ($treatmentHistories[i].price < th.treatment.price) || ($treatmentHistories[i].price>th.treatment.limit)}
-    	                            			on:change={()=>handleValidatePrice(th,$treatmentHistories[i].price)}
-    	                            			bind:value={$treatmentHistories[i].price}
-    	                            			required="{true}">
+    	                            			class:invalid={th.inputPrice > 0 && (th.inputPrice < th.treatment.price) || (th.inputPrice>th.treatment.limit)}
+    	                            			on:change={()=>handleValidatePrice(th, th.inputPrice)}
+    	                            			bind:value={th.inputPrice}
+    	                            			required="{true}"
+                                                type="number">
     	                            	</div>
                                     {:else}
                                         <div>
@@ -69,6 +71,7 @@
             paintState} from './stores/store.js';
 
     import {addUserTreatment, 
+            updateUserTreatment,
             finishTreatment,
             addPainting} from '../api/doctor-treatment-api.js';
     import axios from 'axios';
@@ -77,26 +80,32 @@
 
     import moment from 'moment';
 
+    export let dialog;
+    let dialogTitle = 'Үнэн дүнгүүдийг оруулна уу';
+
 
     let resultSnackbar;
     let total = 0;
     let lastTotal = 0;
+
     $:{
     	total = 0;
     	for (let i=0; i<$treatmentHistories.length; i++){
-    		if (typeof $treatmentHistories[i].id !== 'number' &&
-                ($treatmentHistories[i].price != null)){
-                total += parseInt($treatmentHistories[i].price);
+    		if (!$treatmentHistories[i].price){
+                if (!isNaN($treatmentHistories[i].inputPrice))
+                    total += parseInt($treatmentHistories[i].inputPrice);
             }
-    	}
+    	 }
     	total = total.toLocaleString();
     }
 
     const handleValidatePrice = (treatmentHistory, val) => {
-    	let treatment = treatmentHistory.treatment;
-    	if (val >= treatment.price && (val<=treatment.limit)){
-    		treatmentHistory.price = val;
-    	}
+        console.log('onchange');
+        console.log(val);
+    	// let treatment = treatmentHistory.treatment;
+    	// if (val >= treatment.price && (val<=treatment.limit)){
+    	// 	treatmentHistory.price = val;
+    	// }
     }
 
     const quit = () => {
@@ -105,24 +114,18 @@
 
     const handleSavePainting = () => {
         return new Promise((resolve, reject) => {
-            if (points.length == 0){
-                resolve(0);
+
+            // any left painting?
+            if ($points.length == 0){
+                resolve(true);
             }
-            // convert each points to some percent
-            // for (let i=0; i<$points.length; i++){
-            //     let point = $points[i];
-            //     point.x  = point.x*100/$paintState.canvasWidth;
-            //     point.y = point.y*100/$paintState.canvasHeight;
-            // }
             let data = {
                 user_id: $patient.id,
-                content: $points
+                content: JSON.stringify($points)
             }
             addPainting(data)
                 .then(response => {
-                    console.log('store paint response: ');
-                    console.log(response.data);
-                    resolve(response);
+                    resolve(true);
                 })
                 .catch(err => {
                     reject(err);
@@ -137,82 +140,70 @@
     	}
         lastTotal = total;
 
-        handleSavePainting().then(response => {
-            storeTreatments().then(axios.spread((...responses)=>{
-                console.log('storeTreatments response');
+        // define async function then call immediately
+        const finish = async () => {
+            try{
+                await handleSavePainting();
+            }catch(err){
+                if (confirm('Зураг хадгалахад алдаа гарлаа дахиж оролдох уу?')){
+                    await handleSavePainting(); // why not xd
+                }
+            }
+            try{
+                let responses = await storeTreatments();
+                console.log('storeTreatments responses');
                 console.log(responses);
                 $treatmentHistories = $treatmentHistories;
                 resultSnackbar.open();
                 dialog.close();
-                let data = {
+                let checkinRequest = {
                     checkin_id: $checkin.id
                 }
-                finishTreatment(data)
-                    .then(response => {
-                        if (response.data == 0){
-                            alert('Эмчилгээг дуусгахад алдаа гарлаа\nДахиж  оролдоно уу');
-                            console.log(err);
-                            return;
-                        }
-                        setTimeout(quit, 2000);
-                    })
-                    .catch(err => {
-                        alert('Эмчилгээг дуусгахад алдаа гарлаа\nДахиж  оролдоно уу');
-                    });
-            })).catch(err=>{
+                let finishResult = await finishTreatment(checkinRequest);
+                if (finishResult.data == 0){
+                    alert('Эмчилгээг дуусгахад алдаа гарлаа\nДахиж  оролдоно уу');
+                    console.log(err);
+                    return;
+                }
+                setTimeout(quit, 2000);
+            }catch(err){
                 alert('Эмчилгээнүүдийг хадгалахад алдаа гарлаа\nPage reload хийнэ үү');
                 console.log(err);
-            })
-        })
-        .catch(err => {
-            if (confirm('failed to save painting, want to skip?')){
-                $points = [];
-                handleFinish();
             }
-        });
+        }
+        finish();
     }
 
     const storeTreatments = () => {
+        // assumes prices are valid
+
 		let promises = [];
         lastTotal = 0;
 		for (let i=0; i<$treatmentHistories.length; i++){
 
+            let userTreatment = $treatmentHistories[i];
             // already recorded?
-			if (typeof $treatmentHistories[i].id === 'number'){
+            // on other hospital?
+			if ((userTreatment.price > 0) || 
+                (userTreatment.checkin_id == 0)){
 				continue;
 			}
-
-            console.log('sending');
-            console.log($treatmentHistories[i]);
-
-            if ($treatmentHistories[i].price != null)
-                lastTotal += parseInt($treatmentHistories[i].price);
-
             // new record
-			let userTreatment = $treatmentHistories[i];
-            console.log('storing');
+            lastTotal += parseInt(userTreatment.inputPrice);
+            userTreatment.price = userTreatment.inputPrice;
+            console.log('update ut');
             console.log(userTreatment);
-            userTreatment.price = userTreatment.price == null? 0:userTreatment.price;
-			let promise = addUserTreatment(userTreatment)
-			 .then(response => {
-				$treatmentHistories[i] = response.data;
-                $treatmentHistories[i].created_at = new moment($treatmentHistories[i].created_at)
-                                                            .format('YYYY-MM-DD HH:mm:ss');
-			}).catch(err=>{
-				console.log('error when storing history')
-				console.log(err);
-				handleError($treatmentHistories[i]);
-			})
+			let promise = updateUserTreatment(userTreatment);
 			promises.push(promise);
 		}
 		return axios.all(promises);
     }
 
     const handleError = (userTreatment) => {
-    	alert(JSON.stringify(userTreatment));
+        alert('Үнэн дүн хадгалахад алдаа гарлаа');
+        userTreatment.price = null;
     }
-    export let dialog;
-    let dialogTitle = 'Үнэн дүнгүүдийг оруулна уу';
+    
 </script>
 
 <style>

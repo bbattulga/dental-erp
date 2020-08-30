@@ -51,6 +51,7 @@ class DateBetweenSeeder extends Seeder
 
     // show some lease, appointments
     // if 7, then start record lease, appointments from $date2-7 date.
+    // else seed some lazy data
     public static $real_date = 7;
 
 
@@ -75,17 +76,22 @@ class DateBetweenSeeder extends Seeder
 
         $doctors = Doctor::all();
         $patients = Patient::all();
+
+        $days = $this->delta_days($date1, $date2) + 1; // including index
         while ($date1 <= $date2){
 
             self::$current_date = $date1;
 
-            // escape saturday sunday
+            error_log("$date1 - $date2  ". $days . " days left");
+            $days--;
+
+            // escape saturday, sunday
             $w = Date('w', strtotime($date1));
-            if ($w%6 == 0){
-                $date1 = Date('Y-m-d', strtotime($date1. ' + 1 Days'));
+            if (($this->delta_days($date1, $date2) <= self::$real_date) && ($w%6 == 0)){
+               $date1 = Date('Y-m-d', strtotime($date1. ' + 1 Days'));
                 continue;
             }
-        	// escape sunday
+
             foreach($doctors as $doctor){
 
                 $shift_type = self::$faker->numberBetween(1, 100) < 10? ShiftType::evening():ShiftType::full();
@@ -147,6 +153,17 @@ class DateBetweenSeeder extends Seeder
 
     private function new_patient($faker, $patient, $shift , $as, $ae){
 
+        if ($shift->date >= Date('Y-m-d')){
+            factory(Patient::class, 10)->create()
+                    ->each(function($patient) use ($shift){
+                        factory(CheckIn::class, 1)->create([
+                            'user_id'=>$patient->id,
+                            'shift_id'=>$shift->id,
+                            'state'=>0,
+                        ]);
+                });
+        }
+
         // make some appointments and others...
         if ($shift->date > Date('Y-m-d')){
             if (self::$faker->numberBetween(1, 100) > self::$register_chance){
@@ -172,17 +189,6 @@ class DateBetweenSeeder extends Seeder
                 ]);
             }
             return;
-        }
-
-        if ($shift->date >= Date('Y-m-d')){
-            factory(Patient::class, 10)->create()
-                    ->each(function($patient) use ($shift){
-                        factory(CheckIn::class, 1)->create([
-                        'user_id'=>$patient->id,
-                        'shift_id'=>$shift->id,
-                        'state'=>0,
-                    ]);
-                });
         }
         $treatments_count = $faker->numberBetween(self::$treatment_again_min, self::$treatment_again_max);
         $checkins = factory(CheckIn::class, $treatments_count)->create([

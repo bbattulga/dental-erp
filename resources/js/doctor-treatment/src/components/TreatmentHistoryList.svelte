@@ -89,9 +89,11 @@
 	</Content>
 
 	<Actions>
-		<button class="btn btn-primary" on:click={handleSave}>
-			Хадгалах
-		</button>
+		{#if treatmentHistory.checkin_id > 0}
+			<button class="btn btn-primary" on:click={handleSave}>Хадгалах</button>
+		{:else}
+			<Button class="btn btn-primary">Буцах</Button>
+		{/if}
 	</Actions>
 
 </Dialog>
@@ -129,7 +131,8 @@
 			treatmentHistories, 
 			selectedTooths,
 			dateInterval,
-			dateIntervals} from './stores/store.js';
+			dateIntervals,
+			checkin} from './stores/store.js';
 
 	import {deleteUserTreatment, 
 			getTreatmentImgSrc,
@@ -196,19 +199,13 @@
 		treatmentHistory.symptom = symptom;
 		treatmentHistory.diagnosis = diagnosis;
 
-		// save treatment first.
-		if (typeof treatmentHistory.id !== 'number'){
-			treatmentHistory.symptom = symptom;
-			treatmentHistory.diagnosis = diagnosis;
-			historyDialog.close();
-			return;
-		}
 		let data = {
 			id: treatmentHistory.id,
-			checkin_id: 0,
+			checkin_id: $checkin.id,
 			symptom,
 			diagnosis
 		}
+		console.log('saving', data);
 		saveNote(data)
 			.then(response => {
 				console.log('save note response');

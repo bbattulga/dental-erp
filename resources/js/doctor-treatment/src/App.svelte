@@ -12,14 +12,15 @@
 			treatments,
 			dateInterval,
 			dateIntervals,
-			points} from './components/stores/store.js';
+			points,
+			paintHistory} from './components/stores/store.js';
 
 	import {checkin, patient} from './components/stores/store.js';
 	
 	import {getToothCodes, 
 			fetchTreatments,
 			fetchUserTreatments,
-			fetchPainting} from './api/doctor-treatment-api.js';
+			fetchPaintings} from './api/doctor-treatment-api.js';
 
 	import Tab, {Icon, Label} from '@smui/tab';
   	import TabBar from '@smui/tab-bar';
@@ -39,12 +40,12 @@
 		    },
 		    {
 		      icon: '',
-		      label: 'Тэмдэглэл'
-		    },
+		      label: 'x-rays'
+		    },	
 		    {
 		      icon: '',
-		      label: 'x-rays'
-		    }
+		      label: 'Тэмдэглэл'
+		    },
 	];
 
 	let toothCodes = getToothCodes();
@@ -68,8 +69,20 @@
 			$treatments = response.data;
 	});
 
-	fetchPainting({user_id: $patient.id}).then(response => {
-		$points = JSON.parse(response.data.content);
+	fetchPaintings({user_id: $patient.id}).then(response => {
+		let history = response.data;
+		for (let i=0; i<history.length; i++){
+			let h = history[i];
+			let p1 = JSON.parse(h.content);
+			// console.log('parsed once');
+			// console.log(p1);
+			let p2 = JSON.parse(p1);
+			// console.log('parsed twice');
+			// console.log(p2);
+			h.content = p2;
+		}
+		$paintHistory = history;
+
 	}).catch(err=>{
 		console.log(err);
 		$points = [];
@@ -78,9 +91,8 @@
 	fetchUserTreatments($patient.id)
 		.then(response => {
 			let userTreatments = response.data;
-			console.log('fetched');
-			console.log(userTreatments);
-
+			// console.log('fetched usertreatments');
+			// console.log(userTreatments);
 			userTreatments = userTreatments.map(u => {
 				u.created_at = new moment(u.created_at).format('YYYY-MM-DD HH:mm:ss');
 				return u;
@@ -127,28 +139,31 @@
 	</div>
 </div>
 
-{#if activeTab == iconTabs[0]}
-	<div class="row" transition:fade>
+	<div class="row" transition:fade
+	     class:hidden={activeTab != iconTabs[0]}>
 	    <ToothChart />
 	    <SideMenu />
 	</div>
 
-{:else if activeTab == iconTabs[1]}
-	<div class="row" transition:fade>
-		<div class="col-md-12">
-			<div class="card">
-				<div class="card-body">
-					<Summary />
+	<div class="row" transition:fade
+		class:hidden={activeTab != iconTabs[1]}>
+		<Xrays />
+	</div>
+
+	{#if activeTab == iconTabs[2]}
+		<div class="row" transition:fade>
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<Summary />
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{:else if activeTab == iconTabs[2]}
-	<div class="row" transition:fade>
-		<Xrays />
-	</div>
-{/if}
-
+	{/if}
 <style>
 
+   .hidden{
+   	display: none;
+   }
 </style>

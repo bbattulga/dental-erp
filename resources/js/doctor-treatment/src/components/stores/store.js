@@ -23,7 +23,7 @@ export const paintHistory = writable([]);
 export const paintState = writable({
 		tool: null,
 		drawing: false,
-		color: {r:10, g:11, b:12},
+		color: '#000',
 		weight: 10,
 		canvasWidth: 0,
 		canvasHeight: 0

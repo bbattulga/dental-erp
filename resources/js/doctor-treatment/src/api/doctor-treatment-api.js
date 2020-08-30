@@ -77,6 +77,10 @@ export const fetchUserTreatments = (userId) => {
 	return axios.post('/api/user-treatment/query', data);
 }
 
+export const updateUserTreatment = (userTreatment) => {
+	return axios.post('/api/user-treatment/update', userTreatment);
+}
+
 export const deleteUserTreatment = (userTreatmentId) => {
 
 	if (typeof userTreatmentId !=='number'){
@@ -86,10 +90,12 @@ export const deleteUserTreatment = (userTreatmentId) => {
 	return axios.delete(`/api/user-treatment/delete/${userTreatmentId}`);
 }
 
+// note
 export const saveNote = (data) => {
-	return axios.put('/api/user-treatment/update', data);
+	return axios.post('/api/user-treatment/update', data);
 }
 
+// xrays
 export const fetchXrays = (userId) => {
 	let data = {
 		user_id: userId
@@ -105,20 +111,16 @@ export const uploadImage = (data) => {
 	return axios.post('/api/xray/create', data);
 }
 
-// fetch last painting
-export const fetchPainting = (data) => {
-	return axios.post('/api/user-treatment/paint/recent', data);
-}
+// paintings
 
-// fetch all paintings
 export const fetchPaintings = (data) => {
-	return axios.post('/api/user-treatment/paint', data);
+	return axios.post('/api/paint/user', data);
 }
 
 export const addPainting = (data) => {
-	return axios.post('/api/user-treatment/paint/create', data);
+	return axios.post('/api/paint/create', data);
 }
 
 export const updatePainting = (data) => {
-	return axios.put('/api/user-treatment/paint/update', data);
+	return axios.put('/api/paint/update', data);
 }

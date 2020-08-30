@@ -75,12 +75,15 @@
             @php
                 $shift_today = \Illuminate\Support\Facades\Auth::user()->shift_today;
             @endphp
+
             <div class="header-icons d-inline-block align-middle">
                 <div class="position-relative d-inline-block">
                     <button class="header-icon btn btn-empty" type="button" id="notificationButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="simple-icon-bell"></i>
+                        @if ($shift_today)
                         <span class="count">{{ $shift_today->appointments? $shift_today->appointments->count(): 0 }}</span>
+                        @endif
                     </button>
                     <div class="dropdown-menu dropdown-menu-right mt-3 scroll position-absolute"
                         id="notificationDropdown">

@@ -15,6 +15,8 @@ use App\Lease;
 use App\Transaction;
 use App\Promotion;
 use App\UserPromotions;
+use App\TransactionCategory;
+
 use Faker\Factory as Faker;
 
 
@@ -256,8 +258,9 @@ class DateBetweenSeeder extends Seeder
 
         factory(Transaction::class)->create([
             'price'=>(int)$total,
-            'type'=>4,
-            'type_id'=>$checkin->id,
+            'type_id'=>TransactionCategory::treatment()->id,
+            'transactionable_id'=>$checkin->id,
+            'transactionable_type'=>CheckIn::class,
             'description'=>'Зээлийн урьдчилгаа төлбөр',
             'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
         ]);
@@ -293,8 +296,9 @@ class DateBetweenSeeder extends Seeder
         $payment = $total-$total*$promotion_percentage/100;
         factory(Transaction::class)->create([
             'price' => (int)$payment,
-            'type' => 4,
-            'type_id' => $checkin->id,
+            'type_id' => TransactionCategory::treatment()->id,
+            'transactionable_id' => $checkin->id,
+            'transactionable_type' => CheckIn::class,
             'description' => $promotion_percentage == 0? '':'Урамшуулал ашиглаж төлбөр төлсөн',
             'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
         ]);
@@ -310,8 +314,9 @@ class DateBetweenSeeder extends Seeder
             $lease->update('price',(int) $paid);
             factory(Transaction::class)->create([
                 'price'=>(int) $paid,
-                'type'=>4,
-                'type_id'=>$checkin->id,
+                'type_id'=>TransactionCategory::treatment()->id,
+                'transactionable_id'=>$checkin->id,
+                'transactionable_type'=>CheckIn::class,
                 'description'=>$promotion_percentage==0? 'Зээлтэй төлбөр төлөгдсөн': 'Зээлтэй. Урамшуулал ашиглаж төлбөр төлсөн',
                 'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
             ]);
@@ -323,8 +328,9 @@ class DateBetweenSeeder extends Seeder
         $lease->update('price', 0);
         factory(Transaction::class)->create([
             'price'=>(int) $paid,
-            'type'=>4,
-            'type_id'=>$checkin->id,
+            'type_id'=>TransactionCategory::treatment()->id,
+            'transactionable_id'=>$checkin->id,
+            'transactionable_type'=>CheckIn::class,
             'description'=>$promotion_percentage==0? 'Зээлтэй төлбөр төлөгдсөн': 'Зээлтэй. Урамшуулал ашиглаж төлбөр төлсөн',
             'created_at'=>'' . $checkin->shift->date . ' ' . Date('H:i')
         ]);
@@ -347,7 +353,7 @@ class DateBetweenSeeder extends Seeder
 
     private function delta_days($date1, $date2){
         $datediff = strtotime($date2) - strtotime($date1);
-        return round($datediff / (60 * 60 * 24));
+        return abs(round($datediff / (60 * 60 * 24)));
     }
 
 }

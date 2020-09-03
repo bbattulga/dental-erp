@@ -81,12 +81,12 @@
                     <button class="header-icon btn btn-empty" type="button" id="notificationButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="simple-icon-bell"></i>
-                        <span class="count">3</span>
+                        <span class="count">0</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right mt-3 scroll position-absolute"
                         id="notificationDropdown">
 
-                        <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                        <!-- <div class="d-flex flex-row mb-3 pb-3 border-bottom">
                            <p class="font-weight-bold">Өвчтөний нэр </p>
                             <div class="pl-3 pr-2">
                                 <a href="#">
@@ -95,7 +95,7 @@
                                 </a>
                             </div>
                         </div>
-
+                        -->
                       
 
                     </div>

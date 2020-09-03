@@ -391,7 +391,7 @@
                     tds = `<tr><td>#${treatment.tooth_id}</td>` +
                             `<td></td>` +
                             `<td></td>` +
-                            `<td>${treatment.treatment.name}</td></tr>`;
+                            `<td>${treatment.treatment.name} ${treatment.checkin_id == 0? '(өөр эмнэлэгт хийлгэсэн)':''}</td></tr>`;
                 }
                 treatmentRows += `${tds}`;
             };

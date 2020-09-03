@@ -202,14 +202,18 @@
                                         <tbody>
                                         <?php $i = 1;?>
                                         @foreach($histories as $history)
+                                            @php
+                                                $tx = App\Transaction::where('type_id', App\TransactionCategory::material()->id)
+                                                ->where('transactionable_id', $history->id)
+                                                ->where('transactionable_type', App\ItemHistory::class)->first();
+                                            @endphp
                                             <tr>
                                                 <td>{{$i}}</td>
                                                 <td>{{$history->quantity}} ширхэг</td>
                                                 @if($history->quantity<0)
                                                     <td>{{-1*$specific_product->price*$history->quantity}}₮</td>
                                                 @else
-                                                    <td>{{\App\Transaction::where('type',7)->where('type_id',$history->id)->first()->price}} ₮</td>
-{{--                                                    <td>{{\App\Transaction::where('type',7)->where('type_id',$history->id)->first()}} ₮</td>--}}
+                                                    <td>{{$tx? $tx->price:0}} ₮</td>
                                                 @endif
                                                 <td>{{\App\User::find($history->created_by)->name}}</td>
                                                 <td>{{$history->created_at}}</td>

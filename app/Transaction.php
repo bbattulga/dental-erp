@@ -4,19 +4,36 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\CheckIn;
+use App\Promotion;
+    
+
 class Transaction extends Model
 {
     //
     protected $fillable = [
-        'price', 'type', 'type_id', 'description','created_by'
+        'price', 
+        'type_id', 
+        'transactionable_id',
+        'transactionable_type',
+        'description',
+        'created_by'
     ];
-    public function typeOut() {
-        return $this->hasOne('App\OutcomeCategory', 'id', 'type');
+
+    public function transactionable(){
+        return $this->morphTo();
     }
-    public function promotion() {
-        return $this->hasOne('App\UserPromotions', 'transaction_id', 'id');
+
+    public function type() {
+        return $this->hasOne('App\TransactionCategory', 'id', 'type_id');
     }
-    public function checkin() {
-        return $this->hasOne('App\Checkin', 'id', 'type_id');
+
+    // for legacy code
+    public function getPromotionAttribute(){
+        return $this->transactionable;
     }
+    public function getCheckInAttribute(){
+        return $this->transactionable;
+    }
+    // end for legacy code
 }

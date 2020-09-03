@@ -113,7 +113,6 @@
                         <label>Төрөл</label>
                         <select name="transaction_edit_type" class="form-control" id="mySelect">
                             <option id="variableValue" value="0"></option>
-
                         @foreach($types as $type)
                                 <option value="{{$type->id}}">{{$type->name}}</option>
                             @endforeach
@@ -173,12 +172,9 @@
                             </div>
                             <form id = "form2" method="post" action="{{url('/accountant/transactions/add')}}">
                                 @csrf
-                                <select class="form-control mb-3" name="type">
-                                    @foreach($types as $type)
-                                        @if($type->id == 4 || $type->id == 1 || $type->id == 2 || $type->id == 5 || $type->id == 6 || $type->id == 7)
-                                            @else
-                                            <option value="{{$type->id}}">{{$type->name}}</option>
-                                        @endif
+                                <select class="form-control mb-3" name="type_id">
+                                    @foreach ($types as $type)
+                                        <option value="{{$type->id}}">{{$type->name}}</option>
                                     @endforeach
                                 </select>
                                 <input id="pricee" name="price" class="form-control mb-3" required type="number" placeholder="Үнийн дүн"
@@ -187,6 +183,42 @@
                                        autocomplete="off">
                                 <button class="btn btn-primary btn-block" type="submit">ЗАРЛАГА ОРУУЛАХ</button>
                             </form>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Зардлын бүтэц</h5>
+                            <div class="chart-container">
+                                <canvas id="outcome_chart"></canvas>
+                            </div>
+                            <b>Нийт - {{number_format((int)$outcome)}}₮</b>
+                            <table border="0" width="100%">
+                                @foreach($types as $type)
+                                        <tr>
+                                            <td>
+                                                <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                                                    <div>
+                                                    <b>{{$type->name}}</b>
+                                                    </div>
+                                               <!--  </td>
+                                                <td class="text-right">
+                                                    <div> -->
+                                                        @php
+                                                            $out = $category_outcomes[$type->id];
+                                                        @endphp
+                                                        <div>
+                                                        <!-- protect from divide by zero -->
+                                                        @if ($outcome != 0)
+                                                            {{number_format($out)}}₮/{{round($out/$outcome*100, 2)}}%
+                                                        @else
+                                                            0₮/0%
+                                                        @endif
+                                                    </div>
+                                                <!-- </td> -->
+                                                </div>
+                                        </tr>
+                                @endforeach
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -219,57 +251,21 @@
                                        autocomplete="off">
                                 <input class="form-control mb-3" required name="description" type="text" placeholder="Тайлбар"
                                        autocomplete="off">
+                                <select class="form-control mb-3" name="type_id">
+                                    @foreach ($types as $type)
+                                        <option value="{{$type->id}}">{{$type->name}}</option>
+                                    @endforeach
+                                </select>
                                 <button class="btn btn-primary btn-block">ОРЛОГО ОРУУЛАХ</button>
                             </form>
-
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Зардлын бүтэц</h5>
-                    <?php $sum = 0?>
-                    <?php $income = 0?>
-                    @foreach($transactions as $transaction)
-                        @if($transaction->price < 0)
-                            <?php $sum = $sum + $transaction->price;?>
-                        @else
-                            <?php $income = $income + $transaction->price;?>
-                        @endif
-                    @endforeach
-                    <table border="0" width="100%">
-                        @foreach($types as $type)
-                            @if($type->id == 4 || $type->id == 5 || $type->id == 6)
-                                @else
-                                <?php $temp_sum = 0?>
-                                <?php $local_transactions = $transactions?>
-                                <tr>
-                                    <td>
-                                        <b>{{$type->name}}</b>
-                                    </td>
-                                    <td class="text-right">
-                                        @foreach($local_transactions->where('type', $type->id) as $transaction)
-                                            <?php $temp_sum = $temp_sum + $transaction->price?>
-                                        @endforeach
-                                        {{number_format($temp_sum)}}₮
-                                        / @if($sum != 0){{number_format($temp_sum/$sum*100, 2)}}% @else 0.00% @endif
-                                    </td>
-                                </tr>
-                                @endif
-
-                        @endforeach
-                    </table>
-                    <b></b>
-
-
-                </div>
-            </div>
-            <br>
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Орлого</h5>
-                    <b>{{intval($income)}}₮</b>
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Орлого</h5>
+                            <b>{{number_format((int)$income)}}₮</b>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -283,43 +279,45 @@
                             <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">Хугацаа
                                 өөрчлөн харах</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input id="date" name="start_date" autocomplete="off" class="form-control datepicker"
+                                    data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Эхлэл"
-                                   value="@if($start_date){{date('m/d/Y', $start_date)}}@else{{date('m/d/Y', strtotime('-30 Days'))}}@endif">&nbsp;&nbsp;&nbsp;<span
+                                   value="@if($start_date){{$start_date}}@else{{date('Y-m-d', strtotime('-30 Days'))}}@endif">&nbsp;&nbsp;&nbsp;<span
                                     style="color: #8f8f8f">-&nbsp;&nbsp;&nbsp;</span>
                             <input name="end_date" autocomplete="off" class="form-control datepicker "
+                                    data-date-format="yyyy-mm-dd"
                                    style="background-color: #f8f8f8; border-color: #f8f8f8; border-bottom-color: #8f8f8f; color: #8f8f8f; padding: 0px"
                                    placeholder="Төгсгөл"
-                                   value="@if($end_date){{date('m/d/Y', $end_date)}}@else{{date('m/d/Y')}}@endif">
+                                   value="@if($end_date){{$end_date}}@else{{date('Y-m-d')}}@endif">
                             <a href="#" onclick="$(this).closest('form').submit()" style="color: #8f8f8f">үзэх</a>
                         </div>
                     </form>
                 </div>
                 <div class="col-md-6 text-right">
                     <form id="monthSearch" action="{{url('/accountant/transactions/by_month')}}" method="post">
-                    @csrf
-                        <select name="year">
-                            @if($start_date)
-                                <option value="{{date('Y', $start_date)}}">{{date('Y', $start_date)}}</option>
-                                @for($m = 2019; $m<=2027; $m++)
-                                    @if($m != date('Y', $start_date))
-                                        <option value="{{$m}}">{{$m}}</option>
-                                    @endif
-                                @endfor
-                            @else
-                                <option value="{{date('Y')}}">{{date('Y')}}</option>
-                                @for($m = 2019; $m<=2027; $m++)
-                                    @if($m != date('Y'))
-                                        <option value="{{$m}}">{{$m}}</option>
-                                    @endif
-                                @endfor
-                            @endif
+                            @csrf
+                    <select name="year" id="select-year">
+                        @if(!empty($start_date))
+                            <option value="{{date('Y', strtotime($start_date))}}">{{date('Y', strtotime($start_date))}}</option>
+                            @for($m = 2019; $m<=2027; $m++)
+                                @if($m != date('Y', strtotime($start_date)))
+                                    <option value="{{$m}}">{{$m}}</option>
+                                @endif
+                            @endfor
+                        @else
+                            <option value="{{date('Y')}}">{{date('Y')}}</option>
+                            @for($m = 2019; $m<=2027; $m++)
+                                @if($m != date('Y'))
+                                    <option value="{{$m}}">{{$m}}</option>
+                                @endif
+                            @endfor
+                        @endif
                     </select>
-                    <select name="month" onchange="document.getElementById('monthSearch').submit()">
-                        @if($start_date)
-                            <option value="{{date('m', $start_date)}}">{{date('m', $start_date)}}</option>
+                    <select name="month" id="select-month" onchange="document.getElementById('monthSearch').submit()">
+                        @if(!empty($start_date))
+                            <option value="{{date('m', strtotime($start_date))}}">{{date('m', strtotime($start_date))}}</option>
                             @for($m = 1; $m<=12; $m++)
-                                @if($m != date('m', $start_date))
+                                @if($m != date('m', strtotime($start_date)))
                                     <option value="{{$m}}">{{$m}}</option>
                                 @endif
                             @endfor
@@ -331,8 +329,6 @@
                                 @endif
                             @endfor
                         @endif
-
-
                     </select>
                     </form>
                 </div>
@@ -365,9 +361,7 @@
                                         <td>{{$i}}</td>
                                         <td>{{$transaction->price}}</td>
                                         <td>
-
-                                            {{--@if(!empty($transaction->typeOut)){{$transaction->typeOut->name}} @endif--}}
-                                            Эмчилгээ
+                                            {{$transaction->type->name}}
                                         </td>
                                         <td>@if($transaction->description){{$transaction->description}} @else Тайлбар
                                             байхгүй @endif</td>
@@ -375,7 +369,7 @@
                                         <td>{{\App\User::find($transaction->created_by)->name}}</td>
                                         <td class="text-center">
                                             @if($transaction->created_by == \Illuminate\Support\Facades\Auth::user()->id)
-                                            <a onclick="editTransaction('{{$transaction->id}}', '{{$transaction->type}}','@if(!empty($transaction->typeOut)) {{$transaction->typeOut->name}}@endif',
+                                            <a onclick="editTransaction('{{$transaction->id}}', '{{$transaction->type_id}}','@if(!empty($transaction->type)) {{$transaction->type->name}}@endif',
                                                     '{{$transaction->price}}', '{{$transaction->description}}')">
                                                 <i class="iconsmind-Pencil"></i>
                                             </a>
@@ -396,6 +390,11 @@
 
         </div>
     </div><!-- row end-->
+
+    <!-- pass data to chart -->
+    <input type="hidden" id="category_outcomes" value="{{json_encode($category_outcomes)}}" />
+    <input type="hidden" id="outcome_categories" value="{{json_encode($types)}}" />
+
 @endsection
 @section('footer')
     <script>
@@ -437,6 +436,7 @@
 
     <!-- Selection table -->
     <script src="{{asset('plugin/datatables/dataTables.select.min.js')}}"></script>
+     <script src="{{asset('js/vendor/Chart.bundle.min.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -468,6 +468,112 @@
             table.buttons().container()
                 .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
         });
+
+
+        ////////////////////////// CHART
+        // CHART SETTINGS
+        var rootStyle = getComputedStyle(document.body);
+        var themeColor1 = rootStyle.getPropertyValue("--theme-color-1").trim();
+        var themeColor2 = rootStyle.getPropertyValue("--theme-color-2").trim();
+        var themeColor3 = rootStyle.getPropertyValue("--theme-color-3").trim();
+        var themeColor4 = rootStyle.getPropertyValue("--theme-color-4").trim();
+        var themeColor5 = rootStyle.getPropertyValue("--theme-color-5").trim();
+        var themeColor6 = rootStyle.getPropertyValue("--theme-color-6").trim();
+        var themeColor1_10 = rootStyle
+          .getPropertyValue("--theme-color-1-10")
+          .trim();
+        var themeColor2_10 = rootStyle
+          .getPropertyValue("--theme-color-2-10")
+          .trim();
+        var themeColor3_10 = rootStyle
+          .getPropertyValue("--theme-color-3-10")
+          .trim();
+        var themeColor4_10 = rootStyle
+          .getPropertyValue("--theme-color-4-10")
+          .trim();
+
+        var themeColor5_10 = rootStyle
+          .getPropertyValue("--theme-color-5-10")
+          .trim();
+        var themeColor6_10 = rootStyle
+          .getPropertyValue("--theme-color-6-10")
+          .trim();
+
+        var primaryColor = rootStyle.getPropertyValue("--primary-color").trim();
+        var foregroundColor = rootStyle
+          .getPropertyValue("--foreground-color")
+          .trim();
+        var separatorColor = rootStyle.getPropertyValue("--separator-color").trim();
+
+        var chartTooltip = {
+            backgroundColor: foregroundColor,
+            titleFontColor: primaryColor,
+            borderColor: separatorColor,
+            borderWidth: 0.5,
+            bodyFontColor: primaryColor,
+            bodySpacing: 10,
+            xPadding: 15,
+            yPadding: 15,
+            cornerRadius: 0.15,
+            displayColors: false
+          };
+
+        // INSTANSIATE CHART
+        var outcomeCategories = JSON.parse(document.getElementById('outcome_categories').value);
+        var outcomeData = JSON.parse(document.getElementById('category_outcomes').value);
+        var outcomes = [];
+        for (let oc of outcomeCategories){
+            outcomes.push(outcomeData[oc.id]);
+        }
+        console.log('outcome categories', outcomeCategories);
+        console.log('outcome labels', outcomeCategories.map(o => o.name));
+        console.log('outcomes', outcomes);
+
+        if (document.getElementById("outcome_chart")) {
+        var pieChart = document.getElementById("outcome_chart");
+        var myChart = new Chart(pieChart, {
+          type: "pie",
+          data: {
+            labels: outcomeCategories.map(o => o.name),
+            datasets: [
+              {
+                label: "",
+                // borderColor: [themeColor1, themeColor2, themeColor3],
+                backgroundColor: outcomes.map(m => '#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0')),
+                borderWidth: 2,
+                data: outcomes
+              }
+            ]
+          },
+          draw: function() {},
+          options: {
+            plugins: {
+              datalabels: {
+                display: false
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+              display: false
+            },
+            layout: {
+              padding: {
+                bottom: 20
+              }
+            },
+            legend: {
+              position: "bottom",
+              labels: {
+                padding: 30,
+                usePointStyle: true,
+                fontSize: 12
+              }
+            },
+            tooltips: chartTooltip
+          }
+        });
+      }
 
     </script>
     <script>

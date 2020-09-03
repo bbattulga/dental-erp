@@ -138,6 +138,14 @@
     		alert('Үнэн дүн буруу байна');
     		return true;
     	}
+        for (let i=0; i<$treatmentHistories.length; i++){
+            if ($treatmentHistories[i].price || !$treatmentHistories[i].checkin_id)
+                continue;
+            if (!$treatmentHistories[i].inputPrice){
+                alert('Үнэн дүн дутуу байна');
+                return;
+            }
+        }
         lastTotal = total;
 
         // define async function then call immediately

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Log;
-use App\OutcomeCategory;
+use App\TransactionCategory;
 use App\UserRole;
 use App\Transaction;
 use Carbon\Carbon;
@@ -21,20 +21,17 @@ class AccountantTransactionController extends Controller
 
 
     public function index() {
-        $transactions = Transaction::all()->where('created_at','>=', date('Y-m-d', strtotime('first day of this month')))->sortByDesc('id');
-        $roles = UserRole::all();
-        $types = OutcomeCategory::all();
         $start_date = strtotime('-30 Days');
         $end_date = strtotime('Today');
-        return view('accountant.transaction', compact('transactions', 'roles', 'start_date', 'end_date', 'types'));
+        return view('accountant.transaction', $this->transactionData($start_date, $end_date));
     }
 
     public function edit(Request $request) {
         $transaction = Transaction::find($request['transaction_id']);
         Log::create(['type'=>0,'type_id'=>$transaction->id,'user_id'=>Auth::user()->id,'action_id'=>1,'description'=> 'Хэмжээ '
             .$transaction->price.'₮ -> '.$request['price'].'₮ Тайлбар '.$transaction->description. ' -> '. $request['description'] . ' Төрөл: '
-            .OutcomeCategory::find($transaction->type)->name. ' -> '.OutcomeCategory::find($request['transaction_edit_type'])->name]);
-        $transaction->update(['price'=>$request['price'],'description'=>$request['description'],'type'=>$request['transaction_edit_type']]);
+            .TransactionCategory::find($transaction->type_id)->name. ' -> '.TransactionCategory::find($request['transaction_edit_type'])->name]);
+        $transaction->update(['price'=>$request['price'],'description'=>$request['description'],'type_id'=>$request['transaction_edit_type']]);
         return redirect('/accountant/transactions');
     }
 //    public function delete(Request $request){
@@ -46,10 +43,7 @@ class AccountantTransactionController extends Controller
 //    }
 
     public function search($start_date, $end_date) {
-        $transactions = Transaction::all()->whereBetween('created_at', [date('Y-m-d', $start_date), date('Y-m-d', $end_date)])->sortByDesc('id');
-        $roles = UserRole::all();
-        $types = OutcomeCategory::all();
-        return view('accountant.transaction', compact('transactions', 'roles', 'start_date', 'end_date', 'types'));
+        return view('accountant.transaction', $this->transactionData($start_date, $end_date));
     }
 
     public function updateOutcomeType(Request $request) {
@@ -57,42 +51,86 @@ class AccountantTransactionController extends Controller
     }
 
     public function store(Request $request) {
-        Transaction::create(['price'=> -1*$request['price'], 'type'=>$request['type'], 'type_id'=>0, 'description'=>$request['description'],'created_by'=>Auth::user()->id]);
+        Transaction::create([
+            'price'=> -1*abs($request['price']), 
+            'type_id'=> $request['type_id'], 
+            'description'=>$request['description'],
+            'created_by'=>Auth::user()->id
+        ]);
         return redirect('/accountant/transactions');
     }
     public function salary(Request $request) {
         $user = UserRole::find($request['staff'])->staff;
-        Transaction::create(['price'=> -1*$request['price'], 'type'=>1, 'type_id'=>$request['staff'], 'description'=>$user->name.' цалин','created_by'=>Auth::user()->id]);
+        $salary_type = TransactionCategory::salary();
+        Transaction::create(['price'=> -1*abs($request['price']),
+                                'type_id'=> $salary_type->id, 
+                                'description'=>$user->name.' цалин',
+                                'created_by'=>Auth::user()->id]);
         return redirect('/accountant/transactions');
     }
     public function income(Request $request) {
-        Transaction::create(['price'=> $request['price'], 'type'=>5, 'type_id'=>0, 'description'=>$request['description'],'created_by'=>Auth::user()->id]);
+        Transaction::create(['price'=> abs($request['price']),
+                            'type_id'=> $request['type_id'], 
+                            'description'=>$request['description'],
+                            'created_by'=>Auth::user()->id
+                        ]);
         return redirect('/accountant/transactions');
     }
-    public function outcomeCategory(Request $request) {
-        OutcomeCategory::create(['name'=>$request['name']]);
+    public function TransactionCategory(Request $request) {
+        TransactionCategory::create(['name'=>$request['name']]);
         return redirect()->back();
     }
 
     public function date(Request $request) {
         $start_date = $request['start_date'];
         $end_date = $request['end_date'];
-        $start_date = explode('/', $start_date);
-        $start_date = strtotime($start_date[2] . '-' . $start_date[0] . '-' . $start_date[1]);
-        $end_date = explode('/', $end_date);
-        $end_date = strtotime($end_date[2] . '-' . $end_date[0] . '-' . $end_date[1]);;
         return redirect('/accountant/transactions/' . $start_date.'/'.$end_date);
     }
     public function by_month(Request $request){
         $month = $request['month'];
         $year = $request['year'];
         $end_month = $request['month']+1;
-        $start_date= strtotime($year .'-'.$month.'-'.'1');
+        $start_date= Date('Y-m-d', strtotime($year .'-'.$month.'-'.'01'));
         if($end_month == 12){
             $end_month = 1;
         }
-        $end_date = strtotime($year.'-'.$end_month.'-'.'1');
+        $end_date = Date('Y-m-d', strtotime($year.'-'.$end_month.'-'.'01'));
         return redirect('/accountant/transactions/' . $start_date.'/'.$end_date);
+    }
+
+
+    public function transactionData($start_date, $end_date){
+        if (gettype($start_date) === 'integer'){
+            $start_date = Date('Y-m-d 00:00:00', $start_date);
+        }
+        if (gettype($end_date) === 'integer'){
+            $end_date = Date('Y-m-d 23:59:59', $end_date);
+        }
+        $roles = UserRole::all();
+        $types = TransactionCategory::all();
+        $transactions = Transaction::all()->where('created_at','>=', $start_date)
+                                        ->where('created_at', '<=', $end_date)
+                                        ->sortByDesc('id');
+        $income = 0;
+        $outcome = 0;
+        $category_outcomes = [];
+        for ($i=0; $i<=$types->count(); $i++){
+            array_push($category_outcomes, 0);
+        }
+        foreach($transactions as $transaction){
+            if ($transaction->price > -1){
+                $income += $transaction->price;
+                continue;
+            }
+            $category_outcomes[$transaction->type_id] += abs($transaction->price);
+            $outcome += $transaction->price;
+        }
+        $outcome = abs($outcome);
+
+        $start_date = Date('Y-m-d', strtotime($start_date));
+        $end_date = Date('Y-m-d', strtotime($end_date));
+        return compact('transactions', 'roles', 'start_date', 'end_date', 
+                        'types', 'outcome', 'category_outcomes', 'income');
     }
 
 }

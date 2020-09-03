@@ -175,9 +175,9 @@
                                                                    id="hidden">
                                                             {{--<select class="form-control mb-3" name="user_id">--}}
                                                                 {{--@foreach($roles as $role)--}}
-                                                                    {{--<option value="{{$role->staff->id}}">{{$role->staff->name}}/@if($role->role_id == 0)--}}
-                                                                            {{--Менежер @elseif($role->role_id == 1) Pесепшн @elseif($role->role_id == 2)--}}
-                                                                            {{--Доктор @elseif($role->role_id == 3) Сувилагч @else Бусад @endif/--}}
+                                                                    {{--<option value="{{$role->staff->id}}">{{$role->staff->name}}/@if($role->role_id == 5)--}}
+                                                                            {{--Менежер @elseif($role->role_id == 2) Pесепшн @elseif($role->role_id == 3)--}}
+                                                                            {{--Доктор @elseif($role->role_id == 1) Сувилагч @else Бусад @endif/--}}
                                                                     {{--</option>--}}
                                                                 {{--@endforeach--}}
                                                             {{--</select>--}}

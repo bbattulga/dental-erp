@@ -7,6 +7,7 @@ use App\ItemHistory;
 use App\Log;
 use App\UserRole;
 use App\Transaction;
+use App\TransactionCategory;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class AccountantItemController extends Controller
         $products = Item::all();
         $specific_product = Item::find($id);
         $histories = ItemHistory::all()->where('item_id', $specific_product->id);
-        return view('accountant.item_show', compact('products', 'specific_product', 'histories', 'roles'));
+        return view('accountant.item_show', compact('products', 'specific_product', 'histories'));
     }
     public function add_item(Request $request){
         $product = Item::create(['name'=>$request['name'],'price'=>$request['price'],'quantity'=>0]);
@@ -36,7 +37,14 @@ class AccountantItemController extends Controller
         $product = Item::find($request['id']);
         $product->update(['quantity'=>$product->quantity + $request['quantity']]);
         $history = ItemHistory::create(['item_id'=>$product->id,'quantity'=>$request['quantity'], 'created_by'=>Auth::user()->id]);
-        Transaction::create(['type'=>7,'type_id'=>$history->id,'price'=> -1*$request['price'],'description'=>''.$product->name.' '.$request['quantity'].' ширхэг', 'created_by'=>Auth::user()->id]);
+        Transaction::create([
+                        'type_id'=>TransactionCategory::material()->id,
+                        'transactionable_id'=>$history->id,
+                        'transactionable_name'=>Item::class,
+                        'price'=> -1*abs($request['price']),
+                        'description'=>''.$product->name.' '.$request['quantity'].' ширхэг', 
+                        'created_by'=>Auth::user()->id
+                    ]);
         return redirect('/accountant/items/'.$product->id);
     }
     public function delete_item($id){
@@ -48,7 +56,7 @@ class AccountantItemController extends Controller
         $products = Item::all();
         $specific_product = Item::find($id);
         $histories = ItemHistory::all()->where('item_id', $specific_product->id);
-        return view('accountant.item_change', compact('products', 'specific_product', 'histories', 'roles'));
+        return view('accountant.item_change', compact('products', 'specific_product', 'histories'));
     }
     public function change_item($id,Request $request){
         $product = Item::find($id);

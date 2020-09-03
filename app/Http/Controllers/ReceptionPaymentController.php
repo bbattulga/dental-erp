@@ -12,10 +12,12 @@ use App\Products;
 use App\Promotion;
 use App\UserRole;
 use App\Transaction;
+use App\TransactionCategory;
 use App\TreatmentSelections;
 use App\User;
 use App\UserPromotions;
 use App\UserTreatments;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +30,7 @@ class ReceptionPaymentController extends Controller
     }
     
     public function index() {
-        $treatment_done_users = CheckIn::where('state',2)->orderBy('id', 'desc')->get();
+        $treatment_done_users = CheckIn::where('state',2)->orderBy('updated_at', 'asc')->get();
         return view('reception.payment',compact('treatment_done_users'));
     }
 
@@ -47,7 +49,14 @@ class ReceptionPaymentController extends Controller
                 $total = $total + $user_treatment->price;
             }
         if(empty($request['promotion_code']) and empty($request['lease'])){
-            Transaction::create(['price'=>$total,'type'=>4,'type_id'=>$request['checkin_id'],'created_by'=>Auth::user()->id]);
+
+            Transaction::create(['price'=>$total,
+                                'type_id'=>TransactionCategory::treatment()->id,
+                                'transactionable_type'=>UserTreatments::class,
+                                'transactionable_id'=>$request['checkin_id'],
+                                'created_by'=>Auth::user()->id]
+                            );
+
             $update = CheckIn::find($request['checkin_id']);
             $update->update(['state' => 3]);
         }
@@ -55,9 +64,17 @@ class ReceptionPaymentController extends Controller
             if($promotion = Promotion::where('promotion_end_date','>=',date('Y-m-d'))->where('promotion_code',$request['promotion_code'])->first()){
                 $total = $total - $total*$promotion->percentage/100;
                 $total = (int) $total;
-                $transaction = Transaction::create(['price'=>$total,'type'=>4,
+
+                $transaction = Transaction::create([
+                    'price'=>$total,
+                    'type_id'=>TransactionCategory::treatment()->id,
                     'description' => 'Урамшуулаллын код ашиглаж төлбөр төлсөн',
-                    'type_id'=>$request['checkin_id'],'created_by'=>Auth::user()->id]);
+
+                    'transactionable_type'=>UserTreatments::class,
+                    'transactionable_id'=>$request['checkin_id'],
+                    'created_by'=>Auth::user()->id
+                ]);
+
                 UserPromotions::create(['checkin_id'=>$request['checkin_id'],'promotion_id'=>$promotion->id, 'created_by'=>Auth::user()->id]);
                 $update = CheckIn::find($request['checkin_id']);
                 $update->update(['state' => 3]);
@@ -68,7 +85,16 @@ class ReceptionPaymentController extends Controller
         }
         elseif (empty($request['promotion_code']) and !empty($request['lease'])){
             Lease::create(['total'=>$total,'checkin_id'=>$request['checkin_id'],'price'=>$total-$request['lease'],'created_by'=>Auth::user()->id]);
-            Transaction::create(['price'=>$request['lease'],'type'=>4,'type_id'=>$request['checkin_id'],'created_by'=>Auth::user()->id,'description'=>'Зээлтэй төлбөр төлөгдсөн.']);
+
+            Transaction::create([
+                'price'=>$request['lease'],
+                'type_id'=>TransactionCategory::treatment()->id,
+                'transactionable_type'=>UserTreatments::class,
+                'transactionable_id'=>$request['checkin_id'],
+                'created_by'=>Auth::user()->id,
+                'description'=>'Зээлийн урьдчилгаа.'
+            ]);
+
             $update = CheckIn::find($request['checkin_id']);
             $update->update(['state' => 4]);
         }
@@ -77,9 +103,16 @@ class ReceptionPaymentController extends Controller
                 $total = $total - $total*$promotion->percentage/100;
                 $tota = (int) $total;
                 Lease::create(['total'=>$total,'checkin_id'=>$request['checkin_id'],'price'=>$total-$request['lease'],'created_by'=>Auth::user()->id]);
-                $transaction = Transaction::create(['price'=>$request['lease'],'type'=>4,'type_id'=>$request['checkin_id'],
+
+                $transaction = Transaction::create([
+                    'price'=>$request['lease'],
+                    'type_id'=>TransactionCategory::treatment()->id,
+                    'transactionable_type'=>UserTreatments::class,
+                    'transactionable_id'=>$request['checkin_id'],
                     'description'=>'Зээлтэй, урамшуулал ашиглаж төлбөр төлөгдсөн.',
-                    'created_by'=>Auth::user()->id]);
+                    'created_by'=>Auth::user()->id
+                ]);
+
                 UserPromotions::create(['checkin_id'=>$request['checkin_id'],'promotion_id'=>$promotion->id, 'created_by'=>Auth::user()->id]);
                 $update = CheckIn::find($request['checkin_id']);
                 $update->update(['state' => 4]);
@@ -105,11 +138,29 @@ class ReceptionPaymentController extends Controller
 
         $lease->price = $lease->price - $request['price'];
         $lease->save();
-        Transaction::create(['price'=>$request['price'],'type'=>4,'type_id'=>$request['checkin_id'],'description'=>'Зээлийн үлдэгдэл төлбөр.','created_by'=>Auth::user()->id]);
+
         $checkin = CheckIn::find($request['checkin_id']);
         if ($lease->price == 0){
             $checkin->update(['state'=>3]);
             $lease->delete();
+            Transaction::create([
+                'price'=>$request['price'],
+                'type_id'=>TransactionCategory::treatment()->id,
+                'transactionable_type'=>UserTreatments::class,
+                'transactionable_id'=>$request['checkin_id'],
+                'description'=>'Зээлтэй төлбөр төлөгдсөн.',
+                'created_by'=>Auth::user()->id
+            ]);
+        }else{
+            // left some
+            Transaction::create([
+                'price'=>$request['price'],
+                'type_id'=>TransactionCategory::treatment()->id,
+                'transactionable_type'=>UserTreatments::class,
+                'transactionable_id'=>$request['checkin_id'],
+                'description'=>'Зээл төлөх.',
+                'created_by'=>Auth::user()->id
+            ]);
         }
         return redirect('/reception/lease');
     }
@@ -122,7 +173,7 @@ class ReceptionPaymentController extends Controller
         $specific_product = Item::find($id);
         $histories = ItemHistory::all()->where('item_id', $specific_product->id);
         $roles = UserRole::all();
-        return view('reception.product_show', compact('products', 'specific_product', 'histories', 'roles','created_user'));
+        return view('reception.product_show', compact('products', 'specific_product', 'histories', 'roles'));
     }
 
     public function decrease_product(Request $request) {
@@ -130,7 +181,13 @@ class ReceptionPaymentController extends Controller
         $minus = $product->quantity - $request['quantity'];
         $product->update(['quantity'=>$minus]);
         $history = ItemHistory::create(['item_id'=>$product->id,'quantity'=> -1 * $request['quantity'],'created_by'=>Auth::user()->id]);
-        Transaction::create(['type'=>6,'type_id'=>$request['id'],'price'=> $request['quantity']*$product->price,'description'=>''.$product->name.' '.$request['quantity'].' ширхэг зарсан.','created_by'=>Auth::user()->id]);
+        Transaction::create([
+                'type_id'=>TransactionCategory::item()->id,
+                'transactionable_id'=>$request['id'],
+                'transactionable_type'=>ItemHistory::class,
+                'price'=> $request['quantity']*$product->price,
+                'description'=>''.$product->name.' '.$request['quantity'].' ширхэг зарсан.',
+                'created_by'=>Auth::user()->id]);
         return redirect('/reception/product/'.$product->id);
     }
 }

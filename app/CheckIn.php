@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\CheckInState;
+use App\TransactionCategory;
 
 
 class CheckIn extends Model
@@ -26,7 +27,7 @@ class CheckIn extends Model
         return $this->hasMany('App\UserTreatments', 'checkin_id', 'id');
     }
     public function transactions() {
-        return Transaction::where('type', 4);
+        return Transaction::where('type_id', TransactionCategory::treatment()->id);
     }
     public function user_promotion() {
         return $this->hasOne('App\UserPromotions', 'checkin_id', 'id');

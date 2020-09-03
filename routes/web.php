@@ -46,164 +46,173 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 //--ADMIN STARTING--
+// contollers have admin middleware
+Route::group(['prefix' => '/admin'], function() {
 
-// for normal routings
-Route::get('/admin/dashboard', 'AdminController@dashboard')->name('dash');
-Route::get('/admin/dashboard/{date1}/{date2}', 'AdminController@show_between');
-Route::get('/admin/shifts', 'AdminTimeController@index');
+	Route::get('dashboard', 'AdminController@dashboard')->name('dash');
+	Route::get('dashboard/{date1}/{date2}', 'AdminController@show_between');
+	Route::get('shifts', 'AdminTimeController@index');
 
-Route::get('/admin/add_staff/{id}/profile', 'AdminController@profile');
-Route::get('/admin/add_staff/fire/{id}','AdminController@fire');
-Route::get('/admin/add_staff/edit/{id}','AdminStaffController@edit');
-Route::get('/admin/add_staff','AdminController@index');
-Route::post('/admin/add_staff','AdminController@add_staff');
-Route::post('/admin/update_staff','AdminStaffController@update');
-Route::get('/admin/staff_check/{id}/{start_date}/{end_date}', 'AdminStaffController@search');
-Route::post('/admin/staff/by_month', 'AdminStaffController@by_month');
-Route::post('/admin/staff/date', 'AdminStaffController@date');
-// for ajax
-Route::delete('/admin/staff/delete', 'AdminStaffController@delete');
+	Route::get('add_staff/{id}/profile', 'AdminController@profile');
+	Route::get('add_staff/fire/{id}','AdminController@fire');
+	Route::get('add_staff/edit/{id}','AdminStaffController@edit');
+	Route::get('add_staff','AdminController@index');
+	Route::post('add_staff','AdminController@add_staff');
+	Route::post('update_staff','AdminStaffController@update');
+	Route::get('staff_check/{id}/{start_date}/{end_date}', 'AdminStaffController@search');
+	Route::post('staff/by_month', 'AdminStaffController@by_month');
+	Route::post('staff/date', 'AdminStaffController@date');
 
+	// for ajax
+	Route::delete('staff/delete', 'AdminStaffController@delete');
 
-Route::get('/admin/promotion','AdminPromotionController@index');
-Route::post('/admin/promotion/add','AdminPromotionController@store');
-Route::get('/admin/promotion_check/{id}','AdminPromotionController@promotion_check');
-Route::get('/admin/promotion_edit_index/{id}','AdminPromotionController@promotion_edit_index');
-Route::post('/admin/promotion_edit_index/{id}','AdminPromotionController@promotion_edit_index');
-Route::get('/admin/promotion_edit/{id}','AdminPromotionController@promotion_edit');
-Route::post('/admin/promotion_edit/{id}','AdminPromotionController@promotion_edit');
+	Route::get('promotion','AdminPromotionController@index');
+	Route::post('promotion/add','AdminPromotionController@store');
+	Route::get('promotion_check/{id}','AdminPromotionController@promotion_check');
+	Route::get('promotion_edit_index/{id}','AdminPromotionController@promotion_edit_index');
+	Route::post('promotion_edit_index/{id}','AdminPromotionController@promotion_edit_index');
+	Route::get('promotion_edit/{id}','AdminPromotionController@promotion_edit');
+	Route::post('promotion_edit/{id}','AdminPromotionController@promotion_edit');
 
-Route::get('/admin/product','AdminProductController@product');
-Route::get('/admin/product/{id}','AdminProductController@show');
-Route::post('/admin/add_product','AdminProductController@add_product');
-Route::post('/admin/edit_product','AdminProductController@edit_product');
-Route::post('/admin/decrease_product','AdminProductController@decrease_product');
-Route::get('/admin/delete_product/{id}','AdminProductController@delete_product');
+	Route::get('product','AdminProductController@product');
+	Route::get('product/{id}','AdminProductController@show');
+	Route::post('add_product','AdminProductController@add_product');
+	Route::post('edit_product','AdminProductController@edit_product');
+	Route::post('decrease_product','AdminProductController@decrease_product');
+	Route::get('delete_product/{id}','AdminProductController@delete_product');
 
-Route::get('/admin/time', 'AdminTimeController@time');
-Route::get('/admin/time/{i}/{doctor_staff_id}/{shift_id}','AdminTimeController@store');
-Route::get('/admin/time/week/{id}', 'AdminTimeController@timeWeek');
-Route::post('/admin/time/add', 'AdminTimeController@storeAppointment');
-Route::get('/admin/time/cancel','AdminTimeController@cancelAppointment');
+	Route::get('time', 'AdminTimeController@time');
+	Route::get('time/{i}/{doctor_staff_id}/{shift_id}','AdminTimeController@store');
+	Route::get('time/week/{id}', 'AdminTimeController@timeWeek');
+	Route::post('time/add', 'AdminTimeController@storeAppointment');
+	Route::get('time/cancel','AdminTimeController@cancelAppointment');
 
-Route::post('/admin/transaction/date', 'AdminTransactionController@date');
-Route::get('/admin/transaction', 'AdminTransactionController@index');
-Route::get('/admin/transaction/{start_date}/{end_date}', 'AdminTransactionController@search');
-Route::post('/admin/transaction/by_month','AdminTransactionController@by_month');
+	Route::post('transaction/date', 'AdminTransactionController@date');
+	Route::get('transaction', 'AdminTransactionController@index');
+	Route::get('transaction/{start_date}/{end_date}', 'AdminTransactionController@search');
+	Route::post('transaction/by_month','AdminTransactionController@by_month');
 
-Route::post('/admin/transactions/salary', 'AdminTransactionController@salary');
-Route::post('/admin/transactions/add', 'AdminTransactionController@store');
-Route::post('/admin/transactions/income', 'AdminTransactionController@income');
-Route::post('/admin/transactions/outcome/type', 'AdminTransactionController@outcomeCategory');
+	Route::post('transactions/salary', 'AdminTransactionController@salary');
+	Route::post('transactions/add', 'AdminTransactionController@store');
+	Route::post('transactions/income', 'AdminTransactionController@income');
+	Route::post('transactions/outcome/type', 'AdminTransactionController@outcomeCategory');
 
-Route::get('/admin/hospital','AdminHospitalController@index');
-Route::get('/admin/hospital/{from}/{to}', 'AdminHospitalController@date');
-Route::post('/admin/hospital/by_month','AdminHospitalController@by_month');
-Route::post('/admin/hospital/by_date','AdminHospitalController@by_date');
+	Route::get('hospital','AdminHospitalController@index');
+	Route::get('hospital/{from}/{to}', 'AdminHospitalController@date');
+	Route::post('hospital/by_month','AdminHospitalController@by_month');
+	Route::post('hospital/by_date','AdminHospitalController@by_date');
 
-Route::get('/admin/logs','AdminController@logs');
-Route::get('/admin/users','AdminController@users');
-Route::get('/admin/user_check/{id}','AdminController@user_check');
-Route::get('/admin/search', 'AdminController@search');
+	Route::get('logs','AdminController@logs');
+	Route::get('users','AdminController@users');
+	Route::get('user_check/{id}','AdminController@user_check');
+	Route::get('search', 'AdminController@search');
 
-Route::get('/admin/treatment', 'AdminTreatmentController@index');
-Route::post('/admin/treatment/store', 'AdminTreatmentController@store');
-Route::post('/admin/treatment/storeTreatmentSelection', 'AdminTreatmentController@storeTreatmentSelection');
-Route::post('/admin/treatment/updateTreatmentSelection', 'AdminTreatmentController@updateTreatmentSelection');
-Route::post('/admin/treatment/update', 'AdminTreatmentController@update');
-Route::get('/admin/treatment/{id}', 'AdminTreatmentController@edit');
-Route::get('/admin/treatment/{id}/{s_id}', 'AdminTreatmentController@editTreatmentSelection');
+	Route::get('treatment', 'AdminTreatmentController@index');
+	Route::post('treatment/store', 'AdminTreatmentController@store');
+	Route::post('treatment/storeTreatmentSelection', 'AdminTreatmentController@storeTreatmentSelection');
+	Route::post('treatment/updateTreatmentSelection', 'AdminTreatmentController@updateTreatmentSelection');
+	Route::post('treatment/update', 'AdminTreatmentController@update');
+	Route::get('treatment/{id}', 'AdminTreatmentController@edit');
+	Route::get('treatment/{id}/{s_id}', 'AdminTreatmentController@editTreatmentSelection');
+});
 
 //--ACCOUNTANT STARTING--
-Route::post('/accountant/transactions/date', 'AccountantTransactionController@date');
-Route::get('/accountant/transactions', 'AccountantTransactionController@index');
-Route::post('/accountant/transactions/edit', 'AccountantTransactionController@edit');
-Route::post('/accountant/transactions/delete','AccountantTransactionController@delete');
-Route::get('/accountant/transactions/{start_date}/{end_date}', 'AccountantTransactionController@search');
-Route::post('/accountant/transactions/by_month','AccountantTransactionController@by_month');
 
-Route::post('/accountant/transactions/salary', 'AccountantTransactionController@salary');
-Route::post('/accountant/transactions/add', 'AccountantTransactionController@store');
-Route::post('/accountant/transactions/income', 'AccountantTransactionController@income');
-Route::post('/accountant/transactions/outcome/type', 'AccountantTransactionController@outcomeCategory');
+Route::group(['prefix'=>'/accountant'], function(){
+	Route::post('/transactions/date', 'AccountantTransactionController@date');
+	Route::get('/transactions', 'AccountantTransactionController@index');
+	Route::post('/transactions/edit', 'AccountantTransactionController@edit');
+	Route::post('/transactions/delete','AccountantTransactionController@delete');
+	Route::get('/transactions/{start_date}/{end_date}', 'AccountantTransactionController@search');
+	Route::post('/transactions/by_month','AccountantTransactionController@by_month');
 
-Route::get('/accountant/products','AccountantProductController@product');
-Route::get('/accountant/products/{id}','AccountantProductController@show');
-Route::post('/accountant/add_product','AccountantProductController@add_product');
-Route::post('/accountant/edit_product','AccountantProductController@edit_product');
-Route::post('/accountant/change_product/{id}','AccountantProductController@change_product');
-Route::get('/accountant/change_product/{id}','AccountantProductController@change_product');
-Route::get('/accountant/change_product_index/{id}','AccountantProductController@change_product_index');
-Route::post('/accountant/change_product_index/{id}','AccountantProductController@change_product_index');
-Route::post('/accountant/decrease_product','AccountantProductController@decrease_product');
-Route::get('/accountant/delete_product/{id}','AccountantProductController@delete_product');
+	Route::post('/transactions/salary', 'AccountantTransactionController@salary');
+	Route::post('/transactions/add', 'AccountantTransactionController@store');
+	Route::post('/transactions/income', 'AccountantTransactionController@income');
+	Route::post('/transactions/outcome/type', 'AccountantTransactionController@outcomeCategory');
 
-Route::get('/accountant/items','AccountantItemController@item');
-Route::get('/accountant/items/{id}','AccountantItemController@show');
-Route::post('/accountant/add_item','AccountantItemController@add_item');
-Route::post('/accountant/edit_item','AccountantItemController@edit_item');
-Route::get('/accountant/change_item_index/{id}','AccountantItemController@change_item_index');
-Route::post('/accountant/change_item_index/{id}','AccountantItemController@change_item_index');
-Route::get('/accountant/change_item/{id}','AccountantItemController@change_item');
-Route::post('/accountant/change_item/{id}','AccountantItemController@change_item');
+	Route::get('/products','AccountantProductController@product');
+	Route::get('/products/{id}','AccountantProductController@show');
+	Route::post('/add_product','AccountantProductController@add_product');
+	Route::post('/edit_product','AccountantProductController@edit_product');
+	Route::post('/change_product/{id}','AccountantProductController@change_product');
+	Route::get('/change_product/{id}','AccountantProductController@change_product');
+	Route::get('/change_product_index/{id}','AccountantProductController@change_product_index');
+	Route::post('/change_product_index/{id}','AccountantProductController@change_product_index');
+	Route::post('/decrease_product','AccountantProductController@decrease_product');
+	Route::get('/delete_product/{id}','AccountantProductController@delete_product');
+
+	Route::get('/items','AccountantItemController@item');
+	Route::get('/items/{id}','AccountantItemController@show');
+	Route::post('/add_item','AccountantItemController@add_item');
+	Route::post('/edit_item','AccountantItemController@edit_item');
+	Route::get('/change_item_index/{id}','AccountantItemController@change_item_index');
+	Route::post('/change_item_index/{id}','AccountantItemController@change_item_index');
+	Route::get('/change_item/{id}','AccountantItemController@change_item');
+	Route::post('/change_item/{id}','AccountantItemController@change_item');
 
 
 
-Route::get('/accountant/staffs', 'AccountantStaffController@index');
-Route::get('/accountant/staff_check/{id}','AccountantStaffController@staff_check');
-Route::get('/accountant/staff_check/{id}/{start_date}/{end_date}', 'AccountantStaffController@search');
-Route::post('/accountant/staff/by_month', 'AccountantStaffController@by_month');
-Route::post('/accountant/staff/date', 'AccountantStaffController@date');
+	Route::get('/staffs', 'AccountantStaffController@index');
+	Route::get('/staff_check/{id}','AccountantStaffController@staff_check');
+	Route::get('/staff_check/{id}/{start_date}/{end_date}', 'AccountantStaffController@search');
+	Route::post('/staff/by_month', 'AccountantStaffController@by_month');
+	Route::post('/staff/date', 'AccountantStaffController@date');
 
-Route::get('/accountant/hospital', 'AccountantHospitalController@index');
-Route::get('/accountant/hospital/{from}/{to}', 'AccountantHospitalController@date');
-Route::post('/accountant/hospital/by_month','AccountantHospitalController@by_month');
-Route::post('/accountant/hospital/by_date','AccountantHospitalController@by_date');
+	Route::get('/hospital', 'AccountantHospitalController@index');
+	Route::get('/hospital/{from}/{to}', 'AccountantHospitalController@date');
+	Route::post('/hospital/by_month','AccountantHospitalController@by_month');
+	Route::post('/hospital/by_date','AccountantHospitalController@by_date');
+});
 
 //--RECEPTION STARTING--
-Route::get('/reception/user', 'ReceptionUserController@index');
-Route::post('/reception/user/store','ReceptionUserController@store');
-Route::post('/reception/user/update','ReceptionUserController@update');
-Route::get('/reception/user/register/{name}/{phone}/{appointment_id}', 'ReceptionUserController@fromAppointment');
+Route::group(['prefix'=>'reception'], function(){
+	Route::get('/user', 'ReceptionUserController@index');
+	Route::post('/user/store','ReceptionUserController@store');
+	Route::post('/user/update','ReceptionUserController@update');
+	Route::get('/user/register/{name}/{phone}/{appointment_id}', 'ReceptionUserController@fromAppointment');
 
-Route::get('/reception/search', 'ReceptionUserController@search');
-Route::get('/reception/time', 'ReceptionTimeController@time');
-Route::get('/reception/time2', 'ReceptionTimeController@time2');
+	Route::get('/search', 'ReceptionUserController@search');
+	Route::get('/time', 'ReceptionTimeController@time');
+	Route::get('/time2', 'ReceptionTimeController@time2');
 
-Route::get('/reception/time/week/{id}', 'ReceptionTimeController@timeWeek');
-Route::get('/reception/time/week/{id}/{user_id}', 'ReceptionTimeController@timeWeekAppointment');
-Route::post('/reception/time/add', 'ReceptionTimeController@store');
-Route::post('/reception/time/cancel','ReceptionTimeController@cancel');
-Route::get('/reception/time/{id}','ReceptionTimeController@appointment');
-Route::get('/reception/user_check/{id}','ReceptionUserController@user_check');
-Route::get('/reception/user_check/{id}/update','ReceptionUserController@user_update');
-Route::post('/reception/user_check/{id}','ReceptionUserController@user_check_edit');
-Route::get('/reception/user_check/{user_id}/{appointment_id}/check_in','ReceptionTimeController@check_in');
-Route::get('/reception/shifts', 'ReceptionShiftsController@index');
-Route::post('/reception/shifts/cancel','ReceptionShiftsController@cancel');
-Route::get('/reception/shifts/{i}/{doctor_staff_id}/{shift_id}','ReceptionShiftsController@store');
-Route::get('/reception/payment', 'ReceptionPaymentController@index');
-Route::post('/reception/payment/store','ReceptionPaymentController@store');
-Route::get('/reception/lease','ReceptionPaymentController@lease');
-Route::post('/reception/lease/store','ReceptionPaymentController@lease_store');
-Route::get('/reception/lease/store','ReceptionPaymentController@lease_store');
-Route::get('/reception/product','ReceptionPaymentController@product');
-Route::get('/reception/product/{id}','ReceptionPaymentController@show');
-Route::post('/reception/decrease_product','ReceptionPaymentController@decrease_product');
+	Route::get('/time/week/{id}', 'ReceptionTimeController@timeWeek');
+	Route::get('/time/week/{id}/{user_id}', 'ReceptionTimeController@timeWeekAppointment');
+	Route::post('/time/add', 'ReceptionTimeController@store');
+	Route::post('/time/cancel','ReceptionTimeController@cancel');
+	Route::get('/time/{id}','ReceptionTimeController@appointment');
+	Route::get('/user_check/{id}','ReceptionUserController@user_check');
+	Route::get('/user_check/{id}/update','ReceptionUserController@user_update');
+	Route::post('/user_check/{id}','ReceptionUserController@user_check_edit');
+	Route::get('/user_check/{user_id}/{appointment_id}/check_in','ReceptionTimeController@check_in');
+	Route::get('/shifts', 'ReceptionShiftsController@index');
+	Route::post('/shifts/cancel','ReceptionShiftsController@cancel');
+	Route::get('/shifts/{i}/{doctor_staff_id}/{shift_id}','ReceptionShiftsController@store');
+	Route::get('/payment', 'ReceptionPaymentController@index');
+	Route::post('/payment/store','ReceptionPaymentController@store');
+	Route::get('/lease','ReceptionPaymentController@lease');
+	Route::post('/lease/store','ReceptionPaymentController@lease_store');
+	Route::get('/lease/store','ReceptionPaymentController@lease_store');
+	Route::get('/product','ReceptionPaymentController@product');
+	Route::get('/product/{id}','ReceptionPaymentController@show');
+	Route::post('/decrease_product','ReceptionPaymentController@decrease_product');
+});
 
 //--DOCTOR STARTING--
-Route::get('/doctor','DoctorController@index');
-Route::get('/doctor/dash','DoctorController@dash');
-Route::get('/doctor/treatment/{user_id}','DoctorTreatmentController@index');
-Route::get('/doctor/treatment/{user_id}/gajig','DoctorTreatmentController@gajig');
-Route::get('/doctor/treatment/{user_id}/sogog','DoctorTreatmentController@sogog');
-Route::get('/doctor/treatment/{user_id}/mes','DoctorTreatmentController@mes');
-Route::post('/doctor/treatment/store','DoctorTreatmentController@store');
-Route::post('/doctor/treatment/finish','DoctorTreatmentController@finish');
-Route::post('/doctor/treatment/xray','DoctorTreatmentController@xray');
-Route::get('/doctor/treatment/history/{id}','DoctorTreatmentController@delete_history');
+Route::group(['prefix'=>'/doctor'], function(){
+	Route::get('','DoctorController@index');
+	Route::get('dash','DoctorController@dash');
+	Route::get('treatment/{user_id}','DoctorTreatmentController@index');
+	Route::get('treatment/{user_id}/gajig','DoctorTreatmentController@gajig');
+	Route::get('treatment/{user_id}/sogog','DoctorTreatmentController@sogog');
+	Route::get('treatment/{user_id}/mes','DoctorTreatmentController@mes');
+	Route::post('treatment/store','DoctorTreatmentController@store');
+	Route::post('treatment/finish','DoctorTreatmentController@finish');
+	Route::post('treatment/xray','DoctorTreatmentController@xray');
+	Route::get('treatment/history/{id}','DoctorTreatmentController@delete_history');
 
-Route::get('/doctor/dashboard/','DoctorController@dashboard');
-Route::get('/doctor/dashboard/{start_date}/{end_date}', 'DoctorController@search');
-Route::post('/doctor/dashboard/by_month', 'DoctorController@by_month');
-Route::post('/doctor/dashboard/date', 'DoctorController@date');
+	Route::get('dashboard/','DoctorController@dashboard');
+	Route::get('dashboard/{start_date}/{end_date}', 'DoctorController@search');
+	Route::post('dashboard/by_month', 'DoctorController@by_month');
+	Route::post('dashboard/date', 'DoctorController@date');
+});

@@ -74,12 +74,13 @@
 
     @php
         function moneyFormat($amount){
-        $b = $amount/1000000000;
+        /* $b = $amount/1000000000;
         $m = $amount/1000000;
         if ($b>=1){
             return $b . ' тэрбум ₮';
         }
-        return $m . ' сая ₮';
+        return $m . ' сая ₮'; */
+        return number_format((int) $amount) . '₮';
     }
     @endphp
 

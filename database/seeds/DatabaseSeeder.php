@@ -28,12 +28,11 @@ class DatabaseSeeder extends Seeder
 
 
     public function run()
-    {   
+    {   $this->call(Refresh::class);
         $this->call(BaseDataSeeder::class);
-        $this->call(Refresh::class);
 
-        DateBetweenSeeder::$date1 = Date('Y-m-d', strtotime('- 3 Months'));
-        DateBetweenSeeder::$date2 = Date('Y-m-d', strtotime('+ 15 Days'));
+        DateBetweenSeeder::$date1 = Date('Y-m-d', strtotime('- 3 Days'));
+        DateBetweenSeeder::$date2 = Date('Y-m-d', strtotime('+ 1 Days'));
         $this->call(DateBetweenSeeder::class);
     }
 

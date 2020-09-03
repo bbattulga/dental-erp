@@ -8,6 +8,7 @@ use App\Products;
 use App\Promotion;
 use App\UserRole;
 use App\Transaction;
+use App\TransactionCategory;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,14 @@ class AccountantProductController extends Controller
         $product = Products::find($request['id']);
         $product->update(['quantity'=>$product->quantity + $request['quantity']]);
         ProductHistory::create(['product_id'=>$product->id, 'user_id'=>Auth::user()->id, 'quantity'=>$request['quantity'], 'description'=>Auth::user()->name . ' нэмэв', 'created_by'=>Auth::user()->id]);
-        Transaction::create(['type'=>2,'type_id'=>$request['id'],'price'=> -1*$request['price'],'description'=>''.$product->name.' '.$request['quantity'].' ширхэг', 'created_by'=>Auth::user()->id]);
+        Transaction::create([
+                    'type_id'=>TransactionCategory::product()->id,
+                    'transactionable_id'=>$request['id'],
+                    'transactionable_name'=>Products::class,
+                    'price'=> -1*$request['price'],
+                    'description'=>''.$product->name.' '.$request['quantity'].' ширхэг',
+                    'created_by'=>Auth::user()->id
+                ]);
         return redirect('/accountant/products/'.$product->id);
     }
 

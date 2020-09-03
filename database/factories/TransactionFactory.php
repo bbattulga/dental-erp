@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 use App\Transaction;
 use Illuminate\Support\Facades\Auth;
 use App\Reception;
-
+use App\TransactionCategory;
 
 $factory->define(Transaction::class, function (Faker $faker) {
 
@@ -18,11 +18,8 @@ $factory->define(Transaction::class, function (Faker $faker) {
     return [
         //
         'price' => $price,
-        'type'=>4,
-
         // should be overriden
-        'type_id'=>0,
-
+        'type_id'=>TransactionCategory::treatment()->id,
         'description'=>'',
         'created_by'=>$reception->id
     ];

@@ -107,7 +107,7 @@ class AdminController extends Controller
     //DASHBOARD
     //--------------
     public function dashboard() {
-        $start_date = Date('Y-m-01');
+        $start_date = Date('Y-m-d', strtotime('- 30 Days'));
         $end_date = Date('Y-m-d');
         return $this->show_between($start_date, $end_date);
     }

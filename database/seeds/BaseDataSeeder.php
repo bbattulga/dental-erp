@@ -100,5 +100,7 @@ class BaseDataSeeder extends Seeder
         if (Admin::all()->count() == 0){
             $this->call(StaffSeeder::class);
         }
+
+        $this->call(TransactionCategorySeeder::class);
     }
 }

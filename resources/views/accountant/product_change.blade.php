@@ -20,22 +20,6 @@
     </script>
     <div class="row">
         <div class="col-lg-5">
-            <div class="card mb-4">
-                {{--<div class="card-body">--}}
-                    {{--<h5 class="mb-4">Шинэ бараа нэмэх</h5>--}}
-
-                    {{--<form id = "form3" class="form-inline" action="{{url('/accountant/add_product')}}" method="post">--}}
-                        {{--@csrf--}}
-                        {{--<div class=" mb-2 mr-sm-2">--}}
-                            {{--<input  name="name" type="text" class="form-control" id="inlineFormInputGroupUsername2"--}}
-                                   {{--placeholder="Барааны нэр">--}}
-                        {{--</div>--}}
-                        {{--<button onclick="baraa()" type="button" class="btn btn-outline-primary mb-2" style="border-radius: 0px">--}}
-                            {{--Шинэ бараа нэмэх--}}
-                        {{--</button>--}}
-                    {{--</form>--}}
-                {{--</div>--}}
-            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -55,7 +39,8 @@
                         <tr>
                             <th>Дугаар</th>
                             <th>Барааны нэр</th>
-                            <th>Ширхэг</th>
+                            <th>Хэмжээ</th>
+                            <th>Барааны үнэ</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -67,13 +52,14 @@
                                 <td>
                                     {{--<button type="button" class="btn btn-primary " data-toggle="modal"--}}
                                     {{--data-target="#exampleModalPopovers" onclick="onItemClick({{$product->id}})">--}}
-                                    <a href="{{url('accountant/products/'.$product->id)}}">
+                                    <a href="{{url('accountant/change_product_index/'.$product->id)}}">
                                         {{$product->name}}
                                     </a>
                                     {{--</button>--}}
                                 </td>
                                 <td>
-                                    <p class="text-muted">{{$product->quantity}}</p>
+                                    <p class="text-muted">{{$product->quantity}}{{$product->unit}}</p></td>
+                                <td>{{$product->price}} ₮</td>
 
 
                             </tr>
@@ -96,160 +82,38 @@
         </div>
         <div class="col-xl-7 col-lg-12 mb-4">
             <div class="row mb-3">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <h5>{{$specific_product->name}}</h5>
-                                    <a href="{{url('/accountant/change_product_index/'.$specific_product->id)}}"><i class="iconsmind-Pen"></i></a>
-                                    <span class="text-muted text-small d-block">Нэмэх, хасах товч дээр дарна материал нэмж хасна</span>
-                                    <form id ="form1" action="{{url('/accountant/change_product/'.$specific_product->id)}}">
-                                        @csrf
-                                        <input required value="{{$specific_product->name}}" type="text" name="name" class="form-control mb-3" placeholder="Материалын нэр">
-                                        <input required name="quantity"  class="form-control mb-3"
-                                               value="{{$specific_product->quantity}}" type="number" placeholder="Тоо ширхэг">
-                                        <button class="btn btn-primary btn-block"
-                                                type="submit">
-                                            Хадгалах
-                                        </button>
-                                    </form>
+                            <h5 class="mb-4">Барааг өөрчлөх</h5>
+                            <form id ="form1" method="POST" action="{{url('/accountant/change_product')}}">
+                                @csrf
+                                <input type="hidden" name="id" value="{{$specific_product->id}}" />
+                                <div class="form-group">
+                                    <label>Барааны нэр</label>
+                                    <input value="{{$specific_product->name}}" type="text" name="name" class="form-control mb-3">
                                 </div>
-                                <div class="col-md-5 text-right">
-                                    <button class="btn btn-primary" data-toggle="modal"
-                                            data-target="#decreaseProduct">-
-                                    </button>&nbsp;
-                                    {{$specific_product->quantity}}
-                                    ширхэг &nbsp;<button class="btn btn-primary" data-toggle="modal"
-                                                         data-target="#increaseProduct">+
-                                    </button>
-                                    <div id="increaseProduct" class="modal fade show" tabindex="-1" role="dialog"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalPopoversLabel">Материал
-                                                        нэмэх</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="card mb-4 text-left">
-                                                    <div class="card-body">
-                                                        <form id ="form1"action="{{url('/accountant/edit_product')}}">
-                                                              method="post">
-                                                            @csrf
-                                                            <span>Тоо ширхэг</span>
-                                                            <input required name="id" type="hidden" value="{{$specific_product->id}}"
-                                                                   id="hidden">
-                                                            <input required name="quantity" id="too"  class="form-control mb-3"
-                                                                   type="number" placeholder="Тоо ширхэг">
-
-                                                            <span>Үнийн дүн</span>
-                                                            <input required name="price" id="une" class="form-control mb-3"
-                                                                   type="number"
-                                                                   placeholder="Үнийн дүн">
-
-                                                            <button onclick="numa()" class="btn btn-primary btn-block"
-                                                                    type="button">
-                                                                Хадгалах
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="decreaseProduct" class="modal fade show" tabindex="-1" role="dialog"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-
-                                                    <h5 class="modal-title" id="exampleModalPopoversLabel">Материал
-                                                        хасах</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-
-                                                </div>
-
-
-                                                <div class="card mb-4 text-left">
-                                                    <div class="card-body">
-                                                        <form id="form" action="{{url('/accountant/decrease_product')}}"
-                                                              method="post">
-                                                            @csrf
-                                                            <span >Ажилтан сонгох</span>
-
-                                                            <input name="id" type="hidden" value="{{$specific_product->id}}"
-                                                                   id="hidden">
-                                                            <select class="form-control mb-3" name="user_id">
-                                                                @foreach($roles as $role)
-                                                                    <option value="{{$role->staff->id}}">{{$role->staff->name}}/@if($role->role_id == 0)
-                                                                            Админ @elseif($role->role_id == 1) Pесепшн @elseif($role->role_id == 2)
-                                                                            Доктор @elseif($role->role_id == 3) Сувилагч @elseif($role->role_id == 3) Нягтлан @else Бусад @endif/
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-
-                                                            <span>Тоо ширхэг</span>
-                                                            <input name="quantity" id="numhas" class="form-control mb-3"
-                                                                   type="number" placeholder="Тоо ширхэг">
-                                                            <span id="numhas_msg" style="color:red"></span>
-
-                                                            <button onclick="numb()" class="btn btn-primary btn-block"
-                                                                    type="button">
-                                                                Хадгалах
-                                                            </button>
-                                                        </form>
-                                                    </div>
-
-
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                
+                                <div class="form-group">
+                                    <label>Байгаа хэмжээ/ширхэг ({{$specific_product->unit}})</label>
+                                    <input value="{{$specific_product->quantity}}" name="quantity" id="too"  class="form-control mb-3"
+                                       type="number">
                                 </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="data-table responsive nowrap" data-order="[[ 0, &quot;desc&quot; ]]">
-                                        <thead>
-                                        <tr>
-                                            <th>Дугаар</th>
-                                            <th>Ажилтан</th>
-                                            <th>Ширхэг</th>
-                                            <th>Тайлбар</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php $i = 1;?>
-                                        @foreach($histories as $history)
-                                            <tr>
-                                                <td>{{$i}}</td>
-                                                <td>{{$history->user->name}}</td>
-                                                <td>{{$history->quantity}} ширхэг</td>
-                                                <td>{{$history->description}}</td>
-                                            </tr>
-                                            <?php $i++;?>
-                                        @endforeach
 
-                                        </tbody>
-                                    </table>
+                                <div class="form-group">
+                                    <label>Үнэ(₮)</label>
+                                    <input value="{{$specific_product->price}}" name="price" id="too"  class="form-control mb-3"
+                                       type="number">
                                 </div>
-                            </div>
+                                <button onclick="numa()" class="btn btn-primary btn-block"
+                                        type="submit">
+                                    Хадгалах
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

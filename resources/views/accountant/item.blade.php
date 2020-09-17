@@ -23,20 +23,28 @@
         <div class="col-lg-6">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="mb-4">Шинэ бараа нэмэх</h5>
-
-                    <form id="form" class="form-inline" action="{{url('/accountant/add_item')}}" method="post">
+                    <h5 class="mb-4">Шинэ материал нэмэх</h5>
+                    <form id="form" class="form-inline" action="{{url('/accountant/items/create')}}" method="post">
                         @csrf
-                        <div class=" mb-2 mr-sm-2">
-                            <input name="name" type="text" class="form-control" id="prodddd"
-                                   placeholder="Барааны нэр" autocomplete="off">
-                            <input name="price" type="number" class="form-control" id="prodddd"
-                                   placeholder="Барааны үнэ" autocomplete="off">
-                        </div>
-                        <button onclick = "product()" type="button" class="btn btn-outline-primary mb-2" style="border-radius: 0px">
-                            Шинэ бараа нэмэх
-                        </button>
 
+                        <div class="form-group">
+                            <label>Материалын нэр</label>
+                            <div class=" mb-2 mr-sm-2">
+                                <input name="name" type="text" class="form-control" id="prodddd"
+                                        autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group mt-3" style="display: flex;">
+                                <label class="mr-3">нэгж</label> 
+                                <select name="unit" class="form-control" aria-hidden="true">
+                                    <option value="ш">ширхэг</option>
+                                    <option value="гр">грам</option>
+                                    <option value="кг">килограм</option>
+                                </select>
+                            </div>
+                        <button onclick = "product()" type="button" class="btn btn-outline-primary mb-2" style="border-radius: 0px">
+                            Шинэ материал нэмэх
+                        </button>
                     </form>
                 </div>
             </div>
@@ -48,8 +56,8 @@
                             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Хайх...">
                         </div>
                     </div>
-                    <h5 class="card-title">Барааны жагсаалт
-                        <br> <span class="text-muted text-small d-block">Барааны нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
+                    <h5 class="card-title">Материалын жагсаалт
+                        <br> <span class="text-muted text-small d-block">Материалын нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
                     </h5>
 
 
@@ -58,9 +66,8 @@
                         <thead>
                         <tr>
                             <th>Дугаар</th>
-                            <th>Барааны нэр</th>
+                            <th>Материалын нэр</th>
                             <th>Ширхэг</th>
-                            <th>Барааны үнэ</th>
 
                         </tr>
                         </thead>
@@ -79,8 +86,8 @@
                                     {{--</button>--}}
                                 </td>
                                 <td>
-                                    <p class="text-muted">{{$product->quantity}}</p></td>
-                                <td>{{$product->price}} ₮</td>
+                                    <p class="text-muted">{{$product->quantity}}</p>
+                                </td>
                             </tr>
                         @endforeach
                         <script>
@@ -125,7 +132,7 @@
                                                  aria-labelledby="first-tab">
                                                 <div class="card mb-4">
                                                     <div class="card-body">
-                                                        <form action="{{url('/admin/edit_item')}}" method="post">
+                                                        <form action="{{url('/accountant/edit_item')}}" method="post">
                                                             @csrf
                                                             <input name="id" type="hidden" value="0" id="hidden">
 
@@ -146,7 +153,7 @@
                                                  aria-labelledby="second-tab">
                                                 <div class="card mb-4">
                                                     <div class="card-body">
-                                                        <form action="{{url('/admin/add_transaction')}}" method="post">
+                                                        <form action="{{url('/accountant/add_transaction')}}" method="post">
                                                             <input name="id" type="hidden" value="0" id="hidden">
                                                             @csrf
                                                             <input name="description" class="form-control mb-3"
@@ -205,14 +212,14 @@
             }
         }
         function product(){
-            var ss = document.getElementById("prodddd").value;
-            if(ss === "") {
-                document.getElementById('prodddd').classList.add('border-danger');
-                document.getElementById('prodddd_msg').innerHTML = "Нэрээ оруулна уу";
-            } else {
-                document.getElementById("form").submit();
+        var ss = document.getElementById("prodddd").value;
+        if(ss === "") {
+            document.getElementById('prodddd').classList.add('border-danger');
+            document.getElementById('prodddd_msg').innerHTML = "Нэрээ оруулна уу";
+        } else {
+            document.getElementById("form").submit();
 
-            }
+        }
         }
     </script>
 

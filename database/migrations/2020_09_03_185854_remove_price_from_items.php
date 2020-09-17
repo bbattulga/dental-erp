@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUnitToItems extends Migration
+class RemovePriceFromItems extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class AddUnitToItems extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             //
-            $table->string('unit', 20)->after('quantity')->defaullt('');
+            $table->dropColumn('price');
         });
     }
 
@@ -28,7 +28,7 @@ class AddUnitToItems extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             //
-            $table->dropColumn('unit');
+            $table->integer('price');
         });
     }
 }

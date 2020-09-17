@@ -14,7 +14,7 @@ class AddFieldsToProducts extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('unit', 20)->after('quantity');
+            $table->string('unit', 20)->after('quantity')->default('');
             $table->integer('price')->after('unit');
         });
     }

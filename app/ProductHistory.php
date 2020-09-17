@@ -12,4 +12,7 @@ class ProductHistory extends Model
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');
     }
+    public function product(){
+    	return $this->hasOne('App\Products', 'id', 'product_id');
+    }
 }

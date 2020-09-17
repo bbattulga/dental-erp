@@ -144,8 +144,8 @@
                         <i class="iconsmind-Administrator"></i> Ажилчид
                     </a>
                 </li>
-                <li id="accountantProduct">
-                    <a href="{{url('/accountant/products')}}">
+                <li id="accountantItem">
+                    <a href="{{url('/accountant/items')}}">
                         <i class="iconsmind-Medicine-2"></i> Материал
                     </a>
                 </li>
@@ -154,8 +154,8 @@
                         <i class="iconsmind-Betvibes"></i> Эмнэлэг
                     </a>
                 </li>
-                <li id="accountantItem">
-                    <a href="{{url('/accountant/items')}}">
+                <li id="accountantProduct">
+                    <a href="{{url('/accountant/products')}}">
                         <i class="iconsmind-Betvibes"></i> Бараа
                     </a>
                 </li>

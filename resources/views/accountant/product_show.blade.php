@@ -28,8 +28,8 @@
                             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Хайх...">
                         </div>
                     </div>
-                    <h5 class="card-title">Материалын жагсаалт
-                        <br> <span class="text-muted text-small d-block">Материалын нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
+                    <h5 class="card-title">Барааны жагсаалт
+                        <br> <span class="text-muted text-small d-block">Барааны нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
                     </h5>
 
 
@@ -38,8 +38,9 @@
                         <thead>
                         <tr>
                             <th>Дугаар</th>
-                            <th>Материалын нэр</th>
-                            <th>Ширхэг</th>
+                            <th>Барааны нэр</th>
+                            <th>Хэмжээ</th>
+                            <th>Барааны үнэ</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,13 +52,14 @@
                                 <td>
                                     {{--<button type="button" class="btn btn-primary " data-toggle="modal"--}}
                                     {{--data-target="#exampleModalPopovers" onclick="onItemClick({{$product->id}})">--}}
-                                    <a href="{{url('accountant/products/'.$product->id)}}">
+                                    <a href="{{url('/accountant/change_product_index/'.$product->id)}}">
                                         {{$product->name}}
                                     </a>
                                     {{--</button>--}}
                                 </td>
                                 <td>
-                                    <p class="text-muted">{{$product->quantity}}</p>
+                                    <p class="text-muted">{{$product->quantity}}{{$product->unit}}</p></td>
+                                <td>{{$product->price}} ₮</td>
 
 
                             </tr>
@@ -68,11 +70,8 @@
                                 return true;
                             }
                         </script>
-
-
                         </tbody>
                     </table>
-
                 </div>
             </div>
 
@@ -87,14 +86,15 @@
                                 <div class="col-md-7">
                                     <h5>{{$specific_product->name}}</h5>
                                     <a href="{{url('/accountant/change_product_index/'.$specific_product->id)}}"><i class="iconsmind-Pen"></i></a>
-                                    <span class="text-muted text-small d-block">Нэмэх, хасах товч дээр дарна материал нэмж хасна</span>
+
+                                    <span class="text-muted text-small d-block">Нэмэх товч дээр дарна бараа нэмнэ</span>
                                 </div>
                                 <div class="col-md-5 text-right">
-                                    <button class="btn btn-primary" data-toggle="modal"
-                                            data-target="#decreaseProduct">-
-                                    </button>&nbsp;
-                                    {{$specific_product->quantity}}
-                                    ширхэг &nbsp;<button class="btn btn-primary" data-toggle="modal"
+                                    {{--<button class="btn btn-primary" data-toggle="modal"--}}
+                                            {{--data-target="#decreaseProduct">---}}
+                                    {{--</button>&nbsp;--}}
+                                    {{$specific_product->quantity . ' ' . $specific_product->unit}} байна
+                                    &nbsp;<button class="btn btn-primary" data-toggle="modal"
                                                          data-target="#increaseProduct">+
                                     </button>
                                     <div id="increaseProduct" class="modal fade show" tabindex="-1" role="dialog"
@@ -111,20 +111,14 @@
                                                 </div>
                                                 <div class="card mb-4 text-left">
                                                     <div class="card-body">
-                                                        <form id ="form1"action="{{url('/accountant/edit_product')}}"
+                                                        <form id ="form1"action="{{url('/accountant/products/add')}}"
                                                               method="post">
                                                             @csrf
-                                                            <span>Тоо ширхэг</span>
+                                                            <span>Тоо ширхэг/нэгж</span>
                                                             <input name="id" type="hidden" value="{{$specific_product->id}}"
                                                                    id="hidden">
                                                             <input name="quantity" id="too"  class="form-control mb-3"
-                                                                   type="number" placeholder="Тоо ширхэг">
-
-                                                            <span>Үнийн дүн</span>
-                                                            <input name="price" id="une" class="form-control mb-3"
-                                                                   type="number"
-                                                                   placeholder="Үнийн дүн">
-
+                                                                   type="number" placeholder="">
                                                             <button onclick="numa()" class="btn btn-primary btn-block"
                                                                     type="button">
                                                                 Хадгалах
@@ -153,21 +147,12 @@
 
                                                 <div class="card mb-4 text-left">
                                                     <div class="card-body">
-                                                        <form id="form" action="{{url('/accountant/decrease_product')}}"
+                                                        <form id="form" action="{{url('/accountant/decrease_item')}}"
                                                               method="post">
                                                             @csrf
-                                                            <span >Ажилтан сонгох</span>
 
                                                             <input name="id" type="hidden" value="{{$specific_product->id}}"
                                                                    id="hidden">
-                                                            <select class="form-control mb-3" name="user_id">
-                                                                @foreach($roles as $role)
-                                                                    <option value="{{$role->staff->id}}">{{$role->staff->name}}/@if($role->role_id == 0)
-                                                                            Админ @elseif($role->role_id == 1) Pесепшн @elseif($role->role_id == 2)
-                                                                            Доктор @elseif($role->role_id == 3) Сувилагч @elseif($role->role_id == 3) Нягтлан @else Бусад @endif/
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
 
                                                             <span>Тоо ширхэг</span>
                                                             <input name="quantity" id="numhas" class="form-control mb-3"
@@ -198,19 +183,31 @@
                                         <thead>
                                         <tr>
                                             <th>Дугаар</th>
-                                            <th>Ажилтан</th>
-                                            <th>Ширхэг</th>
-                                            <th>Тайлбар</th>
+                                            <th>Хэмжээ</th>
+                                            <th>Үнийн дүн</th>
+                                            <th>Хэн</th>
+                                            <th>Хэзээ</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <?php $i = 1;?>
                                         @foreach($histories as $history)
+                                            @php
+                                                $tx = App\Transaction::where('type_id', App\TransactionCategory::product()->id)
+                                                ->where('transactionable_id', $history->id)
+                                                ->where('transactionable_type', App\ProductHistory::class)
+                                                ->first();
+                                            @endphp
                                             <tr>
                                                 <td>{{$i}}</td>
-                                                <td>{{$history->user->name}}</td>
-                                                <td>{{$history->quantity}} ширхэг</td>
-                                                <td>{{$history->description}}</td>
+                                                <td>{{$history->quantity}}{{$history->unit}}{{$history->product->unit}}</td>
+                                                @if($history->quantity<0)
+                                                    <td>{{-1*$specific_product->price*$history->quantity}}₮</td>
+                                                @else
+                                                    <td>{{$tx? $tx->price:0}} ₮</td>
+                                                @endif
+                                                <td>{{\App\User::find($history->created_by)->name}}</td>
+                                                <td>{{$history->created_at}}</td>
                                             </tr>
                                             <?php $i++;?>
                                         @endforeach
@@ -266,12 +263,8 @@
         }
         function numa(){
             var too = document.getElementById("too").value;
-            var une = document.getElementById("une").value;
             if(too < 1 ) {
                 document.getElementById('too').classList.add('border-danger');
-            }
-            else if(une < 1){
-                document.getElementById('une').classList.add('border-danger');
             }
             else {
                 document.getElementById("form1").submit();

@@ -44,7 +44,6 @@
                         </div>
                     </div>
                     <h5 class="card-title">Барааны жагсаалт
-                        <br> <span class="text-muted text-small d-block">Барааны нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
                     </h5>
 
 
@@ -103,7 +102,6 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <h5>{{$specific_product->name}}</h5>
-                                    <span class="text-muted text-small d-block">Нэмэх товч дээр дарна материал нэмнэ</span>
                                 </div>
                                 <div class="col-md-5 text-right">
                                     <button class="btn btn-primary" data-toggle="modal"

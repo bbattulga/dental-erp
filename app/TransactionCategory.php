@@ -38,6 +38,9 @@ class TransactionCategory extends Model
     	}
     	return self::$MATERIAL;
     }
+    public static function item(){
+        return self::material();
+    }
     public static function product(){
     	if (!self::$PRODUCT){
     		self::$PRODUCT = self::where('name', 'like', 'Бар%')

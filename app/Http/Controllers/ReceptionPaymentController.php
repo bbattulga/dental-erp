@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\CheckIn;
 use App\Http\Middleware\Doctor;
-use App\Item;
-use App\ItemHistory;
-use App\Lease;
-use App\ProductHistory;
 use App\Products;
+use App\ProductHistory;
+use App\Lease;
 use App\Promotion;
 use App\UserRole;
 use App\Transaction;
@@ -165,29 +163,36 @@ class ReceptionPaymentController extends Controller
         return redirect('/reception/lease');
     }
     public function product(){
-        $products = Item::all();
+        $products = Products::where('quantity', '>', 0)->get();
         return view('reception.product',compact('products'));
     }
     public function show($id) {
-        $products = Item::all();
-        $specific_product = Item::find($id);
-        $histories = ItemHistory::all()->where('item_id', $specific_product->id);
+        $products = Products::where('quantity', '>', 0)->get();
+        $specific_product = Products::find($id);
+        $histories = ProductHistory::all()->where('product_id', $specific_product->id);
         $roles = UserRole::all();
         return view('reception.product_show', compact('products', 'specific_product', 'histories', 'roles'));
     }
 
     public function decrease_product(Request $request) {
-        $product = Item::find($request['id']);
+        $product = Products::find($request['id']);
         $minus = $product->quantity - $request['quantity'];
         $product->update(['quantity'=>$minus]);
-        $history = ItemHistory::create(['item_id'=>$product->id,'quantity'=> -1 * $request['quantity'],'created_by'=>Auth::user()->id]);
+        $history = ProductHistory::create([
+                        'product_id'=>$product->id,
+                        'quantity'=> -1 * $request['quantity'],
+                        'description' => ''.$product->name.' '.$request['quantity']. $product->unit .' зарсан.',
+                        'user_id' => Auth::user()->id,
+                        'created_by'=>Auth::user()->id
+                    ]);
         Transaction::create([
-                'type_id'=>TransactionCategory::item()->id,
+                'type_id'=>TransactionCategory::product()->id,
                 'transactionable_id'=>$request['id'],
-                'transactionable_type'=>ItemHistory::class,
+                'transactionable_type'=>ProductHistory::class,
                 'price'=> $request['quantity']*$product->price,
-                'description'=>''.$product->name.' '.$request['quantity'].' ширхэг зарсан.',
-                'created_by'=>Auth::user()->id]);
+                'description'=>''.$product->name.' '.$request['quantity']. $product->unit .' зарсан.',
+                'created_by'=>Auth::user()->id
+            ]);
         return redirect('/reception/product/'.$product->id);
     }
 }

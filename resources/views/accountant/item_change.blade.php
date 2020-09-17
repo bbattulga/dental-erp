@@ -16,10 +16,26 @@
 @section('content')
     <!-- Menu active-->
     <script>
-        document.getElementById('accountantItem').classList.add('active');
+        document.getElementById('accountantProduct').classList.add('active');
     </script>
     <div class="row">
         <div class="col-lg-5">
+            <div class="card mb-4">
+                {{--<div class="card-body">--}}
+                    {{--<h5 class="mb-4">Шинэ бараа нэмэх</h5>--}}
+
+                    {{--<form id = "form3" class="form-inline" action="{{url('/accountant/add_product')}}" method="post">--}}
+                        {{--@csrf--}}
+                        {{--<div class=" mb-2 mr-sm-2">--}}
+                            {{--<input  name="name" type="text" class="form-control" id="inlineFormInputGroupUsername2"--}}
+                                   {{--placeholder="Барааны нэр">--}}
+                        {{--</div>--}}
+                        {{--<button onclick="baraa()" type="button" class="btn btn-outline-primary mb-2" style="border-radius: 0px">--}}
+                            {{--Шинэ бараа нэмэх--}}
+                        {{--</button>--}}
+                    {{--</form>--}}
+                {{--</div>--}}
+            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -40,8 +56,6 @@
                             <th>Дугаар</th>
                             <th>Барааны нэр</th>
                             <th>Ширхэг</th>
-                            <th>Барааны үнэ</th>
-
                         </tr>
                         </thead>
                         <tbody>
@@ -53,14 +67,13 @@
                                 <td>
                                     {{--<button type="button" class="btn btn-primary " data-toggle="modal"--}}
                                     {{--data-target="#exampleModalPopovers" onclick="onItemClick({{$product->id}})">--}}
-                                    <a href="{{url('accountant/items/'.$product->id)}}">
+                                    <a href="{{url('accountant/products/'.$product->id)}}">
                                         {{$product->name}}
                                     </a>
                                     {{--</button>--}}
                                 </td>
                                 <td>
-                                    <p class="text-muted">{{$product->quantity}}</p></td>
-                                <td>{{$product->price}} ₮</td>
+                                    <p class="text-muted">{{$product->quantity}}</p>
 
 
                             </tr>
@@ -89,27 +102,26 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <h5>{{$specific_product->name}}</h5>
-                                    <form id ="form1" action="{{url('/accountant/change_item/'.$specific_product->id)}}">
+                                    <a href="{{url('/accountant/change_product_index/'.$specific_product->id)}}"><i class="iconsmind-Pen"></i></a>
+                                    <span class="text-muted text-small d-block">Нэмэх, хасах товч дээр дарна материал нэмж хасна</span>
+                                    <form id ="form1" action="{{url('/accountant/change_product/'.$specific_product->id)}}">
                                         @csrf
-                                        <input value="{{$specific_product->name}}" type="text" name="name" class="form-control mb-3" placeholder="Барааны нэр">
-                                        <input value="{{$specific_product->quantity}}" name="quantity" id="too"  class="form-control mb-3"
-                                               type="number" placeholder="Тоо ширхэг">
-                                        <input value="{{$specific_product->price}}" name="price" id="too"  class="form-control mb-3"
-                                               type="number" placeholder="Барааны үнэ">
-                                        <button onclick="numa()" class="btn btn-primary btn-block"
+                                        <input required value="{{$specific_product->name}}" type="text" name="name" class="form-control mb-3" placeholder="Материалын нэр">
+                                        <input required name="quantity"  class="form-control mb-3"
+                                               value="{{$specific_product->quantity}}" type="number" placeholder="Тоо хэмжээ ({{$specific_product->unit}})">
+                                        <button class="btn btn-primary btn-block"
                                                 type="submit">
                                             Хадгалах
                                         </button>
                                     </form>
-                                    <span class="text-muted text-small d-block">Нэмэх товч дээр дарна бараа нэмнэ</span>
                                 </div>
                                 <div class="col-md-5 text-right">
-                                    {{--<button class="btn btn-primary" data-toggle="modal"--}}
-                                    {{--data-target="#decreaseProduct">---}}
-                                    {{--</button>&nbsp;--}}
-                                    {{$specific_product->quantity}} ширхэг байна
-                                    &nbsp;<button class="btn btn-primary" data-toggle="modal"
-                                                  data-target="#increaseProduct">+
+                                    <button class="btn btn-primary" data-toggle="modal"
+                                            data-target="#decreaseProduct">-
+                                    </button>&nbsp;
+                                    {{$specific_product->quantity}}
+                                    ширхэг &nbsp;<button class="btn btn-primary" data-toggle="modal"
+                                                         data-target="#increaseProduct">+
                                     </button>
                                     <div id="increaseProduct" class="modal fade show" tabindex="-1" role="dialog"
                                          aria-hidden="true">
@@ -125,17 +137,17 @@
                                                 </div>
                                                 <div class="card mb-4 text-left">
                                                     <div class="card-body">
-                                                        <form id ="form1"action="{{url('/accountant/edit_item')}}"
+                                                        <form id ="form1"action="{{url('/accountant/edit_item')}}">
                                                               method="post">
                                                             @csrf
                                                             <span>Тоо ширхэг</span>
-                                                            <input name="id" type="hidden" value="{{$specific_product->id}}"
+                                                            <input required name="id" type="hidden" value="{{$specific_product->id}}"
                                                                    id="hidden">
-                                                            <input name="quantity" id="too"  class="form-control mb-3"
+                                                            <input required name="quantity" id="too"  class="form-control mb-3"
                                                                    type="number" placeholder="Тоо ширхэг">
 
                                                             <span>Үнийн дүн</span>
-                                                            <input name="price" id="une" class="form-control mb-3"
+                                                            <input required name="price" id="une" class="form-control mb-3"
                                                                    type="number"
                                                                    placeholder="Үнийн дүн">
 
@@ -167,12 +179,21 @@
 
                                                 <div class="card mb-4 text-left">
                                                     <div class="card-body">
-                                                        <form id="form" action="{{url('/accountant/decrease_item')}}"
+                                                        <form id="form" action="{{url('/accountant/items/decrease')}}"
                                                               method="post">
                                                             @csrf
+                                                            <span >Ажилтан сонгох</span>
 
                                                             <input name="id" type="hidden" value="{{$specific_product->id}}"
                                                                    id="hidden">
+                                                            <select class="form-control mb-3" name="user_id">
+                                                                {{--@foreach($roles as $role)
+                                                                    <option value="{{$role->staff->id}}">{{$role->staff->name}}/@if($role->role_id == 0)
+                                                                            Админ @elseif($role->role_id == 1) Pесепшн @elseif($role->role_id == 2)
+                                                                            Доктор @elseif($role->role_id == 3) Сувилагч @elseif($role->role_id == 3) Нягтлан @else Бусад @endif/
+                                                                    </option>
+                                                                @endforeach--}}
+                                                            </select>
 
                                                             <span>Тоо ширхэг</span>
                                                             <input name="quantity" id="numhas" class="form-control mb-3"
@@ -203,35 +224,23 @@
                                         <thead>
                                         <tr>
                                             <th>Дугаар</th>
+                                            <th>Ажилтан</th>
                                             <th>Ширхэг</th>
-                                            <th>Үнийн дүн</th>
-                                            <th>Хэн</th>
-                                            <th>Хэзээ</th>
+                                            <th>Тайлбар</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <?php $i = 1;?>
                                         @foreach($histories as $history)
-
-                                            @php
-                                                $tx = App\Transaction::where('type_id', App\TransactionCategory::material()->id)
-                                                ->where('transactionable_id', $history->id)
-                                                ->where('transactionable_type', App\ItemHistory::class)
-                                                ->first();
-                                            @endphp
                                             <tr>
                                                 <td>{{$i}}</td>
+                                                <td>{{$history->user->name}}</td>
                                                 <td>{{$history->quantity}} ширхэг</td>
-                                                @if($history->quantity<0)
-                                                    <td>{{-1*$specific_product->price*$history->quantity}}₮</td>
-                                                @else
-                                                    <td>{{$tx? $tx->price:'0'}} ₮</td>
-                                                @endif
-                                                <td>{{\App\User::find($history->created_by)->name}}</td>
-                                                <td>{{$history->created_at}}</td>
+                                                <td>{{$history->description}}</td>
                                             </tr>
                                             <?php $i++;?>
                                         @endforeach
+
                                         </tbody>
                                     </table>
                                 </div>

@@ -119,38 +119,57 @@ Route::group(['prefix' => '/admin'], function() {
 //--ACCOUNTANT STARTING--
 
 Route::group(['prefix'=>'/accountant'], function(){
-	Route::post('/transactions/date', 'AccountantTransactionController@date');
-	Route::get('/transactions', 'AccountantTransactionController@index');
-	Route::post('/transactions/edit', 'AccountantTransactionController@edit');
-	Route::post('/transactions/delete','AccountantTransactionController@delete');
-	Route::get('/transactions/{start_date}/{end_date}', 'AccountantTransactionController@search');
-	Route::post('/transactions/by_month','AccountantTransactionController@by_month');
 
-	Route::post('/transactions/salary', 'AccountantTransactionController@salary');
-	Route::post('/transactions/add', 'AccountantTransactionController@store');
-	Route::post('/transactions/income', 'AccountantTransactionController@income');
-	Route::post('/transactions/outcome/type', 'AccountantTransactionController@outcomeCategory');
+	// /acountant/transactions
+	Route::group(['prefix'=>'transactions'], function(){
+		Route::post('date', 'AccountantTransactionController@date');
+		Route::get('', 'AccountantTransactionController@index');
+		Route::post('edit', 'AccountantTransactionController@edit');
+		Route::post('delete','AccountantTransactionController@delete');
+		Route::get('{start_date}/{end_date}', 'AccountantTransactionController@search');
+		Route::post('by_month','AccountantTransactionController@by_month');
 
-	Route::get('/products','AccountantProductController@product');
-	Route::get('/products/{id}','AccountantProductController@show');
-	Route::post('/add_product','AccountantProductController@add_product');
-	Route::post('/edit_product','AccountantProductController@edit_product');
+		Route::post('salary', 'AccountantTransactionController@salary');
+		Route::post('add', 'AccountantTransactionController@store');
+		Route::post('income', 'AccountantTransactionController@income');
+		Route::post('outcome/type', 'AccountantTransactionController@outcomeCategory');
+	});
+
+	// /accountant/products
+	Route::group(['prefix'=>'products'], function(){
+		Route::get('','AccountantProductController@product');
+		Route::get('{id}','AccountantProductController@show');
+		Route::post('create','AccountantProductController@store');
+		Route::post('update','AccountantProductController@update');
+		Route::post('delete/{id}', 'AccountantProductController@delete');
+		Route::post('add', 'AccountantProductController@add');
+		Route::post('decrease', 'AccountantProductController@decrease');
+	});
 	Route::post('/change_product/{id}','AccountantProductController@change_product');
-	Route::get('/change_product/{id}','AccountantProductController@change_product');
+	Route::post('/change_product','AccountantProductController@change_product');
 	Route::get('/change_product_index/{id}','AccountantProductController@change_product_index');
 	Route::post('/change_product_index/{id}','AccountantProductController@change_product_index');
 	Route::post('/decrease_product','AccountantProductController@decrease_product');
 	Route::get('/delete_product/{id}','AccountantProductController@delete_product');
+	// accountant's product section end
 
-	Route::get('/items','AccountantItemController@item');
-	Route::get('/items/{id}','AccountantItemController@show');
+	// /accountant/items
+	Route::group(['prefix'=>'items'], function(){
+		Route::get('','AccountantItemController@index');
+		Route::get('{id}','AccountantItemController@show');
+		Route::post('create', 'AccountantItemController@store');
+		Route::post('update', 'AccountantItemController@update');
+		Route::post('add', 'AccountantItemController@add');
+		Route::post('decrease', 'AccountantItemController@decrease');
+		Route::delete('delete/{id}', 'AccountantItemController@delete');
+	});
 	Route::post('/add_item','AccountantItemController@add_item');
 	Route::post('/edit_item','AccountantItemController@edit_item');
 	Route::get('/change_item_index/{id}','AccountantItemController@change_item_index');
 	Route::post('/change_item_index/{id}','AccountantItemController@change_item_index');
 	Route::get('/change_item/{id}','AccountantItemController@change_item');
 	Route::post('/change_item/{id}','AccountantItemController@change_item');
-
+	// accountant's item section end
 
 
 	Route::get('/staffs', 'AccountantStaffController@index');

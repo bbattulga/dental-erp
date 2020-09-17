@@ -23,22 +23,39 @@
         <div class="col-lg-6">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="mb-4">Шинэ материал нэмэх</h5>
+                    <h5 class="mb-4">Шинэ бараа нэмэх</h5>
 
-                    <form id="form" class="form-inline" action="{{url('/accountant/add_product')}}" method="post">
+                    <form id="form" class="" action="{{url('/accountant/products/create')}}" method="post">
                         @csrf
-                        <div class=" mb-2 mr-sm-2">
+                        <div class="form-group position-relative error-l-50">
+                            <label>Барааны нэр</label>
                             <input name="name" type="text" class="form-control" id="prodddd"
-                                   placeholder="Материалын нэр" autocomplete="off">
+                                   placeholder="" autocomplete="off">
+                        </div>
+                        <div class="form-group position-relative error-l-50">
+                            <label>Үнэ</label>
+                            <input id="new-product-price"
+                                name="price" type="number" step="100"
+                                class="form-control"
+                                   placeholder="" autocomplete="off">
+                        </div>
+                        <div class="form-group position-relative error-l-50">
+                            <label>Зарах нэгж</label> 
+                            <select name="unit" class="custom-select">
+                                <option value="ш">ширхэг</option>
+                                <option value="гр">грам</option>
+                                <option value="кг">килограм</option>
+                            </select>
                         </div>
                         <button onclick = "product()" type="button" class="btn btn-outline-primary mb-2" style="border-radius: 0px">
-                            Шинэ материал нэмэх
+                            Шинэ бараа нэмэх
                         </button>
 
                     </form>
                 </div>
             </div>
-
+        </div>
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <div class="btn-group float-right float-none-xs mt-2">
@@ -46,8 +63,8 @@
                             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Хайх...">
                         </div>
                     </div>
-                    <h5 class="card-title">Материалын жагсаалт
-                        <br> <span class="text-muted text-small d-block">Материалын нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
+                    <h5 class="card-title">Барааны жагсаалт
+                        <br> <span class="text-muted text-small d-block">Барааны нэрэн дээр даран тоо болон үнийг өөрчилнө үү</span>
                     </h5>
 
 
@@ -56,8 +73,9 @@
                         <thead>
                         <tr>
                             <th>Дугаар</th>
-                            <th>Материалын нэр</th>
-                            <th>Ширхэг</th>
+                            <th>Барааны нэр</th>
+                            <th>Хэмжээ</th>
+                            <th>Барааны үнэ</th>
 
                         </tr>
                         </thead>
@@ -70,22 +88,16 @@
                                 <td>
                                     {{--<button type="button" class="btn btn-primary " data-toggle="modal"--}}
                                     {{--data-target="#exampleModalPopovers" onclick="onItemClick({{$product->id}})">--}}
-                                    <a href="{{url('accountant/products/'.$product->id)}}">
+                                    <a href="{{url('/accountant/products/'.$product->id)}}">
                                         {{$product->name}}
                                     </a>
                                     {{--</button>--}}
                                 </td>
                                 <td>
-                                    <p class="text-muted">{{$product->quantity}}</p>
-                                </td>
+                                    <p class="text-muted">{{$product->quantity . ' ' . $product->unit}}</p></td>
+                                <td>{{$product->price}} ₮</td>
                             </tr>
                         @endforeach
-                        <script>
-                            function onItemClick(id) {
-                                document.getElementById('hidden').value = id;
-                                return true;
-                            }
-                        </script>
 
                         <div id="exampleModalPopovers" class="modal fade show" tabindex="-1" role="dialog"
                              aria-hidden="true">
@@ -138,14 +150,22 @@
                                                 </div>
                                             </div>
 
+                                            <script>
+                                                function onItemClick(id) {
+                                                    document.getElementById('hidden').value = id;
+                                                    return true;
+                                                }
+                                            </script>
+
 
                                             <div class="tab-pane" id="second" role="tabpane2"
                                                  aria-labelledby="second-tab">
                                                 <div class="card mb-4">
                                                     <div class="card-body">
-                                                        <form action="{{url('/admin/add_transaction')}}" method="post">
-                                                            <input name="id" type="hidden" value="0" id="hidden">
+                                                        <form method="POST" action="{{url('/admin/add_transaction')}}">
                                                             @csrf
+                                                            <input name="id" type="hidden" value="0" id="hidden">
+                                                            
                                                             <input name="description" class="form-control mb-3"
                                                                    type="text" placeholder="Тайлбар">
                                                             <input class="form-control mb-3" name="price" type="number"
@@ -167,10 +187,7 @@
 
                 </div>
             </div>
-
-
         </div>
-
     </div>
 
 
@@ -202,14 +219,19 @@
             }
         }
         function product(){
-        var ss = document.getElementById("prodddd").value;
-        if(ss === "") {
-            document.getElementById('prodddd').classList.add('border-danger');
-            document.getElementById('prodddd_msg').innerHTML = "Нэрээ оруулна уу";
-        } else {
-            document.getElementById("form").submit();
+            var ss = document.getElementById("prodddd").value;
+            if(ss.length === 0) {
+                document.getElementById('prodddd').classList.add('border-danger');
+                document.getElementById('prodddd_msg').innerHTML = "Нэрээ оруулна уу";
+            } 
+            else if (document.getElementById('new-product-price').value.length === 0){
+                document.getElementById('new-product-price').classList.add('border-danger');
+                return;
+            }
+            else {
+                document.getElementById("form").submit();
 
-        }
+            }
         }
     </script>
 

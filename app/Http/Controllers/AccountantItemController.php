@@ -19,7 +19,7 @@ class AccountantItemController extends Controller
     {
         $this->middleware('accountant');
     }
-    public function item(){
+    public function index(){
         $products = Item::all();
         return view('accountant.item',compact('products'));
     }
@@ -29,6 +29,10 @@ class AccountantItemController extends Controller
         $histories = ItemHistory::all()->where('item_id', $specific_product->id);
         return view('accountant.item_show', compact('products', 'specific_product', 'histories'));
     }
+    public function store(Request $request){
+        $product = Item::create(['name'=>$request['name'], 'quantity'=>0, 'unit' => $request['unit']]);
+        return redirect('/accountant/items');
+    }
     public function add_item(Request $request){
         $product = Item::create(['name'=>$request['name'],'price'=>$request['price'],'quantity'=>0]);
         return redirect('/accountant/items');
@@ -37,15 +41,10 @@ class AccountantItemController extends Controller
         $product = Item::find($request['id']);
         $product->update(['quantity'=>$product->quantity + $request['quantity']]);
         $history = ItemHistory::create(['item_id'=>$product->id,'quantity'=>$request['quantity'], 'created_by'=>Auth::user()->id]);
-        Transaction::create([
-                        'type_id'=>TransactionCategory::material()->id,
-                        'transactionable_id'=>$history->id,
-                        'transactionable_name'=>Item::class,
-                        'price'=> -1*abs($request['price']),
-                        'description'=>''.$product->name.' '.$request['quantity'].' ширхэг', 
-                        'created_by'=>Auth::user()->id
-                    ]);
         return redirect('/accountant/items/'.$product->id);
+    }
+    public function delete($id){
+        return $this->delete_item($id);
     }
     public function delete_item($id){
         $product = Item::find($id);

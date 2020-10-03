@@ -94,6 +94,8 @@ Route::group(['prefix' => '/admin'], function() {
 
 	Route::post('transactions/salary', 'AdminTransactionController@salary');
 	Route::post('transactions/add', 'AdminTransactionController@store');
+	Route::post('transactions/edit', 'AdminTransactionController@edit');
+	Route::post('transactions/delete', 'AdminTransactionController@delete');
 	Route::post('transactions/income', 'AdminTransactionController@income');
 	Route::post('transactions/outcome/type', 'AdminTransactionController@outcomeCategory');
 

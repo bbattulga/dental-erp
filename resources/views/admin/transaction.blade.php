@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+</div>@extends('layouts.admin')
 @section('header')
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -72,8 +72,8 @@
                 </div>
                 <div class="card mb-4 text-left">
                     <div class="card-body">
-                        <form action="{{url('/accountant/transactions/delete')}}"
-                              method="post">
+                        <form action="{{url('/admin/transactions/delete')}}"
+                              method="POST">
                             @csrf
                             <span>Тайлбар:</span>
                             <input type="hidden" name="transaction_id" id="transactionHidden">
@@ -260,10 +260,16 @@
                             </form>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card mb-3">
                         <div class="card-body text-center">
                             <h5 class="card-title">Орлого</h5>
                             <b>{{number_format((int)$income)}}₮</b>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Үлдэгдэл</h5>
+                            <b>{{number_format((int)($income-$outcome))}}₮</b>
                         </div>
                     </div>
                 </div>
@@ -366,17 +372,22 @@
                                         <td>@if($transaction->description){{$transaction->description}} @else Тайлбар
                                             байхгүй @endif</td>
                                         <td>{{$transaction->created_at}}</td>
-                                        <td>{{\App\User::find($transaction->created_by)->name}}</td>
+                                        @php
+                                            $created_by = \App\User::find($transaction->created_by);
+                                        @endphp
+                                        <td>{{$created_by->last_name[0]}}. {{$created_by->name}}</td>
                                         <td class="text-center">
-                                            @if($transaction->created_by == \Illuminate\Support\Facades\Auth::user()->id)
-                                            <a onclick="editTransaction('{{$transaction->id}}', '{{$transaction->type_id}}','@if(!empty($transaction->type)) {{$transaction->type->name}}@endif',
+                                            <div class="glyph">
+                                                <a onclick="editTransaction('{{$transaction->id}}', '{{$transaction->type_id}}','@if(!empty($transaction->type)) {{$transaction->type->name}}@endif',
                                                     '{{$transaction->price}}', '{{$transaction->description}}')">
-                                                <i class="iconsmind-Pencil"></i>
-                                            </a>
-                                            @endif
-                                            {{--<a onclick="deleteTransaction({{$transaction->id}})">--}}
-                                                {{--<i class="simple-icon-trash"></i>--}}
-                                            {{--</a>--}}
+                                                    <i class="iconsmind-Pencil"></i>
+                                                </a>
+                                            </div>
+                                            <div class="glyph">
+                                                <a onclick="deleteTransaction({{$transaction->id}})">
+                                                    <i class="simple-icon-trash"></i>
+                                                </a>
+                                            </div>
                                         </td>
                                         <?php $i++;?>
                                     </tr>
@@ -587,6 +598,10 @@
             }
         }
 
+        function deleteTransaction(id){
+            $('#transactionHidden').val(id);
+            $('#deleteTransaction').modal();
+        }
     </script>
     <script src="{{asset('js/vendor/select2.full.js')}}"></script>
     <script src="{{asset('js/vendor/nouislider.min.js')}}"></script>

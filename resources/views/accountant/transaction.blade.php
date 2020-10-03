@@ -1,4 +1,4 @@
-@extends('layouts.accountant')
+</div>@extends('layouts.accountant')
 @section('header')
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -260,10 +260,16 @@
                             </form>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card mb-3">
                         <div class="card-body text-center">
                             <h5 class="card-title">Орлого</h5>
                             <b>{{number_format((int)$income)}}₮</b>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Үлдэгдэл</h5>
+                            <b>{{number_format((int)($income-$outcome))}}₮</b>
                         </div>
                     </div>
                 </div>
@@ -366,7 +372,10 @@
                                         <td>@if($transaction->description){{$transaction->description}} @else Тайлбар
                                             байхгүй @endif</td>
                                         <td>{{$transaction->created_at}}</td>
-                                        <td>{{\App\User::find($transaction->created_by)->name}}</td>
+                                        @php
+                                            $created_by = \App\User::find($transaction->created_by);
+                                        @endphp
+                                        <td>{{$created_by->last_name[0]}}. {{$created_by->name}}</td>
                                         <td class="text-center">
                                             @if($transaction->created_by == \Illuminate\Support\Facades\Auth::user()->id)
                                             <a onclick="editTransaction('{{$transaction->id}}', '{{$transaction->type_id}}','@if(!empty($transaction->type)) {{$transaction->type->name}}@endif',

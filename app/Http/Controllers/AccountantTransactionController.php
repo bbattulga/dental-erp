@@ -66,7 +66,7 @@ class AccountantTransactionController extends Controller
                                 'type_id'=> $salary_type->id, 
                                 'description'=>$user->name.' цалин',
                                 'created_by'=>Auth::user()->id]);
-        return redirect('/accountant/transactions');
+        return redirect()->back();
     }
     public function income(Request $request) {
         Transaction::create(['price'=> abs($request['price']),
@@ -74,7 +74,7 @@ class AccountantTransactionController extends Controller
                             'description'=>$request['description'],
                             'created_by'=>Auth::user()->id
                         ]);
-        return redirect('/accountant/transactions');
+        return redirect()->back();
     }
     public function TransactionCategory(Request $request) {
         TransactionCategory::create(['name'=>$request['name']]);
@@ -102,9 +102,13 @@ class AccountantTransactionController extends Controller
     public function transactionData($start_date, $end_date){
         if (gettype($start_date) === 'integer'){
             $start_date = Date('Y-m-d 00:00:00', $start_date);
+        }else{
+            $start_date = Date('Y-m-d 00:00:00', strtotime($start_date));
         }
         if (gettype($end_date) === 'integer'){
             $end_date = Date('Y-m-d 23:59:59', $end_date);
+        }else{
+            $end_date = Date('Y-m-d 23:59:59', strtotime($end_date));
         }
         $roles = UserRole::all();
         $types = TransactionCategory::all();
@@ -114,7 +118,7 @@ class AccountantTransactionController extends Controller
         $income = 0;
         $outcome = 0;
         $category_outcomes = [];
-        for ($i=0; $i<=$types->count(); $i++){
+        for ($i=0; $i<=$types[$types->count()-1]->id; $i++){
             array_push($category_outcomes, 0);
         }
         foreach($transactions as $transaction){
@@ -131,6 +135,13 @@ class AccountantTransactionController extends Controller
         $end_date = Date('Y-m-d', strtotime($end_date));
         return compact('transactions', 'roles', 'start_date', 'end_date', 
                         'types', 'outcome', 'category_outcomes', 'income');
+    }
+
+    public function outcomeCategory(Request $request){
+        TransactionCategory::create([
+            'name' => $request['name']
+        ]);
+        return redirect()->back();
     }
 
 }
